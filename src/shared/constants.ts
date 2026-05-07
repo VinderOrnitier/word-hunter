@@ -1,0 +1,14 @@
+import type { GameSettings } from "./types";
+
+export const DEFAULT_WORDS = [
+  "cat", "elephant", "fox", "wolf", "eagle", "bear", "giraffe", "tiger",
+  "dolphin", "hedgehog", "zebra", "kangaroo", "lion", "penguin", "owl",
+  "crocodile", "flamingo", "peacock",
+];
+
+export const DEFAULT_SETTINGS: GameSettings = {
+  hintDelayMinutes: 5,
+  celebrationHoverSeconds: 1.5,
+};
+
+export const MIN_PARAGRAPH_WORDS = 50;

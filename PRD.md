@@ -1,4 +1,4 @@
-# PRD: Chrome Extension "Find the Word"
+# PRD: Chrome Extension "Word Hunter"
 
 ## Problem Statement
 
