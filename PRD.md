@@ -10,8 +10,9 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 
 ## User Stories
 
-1. As a player, I want to select a word from a list of animals, so that I can start playing without extra configuration.
-2. As a player, I want to type a custom word not in the list, so that I can diversify the game.
+1. As a player, I want to choose an active word list (Animals or Pokémon), so that I can vary the theme of the game.
+2. As a player, I want to select a word from the active list, so that I can start playing without extra configuration.
+3. As a player, I want to type a custom word not in the list, so that I can diversify the game.
 3. As a player, I want the chosen word to appear automatically on every web page when it loads, so that I don't have to configure the game each time.
 4. As a player, I want the word to be inserted only into sufficiently long texts (50+ words), so that it can genuinely hide among other words.
 5. As a player, I want the word to look like normal page text, so that it cannot be easily spotted visually.
@@ -27,6 +28,8 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 15. As a player, I want the hint timer to start counting from the moment the page containing the inserted word is loaded.
 16. As a player, I want to choose the next word myself after finding the current one (or press "new word"), rather than having it change automatically.
 17. As a player, I want one active word across all tabs simultaneously, so that I can search on any page.
+18. As a player, I want to see a notification when a page has no suitable text blocks (no paragraphs with 50+ words), so that I know why the word is not hidden on this page.
+19. As a player, I want to view a page inside the extension that explains the rules for what qualifies as a valid text block, so that I understand where the word can be hidden.
 
 ## Implementation Decisions
 
@@ -66,9 +69,15 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 - Tab "Statistics": table of found words (word, date, search duration, hint used, link to page)
 - Tab "Settings": hint timer duration (minutes), hover duration for celebration tooltip (seconds)
 
-### Default Word List (animals)
+### Word Lists
 
+The player selects an active list; the word is then chosen from that list.
+
+**Animals (default):**
 cat, elephant, fox, wolf, eagle, bear, giraffe, tiger, dolphin, hedgehog, zebra, kangaroo, lion, penguin, owl, crocodile, flamingo, peacock
+
+**Pokémon:**
+Pikachu, Bulbasaur, Charmander, Squirtle, Jigglypuff, Mewtwo, Eevee, Snorlax, Gengar, Psyduck, Machop, Alakazam, Magikarp, Gyarados, Lapras, Vaporeon, Flareon, Dragonite
 
 ### Technical Solution for Ctrl+F Bypass
 
@@ -111,7 +120,8 @@ Good tests verify behavior through public interfaces, not implementation details
 - Multiplayer or leaderboard
 - Support for other browsers (Firefox, Safari)
 - Inserting the word into images or video
-- Word categories beyond animals (can be added later)
+- Additional word lists beyond Animals and Pokémon (planned: expandable lists with per-word images, e.g. a photo of the Pokémon or animal)
+- Binding a celebration image to a specific word (planned as a future feature tied to list expansion)
 - Localization into other languages
 - Binding a celebration image to a specific word (e.g. a photo of a cat for "cat")
 
@@ -119,5 +129,5 @@ Good tests verify behavior through public interfaces, not implementation details
 
 - The extension uses Manifest V3 (current Chrome standard)
 - The content script must handle Single Page Applications: monitor navigation via `MutationObserver` or the `history` API
-- If no suitable paragraphs exist on a page, the extension silently skips the page (no notifications)
+- If no suitable paragraphs exist on a page, the extension shows a notification explaining why the word was not hidden; the extension popup also has a "Rules" tab explaining what qualifies as a valid paragraph
 - Celebration GIFs are stored as static assets bundled with the extension (not fetched from the internet)
