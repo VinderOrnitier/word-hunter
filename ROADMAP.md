@@ -4,11 +4,11 @@
 - [x] Dev environment: Node 24, pnpm 11, TypeScript, Vite + @crxjs/vite-plugin, Jest + jsdom
 - [x] GitHub repo created: https://github.com/VinderOrnitier/word-hunter
 - [x] gh CLI authenticated (VinderOrnitier)
-- [ ] **Step 1** — `/grill-with-docs` — lock down domain glossary in `CONTEXT.md` (Word, Paragraph, HiddenWord, HintTimer, Find Event)
-- [ ] **Step 2** — `/setup-matt-pocock-skills` — configure issue tracker, triage labels, domain docs
+- [x] **Step 1** — `/grill-with-docs` — lock down domain glossary in `CONTEXT.md` (Word, ActiveWord, WordList, Paragraph, HiddenWord, HintTimer, FindEvent, HuntRecord)
+- [x] **Step 2** — `/setup-matt-pocock-skills` — configure issue tracker, triage labels, domain docs
 
 ## Phase 1 — Planning
-- [ ] **Step 3** — `/to-issues` — break PRD into vertical slices → GitHub issues
+- [x] **Step 3** — `/to-issues` — break PRD into vertical slices → GitHub issues #1–#14
 
 ## Phase 2 — Prototypes (validate risky decisions before coding)
 - [ ] **Step 4** — `/prototype` — verify Ctrl+F bypass technique (CSS `::before` + empty text nodes)
