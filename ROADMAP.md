@@ -11,7 +11,7 @@
 - [x] **Step 3** — `/to-issues` — break PRD into vertical slices → GitHub issues #1–#14
 
 ## Phase 2 — Prototypes (validate risky decisions before coding)
-- [ ] **Step 4** — `/prototype` — verify Ctrl+F bypass technique (CSS `::before` + empty text nodes)
+- [x] **Step 4** — `/prototype` — verify Ctrl+F bypass technique (CSS `::before` + empty text nodes) → confirmed: `data-char` spans with empty text nodes are invisible to `TreeWalker(NodeFilter.SHOW_TEXT)`
 - [ ] **Step 5** — `/prototype` — validate celebration tooltip UX (2-3 layout variants)
 
 ## Phase 3 — Implementation (TDD, one module at a time)
