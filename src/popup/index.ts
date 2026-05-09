@@ -1,15 +1,17 @@
 import { PlayTab } from "./play-tab";
 import { StatsTab } from "./stats-tab";
 import { SettingsTab } from "./settings-tab";
+import { RulesTab } from "./rules-tab";
 
 const app = document.getElementById("app")!;
 
-type TabName = "play" | "stats" | "settings";
+type TabName = "play" | "stats" | "settings" | "rules";
 
-const tabs: Record<TabName, { instance: PlayTab | StatsTab | SettingsTab | null }> = {
+const tabs: Record<TabName, { instance: PlayTab | StatsTab | SettingsTab | RulesTab | null }> = {
   play: { instance: null },
   stats: { instance: null },
   settings: { instance: null },
+  rules: { instance: null },
 };
 
 async function showTab(name: TabName): Promise<void> {
@@ -26,6 +28,10 @@ async function showTab(name: TabName): Promise<void> {
   } else if (name === "settings") {
     const tab = new SettingsTab(app);
     tabs.settings.instance = tab;
+    await tab.init();
+  } else if (name === "rules") {
+    const tab = new RulesTab(app);
+    tabs.rules.instance = tab;
     await tab.init();
   }
 }
