@@ -1,4 +1,5 @@
 # Word Hunter — Build Roadmap
+@PRD.md - this Roadmap based on this PRD
 
 ## Phase 0 — Setup ✅
 - [x] Dev environment: Node 24, pnpm 11, TypeScript, Vite + @crxjs/vite-plugin, Jest + jsdom

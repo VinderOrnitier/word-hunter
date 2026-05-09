@@ -1,4 +1,4 @@
-export interface FindRecord {
+export interface HuntRecord {
   word: string;
   foundAt: number;
   pageUrl: string;

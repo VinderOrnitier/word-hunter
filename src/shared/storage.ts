@@ -1,8 +1,8 @@
-import type { FindRecord, GameSettings, ActiveWord } from "./types";
+import type { HuntRecord, GameSettings, ActiveWord } from "./types";
 import { DEFAULT_SETTINGS } from "./constants";
 
 type StorageSchema = {
-  finds: FindRecord[];
+  finds: HuntRecord[];
   settings: GameSettings;
   activeWord: ActiveWord | null;
 };
@@ -12,12 +12,12 @@ async function get<K extends keyof StorageSchema>(key: K): Promise<StorageSchema
   return result[key] as StorageSchema[K] | undefined;
 }
 
-export async function saveFind(record: FindRecord): Promise<void> {
+export async function saveFind(record: HuntRecord): Promise<void> {
   const finds = (await get("finds")) ?? [];
   await chrome.storage.local.set({ finds: [...finds, record] });
 }
 
-export async function getFinds(): Promise<FindRecord[]> {
+export async function getFinds(): Promise<HuntRecord[]> {
   return (await get("finds")) ?? [];
 }
 
