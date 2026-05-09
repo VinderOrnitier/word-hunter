@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Celebration Tooltip — Prototype</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, serif;
+      max-width: 680px;
+      margin: 60px auto 120px;
+      padding: 0 24px;
+      line-height: 1.8;
+      color: #222;
+      font-size: 17px;
+    }
+
+    h1 {
+      font-family: system-ui, sans-serif;
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 32px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ── Hidden word ── */
+    .hw {
+      position: relative;
+      cursor: default;
+      display: inline-block;
+    }
+    .hw-text {
+      transition: none;
+    }
+
+    /* ── Variant A: small popup above ── */
+    #tip-a {
+      position: fixed;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.16);
+      padding: 14px 18px;
+      text-align: center;
+      min-width: 130px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(6px) scale(0.92);
+      transition: opacity 0.22s, transform 0.22s;
+      z-index: 500;
+    }
+    #tip-a.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    #tip-a .emoji { font-size: 34px; display: block; margin-bottom: 4px; }
+    #tip-a .label { font-family: system-ui, sans-serif; font-size: 12px; font-weight: 700; color: #f59e0b; letter-spacing: 0.05em; }
+
+    /* ── Variant B: full-screen overlay ── */
+    #tip-b {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+      z-index: 600;
+    }
+    #tip-b.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #tip-b .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 48px 56px;
+      text-align: center;
+    }
+    #tip-b .emoji { font-size: 80px; display: block; margin-bottom: 16px; }
+    #tip-b .label { font-family: system-ui, sans-serif; font-size: 22px; font-weight: 700; color: #f59e0b; }
+    #tip-b .hint  { font-family: system-ui, sans-serif; font-size: 12px; color: #aaa; margin-top: 10px; }
+
+    /* ── Variant C: corner toast ── */
+    #tip-c {
+      position: fixed;
+      top: 28px;
+      right: 28px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.16);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: system-ui, sans-serif;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateX(16px);
+      transition: opacity 0.22s, transform 0.22s;
+      z-index: 500;
+    }
+    #tip-c.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    #tip-c .emoji { font-size: 28px; }
+    #tip-c .label { font-size: 13px; font-weight: 700; color: #f59e0b; letter-spacing: 0.04em; }
+
+    /* ── Bottom switcher ── */
+    .switcher {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a1a;
+      border-radius: 999px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: system-ui, sans-serif;
+      font-size: 13px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+      z-index: 1000;
+    }
+    .switcher-label { color: #666; margin-right: 4px; }
+    .switcher button {
+      background: transparent;
+      border: 1px solid #444;
+      color: #ccc;
+      border-radius: 999px;
+      padding: 5px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .switcher button:hover { border-color: #777; color: #fff; }
+    .switcher button.active { background: #f59e0b; border-color: #f59e0b; color: #fff; }
+    .switcher-desc { color: #555; margin-left: 8px; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<h1>Prototype — celebration tooltip &nbsp;/&nbsp; hover the word to trigger</h1>
+
+<p>
+  Researchers have long debated the origins of language. Some argue it emerged gradually
+  from gesture and vocalization, while others suggest a more sudden cognitive leap. The
+  evolution of symbolic thought — the ability to represent one thing with another — is
+  central to this debate. Consider the humble
+  <span class="hw" id="hw">
+    <span class="hw-text">elephant</span>
+  </span>,
+  studied for decades as a model of social intelligence. Its capacity for memory,
+  empathy, and complex communication challenges simple notions of what separates humans
+  from other animals.
+</p>
+
+<!-- Variant A -->
+<div id="tip-a">
+  <span class="emoji">🎉</span>
+  <span class="label">FOUND IT!</span>
+</div>
+
+<!-- Variant C -->
+<div id="tip-c">
+  <span class="emoji">🎉</span>
+  <span class="label">FOUND IT!</span>
+</div>
+
+<!-- Variant B -->
+<div id="tip-b">
+  <div class="card">
+    <span class="emoji">🎊</span>
+    <div class="label">You found it!</div>
+    <div class="hint">click anywhere to close</div>
+  </div>
+</div>
+
+<!-- Switcher -->
+<div class="switcher">
+  <span class="switcher-label">Variant:</span>
+  <button class="active" onclick="setVariant('A')">A — Popup</button>
+  <button onclick="setVariant('B')">B — Overlay</button>
+  <button onclick="setVariant('C')">C — Toast</button>
+</div>
+
+<script>
+  let variant = 'A';
+  let timer = null;
+
+  const hw     = document.getElementById('hw');
+  const tipA   = document.getElementById('tip-a');
+  const tipB   = document.getElementById('tip-b');
+  const tipC   = document.getElementById('tip-c');
+  const btns   = document.querySelectorAll('.switcher button');
+
+  function hideAll() {
+    tipA.classList.remove('show');
+    tipB.classList.remove('show');
+    tipC.classList.remove('show');
+    clearTimeout(timer);
+    timer = null;
+  }
+
+  function show() {
+    if (variant === 'A') {
+      const rect = hw.getBoundingClientRect();
+      tipA.style.left = (rect.left + rect.width / 2) + 'px';
+      tipA.style.top  = (rect.top - 12) + 'px';
+      tipA.style.transform = 'translateX(-50%) translateY(-100%) scale(1)';
+      tipA.classList.add('show');
+    } else if (variant === 'B') {
+      tipB.classList.add('show');
+      setTimeout(() => tipB.classList.remove('show'), 2500);
+    } else {
+      tipC.classList.add('show');
+      setTimeout(() => tipC.classList.remove('show'), 2500);
+    }
+  }
+
+  hw.addEventListener('mouseenter', () => {
+    hideAll();
+    timer = setTimeout(show, 1500);
+  });
+
+  hw.addEventListener('mouseleave', () => {
+    if (variant === 'B' && tipB.classList.contains('show')) return;
+    if (variant === 'C' && tipC.classList.contains('show')) return;
+    hideAll();
+  });
+
+  tipB.addEventListener('click', () => tipB.classList.remove('show'));
+
+  function setVariant(v) {
+    hideAll();
+    variant = v;
+    btns.forEach((b, i) => b.classList.toggle('active', ['A','B','C'][i] === v));
+  }
+</script>
+</body>
+</html>
