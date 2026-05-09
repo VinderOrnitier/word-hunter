@@ -33,6 +33,10 @@ export async function getActiveWord(): Promise<ActiveWord | null> {
   return (await get("activeWord")) ?? null;
 }
 
-export async function setActiveWord(activeWord: ActiveWord | null): Promise<void> {
+export async function setActiveWord(activeWord: ActiveWord): Promise<void> {
   await chrome.storage.local.set({ activeWord });
+}
+
+export async function clearActiveWord(): Promise<void> {
+  await chrome.storage.local.remove("activeWord");
 }
