@@ -54,3 +54,68 @@
     transform: scale(1) translateY(0);
   }
 }
+
+/* ============================================================
+   Hint tooltip — fixed top-right after the hint delay
+   ============================================================ */
+
+.hw-hint-tooltip {
+  position: fixed;
+  top: var(--wh-space-4);
+  right: var(--wh-space-4);
+  z-index: 2147483000;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wh-space-3);
+  padding: var(--wh-space-3) var(--wh-space-4);
+  border-radius: var(--wh-radius-2);
+  background: rgba(11, 15, 25, 0.92);
+  border: 1px solid var(--wh-hint);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--wh-shadow-3);
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-sm);
+  font-weight: var(--wh-weight-medium);
+  color: var(--wh-fg);
+  animation: hw-enter var(--wh-dur-base) var(--wh-ease-standard) both;
+}
+
+.hw-hint-tooltip__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--wh-radius-pill);
+  background: var(--wh-hint);
+}
+
+/* ============================================================
+   No-paragraph banner — fixed top-center when no Paragraph qualifies
+   ============================================================ */
+
+.hw-no-paragraph {
+  position: fixed;
+  top: var(--wh-space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2147483000;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wh-space-3);
+  padding: var(--wh-space-3) var(--wh-space-4);
+  border-radius: var(--wh-radius-2);
+  background: rgba(11, 15, 25, 0.92);
+  border: 1px solid var(--wh-border);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--wh-shadow-3);
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-sm);
+  font-weight: var(--wh-weight-medium);
+  color: var(--wh-fg);
+  animation: hw-enter var(--wh-dur-base) var(--wh-ease-standard) both;
+}
+
+.hw-no-paragraph__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--wh-radius-pill);
+  background: var(--wh-fg-3);
+}

@@ -1,6 +1,8 @@
+import { h, render } from "preact";
+import { HintTooltip } from "./components/HintTooltip";
+
 const HINT_USED_KEY = "hw-hint-used";
-const TOOLTIP_CLASS = "hw-hint-tooltip";
-const TOOLTIP_TEXT = "The word is hidden on this page";
+const HOST_CLASS = "hw-hint-tooltip-host";
 
 export function HintTimer(doc: Document) {
   let timerId: ReturnType<typeof setTimeout> | null = null;
@@ -10,10 +12,10 @@ export function HintTimer(doc: Document) {
   }
 
   function showTooltip(): void {
-    const el = doc.createElement("div");
-    el.className = TOOLTIP_CLASS;
-    el.textContent = TOOLTIP_TEXT;
-    doc.body.appendChild(el);
+    const host = doc.createElement("div");
+    host.className = HOST_CLASS;
+    doc.body.appendChild(host);
+    render(h(HintTooltip, { visible: true }), host);
     sessionStorage.setItem(HINT_USED_KEY, "true");
   }
 

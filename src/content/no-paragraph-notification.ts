@@ -1,11 +1,19 @@
+import { h, render } from "preact";
+import { NoParagraphBanner } from "./components/NoParagraphBanner";
+
+const HOST_CLASS = "hw-no-paragraph-host";
+
 export function NoParagraphNotification(doc: Document) {
   return {
     show() {
-      const el = doc.createElement("div");
-      el.className = "hw-no-paragraph";
-      el.textContent = "No long text found on this page — word not hidden";
-      doc.body.appendChild(el);
-      setTimeout(() => el.remove(), 3000);
+      const host = doc.createElement("div");
+      host.className = HOST_CLASS;
+      doc.body.appendChild(host);
+      render(h(NoParagraphBanner, { visible: true }), host);
+      setTimeout(() => {
+        render(null, host);
+        host.remove();
+      }, 3000);
     },
   };
 }
