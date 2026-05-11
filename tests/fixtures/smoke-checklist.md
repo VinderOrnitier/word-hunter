@@ -29,11 +29,11 @@ End-to-end manual verification of the Phase 2 build. Run after `pnpm build` prod
 
 ### Hint timer (#21)
 
-- [ ] In **Settings** lower hint delay to `0.05` min (3 s). Reload the smoke article and wait 3 seconds without clicking the hidden word. The `HintTooltip` fades in at top-right with the blue dot and the text "The word is hidden on this page".
+- [ ] Lower hint delay to `0.05` min (3 s). The Settings input has `min={1} step={1}` and won't accept fractional values via the spinner — set it from a DevTools console instead: `await chrome.storage.local.set({ settings: { hintDelayMinutes: 0.05, celebrationHoverSeconds: 1.5 } })`. Reload the smoke article and wait 3 seconds without clicking the hidden word. The `HintTooltip` fades in at top-right with the blue dot and the text "The word is hidden on this page".
 
 ### NoParagraphBanner (#21)
 
-- [ ] Open a page with **no qualifying paragraph** (e.g. an empty `about:blank`, the Chrome new-tab page, or any short-text page) while an ActiveWord is set. A banner appears at top-center for 3 seconds then auto-removes.
+- [ ] Open a page with **no qualifying paragraph** (use the bundled `tests/fixtures/smoke-short-page.html`, or any short-text page) while an ActiveWord is set. A banner appears at top-center for 3 seconds then auto-removes. Note: content scripts don't run on `data:` URLs even with `<all_urls>`, so use a `file://` or `http://` page.
 
 ### Stats reactivity
 
