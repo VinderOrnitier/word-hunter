@@ -81,16 +81,6 @@
   flex-direction: column;
 }
 
-.wh-tab-stub {
-  display: flex;
-  flex-direction: column;
-  gap: var(--wh-space-2);
-  padding: var(--wh-space-4);
-  background: var(--wh-surface);
-  border: 1px dashed var(--wh-border);
-  border-radius: var(--wh-radius-3);
-}
-
 /* ---------- Card ---------- */
 
 .wh-card {
@@ -454,4 +444,50 @@
   height: 1px;
   background: var(--wh-border-soft);
   margin: var(--wh-space-1) 0;
+}
+
+/* ---------- RulesTab ---------- */
+
+.wh-rules {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wh-space-3);
+}
+
+.wh-rules__body {
+  color: var(--wh-fg-2);
+}
+
+.wh-rules__kbd {
+  font-family: var(--wh-font-mono);
+  font-size: var(--wh-text-xs);
+  padding: 1px var(--wh-space-1);
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-1);
+  color: var(--wh-fg);
+}
+
+.wh-rules__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--wh-space-2);
+}
+
+.wh-rules__item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--wh-space-3);
+}
+
+.wh-rules__marker {
+  flex: 0 0 auto;
+  font-family: var(--wh-font-mono);
+  font-size: var(--wh-text-xs);
+  font-weight: var(--wh-weight-semibold);
+  color: var(--wh-primary);
+  min-width: 28px;
 }

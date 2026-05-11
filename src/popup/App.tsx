@@ -5,15 +5,7 @@ import { Tabs, type TabId } from "./components/Tabs";
 import { PlayTab } from "./tabs/PlayTab";
 import { StatsTab } from "./tabs/StatsTab";
 import { SettingsTab } from "./tabs/SettingsTab";
-
-function TabStub({ label }: { label: string }): JSX.Element {
-  return (
-    <div class="wh-tab-stub">
-      <span class="wh-eyebrow">Coming soon</span>
-      <p class="wh-body-sm">{label} is being migrated to Preact.</p>
-    </div>
-  );
-}
+import { RulesTab } from "./tabs/RulesTab";
 
 export function App(): JSX.Element {
   const [active, setActive] = useState<TabId>("play");
@@ -40,7 +32,7 @@ export function App(): JSX.Element {
         )}
         {active === "rules" && (
           <div data-testid="tab-panel-rules">
-            <TabStub label="Rules" />
+            <RulesTab />
           </div>
         )}
       </main>
