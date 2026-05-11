@@ -12,7 +12,10 @@ export interface GameSettings {
   celebrationHoverSeconds: number;
 }
 
+export type WordSource = "animals" | "pokemon" | "custom";
+
 export interface ActiveWord {
   word: string;
   insertedAt: number;
+  list?: WordSource;
 }

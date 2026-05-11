@@ -1,7 +1,7 @@
 import type { HuntRecord, GameSettings, ActiveWord } from "./types";
 import { DEFAULT_SETTINGS } from "./constants";
 
-type StorageSchema = {
+export type StorageSchema = {
   finds: HuntRecord[];
   settings: GameSettings;
   activeWord: ActiveWord | null;

@@ -1,0 +1,259 @@
+/* ============================================================
+   Word Hunter — Color & Type Foundations
+   Dark-first, "highlighter on slate" aesthetic.
+
+   Fonts are bundled via @fontsource packages, imported in main.tsx.
+   ============================================================ */
+
+:root {
+  /* ---------- Color: surfaces (dark, default) ---------- */
+  --wh-bg:           #0B0F19;
+  --wh-surface:      #151B2C;
+  --wh-surface-2:    #1F2740;
+  --wh-surface-3:    #2A334D;
+  --wh-border:       #2A334D;
+  --wh-border-soft:  #1C2238;
+
+  /* ---------- Color: foreground ---------- */
+  --wh-fg:           #E8ECF6;
+  --wh-fg-2:         #B6BED4;
+  --wh-fg-3:         #8C95B0;
+  --wh-fg-4:         #5C6480;
+  --wh-on-primary:   #1A1405;
+
+  /* ---------- Color: brand & accents ---------- */
+  --wh-primary:      #FFD23F;
+  --wh-primary-dim:  #C99F23;
+  --wh-primary-soft: rgba(255, 210, 63, 0.18);
+
+  --wh-found:        #5EE3A1;
+  --wh-found-soft:   rgba(94, 227, 161, 0.15);
+
+  --wh-hint:         #8AB4FF;
+  --wh-hint-soft:    rgba(138, 180, 255, 0.16);
+
+  --wh-danger:       #FF6B6B;
+  --wh-danger-soft:  rgba(255, 107, 107, 0.15);
+
+  /* ---------- WordList theming ---------- */
+  --wh-list-animals: #5EE3A1;
+  --wh-list-pokemon: #FF8AC2;
+
+  /* ---------- Spacing (4px base) ---------- */
+  --wh-space-0: 0;
+  --wh-space-1: 4px;
+  --wh-space-2: 8px;
+  --wh-space-3: 12px;
+  --wh-space-4: 16px;
+  --wh-space-5: 20px;
+  --wh-space-6: 24px;
+  --wh-space-8: 32px;
+  --wh-space-10: 40px;
+  --wh-space-12: 48px;
+
+  /* ---------- Radii ---------- */
+  --wh-radius-1: 4px;
+  --wh-radius-2: 8px;
+  --wh-radius-3: 12px;
+  --wh-radius-4: 16px;
+  --wh-radius-pill: 999px;
+
+  /* ---------- Shadow / elevation ---------- */
+  --wh-shadow-1: 0 1px 0 rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.25);
+  --wh-shadow-2: 0 4px 14px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.03) inset;
+  --wh-shadow-3: 0 16px 40px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.3);
+  --wh-shadow-glow: 0 0 0 4px var(--wh-primary-soft);
+  --wh-shadow-glow-found: 0 0 0 4px var(--wh-found-soft);
+
+  /* ---------- Type: families ---------- */
+  --wh-font-sans: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --wh-font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --wh-font-serif: "Fraunces", Georgia, "Times New Roman", serif;
+
+  /* ---------- Type: scale ---------- */
+  --wh-text-xs:   11px;
+  --wh-text-sm:   12px;
+  --wh-text-base: 14px;
+  --wh-text-md:   16px;
+  --wh-text-lg:   18px;
+  --wh-text-xl:   22px;
+  --wh-text-2xl:  28px;
+  --wh-text-3xl:  36px;
+  --wh-text-4xl:  48px;
+
+  /* ---------- Type: weights ---------- */
+  --wh-weight-regular:  400;
+  --wh-weight-medium:   500;
+  --wh-weight-semibold: 600;
+  --wh-weight-bold:     700;
+
+  /* ---------- Type: tracking & leading ---------- */
+  --wh-tracking-tight: -0.01em;
+  --wh-tracking-snug:  -0.005em;
+  --wh-tracking-wide:   0.04em;
+  --wh-tracking-caps:   0.08em;
+
+  --wh-leading-tight: 1.15;
+  --wh-leading-snug:  1.3;
+  --wh-leading-body:  1.5;
+  --wh-leading-loose: 1.7;
+
+  /* ---------- Motion ---------- */
+  --wh-ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --wh-ease-out:      cubic-bezier(0.16, 1, 0.3, 1);
+  --wh-ease-pop:      cubic-bezier(0.34, 1.56, 0.64, 1);
+  --wh-dur-fast:      120ms;
+  --wh-dur-base:      200ms;
+  --wh-dur-slow:      360ms;
+
+  /* ---------- Layout ---------- */
+  --wh-popup-width:  360px;
+  --wh-popup-min-h:  480px;
+}
+
+/* ============================================================
+   Semantic typography — composable classes
+   ============================================================ */
+
+.wh-display {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-3xl);
+  font-weight: var(--wh-weight-bold);
+  line-height: var(--wh-leading-tight);
+  letter-spacing: var(--wh-tracking-tight);
+  color: var(--wh-fg);
+}
+
+.wh-h1 {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-2xl);
+  font-weight: var(--wh-weight-bold);
+  line-height: var(--wh-leading-tight);
+  letter-spacing: var(--wh-tracking-tight);
+  color: var(--wh-fg);
+}
+
+.wh-h2 {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-xl);
+  font-weight: var(--wh-weight-semibold);
+  line-height: var(--wh-leading-snug);
+  letter-spacing: var(--wh-tracking-snug);
+  color: var(--wh-fg);
+}
+
+.wh-h3 {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-md);
+  font-weight: var(--wh-weight-semibold);
+  line-height: var(--wh-leading-snug);
+  color: var(--wh-fg);
+}
+
+.wh-body {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-base);
+  font-weight: var(--wh-weight-regular);
+  line-height: var(--wh-leading-body);
+  color: var(--wh-fg);
+}
+
+.wh-body-sm {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-sm);
+  font-weight: var(--wh-weight-regular);
+  line-height: var(--wh-leading-body);
+  color: var(--wh-fg-2);
+}
+
+.wh-meta {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-xs);
+  font-weight: var(--wh-weight-medium);
+  line-height: var(--wh-leading-snug);
+  color: var(--wh-fg-3);
+  letter-spacing: var(--wh-tracking-wide);
+}
+
+.wh-eyebrow {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-xs);
+  font-weight: var(--wh-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--wh-tracking-caps);
+  color: var(--wh-fg-3);
+}
+
+.wh-word {
+  font-family: var(--wh-font-mono);
+  font-size: var(--wh-text-md);
+  font-weight: var(--wh-weight-medium);
+  letter-spacing: 0;
+  color: var(--wh-fg);
+}
+
+.wh-word-display {
+  font-family: var(--wh-font-mono);
+  font-size: var(--wh-text-2xl);
+  font-weight: var(--wh-weight-bold);
+  letter-spacing: var(--wh-tracking-tight);
+  color: var(--wh-fg);
+}
+
+.wh-editorial {
+  font-family: var(--wh-font-serif);
+  font-size: var(--wh-text-xl);
+  font-weight: 400;
+  font-style: italic;
+  line-height: var(--wh-leading-snug);
+  color: var(--wh-fg-2);
+}
+
+/* ============================================================
+   Highlighter — the brand's signature treatment
+   ============================================================ */
+
+.wh-highlight {
+  background-image: linear-gradient(
+    180deg,
+    transparent 0,
+    transparent 74%,
+    var(--wh-primary) 74%,
+    var(--wh-primary) 96%,
+    transparent 96%
+  );
+  padding: 0 1px;
+  color: inherit;
+  border-radius: 1px;
+}
+
+.wh-highlight--found {
+  background-image: linear-gradient(
+    180deg,
+    transparent 0,
+    transparent 74%,
+    var(--wh-found) 74%,
+    var(--wh-found) 96%,
+    transparent 96%
+  );
+}
+
+/* ============================================================
+   Reset & base
+   ============================================================ */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--wh-bg);
+  color: var(--wh-fg);
+  font-family: var(--wh-font-sans);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+button {
+  font-family: inherit;
+}
