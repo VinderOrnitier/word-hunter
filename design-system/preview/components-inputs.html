@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { height: 280px; padding: 24px 28px; }
+.field { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.field label { font-family: var(--wh-font-sans); font-size: 11px; font-weight: 600; color: var(--wh-fg-2); text-transform: uppercase; letter-spacing: 0.06em; }
+.input, .select { font-family: var(--wh-font-sans); font-size: 13px; color: var(--wh-fg); background: var(--wh-surface-2); border: 1px solid var(--wh-border); border-radius: var(--wh-radius-2); padding: 9px 12px; outline: none; }
+.input::placeholder { color: var(--wh-fg-4); }
+.input:focus, .select:focus { border-color: var(--wh-primary); box-shadow: var(--wh-shadow-glow); }
+.input.mono { font-family: var(--wh-font-mono); }
+.row { gap: 14px; }
+.helper { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-3); }
+.error { color: var(--wh-danger); }
+</style></head><body>
+  <div class="label-eyebrow">Inputs & selects</div>
+  <div class="row">
+    <div class="field">
+      <label>Word list</label>
+      <select class="select"><option>Animals</option><option>Pokémon</option></select>
+    </div>
+    <div class="field">
+      <label>Word</label>
+      <select class="select"><option>flamingo</option></select>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 14px">
+    <div class="field">
+      <label>Custom word</label>
+      <input class="input mono" placeholder="type a word…">
+      <span class="helper">used as the next active word</span>
+    </div>
+    <div class="field">
+      <label>Hint delay (min)</label>
+      <input class="input" type="number" value="5" style="width: 80px">
+    </div>
+  </div>
+  <div class="row" style="margin-top: 14px">
+    <div class="field">
+      <label>Focused</label>
+      <input class="input" value="elephant" style="border-color: var(--wh-primary); box-shadow: var(--wh-shadow-glow)">
+    </div>
+    <div class="field">
+      <label>Error</label>
+      <input class="input" value="" placeholder="empty word" style="border-color: var(--wh-danger)">
+      <span class="helper error">enter at least one character</span>
+    </div>
+  </div>
+</body></html>

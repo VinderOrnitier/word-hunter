@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { height: 280px; }
+.label-eyebrow { margin-bottom: 12px; }
+.swatch .chip { height: 72px; }
+.row { gap: 10px; }
+.demos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.demo {
+  padding: 12px 14px; border-radius: var(--wh-radius-2);
+  font-family: Georgia, serif; font-size: 13px; line-height: 1.7;
+  border: 1px solid var(--wh-border-soft);
+}
+.demo.dark { background: var(--wh-bg); color: var(--wh-fg-2); }
+.demo.light { background: #f7f3ec; color: #1c1a17; border-color: #e6dfd2; }
+.hl {
+  background-image: linear-gradient(180deg, transparent 0, transparent 74%, var(--wh-primary) 74%, var(--wh-primary) 96%, transparent 96%);
+  padding: 0 1px;
+  color: inherit;
+}
+.hl-f {
+  background-image: linear-gradient(180deg, transparent 0, transparent 74%, var(--wh-found) 74%, var(--wh-found) 96%, transparent 96%);
+  padding: 0 1px;
+  color: inherit;
+}
+.caption { display: block; font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); margin-top: 6px; }
+.demo.light .caption { color: #6e6354; }
+</style></head><body>
+  <div class="label-eyebrow">Brand &amp; accents</div>
+  <div class="row">
+    <div class="swatch"><div class="chip" style="background: var(--wh-primary)"></div><span class="name">Highlighter</span><span class="val">--wh-primary · #FFD23F</span></div>
+    <div class="swatch"><div class="chip" style="background: var(--wh-found)"></div><span class="name">Found</span><span class="val">--wh-found · #5EE3A1</span></div>
+    <div class="swatch"><div class="chip" style="background: var(--wh-hint)"></div><span class="name">Hint</span><span class="val">--wh-hint · #8AB4FF</span></div>
+    <div class="swatch"><div class="chip" style="background: var(--wh-danger)"></div><span class="name">Danger</span><span class="val">--wh-danger · #FF6B6B</span></div>
+  </div>
+
+  <div class="demos">
+    <div class="demo dark">
+      patient otters spend the morning grooming and the afternoon <span class="hl">hunting</span> at the river — <span class="hl-f">otter</span>
+      <span class="caption">on dark surface · color: inherit</span>
+    </div>
+    <div class="demo light">
+      patient otters spend the morning grooming and the afternoon <span class="hl">hunting</span> at the river — <span class="hl-f">otter</span>
+      <span class="caption">on light surface · color: inherit · same stripe height</span>
+    </div>
+  </div>
+</body></html>

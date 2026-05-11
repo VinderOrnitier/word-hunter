@@ -1,0 +1,63 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { height: 320px; padding: 24px 28px; background: linear-gradient(180deg, #1a1f2c 0, #0e1320 100%); }
+.fakepage { font-family: Georgia, serif; font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.7; padding-top: 8px; }
+.tooltip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: var(--wh-radius-2); font-family: var(--wh-font-sans); font-size: 12px; font-weight: 500; box-shadow: var(--wh-shadow-3); }
+.t-hint { background: rgba(11, 15, 25, 0.92); color: var(--wh-fg); border: 1px solid var(--wh-hint); backdrop-filter: blur(12px); }
+.t-hint .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--wh-hint); }
+.t-no { background: rgba(11, 15, 25, 0.92); color: var(--wh-fg); border: 1px solid var(--wh-border); backdrop-filter: blur(12px); }
+.t-no .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--wh-fg-3); }
+
+.celebrate {
+  background: rgba(11, 15, 25, 0.85); color: var(--wh-fg);
+  border: 1px solid var(--wh-found);
+  padding: 14px 16px; border-radius: var(--wh-radius-3);
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: var(--wh-shadow-3), var(--wh-shadow-glow-found);
+  backdrop-filter: blur(12px);
+}
+.celebrate .art {
+  width: 84px; height: 84px; flex: 0 0 auto;
+  border-radius: var(--wh-radius-2);
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 56px; line-height: 1;
+}
+.celebrate .body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.celebrate .big { font-family: var(--wh-font-sans); font-size: 18px; font-weight: 700; color: var(--wh-found); }
+.celebrate .word { font-family: var(--wh-font-mono); font-size: 14px; font-weight: 500; color: var(--wh-fg); }
+.celebrate .meta { font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-3); }
+
+.row { gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+.legend { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); margin-top: 14px; }
+</style></head><body>
+  <div class="label-eyebrow" style="color: var(--wh-fg-2)">Tooltips · in-page overlays</div>
+
+  <div class="row">
+    <div class="tooltip t-hint"><span class="dot"></span>The word is hidden on this page.</div>
+    <div class="tooltip t-no"><span class="dot"></span>No long text on this page — word not hidden.</div>
+  </div>
+
+  <div class="row" style="margin-top: 14px">
+    <div class="celebrate">
+      <div class="art" aria-hidden="true">🦩</div>
+      <div class="body">
+        <span class="big">Found!</span>
+        <span class="word">flamingo</span>
+        <span class="meta">12 s · no hint</span>
+      </div>
+    </div>
+    <div class="celebrate">
+      <div class="art" aria-hidden="true">⚡</div>
+      <div class="body">
+        <span class="big">Found!</span>
+        <span class="word">Pikachu</span>
+        <span class="meta">2 m 03 s · hint used</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">art slot ≤ 100×100 · emoji or PNG/SVG · matches the word (flamingo → 🦩, Pikachu → ⚡, otter → 🦦) · no art? celebration falls back to body-only.</div>
+
+  <div class="fakepage">A faint preview of host-page text behind the overlays. Backdrop-blur 12 px keeps the page legible while the overlay reads as floating chrome…</div>
+</body></html>

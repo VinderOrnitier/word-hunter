@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { height: 220px; padding: 24px 28px; }
+.row { gap: 8px; align-items: end; }
+.bar { background: var(--wh-primary); border-radius: 2px; }
+.col-item { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.col-item .name { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); }
+.col-item .val { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg); font-weight: 600; }
+.usage { display: flex; gap: 24px; padding: 12px 14px; background: var(--wh-surface); border: 1px solid var(--wh-border); border-radius: var(--wh-radius-2); margin-top: 14px; font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-3); }
+.usage b { color: var(--wh-fg-2); font-weight: 600; }
+</style></head><body>
+  <div class="label-eyebrow">Spacing scale · 4px base</div>
+  <div class="row">
+    <div class="col-item"><div class="bar" style="width: 32px; height: 4px"></div><span class="val">4</span><span class="name">space-1</span></div>
+    <div class="col-item"><div class="bar" style="width: 32px; height: 8px"></div><span class="val">8</span><span class="name">space-2</span></div>
+    <div class="col-item"><div class="bar" style="width: 32px; height: 12px"></div><span class="val">12</span><span class="name">space-3</span></div>
+    <div class="col-item"><div class="bar" style="width: 32px; height: 16px"></div><span class="val">16</span><span class="name">space-4</span></div>
+    <div class="col-item"><div class="bar" style="width: 32px; height: 20px"></div><span class="val">20</span><span class="name">space-5</span></div>
+    <div class="col-item"><div class="bar" style="width: 32px; height: 24px"></div><span class="val">24</span><span class="name">space-6</span></div>
+    <div class="col-item"><div class="bar" style="width: 32px; height: 32px"></div><span class="val">32</span><span class="name">space-8</span></div>
+    <div class="col-item"><div class="bar" style="width: 32px; height: 40px"></div><span class="val">40</span><span class="name">space-10</span></div>
+    <div class="col-item"><div class="bar" style="width: 32px; height: 48px"></div><span class="val">48</span><span class="name">space-12</span></div>
+  </div>
+  <div class="usage">
+    <span><b>List items:</b> 8–12 gap</span>
+    <span><b>Section blocks:</b> 16–24 gap</span>
+    <span><b>Page padding:</b> 16 (popup)</span>
+    <span><b>Major sections:</b> 32+</span>
+  </div>
+</body></html>

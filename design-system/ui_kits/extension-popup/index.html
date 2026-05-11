@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Word Hunter — Extension Popup</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: #0a0d15; min-height: 100vh; font-family: var(--wh-font-sans); }
+  body { display: flex; align-items: center; justify-content: center; padding: 32px 16px; box-sizing: border-box; }
+
+  .stage { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .browser-hint {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; color: var(--wh-fg-3); font-family: var(--wh-font-mono);
+  }
+  .browser-hint .arrow { width: 18px; height: 1px; background: var(--wh-border); position: relative; }
+  .browser-hint .arrow::after { content: ""; position: absolute; right: 0; top: -2px; border: 4px solid transparent; border-left-color: var(--wh-border); }
+
+  .popup {
+    width: var(--wh-popup-width);
+    min-height: var(--wh-popup-min-h);
+    background: var(--wh-bg);
+    border: 1px solid var(--wh-border);
+    border-radius: 16px;
+    box-shadow: var(--wh-shadow-3);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .popup main { flex: 1; overflow-y: auto; }
+  .popup main::-webkit-scrollbar { width: 8px; }
+  .popup main::-webkit-scrollbar-thumb { background: var(--wh-surface-2); border-radius: 4px; }
+
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--wh-border-soft);
+    background: var(--wh-bg);
+  }
+  .header .lockup { display: flex; align-items: center; gap: 10px; }
+  .header img.glyph { width: 22px; height: 22px; border-radius: 5px; }
+  .header .name { font-family: var(--wh-font-sans); font-size: 13px; font-weight: 700; color: var(--wh-fg); letter-spacing: -0.01em; }
+  .header .name .o { background: linear-gradient(180deg, transparent 0, transparent 60%, var(--wh-primary) 60%, var(--wh-primary) 92%, transparent 92%); padding: 0 1px; }
+  .header .v { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="popup" id="root"></div>
+  <div class="browser-hint"><span>chrome toolbar popup · 360 × 480</span></div>
+</div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="ui.jsx"></script>
+<script type="text/babel" src="data.jsx"></script>
+<script type="text/babel" src="Tabs.jsx"></script>
+<script type="text/babel" src="PlayTab.jsx"></script>
+<script type="text/babel" src="StatsTab.jsx"></script>
+<script type="text/babel" src="SettingsTab.jsx"></script>
+<script type="text/babel" src="RulesTab.jsx"></script>
+
+<script type="text/babel">
+const { useState } = React;
+
+function PopupHeader() {
+  return (
+    <header className="header">
+      <div class="lockup">
+        <img className="glyph" src="../../assets/glyph.svg" alt=""/>
+        <span className="name">Word Hunter</span>
+      </div>
+      <span className="v">v0.1.0</span>
+    </header>
+  );
+}
+
+function App() {
+  const [tab, setTab] = useState("play");
+  const [activeWord, setActiveWord] = useState({ word: "flamingo", list: "animals", insertedAt: Date.now() });
+  const [records, setRecords] = useState(MOCK_RECORDS);
+
+  return (
+    <>
+      <PopupHeader/>
+      <Tabs active={tab} onChange={setTab}/>
+      <main>
+        {tab === "play"     && <PlayTab activeWord={activeWord} setActiveWord={setActiveWord}/>}
+        {tab === "stats"    && <StatsTab records={records} setRecords={setRecords}/>}
+        {tab === "settings" && <SettingsTab/>}
+        {tab === "rules"    && <RulesTab/>}
+      </main>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+
+</body>
+</html>

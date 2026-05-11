@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { height: 240px; padding: 28px 28px; }
+.row { gap: 18px; align-items: center; }
+.tile { width: 110px; height: 90px; background: var(--wh-surface); border: 1px solid var(--wh-border); border-radius: var(--wh-radius-3); display: flex; align-items: center; justify-content: center; font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-2); }
+.col-item { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+.col-item .name { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); }
+.col-item .val { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg); font-weight: 600; }
+</style></head><body>
+  <div class="label-eyebrow">Elevation · shadows</div>
+  <div class="row">
+    <div class="col-item"><div class="tile" style="box-shadow: var(--wh-shadow-1)">flat</div><span class="val">shadow-1</span><span class="name">on-page</span></div>
+    <div class="col-item"><div class="tile" style="box-shadow: var(--wh-shadow-2)">raised</div><span class="val">shadow-2</span><span class="name">cards, menus</span></div>
+    <div class="col-item"><div class="tile" style="box-shadow: var(--wh-shadow-3)">overlay</div><span class="val">shadow-3</span><span class="name">celebration popup</span></div>
+    <div class="col-item"><div class="tile" style="box-shadow: var(--wh-shadow-glow); border-color: var(--wh-primary)">focus</div><span class="val">shadow-glow</span><span class="name">always 4px primary</span></div>
+    <div class="col-item"><div class="tile" style="box-shadow: var(--wh-shadow-glow-found); border-color: var(--wh-found)">found</div><span class="val">shadow-glow-found</span><span class="name">celebration ring</span></div>
+  </div>
+</body></html>

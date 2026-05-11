@@ -1,0 +1,23 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { height: 240px; padding: 24px 28px; }
+.row { gap: 10px; }
+.line { display: flex; align-items: center; gap: 14px; padding: 10px 12px; background: var(--wh-surface); border: 1px solid var(--wh-border); border-radius: var(--wh-radius-2); }
+.line .name { font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg); width: 130px; }
+.line .desc { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-3); flex: 1; }
+.line .val { font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-2); }
+.dot { width: 14px; height: 14px; border-radius: 999px; background: var(--wh-primary); }
+.dot-anim { animation: pulse 1.6s var(--wh-ease-standard) infinite; }
+@keyframes pulse { 0%,100% { transform: translateX(0) } 50% { transform: translateX(180px) } }
+.dot-pop { animation: pop 1.2s var(--wh-ease-pop) infinite; background: var(--wh-found); }
+@keyframes pop { 0%,100% { transform: scale(1) } 50% { transform: scale(1.4) } }
+.track { height: 14px; flex: 1; position: relative; }
+.track .dot { position: absolute; top: 0; left: 0; }
+</style></head><body>
+  <div class="label-eyebrow">Motion</div>
+  <div class="col">
+    <div class="line"><span class="name">ease-standard</span><div class="track"><div class="dot dot-anim"></div></div><span class="val">200ms</span></div>
+    <div class="line"><span class="name">ease-pop</span><span class="desc">overshoot — celebration only</span><div class="dot dot-pop"></div><span class="val">360ms</span></div>
+    <div class="line"><span class="name">durations</span><span class="desc">fast 120 · base 200 · slow 360</span><span class="val">ms</span></div>
+    <div class="line"><span class="name">enter pattern</span><span class="desc">opacity 0→1 + translateY 4px → 0</span><span class="val">never fade-only</span></div>
+  </div>
+</body></html>

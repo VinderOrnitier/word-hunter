@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { height: 200px; padding: 28px 28px; }
+.row { gap: 16px; align-items: center; }
+.shape { background: var(--wh-surface-2); border: 1px solid var(--wh-border); width: 96px; height: 72px; display: flex; align-items: center; justify-content: center; font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-2); }
+.col-item { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.col-item .name { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); }
+.col-item .val { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg); font-weight: 600; }
+</style></head><body>
+  <div class="label-eyebrow">Radii</div>
+  <div class="row">
+    <div class="col-item"><div class="shape" style="border-radius: 4px">4</div><span class="val">radius-1</span><span class="name">chips, tags</span></div>
+    <div class="col-item"><div class="shape" style="border-radius: 8px">8</div><span class="val">radius-2</span><span class="name">inputs, buttons</span></div>
+    <div class="col-item"><div class="shape" style="border-radius: 12px">12</div><span class="val">radius-3</span><span class="name">cards</span></div>
+    <div class="col-item"><div class="shape" style="border-radius: 16px">16</div><span class="val">radius-4</span><span class="name">large surfaces</span></div>
+    <div class="col-item"><div class="shape" style="border-radius: 999px; width: 96px">∞</div><span class="val">radius-pill</span><span class="name">pills, dots</span></div>
+  </div>
+</body></html>

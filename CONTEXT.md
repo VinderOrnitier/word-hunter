@@ -53,6 +53,37 @@ _Avoid_: stat entry, find record, discovery
 > **Dev:** "What if the page has no Paragraph?"
 > **Domain expert:** "No HiddenWord is inserted. The player sees a notification explaining why."
 
+## UI Architecture
+
+**DesignToken**:
+A named CSS custom property representing a single design value (color, spacing, radius, typography). All visual values flow through tokens — never hardcoded. Enables full theme swap by replacing one CSS block.
+_Avoid_: variable, CSS var, style value
+
+**Theme**:
+A named set of `DesignTokens` applied via a `data-theme` attribute on the root element. Default theme: dark. Color scheme may change — the rest of the system is theme-agnostic.
+_Avoid_: color scheme, skin, style set
+
+**AtomComponent**:
+A base reusable UI primitive in the internal component library (e.g. `Button`, `Input`, `Card`, `Badge`, `Modal`). Takes props, renders consistently across all tabs and future features.
+_Avoid_: component, widget, UI element
+
+**NavElement**:
+A custom-designed button or switcher unique to a specific tab or page. Has a visually distinct design compared to generic `AtomComponents`, but still consumes `DesignTokens`.
+_Avoid_: custom button, tab control, switcher
+
+**ComponentLibrary**:
+The internal set of `AtomComponents` and `NavElements` shared across all tabs and future features. Built on Preact + Tailwind v4. Extensible by design.
+_Avoid_: design system, UI kit, component set
+
+## UI Architecture decisions
+
+- **Framework**: Preact (React-compatible, 3 KB) for popup UI. Content scripts remain vanilla TypeScript.
+- **Styling**: Tailwind CSS v4 (CSS-first config, native CSS custom properties) + internal `ComponentLibrary`.
+- **Theming**: All colors/spacing/radius via `DesignTokens` (CSS custom properties). Theme swap = replace one CSS block.
+- **Navigation**: State-based (`useState`) within Preact. No router. `NavElements` accept `onNavigate` callback — not bound to URL.
+- **Layout**: Flex/grid throughout. No hardcoded `px` inside components. Popup container dimensions can grow freely.
+- **Extensibility**: `ComponentLibrary` is the first thing built. All future tabs/popups/forms consume it.
+
 ## Flagged ambiguities
 
 - "word" was used loosely to mean both the string candidate and the thing currently being searched — resolved: `Word` (candidate) vs `ActiveWord` (what's live).

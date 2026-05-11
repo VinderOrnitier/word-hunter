@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { height: 240px; padding: 22px 28px; }
+table { width: 100%; border-collapse: collapse; font-family: var(--wh-font-sans); font-size: 12px; }
+th { text-align: left; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); padding: 0 10px 8px; border-bottom: 1px solid var(--wh-border); }
+td { padding: 10px; border-bottom: 1px solid var(--wh-border-soft); color: var(--wh-fg-2); }
+tr:hover td { background: var(--wh-surface-2); color: var(--wh-fg); }
+.word { font-family: var(--wh-font-mono); color: var(--wh-fg); font-weight: 500; }
+.dot { width: 6px; height: 6px; border-radius: 999px; display: inline-block; margin-right: 6px; }
+.meta { font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-3); }
+.link { color: var(--wh-hint); text-decoration: none; }
+.hint-yes { color: var(--wh-hint); font-size: 10px; font-weight: 600; }
+.hint-no { color: var(--wh-fg-3); font-size: 10px; }
+</style></head><body>
+  <div class="label-eyebrow">Stats — table rows</div>
+  <table>
+    <thead><tr><th>Word</th><th>Found</th><th>Duration</th><th>Hint</th><th>Page</th></tr></thead>
+    <tbody>
+      <tr><td><span class="dot" style="background: var(--wh-list-animals)"></span><span class="word">flamingo</span></td><td class="meta">2 min ago</td><td class="meta">14s</td><td><span class="hint-no">—</span></td><td><a class="link">en.wikipedia.org</a></td></tr>
+      <tr><td><span class="dot" style="background: var(--wh-list-pokemon)"></span><span class="word">Pikachu</span></td><td class="meta">today, 9:14</td><td class="meta">2m 03s</td><td><span class="hint-yes">used</span></td><td><a class="link">substack.com</a></td></tr>
+      <tr><td><span class="dot" style="background: var(--wh-fg-3)"></span><span class="word">otter</span></td><td class="meta">yesterday</td><td class="meta">42s</td><td><span class="hint-no">—</span></td><td><a class="link">nytimes.com</a></td></tr>
+      <tr><td><span class="dot" style="background: var(--wh-list-animals)"></span><span class="word">wolf</span></td><td class="meta">3 days ago</td><td class="meta">8s</td><td><span class="hint-no">—</span></td><td><a class="link">arxiv.org</a></td></tr>
+    </tbody>
+  </table>
+</body></html>

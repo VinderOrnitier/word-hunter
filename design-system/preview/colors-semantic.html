@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { height: 220px; }
+.row { gap: 10px; }
+.swatch .chip { height: 70px; display: flex; align-items: center; justify-content: center; font-family: var(--wh-font-sans); font-size: 12px; font-weight: 600; }
+.list-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--wh-surface); border: 1px solid var(--wh-border-soft); border-radius: var(--wh-radius-2); }
+.list-row .dot { width: 8px; height: 8px; border-radius: 999px; }
+.list-row .name { font-family: var(--wh-font-sans); font-weight: 600; font-size: 13px; color: var(--wh-fg); }
+.list-row .word { font-family: var(--wh-font-mono); font-size: 12px; color: var(--wh-fg-3); margin-left: auto; }
+</style></head><body>
+  <div class="label-eyebrow">Word-list theming</div>
+  <div class="col" style="gap: 10px">
+    <div class="row" style="gap:10px">
+      <div class="list-row" style="flex:1"><span class="dot" style="background: var(--wh-list-animals)"></span><span class="name">Animals</span><span class="word">cat · fox · owl · …</span></div>
+      <div class="list-row" style="flex:1"><span class="dot" style="background: var(--wh-list-pokemon)"></span><span class="name">Pokémon</span><span class="word">Pikachu · Eevee · …</span></div>
+      <div class="list-row" style="flex:1"><span class="dot" style="background: var(--wh-fg-3)"></span><span class="name">Custom</span><span class="word">your word here</span></div>
+    </div>
+    <div class="row" style="gap:10px; margin-top: 8px">
+      <div class="swatch"><div class="chip" style="background: var(--wh-found-soft); color: var(--wh-found); border: 1px solid var(--wh-found)">Found tint</div><span class="val">--wh-found-soft</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--wh-hint-soft); color: var(--wh-hint); border: 1px solid var(--wh-hint)">Hint tint</div><span class="val">--wh-hint-soft</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--wh-primary-soft); color: var(--wh-primary); border: 1px solid var(--wh-primary)">Primary tint</div><span class="val">--wh-primary-soft</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--wh-danger-soft); color: var(--wh-danger); border: 1px solid var(--wh-danger)">Danger tint</div><span class="val">--wh-danger-soft</span></div>
+    </div>
+  </div>
+</body></html>

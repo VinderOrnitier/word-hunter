@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { height: 220px; padding: 24px 28px; }
+.row { gap: 10px; flex-wrap: wrap; align-items: center; }
+button { font-family: var(--wh-font-sans); font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: var(--wh-radius-2); border: 1px solid transparent; cursor: pointer; transition: all var(--wh-dur-base) var(--wh-ease-standard); }
+.btn-primary { background: var(--wh-primary); color: var(--wh-on-primary); }
+.btn-primary:hover { background: #FFDC5C; }
+.btn-secondary { background: var(--wh-surface-2); color: var(--wh-fg); border-color: var(--wh-border); }
+.btn-secondary:hover { background: var(--wh-surface-3); }
+.btn-ghost { background: transparent; color: var(--wh-fg-2); }
+.btn-ghost:hover { background: var(--wh-surface-2); color: var(--wh-fg); }
+.btn-danger { background: var(--wh-danger-soft); color: var(--wh-danger); border-color: var(--wh-danger); }
+.btn-focus { box-shadow: var(--wh-shadow-glow); }
+.btn-disabled { opacity: 0.45; cursor: not-allowed; }
+.size-sm { font-size: 11px; padding: 6px 10px; }
+.size-lg { font-size: 14px; padding: 11px 18px; }
+.legend { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); margin-top: 12px; }
+</style></head><body>
+  <div class="label-eyebrow">Buttons</div>
+  <div class="row">
+    <button class="btn-primary">New word</button>
+    <button class="btn-secondary">Change list</button>
+    <button class="btn-ghost">Cancel</button>
+    <button class="btn-secondary btn-focus">Focused</button>
+    <button class="btn-danger">Clear stats</button>
+    <button class="btn-primary btn-disabled">Disabled</button>
+  </div>
+  <div class="row" style="margin-top: 14px">
+    <button class="btn-primary size-sm">Small</button>
+    <button class="btn-primary">Default</button>
+    <button class="btn-primary size-lg">Large</button>
+  </div>
+  <div class="legend">primary reserved for the hunt action · ghost for cancel · focus is always primary glow</div>
+</body></html>

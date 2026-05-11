@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { height: 240px; padding: 24px 28px; }
+.row { gap: 14px; align-items: stretch; }
+.card { background: var(--wh-surface); border: 1px solid var(--wh-border); border-radius: var(--wh-radius-3); padding: 16px; box-shadow: var(--wh-shadow-2); flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.eyebrow { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+.word { font-family: var(--wh-font-mono); font-size: 22px; font-weight: 700; color: var(--wh-fg); letter-spacing: -0.01em; }
+.word .hl { background-image: linear-gradient(180deg, transparent 0, transparent 55%, var(--wh-primary) 55%, var(--wh-primary) 92%, transparent 92%); padding: 0 2px; }
+.meta { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-3); display: flex; gap: 10px; }
+.meta .dot { color: var(--wh-fg-4); }
+.divider { height: 1px; background: var(--wh-border-soft); }
+.actions { display: flex; gap: 8px; }
+.btn { font-family: var(--wh-font-sans); font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: var(--wh-radius-2); border: 1px solid transparent; cursor: pointer; }
+.btn-primary { background: var(--wh-primary); color: var(--wh-on-primary); }
+.btn-secondary { background: var(--wh-surface-2); color: var(--wh-fg); border-color: var(--wh-border); }
+</style></head><body>
+  <div class="label-eyebrow">Card · active hunt</div>
+  <div class="row">
+    <div class="card">
+      <span class="eyebrow">Active word</span>
+      <span class="word">flamingo</span>
+      <div class="meta"><span>From Animals</span><span class="dot">·</span><span>Hunting for 2 min 14 s</span></div>
+      <div class="divider"></div>
+      <div class="actions">
+        <button class="btn btn-primary">New word</button>
+        <button class="btn btn-secondary">Change list</button>
+      </div>
+    </div>
+  </div>
+</body></html>

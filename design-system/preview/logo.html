@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { padding: 32px; height: 220px; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
+.lockup { display: flex; align-items: center; gap: 20px; }
+.glyph { width: 72px; height: 72px; }
+.wordmark-box { display: flex; flex-direction: column; gap: 4px; }
+.wordmark { font-family: var(--wh-font-sans); font-weight: 700; font-size: 38px; letter-spacing: -0.01em; color: var(--wh-fg); }
+.tag { font-family: var(--wh-font-serif); font-style: italic; font-size: 14px; color: var(--wh-fg-3); letter-spacing: 0.01em; }
+.divider { height: 1px; background: var(--wh-border); }
+.row { display: flex; gap: 24px; align-items: center; }
+.row .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); width: 70px; }
+.glyph-mini { width: 32px; height: 32px; border-radius: 7px; }
+</style></head><body>
+  <div class="lockup">
+    <img class="glyph" src="../assets/glyph.svg" alt="">
+    <div class="wordmark-box">
+      <span class="wordmark">Word Hunter</span>
+      <span class="tag">— hunt the word hidden in the page —</span>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="row">
+    <span class="label">Glyph</span>
+    <img class="glyph-mini" src="../assets/glyph.svg" alt="">
+    <img class="glyph-mini" src="../assets/icon48.png" alt="" style="opacity:0.55">
+    <span style="font-size:11px;color:var(--wh-fg-3);font-family:var(--wh-font-mono)">designed → existing placeholder</span>
+  </div>
+</body></html>

@@ -1,0 +1,25 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { height: 180px; padding: 24px 28px; }
+.row { gap: 8px; flex-wrap: wrap; align-items: center; }
+.badge { font-family: var(--wh-font-sans); font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: var(--wh-radius-pill); border: 1px solid transparent; display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 6px; height: 6px; border-radius: 999px; }
+.b-animals { background: var(--wh-found-soft); color: var(--wh-found); border-color: rgba(94,227,161,0.4); }
+.b-pokemon { background: rgba(255,138,194,0.15); color: var(--wh-list-pokemon); border-color: rgba(255,138,194,0.4); }
+.b-custom { background: var(--wh-surface-2); color: var(--wh-fg-2); border-color: var(--wh-border); }
+.b-hint { background: var(--wh-hint-soft); color: var(--wh-hint); border-color: rgba(138,180,255,0.4); }
+.b-found { background: var(--wh-primary-soft); color: var(--wh-primary); border-color: rgba(255,210,63,0.4); }
+.b-active { background: var(--wh-fg); color: var(--wh-bg); }
+</style></head><body>
+  <div class="label-eyebrow">Badges & chips</div>
+  <div class="row">
+    <span class="badge b-animals"><span class="dot" style="background: var(--wh-list-animals)"></span>Animals</span>
+    <span class="badge b-pokemon"><span class="dot" style="background: var(--wh-list-pokemon)"></span>Pokémon</span>
+    <span class="badge b-custom"><span class="dot" style="background: var(--wh-fg-3)"></span>Custom</span>
+    <span class="badge b-hint">hint used</span>
+    <span class="badge b-found">no hint</span>
+    <span class="badge b-active">Active</span>
+  </div>
+  <div class="row" style="margin-top: 18px; font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-3)">
+    list dots use --wh-list-* · status pills use semantic tints · "Active" is the sole solid pill (rare)
+  </div>
+</body></html>

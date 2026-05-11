@@ -1,0 +1,247 @@
+/* ============================================================
+   Word Hunter — Color & Type Foundations
+   Dark-first, "highlighter on slate" aesthetic.
+   ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap");
+
+:root {
+  /* ---------- Color: surfaces (dark, default) ---------- */
+  --wh-bg:           #0B0F19;   /* page / popup background */
+  --wh-surface:      #151B2C;   /* cards, panels */
+  --wh-surface-2:    #1F2740;   /* raised elements, inputs */
+  --wh-surface-3:    #2A334D;   /* hover, active */
+  --wh-border:       #2A334D;   /* hairline borders */
+  --wh-border-soft:  #1C2238;   /* very subtle dividers */
+
+  /* ---------- Color: foreground ---------- */
+  --wh-fg:           #E8ECF6;   /* primary text */
+  --wh-fg-2:         #B6BED4;   /* secondary text */
+  --wh-fg-3:         #8C95B0;   /* tertiary / metadata */
+  --wh-fg-4:         #5C6480;   /* placeholder / disabled */
+  --wh-on-primary:   #1A1405;   /* text on yellow primary */
+
+  /* ---------- Color: brand & accents ---------- */
+  --wh-primary:      #FFD23F;   /* "highlighter" yellow — the hunt */
+  --wh-primary-dim:  #C99F23;
+  --wh-primary-soft: rgba(255, 210, 63, 0.18);
+
+  --wh-found:        #5EE3A1;   /* celebration / success */
+  --wh-found-soft:   rgba(94, 227, 161, 0.15);
+
+  --wh-hint:         #8AB4FF;   /* hint tooltip accent */
+  --wh-hint-soft:    rgba(138, 180, 255, 0.16);
+
+  --wh-danger:       #FF6B6B;
+  --wh-danger-soft:  rgba(255, 107, 107, 0.15);
+
+  /* ---------- WordList theming ---------- */
+  --wh-list-animals: #5EE3A1;   /* mint — natural */
+  --wh-list-pokemon: #FF8AC2;   /* pink — playful */
+
+  /* ---------- Spacing scale (4px base) ---------- */
+  --wh-space-0: 0;
+  --wh-space-1: 4px;
+  --wh-space-2: 8px;
+  --wh-space-3: 12px;
+  --wh-space-4: 16px;
+  --wh-space-5: 20px;
+  --wh-space-6: 24px;
+  --wh-space-8: 32px;
+  --wh-space-10: 40px;
+  --wh-space-12: 48px;
+
+  /* ---------- Radii ---------- */
+  --wh-radius-1: 4px;    /* chips, tags */
+  --wh-radius-2: 8px;    /* inputs, buttons */
+  --wh-radius-3: 12px;   /* cards */
+  --wh-radius-4: 16px;   /* large surfaces */
+  --wh-radius-pill: 999px;
+
+  /* ---------- Shadow / elevation ---------- */
+  --wh-shadow-1: 0 1px 0 rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.25);
+  --wh-shadow-2: 0 4px 14px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.03) inset;
+  --wh-shadow-3: 0 16px 40px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.3);
+  --wh-shadow-glow: 0 0 0 4px var(--wh-primary-soft);
+  --wh-shadow-glow-found: 0 0 0 4px var(--wh-found-soft);
+
+  /* ---------- Type: families ---------- */
+  --wh-font-sans: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --wh-font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --wh-font-serif: "Fraunces", Georgia, "Times New Roman", serif;  /* used sparingly for editorial moments */
+
+  /* ---------- Type: scale ---------- */
+  --wh-text-xs:   11px;
+  --wh-text-sm:   12px;
+  --wh-text-base: 14px;   /* popup default — dense surface */
+  --wh-text-md:   16px;
+  --wh-text-lg:   18px;
+  --wh-text-xl:   22px;
+  --wh-text-2xl:  28px;
+  --wh-text-3xl:  36px;
+  --wh-text-4xl:  48px;
+
+  /* ---------- Type: weights ---------- */
+  --wh-weight-regular:  400;
+  --wh-weight-medium:   500;
+  --wh-weight-semibold: 600;
+  --wh-weight-bold:     700;
+
+  /* ---------- Type: tracking & leading ---------- */
+  --wh-tracking-tight: -0.01em;
+  --wh-tracking-snug:  -0.005em;
+  --wh-tracking-wide:   0.04em;
+  --wh-tracking-caps:   0.08em;
+
+  --wh-leading-tight: 1.15;
+  --wh-leading-snug:  1.3;
+  --wh-leading-body:  1.5;
+  --wh-leading-loose: 1.7;
+
+  /* ---------- Motion ---------- */
+  --wh-ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --wh-ease-out:      cubic-bezier(0.16, 1, 0.3, 1);
+  --wh-ease-pop:      cubic-bezier(0.34, 1.56, 0.64, 1);
+  --wh-dur-fast:      120ms;
+  --wh-dur-base:      200ms;
+  --wh-dur-slow:      360ms;
+
+  /* ---------- Layout ---------- */
+  --wh-popup-width: 360px;     /* recommended popup width (the existing 320 is tight) */
+  --wh-popup-min-h: 440px;
+}
+
+/* ============================================================
+   Semantic typography — apply these classes (or use as patterns)
+   ============================================================ */
+
+.wh-display {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-3xl);
+  font-weight: var(--wh-weight-bold);
+  line-height: var(--wh-leading-tight);
+  letter-spacing: var(--wh-tracking-tight);
+  color: var(--wh-fg);
+}
+
+.wh-h1 {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-2xl);
+  font-weight: var(--wh-weight-bold);
+  line-height: var(--wh-leading-tight);
+  letter-spacing: var(--wh-tracking-tight);
+  color: var(--wh-fg);
+}
+
+.wh-h2 {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-xl);
+  font-weight: var(--wh-weight-semibold);
+  line-height: var(--wh-leading-snug);
+  letter-spacing: var(--wh-tracking-snug);
+  color: var(--wh-fg);
+}
+
+.wh-h3 {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-md);
+  font-weight: var(--wh-weight-semibold);
+  line-height: var(--wh-leading-snug);
+  color: var(--wh-fg);
+}
+
+.wh-body {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-base);
+  font-weight: var(--wh-weight-regular);
+  line-height: var(--wh-leading-body);
+  color: var(--wh-fg);
+}
+
+.wh-body-sm {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-sm);
+  font-weight: var(--wh-weight-regular);
+  line-height: var(--wh-leading-body);
+  color: var(--wh-fg-2);
+}
+
+.wh-meta {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-xs);
+  font-weight: var(--wh-weight-medium);
+  line-height: var(--wh-leading-snug);
+  color: var(--wh-fg-3);
+  letter-spacing: var(--wh-tracking-wide);
+}
+
+.wh-eyebrow {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-xs);
+  font-weight: var(--wh-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--wh-tracking-caps);
+  color: var(--wh-fg-3);
+}
+
+.wh-word {
+  /* The word itself — list items, current word, found-word badge. */
+  font-family: var(--wh-font-mono);
+  font-size: var(--wh-text-md);
+  font-weight: var(--wh-weight-medium);
+  letter-spacing: 0;
+  color: var(--wh-fg);
+}
+
+.wh-word-display {
+  /* Bigger treatment for the active word. */
+  font-family: var(--wh-font-mono);
+  font-size: var(--wh-text-2xl);
+  font-weight: var(--wh-weight-bold);
+  letter-spacing: var(--wh-tracking-tight);
+  color: var(--wh-fg);
+}
+
+.wh-editorial {
+  /* Reserved for one moment per surface — the "hunt" metaphor. */
+  font-family: var(--wh-font-serif);
+  font-size: var(--wh-text-xl);
+  font-weight: 400;
+  font-style: italic;
+  line-height: var(--wh-leading-snug);
+  color: var(--wh-fg-2);
+}
+
+/* ============================================================
+   Highlighter — the brand's signature treatment.
+   Apply to any inline text to evoke the "found word" feeling.
+   ============================================================ */
+
+/* Highlighter stripe — thin (~22% of line height), sits low under the
+   x-height baseline. Works on both dark and light backgrounds because
+   the warm yellow has high luminance against either. The stripe is
+   intentionally narrow so it reads as a marker underline, not a fill. */
+.wh-highlight {
+  background-image: linear-gradient(
+    180deg,
+    transparent 0,
+    transparent 74%,
+    var(--wh-primary) 74%,
+    var(--wh-primary) 96%,
+    transparent 96%
+  );
+  padding: 0 1px;
+  color: inherit;             /* inherit so it works on light or dark backgrounds */
+  border-radius: 1px;
+}
+
+.wh-highlight--found {
+  background-image: linear-gradient(
+    180deg,
+    transparent 0,
+    transparent 74%,
+    var(--wh-found) 74%,
+    var(--wh-found) 96%,
+    transparent 96%
+  );
+}
