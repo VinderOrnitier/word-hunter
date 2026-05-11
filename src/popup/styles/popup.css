@@ -425,3 +425,33 @@
   color: var(--wh-fg-3);
   text-align: center;
 }
+
+/* ---------- SettingsTab ---------- */
+
+.wh-settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wh-space-3);
+}
+
+.wh-settings__input-row {
+  display: flex;
+  align-items: center;
+  gap: var(--wh-space-2);
+}
+
+.wh-settings__input-cell {
+  width: 90px;
+}
+
+.wh-settings__unit {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-sm);
+  color: var(--wh-fg-3);
+}
+
+.wh-settings__divider {
+  height: 1px;
+  background: var(--wh-border-soft);
+  margin: var(--wh-space-1) 0;
+}

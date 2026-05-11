@@ -4,6 +4,7 @@ import { PopupHeader } from "./components/PopupHeader";
 import { Tabs, type TabId } from "./components/Tabs";
 import { PlayTab } from "./tabs/PlayTab";
 import { StatsTab } from "./tabs/StatsTab";
+import { SettingsTab } from "./tabs/SettingsTab";
 
 function TabStub({ label }: { label: string }): JSX.Element {
   return (
@@ -34,7 +35,7 @@ export function App(): JSX.Element {
         )}
         {active === "settings" && (
           <div data-testid="tab-panel-settings">
-            <TabStub label="Settings" />
+            <SettingsTab />
           </div>
         )}
         {active === "rules" && (
