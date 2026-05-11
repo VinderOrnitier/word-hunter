@@ -3,6 +3,7 @@ import type { JSX } from "preact";
 import { PopupHeader } from "./components/PopupHeader";
 import { Tabs, type TabId } from "./components/Tabs";
 import { PlayTab } from "./tabs/PlayTab";
+import { StatsTab } from "./tabs/StatsTab";
 
 function TabStub({ label }: { label: string }): JSX.Element {
   return (
@@ -28,7 +29,7 @@ export function App(): JSX.Element {
         )}
         {active === "stats" && (
           <div data-testid="tab-panel-stats">
-            <TabStub label="Statistics" />
+            <StatsTab />
           </div>
         )}
         {active === "settings" && (
