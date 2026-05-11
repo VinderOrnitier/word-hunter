@@ -1,4 +1,4 @@
-import type { ActiveWordChangedMessage } from "../../src/background/index";
+import type { ActiveWordChangedMessage } from "../../src/background/service-worker";
 
 type StorageChangeListener = (
   changes: Record<string, chrome.storage.StorageChange>,
@@ -37,7 +37,7 @@ describe("background script", () => {
 
   it("sends ACTIVE_WORD_CHANGED to all tabs when activeWord changes", async () => {
     const { fireStorageChange } = setupChromeMock();
-    await import("../../src/background/index");
+    await import("../../src/background/service-worker");
 
     const word = { word: "eagle", insertedAt: 9999 };
     fireStorageChange({ activeWord: { newValue: word } });
@@ -53,7 +53,7 @@ describe("background script", () => {
 
   it("sends null activeWord when activeWord is cleared", async () => {
     const { fireStorageChange } = setupChromeMock();
-    await import("../../src/background/index");
+    await import("../../src/background/service-worker");
 
     fireStorageChange({ activeWord: { oldValue: { word: "fox", insertedAt: 1 } } });
 
@@ -67,7 +67,7 @@ describe("background script", () => {
 
   it("ignores storage changes for other keys", async () => {
     const { fireStorageChange } = setupChromeMock();
-    await import("../../src/background/index");
+    await import("../../src/background/service-worker");
 
     fireStorageChange({ settings: { newValue: { hintDelayMinutes: 10 } } });
 
