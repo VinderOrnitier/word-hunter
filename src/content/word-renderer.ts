@@ -1,14 +1,18 @@
+import { h, render } from "preact";
 import type { ActiveWord } from "../shared/types";
+import { HiddenWord } from "./components/HiddenWord";
 
-const HW_WORD_CLASS = "hw-word";
-const HW_CHAR_CLASS = "hw-char";
+const HW_HOST_CLASS = "hw-host";
 
 export function WordRenderer(activeWord: ActiveWord, paragraphs: Element[]): void {
   if (paragraphs.length === 0) return;
 
   const doc = paragraphs[0].ownerDocument;
 
-  doc.querySelectorAll(`.${HW_WORD_CLASS}`).forEach((el) => el.remove());
+  doc.querySelectorAll(`.${HW_HOST_CLASS}`).forEach((el) => {
+    render(null, el);
+    el.remove();
+  });
 
   const para = paragraphs[Math.floor(Math.random() * paragraphs.length)];
 
@@ -23,7 +27,6 @@ export function WordRenderer(activeWord: ActiveWord, paragraphs: Element[]): voi
   const textNode = textNodes[Math.floor(Math.random() * textNodes.length)];
   const text = textNode.textContent ?? "";
 
-  // Collect word-boundary offsets (positions between words)
   const boundaries: number[] = [];
   const wordBoundary = /\s+/g;
   let match: RegExpExecArray | null;
@@ -34,27 +37,27 @@ export function WordRenderer(activeWord: ActiveWord, paragraphs: Element[]): voi
 
   const insertAt = boundaries[Math.floor(Math.random() * boundaries.length)];
 
-  // Build .hw-word container with inherited styles
   const computed = window.getComputedStyle(para);
-  const wordSpan = doc.createElement("span");
-  wordSpan.className = HW_WORD_CLASS;
-  wordSpan.style.fontFamily = computed.fontFamily;
-  wordSpan.style.fontSize = computed.fontSize;
-  wordSpan.style.color = computed.color;
-  wordSpan.style.lineHeight = computed.lineHeight;
+  const host = doc.createElement("span");
+  host.className = HW_HOST_CLASS;
 
-  for (const char of activeWord.word) {
-    const charSpan = doc.createElement("span");
-    charSpan.className = HW_CHAR_CLASS;
-    charSpan.setAttribute("data-char", char);
-    charSpan.appendChild(doc.createTextNode(""));
-    wordSpan.appendChild(charSpan);
-  }
-
-  // Split the text node and insert the word span between the two halves
   const parent = textNode.parentNode!;
   parent.insertBefore(doc.createTextNode(text.slice(0, insertAt)), textNode);
-  parent.insertBefore(wordSpan, textNode);
+  parent.insertBefore(host, textNode);
   parent.insertBefore(doc.createTextNode(text.slice(insertAt)), textNode);
   parent.removeChild(textNode);
+
+  render(
+    h(HiddenWord, {
+      word: activeWord.word,
+      found: false,
+      inheritedStyle: {
+        fontFamily: computed.fontFamily,
+        fontSize: computed.fontSize,
+        color: computed.color,
+        lineHeight: computed.lineHeight,
+      },
+    }),
+    host
+  );
 }

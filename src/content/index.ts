@@ -1,3 +1,5 @@
+import "../shared/styles/tokens.css";
+import "./styles/overlay.css";
 import { getActiveWord, getSettings } from "../shared/storage";
 import { ParagraphSelector } from "./paragraph-selector";
 import { WordRenderer } from "./word-renderer";

@@ -8,7 +8,7 @@ import "@fontsource/jetbrains-mono/500.css";
 import "@fontsource/jetbrains-mono/700.css";
 import "@fontsource/fraunces/400-italic.css";
 import "@fontsource/fraunces/600-italic.css";
-import "./styles/tokens.css";
+import "../shared/styles/tokens.css";
 import "./styles/popup.css";
 import { App } from "./App";
 
