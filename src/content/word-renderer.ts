@@ -1,10 +1,18 @@
 import { h, render } from "preact";
-import type { ActiveWord } from "../shared/types";
-import { HiddenWord } from "./components/HiddenWord";
+import type { ActiveWord, HuntRecord } from "../shared/types";
+import { HiddenWordHost } from "./components/HiddenWordHost";
 
 const HW_HOST_CLASS = "hw-host";
 
-export function WordRenderer(activeWord: ActiveWord, paragraphs: Element[]): void {
+export interface WordRendererOptions {
+  onFind?: (record: HuntRecord) => void | Promise<void>;
+}
+
+export function WordRenderer(
+  activeWord: ActiveWord,
+  paragraphs: Element[],
+  options: WordRendererOptions = {}
+): void {
   if (paragraphs.length === 0) return;
 
   const doc = paragraphs[0].ownerDocument;
@@ -48,9 +56,9 @@ export function WordRenderer(activeWord: ActiveWord, paragraphs: Element[]): voi
   parent.removeChild(textNode);
 
   render(
-    h(HiddenWord, {
-      word: activeWord.word,
-      found: false,
+    h(HiddenWordHost, {
+      activeWord,
+      onFind: options.onFind ?? (() => {}),
       inheritedStyle: {
         fontFamily: computed.fontFamily,
         fontSize: computed.fontSize,

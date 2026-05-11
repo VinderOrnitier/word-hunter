@@ -1,6 +1,6 @@
 import "../shared/styles/tokens.css";
 import "./styles/overlay.css";
-import { getActiveWord, getSettings } from "../shared/storage";
+import { getActiveWord, getSettings, saveFind } from "../shared/storage";
 import { ParagraphSelector } from "./paragraph-selector";
 import { WordRenderer } from "./word-renderer";
 import { HintTimer } from "./hint-timer";
@@ -20,7 +20,7 @@ async function inject(): Promise<void> {
   }
 
   timer.cancel();
-  WordRenderer(activeWord, paragraphs);
+  WordRenderer(activeWord, paragraphs, { onFind: saveFind });
   const settings = await getSettings();
   timer.start(settings.hintDelayMinutes);
 }

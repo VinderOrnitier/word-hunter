@@ -119,3 +119,93 @@
   border-radius: var(--wh-radius-pill);
   background: var(--wh-fg-3);
 }
+
+/* ============================================================
+   Celebration popup — fullscreen overlay + centered modal
+   ============================================================ */
+
+@keyframes hw-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.hw-celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.18);
+  animation: hw-fade var(--wh-dur-base) var(--wh-ease-standard) both;
+}
+
+.hw-celebration__modal {
+  display: flex;
+  align-items: center;
+  gap: var(--wh-space-3);
+  min-width: 240px;
+  padding: var(--wh-space-4) var(--wh-space-4);
+  background: rgba(11, 15, 25, 0.92);
+  border: 1px solid var(--wh-found);
+  border-radius: var(--wh-radius-3);
+  box-shadow: var(--wh-shadow-3), var(--wh-shadow-glow-found);
+  backdrop-filter: blur(12px);
+  animation: hw-pop var(--wh-dur-slow) var(--wh-ease-pop) both;
+}
+
+.hw-celebration__art {
+  flex: 0 0 auto;
+  width: 84px;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  line-height: 1;
+  border-radius: var(--wh-radius-2);
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-border);
+  overflow: hidden;
+}
+
+.hw-celebration__art-img {
+  max-width: 100px;
+  max-height: 100px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.hw-celebration__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wh-space-1);
+  min-width: 0;
+}
+
+.hw-celebration__headline {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-xl);
+  font-weight: var(--wh-weight-bold);
+  color: var(--wh-found);
+}
+
+.hw-celebration__word {
+  font-family: var(--wh-font-mono);
+  font-size: var(--wh-text-md);
+  font-weight: var(--wh-weight-semibold);
+  color: var(--wh-fg);
+}
+
+.hw-celebration__meta {
+  display: flex;
+  gap: var(--wh-space-3);
+  font-family: var(--wh-font-mono);
+  font-size: var(--wh-text-xs);
+  color: var(--wh-fg-3);
+}
+
+.hw-celebration__meta-sep {
+  color: var(--wh-fg-4);
+}
