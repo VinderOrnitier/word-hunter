@@ -17,9 +17,15 @@
 .wh-header {
   display: flex;
   align-items: center;
-  gap: var(--wh-space-3);
+  justify-content: space-between;
   padding: var(--wh-space-4) var(--wh-space-4);
   border-bottom: 1px solid var(--wh-border-soft);
+}
+
+.wh-header__lockup {
+  display: flex;
+  align-items: center;
+  gap: var(--wh-space-3);
 }
 
 .wh-header__glyph {
@@ -32,6 +38,30 @@
   font-weight: var(--wh-weight-bold);
   letter-spacing: var(--wh-tracking-tight);
   color: var(--wh-fg);
+}
+
+.wh-header__rules-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: var(--wh-radius-2);
+  background: transparent;
+  color: var(--wh-fg-3);
+  cursor: pointer;
+  transition: background var(--wh-dur-base) var(--wh-ease-standard),
+    color var(--wh-dur-base) var(--wh-ease-standard);
+}
+
+.wh-header__rules-btn:hover {
+  background: var(--wh-surface-2);
+  color: var(--wh-fg);
+}
+
+.wh-header__rules-btn--active {
+  color: var(--wh-primary);
 }
 
 /* ---------- Tabs ---------- */

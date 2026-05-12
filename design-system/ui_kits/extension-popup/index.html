@@ -65,14 +65,38 @@
 <script type="text/babel">
 const { useState } = React;
 
-function PopupHeader() {
+function RulesButton({ onClick, isActive }) {
+  const [hover, setHover] = React.useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      aria-label="Rules"
+      title="Rules"
+      style={{
+        display: "flex", alignItems: "center", justifyContent: "center",
+        width: 30, height: 30, borderRadius: 6,
+        border: "none", cursor: "pointer",
+        background: isActive ? "var(--wh-surface-2)" : hover ? "var(--wh-surface-2)" : "transparent",
+        color: isActive ? "var(--wh-primary)" : hover ? "var(--wh-fg)" : "var(--wh-fg-3)",
+        transition: "background 0.15s, color 0.15s",
+        flexShrink: 0,
+      }}
+    >
+      <Icon name="info" size={16} />
+    </button>
+  );
+}
+
+function PopupHeader({ onRules, rulesActive }) {
   return (
     <header className="header">
       <div class="lockup">
         <img className="glyph" src="../../assets/glyph.svg" alt=""/>
         <span className="name">Word Hunter</span>
       </div>
-      <span className="v">v0.1.0</span>
+      <RulesButton onClick={onRules} isActive={rulesActive} />
     </header>
   );
 }
@@ -84,7 +108,7 @@ function App() {
 
   return (
     <>
-      <PopupHeader/>
+      <PopupHeader onRules={() => setTab(tab === "rules" ? "play" : "rules")} rulesActive={tab === "rules"} />
       <Tabs active={tab} onChange={setTab}/>
       <main>
         {tab === "play"     && <PlayTab activeWord={activeWord} setActiveWord={setActiveWord}/>}

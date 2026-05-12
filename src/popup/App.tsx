@@ -10,10 +10,18 @@ import { RulesTab } from "./tabs/RulesTab";
 export function App(): JSX.Element {
   const [active, setActive] = useState<TabId>("play");
 
+  function handleTabNavigate(next: TabId): void {
+    setActive(next);
+  }
+
+  function handleRules(): void {
+    setActive((prev) => (prev === "rules" ? "play" : "rules"));
+  }
+
   return (
     <div class="wh-popup">
-      <PopupHeader />
-      <Tabs active={active} onNavigate={setActive} />
+      <PopupHeader onRules={handleRules} rulesActive={active === "rules"} />
+      <Tabs active={active} onNavigate={handleTabNavigate} />
       <main class="wh-popup__main">
         {active === "play" && (
           <div data-testid="tab-panel-play">
