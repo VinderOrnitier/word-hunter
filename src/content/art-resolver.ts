@@ -1,4 +1,5 @@
 import type { WordSource } from "../shared/types";
+import { getSpriteUrl } from "../shared/pokemon-sprites";
 
 const ANIMAL_EMOJI: Record<string, string> = {
   cat: "🐱",
@@ -21,22 +22,16 @@ const ANIMAL_EMOJI: Record<string, string> = {
   peacock: "🦚",
 };
 
-export function createArtResolver(
-  pokemonImages: Record<string, string>
-): (word: string, source: WordSource | undefined) => string | undefined {
-  return function resolveArt(
-    word: string,
-    source: WordSource | undefined
-  ): string | undefined {
-    switch (source) {
-      case "animals":
-        return ANIMAL_EMOJI[word.toLowerCase()];
-      case "pokemon": {
-        const key = `../assets/pokemon/${word.toLowerCase()}.png`;
-        return pokemonImages[key] ?? pokemonImages["../assets/pokemon/_placeholder.png"];
-      }
-      default:
-        return undefined;
-    }
-  };
+export function resolveArt(
+  word: string,
+  source: WordSource | undefined
+): string | undefined {
+  switch (source) {
+    case "animals":
+      return ANIMAL_EMOJI[word.toLowerCase()];
+    case "pokemon":
+      return getSpriteUrl(word.toLowerCase()) ?? undefined;
+    default:
+      return undefined;
+  }
 }

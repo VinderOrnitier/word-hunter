@@ -1,3 +1,5 @@
+import { POKEMON_NAMES } from "../shared/pokemon-sprites";
+
 export type WordListName = "animals" | "pokemon";
 
 export const ANIMALS = [
@@ -6,11 +8,9 @@ export const ANIMALS = [
   "crocodile", "flamingo", "peacock",
 ];
 
-export const POKEMON = [
-  "Pikachu", "Bulbasaur", "Charmander", "Squirtle", "Jigglypuff", "Mewtwo",
-  "Eevee", "Snorlax", "Gengar", "Psyduck", "Machop", "Alakazam", "Magikarp",
-  "Gyarados", "Lapras", "Vaporeon", "Flareon", "Dragonite",
-];
+export const POKEMON = POKEMON_NAMES.map(
+  (n) => n.charAt(0).toUpperCase() + n.slice(1)
+);
 
 export const WORD_LISTS: Record<WordListName, string[]> = {
   animals: ANIMALS,
