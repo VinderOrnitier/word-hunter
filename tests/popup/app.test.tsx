@@ -50,12 +50,27 @@ describe("App shell", () => {
     expect(header?.textContent).toMatch(/word\s*hunter/i);
   });
 
-  it("renders four tab buttons in the navigation", () => {
+  it("renders three tab buttons in the navigation (no Rules tab)", () => {
     render(<App />);
     expect(screen.getByRole("tab", { name: /play/i })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /statistics/i })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /settings/i })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: /rules/i })).toBeInTheDocument();
+    expect(screen.queryByRole("tab", { name: /rules/i })).toBeNull();
+  });
+
+  it("shows the Rules panel when the header Rules button is clicked", () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: /rules/i }));
+    expect(screen.getByTestId("tab-panel-rules")).toBeInTheDocument();
+    expect(screen.queryByTestId("tab-panel-play")).toBeNull();
+  });
+
+  it("switches away from Rules when a tab is clicked", () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: /rules/i }));
+    fireEvent.click(screen.getByRole("tab", { name: /statistics/i }));
+    expect(screen.getByTestId("tab-panel-stats")).toBeInTheDocument();
+    expect(screen.queryByTestId("tab-panel-rules")).toBeNull();
   });
 
   it("shows the Play panel by default", () => {

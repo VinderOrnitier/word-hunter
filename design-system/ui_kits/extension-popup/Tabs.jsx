@@ -5,7 +5,6 @@ function Tabs({ active, onChange }) {
     { id: "play",     label: "Play",       icon: "search" },
     { id: "stats",    label: "Statistics", icon: "bar-chart" },
     { id: "settings", label: "Settings",   icon: "settings" },
-    { id: "rules",    label: "Rules",      icon: "info" },
   ];
   return (
     <nav style={{

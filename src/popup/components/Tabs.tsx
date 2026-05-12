@@ -4,7 +4,7 @@ import { Icon, type IconName } from "./Icon";
 export type TabId = "play" | "stats" | "settings" | "rules";
 
 interface TabDescriptor {
-  id: TabId;
+  id: Exclude<TabId, "rules">;
   label: string;
   icon: IconName;
 }
@@ -13,7 +13,6 @@ const TABS: TabDescriptor[] = [
   { id: "play", label: "Play", icon: "search" },
   { id: "stats", label: "Statistics", icon: "bar-chart" },
   { id: "settings", label: "Settings", icon: "settings" },
-  { id: "rules", label: "Rules", icon: "info" },
 ];
 
 interface TabsProps {
