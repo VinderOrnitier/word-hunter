@@ -9,7 +9,7 @@ interface CelebrationPopupProps {
   onDismiss: () => void;
 }
 
-const IMAGE_URL_RE = /^(https?:|\/|data:|\.\.?\/)/;
+const IMAGE_URL_RE = /^(https?:|chrome-extension:|\/|data:|\.\.?\/)/;
 
 export function CelebrationPopup({
   visible,

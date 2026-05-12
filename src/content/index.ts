@@ -8,11 +8,17 @@ import { NoParagraphNotification } from "./no-paragraph-notification";
 import { NavigationObserver } from "./navigation-observer";
 import { createArtResolver } from "./art-resolver";
 
-const pokemonImages = import.meta.glob<string>("../assets/pokemon/*.png", {
+const rawPokemonImages = import.meta.glob<string>("../assets/pokemon/*.png", {
   eager: true,
   query: "?url",
   import: "default",
 });
+const pokemonImages = Object.fromEntries(
+  Object.entries(rawPokemonImages).map(([key, url]) => [
+    key,
+    chrome.runtime.getURL(url.replace(/^\//, "")),
+  ])
+);
 const resolveArt = createArtResolver(pokemonImages);
 
 const timer = HintTimer(document);
