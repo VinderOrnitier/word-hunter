@@ -6,6 +6,14 @@ import { WordRenderer } from "./word-renderer";
 import { HintTimer } from "./hint-timer";
 import { NoParagraphNotification } from "./no-paragraph-notification";
 import { NavigationObserver } from "./navigation-observer";
+import { createArtResolver } from "./art-resolver";
+
+const pokemonImages = import.meta.glob<string>("../assets/pokemon/*.png", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+const resolveArt = createArtResolver(pokemonImages);
 
 const timer = HintTimer(document);
 
@@ -20,7 +28,7 @@ async function inject(): Promise<void> {
   }
 
   timer.cancel();
-  WordRenderer(activeWord, paragraphs, { onFind: saveFind });
+  WordRenderer(activeWord, paragraphs, { onFind: saveFind, resolveArt });
   const settings = await getSettings();
   timer.start(settings.hintDelayMinutes);
 }
