@@ -24,6 +24,16 @@ pnpm test     # run tests
 
 Load `dist/` as an unpacked extension in Chrome (`chrome://extensions` → Load unpacked).
 
+## AI Tooling
+
+This project was developed with [Claude Code](https://claude.ai/code) using [Matt Pocock's skills](https://skills.sh/mattpocock/skills). Skill files live in `.agents/skills/` and are tracked in git — no install needed after cloning.
+
+To update skills to their latest version:
+
+```sh
+pnpm dlx skills@latest add mattpocock/skills
+```
+
 ## Version
 
 `0.1.0` — core game loop complete, pre-release (not yet published to Chrome Web Store).

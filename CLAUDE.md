@@ -6,6 +6,7 @@
 #@.agents/skills/grill-me/SKILL.md
 #@.agents/skills/improve-codebase-architecture/SKILL.md
 #@.agents/skills/write-a-skill/SKILL.md
+#@.agents/skills/handoff/SKILL.md
 @.agents/skills/setup-matt-pocock-skills/SKILL.md
 @.agents/skills/grill-with-docs/SKILL.md
 @.agents/skills/diagnose/SKILL.md
