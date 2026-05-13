@@ -1,5 +1,9 @@
 ## Agent skills
 
+### Visual work
+
+For any UI component, layout, or visual asset — always invoke the `word-hunter-design` skill first.
+
 ### Issue tracker
 
 Issues live in GitHub Issues (`gh` CLI). See `docs/agents/issue-tracker.md`.
