@@ -1,4 +1,5 @@
 import type { JSX } from "preact";
+import placeholderUrl from "../../assets/pokemon/_placeholder.png";
 
 interface CelebrationPopupProps {
   visible: boolean;
@@ -31,7 +32,16 @@ export function CelebrationPopup({
         {art !== undefined && (
           <div class="hw-celebration__art" aria-hidden="true">
             {artIsImage ? (
-              <img class="hw-celebration__art-img" src={art} alt="" />
+              <img
+                class="hw-celebration__art-img"
+                src={art}
+                alt=""
+                onError={(e) => {
+                  const img = e.currentTarget as HTMLImageElement;
+                  img.onerror = null;
+                  img.src = placeholderUrl;
+                }}
+              />
             ) : (
               art
             )}

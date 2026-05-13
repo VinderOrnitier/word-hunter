@@ -75,6 +75,26 @@ describe("CelebrationPopup", () => {
     expect(handler).toHaveBeenCalledTimes(1);
   });
 
+  it("renders an img element with the pokemon art URL when art is an https URL", () => {
+    const pokemonUrl =
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png";
+    render(
+      <CelebrationPopup
+        visible={true}
+        word="bulbasaur"
+        durationS={5}
+        hintUsed={false}
+        art={pokemonUrl}
+        onDismiss={() => {}}
+      />
+    );
+    const img = document.querySelector(
+      ".hw-celebration__art-img"
+    ) as HTMLImageElement;
+    expect(img).not.toBeNull();
+    expect(img.getAttribute("src")).toBe(pokemonUrl);
+  });
+
   it("does not invoke onDismiss when the modal body is clicked", () => {
     const handler = jest.fn();
     render(

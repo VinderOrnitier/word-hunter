@@ -14,6 +14,7 @@ const config: Config = {
   moduleFileExtensions: ["ts", "tsx", "js"],
   moduleNameMapper: {
     "\\.(css|woff2?)$": "<rootDir>/tests/style-mock.ts",
+    "\\.(png|jpg|gif|svg)$": "<rootDir>/tests/asset-mock.ts",
     "^@testing-library/preact$":
       "<rootDir>/node_modules/@testing-library/preact/dist/cjs/index.js",
     "^@testing-library/preact/pure$":
