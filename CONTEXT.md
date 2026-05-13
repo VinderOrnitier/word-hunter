@@ -16,6 +16,10 @@ _Avoid_: current word, selected word
 A named set of `Word` candidates the player chooses from (e.g. Animals, Pokémon).
 _Avoid_: word bank, word set, category
 
+**WordSource**:
+The identifier for the origin of the `ActiveWord`: `"animals"`, `"pokemon"`, or `"custom"`. Determines which art (emoji or animated sprite) is shown in the `CelebrationPopup`.
+_Avoid_: word type, list type, category
+
 **Paragraph**:
 Any DOM element containing 50 or more words of continuous text, regardless of HTML tag. The unit into which an `ActiveWord` can be hidden.
 _Avoid_: text block, element, node

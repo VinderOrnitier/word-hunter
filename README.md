@@ -8,6 +8,7 @@ The extension picks a word from a chosen WordList and secretly hides it inside a
 
 - **WordLists** — curated sets of Words to choose from (Animals, Pokémon, etc.)
 - **HiddenWord** — inserted invisibly into page Paragraphs, bypasses Ctrl+F
+- **Per-word art** — emoji for Animals, animated Pokémon sprite (PokeAPI CDN) shown in the celebration popup
 - **HintTimer** — optional hint tooltip after a configurable delay
 - **HuntRecords** — statistics tracking per-hunt: word, duration, page, hint used
 - **SPA support** — NavigationObserver re-injects on client-side navigation

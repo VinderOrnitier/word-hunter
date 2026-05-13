@@ -120,14 +120,12 @@ Good tests verify behavior through public interfaces, not implementation details
 - Multiplayer or leaderboard
 - Support for other browsers (Firefox, Safari)
 - Inserting the word into images or video
-- Additional word lists beyond Animals and Pokémon (planned: expandable lists with per-word images, e.g. a photo of the Pokémon or animal)
-- Binding a celebration image to a specific word (planned as a future feature tied to list expansion)
+- Additional word lists beyond Animals and Pokémon
 - Localization into other languages
-- Binding a celebration image to a specific word (e.g. a photo of a cat for "cat")
 
 ## Further Notes
 
 - The extension uses Manifest V3 (current Chrome standard)
 - The content script must handle Single Page Applications: monitor navigation via `MutationObserver` or the `history` API
-- If no suitable paragraphs exist on a page, the extension shows a notification explaining why the word was not hidden; the extension popup also has a "Rules" tab explaining what qualifies as a valid paragraph
-- Celebration GIFs are stored as static assets bundled with the extension (not fetched from the internet)
+- If no suitable paragraphs exist on a page, the extension shows a notification explaining why the word was not hidden; the popup has a Rules view accessible via an icon button in the header
+- Celebration art is word-source-dependent: Animals words show an emoji, Pokémon words show an animated sprite fetched from the PokeAPI CDN (`raw.githubusercontent.com/PokeAPI/sprites/…`); a local placeholder image is shown on load failure
