@@ -22,4 +22,18 @@ describe("Input", () => {
     );
     expect(container.querySelector("input")).toHaveClass("wh-input--mono");
   });
+
+  it("applies wh-input--error class when error is true", () => {
+    const { container } = render(
+      <Input value="" onInput={() => {}} error />
+    );
+    expect(container.querySelector("input")).toHaveClass("wh-input--error");
+  });
+
+  it("does not apply wh-input--error class by default", () => {
+    const { container } = render(
+      <Input value="" onInput={() => {}} />
+    );
+    expect(container.querySelector("input")).not.toHaveClass("wh-input--error");
+  });
 });

@@ -118,6 +118,102 @@ describe("PlayTab", () => {
     });
   });
 
+  describe("custom word validation", () => {
+    it("shows a '0 / 25' counter when the custom field is empty", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+      expect(screen.getByText("0 / 25")).toBeInTheDocument();
+    });
+
+    it("updates the counter as the user types", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+      const input = screen.getByPlaceholderText(/type your own/i);
+      fireEvent.input(input, { target: { value: "dragon" } });
+      expect(screen.getByText("6 / 25")).toBeInTheDocument();
+    });
+
+    it("does not show an error while typing invalid characters before submit", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+      const input = screen.getByPlaceholderText(/type your own/i);
+      fireEvent.input(input, { target: { value: "hello123" } });
+      expect(screen.queryByText("Letters and hyphens only")).not.toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /new word/i })).not.toBeDisabled();
+    });
+
+    it("shows an error and blocks submit when invalid characters are submitted", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+      const input = screen.getByPlaceholderText(/type your own/i);
+      fireEvent.input(input, { target: { value: "hello123" } });
+      fireEvent.click(screen.getByRole("button", { name: /new word/i }));
+      expect(screen.getByText("Letters and hyphens only")).toBeInTheDocument();
+    });
+
+    it("shows an error and blocks submit when the word is too short", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+      const input = screen.getByPlaceholderText(/type your own/i);
+      fireEvent.input(input, { target: { value: "a" } });
+      fireEvent.click(screen.getByRole("button", { name: /new word/i }));
+      expect(screen.getByText("Min 2 characters")).toBeInTheDocument();
+    });
+
+    it("shows an error and blocks submit when the word exceeds 25 characters", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+      const input = screen.getByPlaceholderText(/type your own/i);
+      fireEvent.input(input, { target: { value: "superlongwordthatexceedslimit" } });
+      fireEvent.click(screen.getByRole("button", { name: /new word/i }));
+      expect(screen.getByText("Max 25 characters")).toBeInTheDocument();
+    });
+
+    it("updates the error in real-time after the first submit attempt", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+      const input = screen.getByPlaceholderText(/type your own/i);
+      fireEvent.input(input, { target: { value: "a" } });
+      fireEvent.click(screen.getByRole("button", { name: /new word/i }));
+      expect(screen.getByText("Min 2 characters")).toBeInTheDocument();
+      fireEvent.input(input, { target: { value: "hello123" } });
+      expect(screen.getByText("Letters and hyphens only")).toBeInTheDocument();
+    });
+
+    it("allows a word with a hyphen", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+      const input = screen.getByPlaceholderText(/type your own/i);
+      fireEvent.input(input, { target: { value: "self-aware" } });
+      expect(screen.queryByText(/letters and hyphens only/i)).not.toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /new word/i })).not.toBeDisabled();
+    });
+
+    it("allows words in non-Latin scripts (Cyrillic, Arabic, Japanese)", () => {
+      setupChromeMock();
+      const { unmount } = render(<PlayTab />);
+      const input = screen.getByPlaceholderText(/type your own/i);
+
+      for (const word of ["дракон", "تنين", "ドラゴン"]) {
+        fireEvent.input(input, { target: { value: word } });
+        expect(screen.queryByText(/letters and hyphens only/i)).not.toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /new word/i })).not.toBeDisabled();
+      }
+
+      unmount();
+    });
+
+    it("does not write to storage when an invalid custom word is submitted", async () => {
+      const { setMock } = setupChromeMock();
+      render(<PlayTab />);
+      const input = screen.getByPlaceholderText(/type your own/i);
+      fireEvent.input(input, { target: { value: "bad word!" } });
+      fireEvent.click(screen.getByRole("button", { name: /new word/i }));
+      await new Promise((r) => setTimeout(r, 50));
+      expect(setMock).not.toHaveBeenCalled();
+    });
+  });
+
   it("clears the ActiveWord when the Clear button is clicked", async () => {
     const active: ActiveWord = {
       word: "fox",

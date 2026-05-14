@@ -8,6 +8,7 @@ interface InputProps {
   type?: "text" | "number";
   min?: number;
   step?: number;
+  error?: boolean;
 }
 
 export function Input({
@@ -18,11 +19,12 @@ export function Input({
   type = "text",
   min,
   step,
+  error = false,
 }: InputProps): JSX.Element {
   return (
     <input
       type={type}
-      class={`wh-input${mono ? " wh-input--mono" : ""}`}
+      class={`wh-input${mono ? " wh-input--mono" : ""}${error ? " wh-input--error" : ""}`}
       value={value}
       placeholder={placeholder}
       min={min}

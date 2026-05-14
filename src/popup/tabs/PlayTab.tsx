@@ -34,11 +34,27 @@ const LIST_DOT: Record<WordSource, string> = {
   custom: "var(--wh-fg-3)",
 };
 
+const MAX_CUSTOM_LEN = 25;
+const VALID_CUSTOM_RE = /^[\p{L}-]+$/u;
+
+function getCustomError(value: string): string | undefined {
+  if (!value) return undefined;
+  if (!VALID_CUSTOM_RE.test(value)) return "Letters and hyphens only";
+  if (value.length < 2) return "Min 2 characters";
+  if (value.length > MAX_CUSTOM_LEN) return `Max ${MAX_CUSTOM_LEN} characters`;
+  return undefined;
+}
+
 export function PlayTab(): JSX.Element {
   const [activeWord, setActiveWord] = useStorage("activeWord", null);
   const [list, setList] = useState<WordListName>("animals");
   const [picked, setPicked] = useState<string>(WORD_LISTS.animals[0]);
   const [custom, setCustom] = useState<string>("");
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+
+  const customError = getCustomError(custom);
+  const showCustomError = submitAttempted && customError !== undefined;
+  const customCounter = `${custom.length} / ${MAX_CUSTOM_LEN}`;
 
   const onListChange = (next: string): void => {
     const nextList = next as WordListName;
@@ -48,6 +64,12 @@ export function PlayTab(): JSX.Element {
 
   const submit = (): void => {
     const trimmed = custom.trim();
+    if (trimmed) {
+      if (customError) {
+        setSubmitAttempted(true);
+        return;
+      }
+    }
     const word = trimmed || picked;
     if (!word) return;
     const source: WordSource = trimmed ? "custom" : list;
@@ -58,6 +80,7 @@ export function PlayTab(): JSX.Element {
     };
     setActiveWord(next);
     setCustom("");
+    setSubmitAttempted(false);
   };
 
   const clear = (): void => {
@@ -102,12 +125,18 @@ export function PlayTab(): JSX.Element {
           </Field>
         </div>
 
-        <Field label="Custom word" helper="overrides the list selection">
+        <Field
+          label="Custom word"
+          helper="overrides the list selection"
+          error={showCustomError ? customError : undefined}
+          counter={customCounter}
+        >
           <Input
             value={custom}
             onInput={setCustom}
             placeholder="type your own…"
             mono
+            error={showCustomError}
           />
         </Field>
 

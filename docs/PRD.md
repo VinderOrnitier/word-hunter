@@ -12,7 +12,7 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 
 1. As a player, I want to choose an active word list (Animals or Pokémon), so that I can vary the theme of the game.
 2. As a player, I want to select a word from the active list, so that I can start playing without extra configuration.
-3. As a player, I want to type a custom word not in the list, so that I can diversify the game.
+3. As a player, I want to type a custom word not in the list, so that I can diversify the game. The field accepts any Unicode letters and hyphens (min 2, max 25 characters). Validation errors appear only after I attempt to submit, then update in real-time as I correct the word.
 3. As a player, I want the chosen word to appear automatically on every web page when it loads, so that I don't have to configure the game each time.
 4. As a player, I want the word to be inserted only into sufficiently long texts (50+ words), so that it can genuinely hide among other words.
 5. As a player, I want the word to look like normal page text, so that it cannot be easily spotted visually.
@@ -65,7 +65,7 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 - Full list of all found words
 
 **6. Popup UI**
-- Tab "Play": current active word, "Change word" button, dropdown with word list + custom input field
+- Tab "Play": current active word, "Change word" button, dropdown with word list + custom input field. The custom field shows a live character counter (`X / 25`); validation (Unicode letters and hyphens only, min 2, max 25 chars) is triggered on submit and then updates in real-time.
 - Tab "Statistics": table of found words (word, date, search duration, hint used, link to page)
 - Tab "Settings": hint timer duration (minutes), hover duration for celebration tooltip (seconds)
 

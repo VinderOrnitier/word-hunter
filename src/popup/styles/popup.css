@@ -215,6 +215,15 @@
   box-shadow: var(--wh-shadow-glow);
 }
 
+.wh-input--error {
+  border-color: var(--wh-danger);
+}
+
+.wh-input--error:focus {
+  border-color: var(--wh-danger);
+  box-shadow: 0 0 0 4px var(--wh-danger-soft);
+}
+
 /* ---------- Select ---------- */
 
 .wh-select {
@@ -250,6 +259,12 @@
   flex: 1;
 }
 
+.wh-field__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .wh-field__label {
   font-family: var(--wh-font-sans);
   font-size: var(--wh-text-xs);
@@ -259,10 +274,26 @@
   color: var(--wh-fg-2);
 }
 
+.wh-field__counter {
+  font-family: var(--wh-font-mono);
+  font-size: var(--wh-text-xs);
+  color: var(--wh-fg-3);
+}
+
+.wh-field__counter--error {
+  color: var(--wh-danger);
+}
+
 .wh-field__helper {
   font-family: var(--wh-font-sans);
   font-size: var(--wh-text-xs);
   color: var(--wh-fg-3);
+}
+
+.wh-field__error {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-xs);
+  color: var(--wh-danger);
 }
 
 /* ---------- Badge ---------- */
