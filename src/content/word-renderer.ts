@@ -6,6 +6,7 @@ const HW_HOST_CLASS = "hw-host";
 
 export interface WordRendererOptions {
   onFind?: (record: HuntRecord) => void | Promise<void>;
+  onReview?: (record: HuntRecord) => void;
   resolveArt?: (word: string, source: ActiveWord["list"]) => string | undefined;
 }
 
@@ -14,7 +15,7 @@ export function WordRenderer(
   paragraphs: Element[],
   options: WordRendererOptions = {}
 ): void {
-  const { onFind, resolveArt } = options;
+  const { onFind, onReview, resolveArt } = options;
   if (paragraphs.length === 0) return;
 
   const doc = paragraphs[0].ownerDocument;
@@ -60,8 +61,8 @@ export function WordRenderer(
   render(
     h(HiddenWordHost, {
       activeWord,
-      art: resolveArt?.(activeWord.word, activeWord.list),
       onFind: onFind ?? (() => {}),
+      onReview,
       inheritedStyle: {
         fontFamily: computed.fontFamily,
         fontSize: computed.fontSize,

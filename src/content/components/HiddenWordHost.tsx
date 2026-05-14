@@ -1,14 +1,13 @@
-import { useState } from "preact/hooks";
+import { useState, useRef } from "preact/hooks";
 import type { JSX } from "preact";
 import type { ActiveWord, HuntRecord } from "../../shared/types";
 import { HiddenWord } from "./HiddenWord";
-import { CelebrationPopup } from "./CelebrationPopup";
 
 interface HiddenWordHostProps {
   activeWord: ActiveWord;
   inheritedStyle?: JSX.CSSProperties;
-  art?: string;
   onFind: (record: HuntRecord) => void | Promise<void>;
+  onReview?: (record: HuntRecord) => void;
 }
 
 const HINT_USED_KEY = "hw-hint-used";
@@ -16,21 +15,21 @@ const HINT_USED_KEY = "hw-hint-used";
 export function HiddenWordHost({
   activeWord,
   inheritedStyle,
-  art,
   onFind,
+  onReview,
 }: HiddenWordHostProps): JSX.Element {
   const [found, setFound] = useState(false);
-  const [celebrating, setCelebrating] = useState(false);
-  const [durationS, setDurationS] = useState(0);
-  const [hintUsed, setHintUsed] = useState(false);
+  const lastRecord = useRef<HuntRecord | null>(null);
 
   const handleFind = (): void => {
-    if (found) return;
+    if (found) {
+      if (lastRecord.current) onReview?.(lastRecord.current);
+      return;
+    }
     const now = Date.now();
-    const seconds = Math.max(
-      0,
-      Math.round((now - activeWord.insertedAt) / 1000)
-    );
+    const seconds = activeWord.insertedAt != null
+      ? Math.max(0, Math.round((now - activeWord.insertedAt) / 1000))
+      : 0;
     const usedHint =
       typeof sessionStorage !== "undefined" &&
       sessionStorage.getItem(HINT_USED_KEY) === "true";
@@ -44,29 +43,17 @@ export function HiddenWordHost({
       hintUsed: usedHint,
     };
 
+    lastRecord.current = record;
     setFound(true);
-    setDurationS(seconds);
-    setHintUsed(usedHint);
-    setCelebrating(true);
     void onFind(record);
   };
 
   return (
-    <>
-      <HiddenWord
-        word={activeWord.word}
-        found={found}
-        onFind={handleFind}
-        inheritedStyle={inheritedStyle}
-      />
-      <CelebrationPopup
-        visible={celebrating}
-        word={activeWord.word}
-        durationS={durationS}
-        hintUsed={hintUsed}
-        art={art}
-        onDismiss={() => setCelebrating(false)}
-      />
-    </>
+    <HiddenWord
+      word={activeWord.word}
+      found={found}
+      onFind={handleFind}
+      inheritedStyle={inheritedStyle}
+    />
   );
 }

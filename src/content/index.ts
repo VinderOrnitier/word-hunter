@@ -1,14 +1,18 @@
 import "../shared/styles/tokens.css";
 import "./styles/overlay.css";
-import { getActiveWord, getSettings, saveFind } from "../shared/storage";
+import { getActiveWord, clearActiveWord, getSettings, saveFind } from "../shared/storage";
 import { ParagraphSelector } from "./paragraph-selector";
 import { WordRenderer } from "./word-renderer";
 import { HintTimer } from "./hint-timer";
+import { CelebrationManager } from "./celebration-manager";
 import { NoParagraphNotification } from "./no-paragraph-notification";
 import { NavigationObserver } from "./navigation-observer";
 import { resolveArt } from "./art-resolver";
+import { ActiveWordWatcher } from "./active-word-watcher";
 
 const timer = HintTimer(document);
+const celebration = CelebrationManager(document);
+ActiveWordWatcher(timer, celebration, document).start();
 
 async function inject(): Promise<void> {
   const activeWord = await getActiveWord();
@@ -20,8 +24,23 @@ async function inject(): Promise<void> {
     return;
   }
 
+  const art = resolveArt(activeWord.word, activeWord.list);
+
   timer.cancel();
-  WordRenderer(activeWord, paragraphs, { onFind: saveFind, resolveArt });
+  WordRenderer(activeWord, paragraphs, {
+    onFind: async (record) => {
+      const current = await getActiveWord();
+      if (!current) return; // stale tab — word already found elsewhere
+      celebration.show({ word: record.word, durationS: record.searchDurationSeconds, hintUsed: record.hintUsed, art });
+      await saveFind(record);
+      await clearActiveWord();
+      timer.cancel();
+    },
+    onReview: (record) => {
+      celebration.show({ word: record.word, durationS: record.searchDurationSeconds, hintUsed: record.hintUsed, art });
+    },
+    resolveArt,
+  });
   const settings = await getSettings();
   timer.start(settings.hintDelayMinutes);
 }

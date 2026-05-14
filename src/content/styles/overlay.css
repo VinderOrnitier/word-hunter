@@ -87,6 +87,31 @@
   background: var(--wh-hint);
 }
 
+.hw-hint-tooltip__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-left: var(--wh-space-1);
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--wh-radius-1);
+  color: var(--wh-fg-3);
+  cursor: pointer;
+  transition: color var(--wh-dur-fast) var(--wh-ease-standard);
+}
+
+.hw-hint-tooltip__close:hover {
+  color: var(--wh-fg);
+}
+
+.hw-hint-tooltip__close:focus-visible {
+  outline: none;
+  box-shadow: var(--wh-shadow-glow);
+}
+
 /* ============================================================
    No-paragraph banner — fixed top-center when no Paragraph qualifies
    ============================================================ */

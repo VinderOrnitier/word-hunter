@@ -33,8 +33,12 @@ The subsystem that starts counting when a page with a `HiddenWord` loads, displa
 _Avoid_: timer, hint system, countdown
 
 **FindEvent**:
-The player's click on a `HiddenWord` that registers the discovery and ends the current search.
+The player's click on a `HiddenWord` that registers the discovery and ends the current search. Immediately clears the `ActiveWord` from storage — other tabs remove their `HiddenWord` at this point, not when the `CelebrationPopup` is dismissed.
 _Avoid_: click event, discovery event, word found
+
+**ReviewClick**:
+A subsequent click on a `HiddenWord` that is already in its found state. Re-shows the `CelebrationPopup` so the player can review the result (art, duration), but does not create a new `HuntRecord`.
+_Avoid_: second click, repeat click, re-find
 
 **HuntRecord**:
 The record created after a `FindEvent`, stored in statistics. Contains: `word`, `foundAt`, `pageUrl`, `pageTitle`, `searchDurationSeconds`, `hintUsed`.
@@ -46,7 +50,8 @@ _Avoid_: stat entry, find record, discovery
 - The player selects one **Word** from the active **WordList** to become the **ActiveWord**
 - One **ActiveWord** exists at a time across all tabs
 - A **HiddenWord** is the DOM representation of the **ActiveWord** inside a **Paragraph**
-- A **FindEvent** on a **HiddenWord** produces one **HuntRecord**
+- A **FindEvent** on a **HiddenWord** produces one **HuntRecord** and immediately clears the **ActiveWord**
+- A **ReviewClick** on an already-found **HiddenWord** replays the **CelebrationPopup** without producing a new **HuntRecord**
 - A **HintTimer** runs per page that contains a **HiddenWord**
 
 ## Example dialogue

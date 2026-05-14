@@ -14,24 +14,18 @@ describe("HiddenWordHost", () => {
     sessionStorage.clear();
   });
 
-  it("shows the HiddenWord and no celebration popup initially", () => {
+  it("shows the HiddenWord initially", () => {
     render(
       <HiddenWordHost activeWord={ACTIVE} onFind={() => {}} />
     );
     expect(document.querySelector(".hw-word")).not.toBeNull();
-    expect(document.querySelector(".hw-celebration")).toBeNull();
   });
 
-  it("opens the CelebrationPopup and applies the found stripe when the word is clicked", async () => {
+  it("applies the found stripe when the word is clicked", () => {
     render(
       <HiddenWordHost activeWord={ACTIVE} onFind={() => {}} />
     );
-
     fireEvent.click(document.querySelector(".hw-word") as Element);
-
-    await waitFor(() => {
-      expect(document.querySelector(".hw-celebration")).not.toBeNull();
-    });
     expect(
       document.querySelector(".hw-word")?.classList.contains("hw-word--found")
     ).toBe(true);
@@ -67,6 +61,14 @@ describe("HiddenWordHost", () => {
     expect((onFind.mock.calls[0][0] as HuntRecord).hintUsed).toBe(true);
   });
 
+  it("searchDurationSeconds is 0 when insertedAt is missing (defensive)", () => {
+    const wordWithoutTimestamp = { word: "eagle", list: "animals" } as ActiveWord;
+    const onFind = jest.fn();
+    render(<HiddenWordHost activeWord={wordWithoutTimestamp} onFind={onFind} />);
+    fireEvent.click(document.querySelector(".hw-word") as Element);
+    expect((onFind.mock.calls[0][0] as HuntRecord).searchDurationSeconds).toBe(0);
+  });
+
   it("does not call onFind a second time on a repeated click", () => {
     const onFind = jest.fn();
     render(
@@ -80,20 +82,31 @@ describe("HiddenWordHost", () => {
     expect(onFind).toHaveBeenCalledTimes(1);
   });
 
-  it("dismisses the CelebrationPopup when the backdrop is clicked", async () => {
+  it("calls onReview on re-click with the same record that was passed to onFind", () => {
+    const onFind = jest.fn();
+    const onReview = jest.fn();
     render(
-      <HiddenWordHost activeWord={ACTIVE} onFind={() => {}} />
+      <HiddenWordHost activeWord={ACTIVE} onFind={onFind} onReview={onReview} />
+    );
+
+    const word = document.querySelector(".hw-word") as Element;
+    fireEvent.click(word);
+    fireEvent.click(word);
+
+    expect(onFind).toHaveBeenCalledTimes(1);
+    expect(onReview).toHaveBeenCalledTimes(1);
+    expect(onReview.mock.calls[0][0]).toEqual(onFind.mock.calls[0][0]);
+  });
+
+  it("does not call onReview on the first click", () => {
+    const onReview = jest.fn();
+    render(
+      <HiddenWordHost activeWord={ACTIVE} onFind={jest.fn()} onReview={onReview} />
     );
 
     fireEvent.click(document.querySelector(".hw-word") as Element);
-    await waitFor(() => {
-      expect(document.querySelector(".hw-celebration")).not.toBeNull();
-    });
 
-    fireEvent.click(document.querySelector(".hw-celebration") as Element);
-
-    await waitFor(() => {
-      expect(document.querySelector(".hw-celebration")).toBeNull();
-    });
+    expect(onReview).not.toHaveBeenCalled();
   });
+
 });
