@@ -20,7 +20,7 @@ Two problems were identified:
 `clearActiveWord()` is called right after `saveFind()`, inside the `onFind` handler — before the player has dismissed the popup. `ActiveWordWatcher` on all other tabs fires instantly and removes their `.hw-host`.
 
 **Preserve the found tab:**  
-`ActiveWordWatcher` skips any `.hw-host` that contains a `.hw-word--found` element. The found tab keeps the HiddenWord in its green "found" stripe state.
+`ActiveWordWatcher` skips any `.hw-host` that contains a `.hw-word--found` element. The found tab keeps the HiddenWord in its green "found" stripe state. It also skips `celebration.dismiss()` when a `.hw-word--found` element is present — otherwise `clearActiveWord()` in `onFind` would trigger the watcher and dismiss the CelebrationPopup on the very tab where the player just found the word.
 
 **Review re-click:**  
 `HiddenWordHost` now accepts an optional `onReview` callback. On the first click it fires `onFind` (records stats, shows popup). On subsequent clicks it fires `onReview` with the original `HuntRecord` — which shows the CelebrationPopup again without saving to statistics. `WordRenderer` passes `onReview` through to `HiddenWordHost`.

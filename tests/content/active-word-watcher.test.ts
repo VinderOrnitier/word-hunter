@@ -45,6 +45,20 @@ describe("ActiveWordWatcher", () => {
     expect(dismiss).toHaveBeenCalledTimes(1);
   });
 
+  it("does NOT call celebration.dismiss() when the found word is on this tab", () => {
+    const foundHost = document.createElement("span");
+    foundHost.className = "hw-host";
+    const foundWord = document.createElement("span");
+    foundWord.className = "hw-word hw-word--found";
+    foundHost.appendChild(foundWord);
+    document.body.appendChild(foundHost);
+
+    const dismiss = jest.fn();
+    ActiveWordWatcher({ cancel: jest.fn() }, { dismiss }, document).start();
+    fireChange({ activeWord: { oldValue: { word: "eagle" } } }, "local");
+    expect(dismiss).not.toHaveBeenCalled();
+  });
+
   it("removes .hw-host elements from DOM when activeWord is removed", () => {
     const host = document.createElement("span");
     host.className = "hw-host";

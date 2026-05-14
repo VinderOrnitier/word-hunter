@@ -22,7 +22,9 @@ export function ActiveWordWatcher(
       if (changes.activeWord.newValue !== undefined) return;
 
       timer.cancel();
-      celebration.dismiss();
+      if (!doc.querySelector(".hw-word--found")) {
+        celebration.dismiss();
+      }
       doc.querySelectorAll(`.${HW_HOST_CLASS}`).forEach((el) => {
         if (el.querySelector(".hw-word--found")) return;
         render(null, el);
