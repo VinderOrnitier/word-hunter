@@ -25,7 +25,8 @@ End-to-end manual verification. Run after `pnpm build` produces a fresh `dist/`.
 - [ ] Press <kbd>Ctrl</kbd>+<kbd>F</kbd> and search for `eagle`. Browser must report **0 matches** on the page — this is the `::before { content: attr(data-char) }` bypass at work.
 - [ ] Click the hidden word. `CelebrationPopup` appears with: `Found!`, the word `eagle`, the search duration in seconds, and `no hint`. The word's stripe turns green.
 - [ ] Click the dimmed backdrop — popup dismisses. The green-striped word **remains visible** in the text (it is not removed).
-- [ ] Click the green word again — `CelebrationPopup` reopens with the same data. Click the backdrop to dismiss.
+- [ ] Click the green word again — `CelebrationPopup` reopens with the same data. A **Remove word** button is visible below the metadata row.
+- [ ] Click **Remove word** — popup closes and the green word disappears from the paragraph.
 - [ ] Open the popup → **Stats**. Exactly **one** row with `eagle` appears (re-click did not add a duplicate).
 
 ### Multi-tab cleanup

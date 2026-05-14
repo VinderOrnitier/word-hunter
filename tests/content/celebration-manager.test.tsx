@@ -60,4 +60,22 @@ describe("CelebrationManager", () => {
     mgr.dismiss();
     expect(afterDismiss).not.toHaveBeenCalled();
   });
+
+  it("clicking the clear button removes the popup", () => {
+    CelebrationManager(document).show(PROPS, undefined, () => {});
+    (document.querySelector(".hw-celebration__clear-btn") as HTMLElement).click();
+    expect(document.querySelector(".hw-celebration")).toBeNull();
+  });
+
+  it("clicking the clear button calls the onClear callback", () => {
+    const onClear = jest.fn();
+    CelebrationManager(document).show(PROPS, undefined, onClear);
+    (document.querySelector(".hw-celebration__clear-btn") as HTMLElement).click();
+    expect(onClear).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not show a clear button when onClear is not passed to show()", () => {
+    CelebrationManager(document).show(PROPS);
+    expect(document.querySelector(".hw-celebration__clear-btn")).toBeNull();
+  });
 });

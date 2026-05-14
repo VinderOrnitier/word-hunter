@@ -165,6 +165,13 @@
   animation: hw-fade var(--wh-dur-base) var(--wh-ease-standard) both;
 }
 
+.hw-celebration__wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--wh-space-2);
+}
+
 .hw-celebration__modal {
   display: flex;
   align-items: center;
@@ -232,4 +239,36 @@
 
 .hw-celebration__meta-sep {
   color: var(--wh-fg-4);
+}
+
+.hw-celebration__clear-btn {
+  padding: 5px var(--wh-space-4);
+  background: rgba(11, 15, 25, 0.72);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-pill);
+  color: var(--wh-fg-3);
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-sm);
+  font-weight: var(--wh-weight-medium);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+  transition: background var(--wh-dur-fast) var(--wh-ease-standard),
+              color var(--wh-dur-fast) var(--wh-ease-standard),
+              border-color var(--wh-dur-fast) var(--wh-ease-standard);
+}
+
+.hw-celebration__clear-btn:hover {
+  background: var(--wh-surface-3);
+  color: var(--wh-fg-2);
+  border-color: var(--wh-fg-4);
+}
+
+.hw-celebration__clear-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--wh-shadow-glow);
+}
+
+.hw-celebration__clear-btn:active {
+  transform: translateY(1px);
 }

@@ -21,22 +21,32 @@ export function CelebrationManager(doc: Document) {
 
   function show(
     props: CelebrationProps,
-    afterDismiss?: () => void | Promise<void>
+    afterDismiss?: () => void | Promise<void>,
+    onClear?: () => void
   ): void {
     dismiss();
     host = doc.createElement("div");
     doc.body.appendChild(host);
     const current = host;
+
+    function dismissCurrent(): void {
+      render(null, current);
+      current.remove();
+      if (host === current) host = null;
+    }
+
     render(
       h(CelebrationPopup, {
         ...props,
         visible: true,
         onDismiss: () => {
-          render(null, current);
-          current.remove();
-          if (host === current) host = null;
+          dismissCurrent();
           void afterDismiss?.();
         },
+        onClear: onClear !== undefined ? () => {
+          dismissCurrent();
+          onClear();
+        } : undefined,
       }),
       host
     );

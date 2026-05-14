@@ -109,4 +109,65 @@ describe("CelebrationPopup", () => {
     fireEvent.click(document.querySelector(".hw-celebration__modal") as Element);
     expect(handler).not.toHaveBeenCalled();
   });
+
+  it("does not render a clear button when onClear is not provided", () => {
+    render(
+      <CelebrationPopup
+        visible={true}
+        word="eagle"
+        durationS={5}
+        hintUsed={false}
+        onDismiss={() => {}}
+      />
+    );
+    expect(document.querySelector(".hw-celebration__clear-btn")).toBeNull();
+  });
+
+  it("renders a 'Remove word' button when onClear is provided", () => {
+    render(
+      <CelebrationPopup
+        visible={true}
+        word="eagle"
+        durationS={5}
+        hintUsed={false}
+        onDismiss={() => {}}
+        onClear={() => {}}
+      />
+    );
+    const btn = document.querySelector(".hw-celebration__clear-btn");
+    expect(btn).not.toBeNull();
+    expect(btn!.textContent).toBe("Remove word");
+  });
+
+  it("calls onClear when the clear button is clicked", () => {
+    const onClear = jest.fn();
+    render(
+      <CelebrationPopup
+        visible={true}
+        word="eagle"
+        durationS={5}
+        hintUsed={false}
+        onDismiss={() => {}}
+        onClear={onClear}
+      />
+    );
+    fireEvent.click(document.querySelector(".hw-celebration__clear-btn") as Element);
+    expect(onClear).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not call onDismiss when the clear button is clicked", () => {
+    const onDismiss = jest.fn();
+    render(
+      <CelebrationPopup
+        visible={true}
+        word="eagle"
+        durationS={5}
+        hintUsed={false}
+        onDismiss={onDismiss}
+        onClear={() => {}}
+      />
+    );
+    fireEvent.click(document.querySelector(".hw-celebration__clear-btn") as Element);
+    expect(onDismiss).not.toHaveBeenCalled();
+  });
 });
