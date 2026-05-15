@@ -16,7 +16,12 @@ function isHidden(el: Element): boolean {
 }
 
 function hasBlockChildren(el: Element): boolean {
-  return Array.from(el.children).some((c) => BLOCK_CHILDREN.has(c.tagName));
+  return Array.from(el.children).some((c) => {
+    if (BLOCK_CHILDREN.has(c.tagName)) return true;
+    if (c.tagName.includes("-")) return true;
+    const display = getComputedStyle(c as HTMLElement).display;
+    return display === "block" || display === "flex" || display === "grid";
+  });
 }
 
 function scanLevel(parent: Element, threshold: number, out: Element[][]): void {

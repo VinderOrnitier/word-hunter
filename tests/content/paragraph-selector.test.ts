@@ -120,6 +120,38 @@ describe("ParagraphSelector", () => {
     expect(result[0]).toHaveLength(2);
   });
 
+  describe("custom element containers", () => {
+    it("recurses into a <div> whose only child is a hyphenated custom element wrapping prose <p> elements", () => {
+      const doc = makeDoc(
+        `<div><turbo-frame><p>${words(20)}</p><p>${words(20)}</p></turbo-frame></div>`
+      );
+      const result = ParagraphSelector(doc);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toHaveLength(2);
+      result[0].forEach((el) => expect(el.tagName).toBe("P"));
+    });
+
+    it("recurses through nested custom elements to reach inner prose", () => {
+      const doc = makeDoc(
+        `<div><turbo-frame><include-fragment><p>${words(20)}</p><p>${words(20)}</p></include-fragment></turbo-frame></div>`
+      );
+      const result = ParagraphSelector(doc);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toHaveLength(2);
+      result[0].forEach((el) => expect(el.tagName).toBe("P"));
+    });
+
+    it("recurses into a container whose child is a non-hyphenated unknown element with display:block", () => {
+      const doc = makeDoc(
+        `<div><turboframe style="display:block"><p>${words(20)}</p><p>${words(20)}</p></turboframe></div>`
+      );
+      const result = ParagraphSelector(doc);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toHaveLength(2);
+      result[0].forEach((el) => expect(el.tagName).toBe("P"));
+    });
+  });
+
   describe("visibility filtering", () => {
     it("excludes a <p> with display:none", () => {
       const doc = makeDoc(
