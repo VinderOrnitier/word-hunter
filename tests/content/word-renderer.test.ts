@@ -79,7 +79,7 @@ describe("WordRenderer", () => {
     expect(host.closest("code")).toBeNull();
   });
 
-  it.each(["a", "button", "code", "kbd", "samp", "var", "abbr", "acronym"])(
+  it.each(["a", "button", "code", "kbd", "samp", "var", "abbr", "acronym", "script", "style", "noscript"])(
     "skips text nodes whose closest ancestor is <%s>",
     (tag) => {
       const para = document.createElement("p");
@@ -94,6 +94,21 @@ describe("WordRenderer", () => {
       expect(document.querySelectorAll(".hw-word")).toHaveLength(0);
     }
   );
+
+  it("inserts into plain text even when paragraph also contains a <script> element", () => {
+    const para = document.createElement("p");
+    para.innerHTML =
+      `<script type="application/json">${Array.from({ length: 30 }, (_, i) => `word${i}`).join(" ")}</script>` +
+      " " +
+      Array.from({ length: 30 }, (_, i) => `plain${i}`).join(" ");
+    document.body.appendChild(para);
+
+    WordRenderer(eagle, [[para]]);
+
+    expect(document.querySelectorAll(".hw-word")).toHaveLength(1);
+    const host = document.querySelector(".hw-host")!;
+    expect(host.closest("script")).toBeNull();
+  });
 
   it("inserts into one of the elements across multiple groups", () => {
     const paras = Array.from({ length: 4 }, (_, i) => {

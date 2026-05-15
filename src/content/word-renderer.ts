@@ -3,7 +3,7 @@ import type { ActiveWord, HuntRecord } from "../shared/types";
 import { HiddenWordHost } from "./components/HiddenWordHost";
 
 const HW_HOST_CLASS = "hw-host";
-const SKIP_SELECTOR = "a, button, code, kbd, samp, var, abbr, acronym";
+const SKIP_SELECTOR = "a, button, code, kbd, samp, var, abbr, acronym, script, style, noscript";
 
 export interface WordRendererOptions {
   onFind?: (record: HuntRecord) => void | Promise<void>;
