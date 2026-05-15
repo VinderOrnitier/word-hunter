@@ -20,9 +20,17 @@ _Avoid_: word bank, word set, category
 The identifier for the origin of the `ActiveWord`: `"animals"`, `"pokemon"`, or `"custom"`. Determines which art (emoji or animated sprite) is shown in the `CelebrationPopup`.
 _Avoid_: word type, list type, category
 
+**ParagraphGroup**:
+A set of adjacent sibling prose elements within the same parent whose combined word count meets the `MinWordThreshold`. The unit from which a `Paragraph` is selected for `ActiveWord` insertion. Structural, navigational, and heading elements (e.g. `<nav>`, `<h1>`–`<h6>`) do not form or contribute to a ParagraphGroup. Elements hidden from the user (not rendered, zero dimensions) are excluded.
+_Avoid_: text section, content block, merged paragraph
+
 **Paragraph**:
-Any DOM element containing 50 or more words of continuous text, regardless of HTML tag. The unit into which an `ActiveWord` can be hidden.
+A single prose element within a `ParagraphGroup` into which the `ActiveWord` is actually hidden. Selected randomly from the group at insertion time.
 _Avoid_: text block, element, node
+
+**MinWordThreshold**:
+The minimum combined word count a `ParagraphGroup` must meet to be eligible for `ActiveWord` insertion. User-configurable in Settings; default 30, range 30–150.
+_Avoid_: word limit, paragraph length, threshold
 
 **HiddenWord**:
 The DOM representation of an `ActiveWord` inserted into a `Paragraph` — rendered via CSS `::before` on empty `<span>` elements, making it invisible to Ctrl+F.
@@ -49,6 +57,7 @@ _Avoid_: stat entry, find record, discovery
 - A **WordList** contains many **Words**
 - The player selects one **Word** from the active **WordList** to become the **ActiveWord**
 - One **ActiveWord** exists at a time across all tabs
+- A **ParagraphGroup** contains one or more adjacent prose **Paragraphs** whose combined word count meets the **MinWordThreshold**
 - A **HiddenWord** is the DOM representation of the **ActiveWord** inside a **Paragraph**
 - A **FindEvent** on a **HiddenWord** produces one **HuntRecord** and immediately clears the **ActiveWord**
 - A **ReviewClick** on an already-found **HiddenWord** replays the **CelebrationPopup** without producing a new **HuntRecord**
