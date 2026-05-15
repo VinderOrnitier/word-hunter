@@ -1,16 +1,40 @@
 import { ParagraphSelector } from "../../src/content/paragraph-selector";
 
+// Use the main jsdom document so that getComputedStyle resolves CSS class rules
+// from <style> tags (detached documents have no defaultView for CSSOM cascade).
 function makeDoc(html: string): Document {
-  const doc = document.implementation.createHTMLDocument();
-  doc.body.innerHTML = html;
-  return doc;
+  document.body.innerHTML = html;
+  return document;
 }
+
+const VISIBLE_RECT: DOMRect = {
+  width: 200, height: 20, top: 100, left: 0,
+  bottom: 120, right: 200, x: 0, y: 100,
+  toJSON: () => ({}),
+};
 
 function words(n: number): string {
   return Array.from({ length: n }, (_, i) => `word${i}`).join(" ");
 }
 
+// Per-element bounding-box overrides. Populated in individual tests; cleared by afterEach.
+// Using a Map (not jest.spyOn on instances) avoids interference with the prototype spy.
+let rectOverrides: Map<HTMLElement, DOMRect>;
+
 describe("ParagraphSelector", () => {
+  beforeEach(() => {
+    rectOverrides = new Map();
+    // jsdom always returns a zero rect; mock to simulate visible elements so
+    // the bounding-box guard in isHidden does not incorrectly hide every element.
+    jest.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
+      return rectOverrides.get(this) ?? VISIBLE_RECT;
+    });
+  });
+  afterEach(() => {
+    jest.restoreAllMocks();
+    rectOverrides.clear();
+  });
+
   it("groups two adjacent <p> siblings whose combined word count meets threshold", () => {
     const doc = makeDoc(`<p>${words(15)}</p><p>${words(20)}</p>`);
     const result = ParagraphSelector(doc);
@@ -119,6 +143,46 @@ describe("ParagraphSelector", () => {
       const doc = makeDoc(
         `<p>${words(20)}</p><p style="opacity:0">${words(20)}</p><p>${words(15)}</p>`
       );
+      const result = ParagraphSelector(doc);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toHaveLength(2);
+    });
+
+    it("excludes an element hidden via CSS class (computed display:none)", () => {
+      const doc = makeDoc(
+        `<style>.hidden { display: none; }</style>` +
+        `<p>${words(20)}</p><p class="hidden">${words(20)}</p><p>${words(15)}</p>`
+      );
+      const result = ParagraphSelector(doc);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toHaveLength(2);
+    });
+
+    it("excludes a sr-only element with 1×1 px bounding box", () => {
+      const doc = makeDoc(
+        `<p>${words(20)}</p>` +
+        `<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">${words(20)}</span>` +
+        `<p>${words(15)}</p>`
+      );
+      rectOverrides.set(doc.querySelector("span") as HTMLElement, {
+        width: 1, height: 1, top: 0, left: 0,
+        bottom: 1, right: 1, x: 0, y: 0, toJSON: () => ({}),
+      } as DOMRect);
+      const result = ParagraphSelector(doc);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toHaveLength(2);
+    });
+
+    it("excludes an off-screen element with zero visible area (left: -9999px, 1×1 px)", () => {
+      const doc = makeDoc(
+        `<p>${words(20)}</p>` +
+        `<span style="position:absolute;left:-9999px;width:1px;height:1px">${words(20)}</span>` +
+        `<p>${words(15)}</p>`
+      );
+      rectOverrides.set(doc.querySelector("span") as HTMLElement, {
+        width: 1, height: 1, top: 0, left: -9999,
+        bottom: 1, right: -9998, x: -9999, y: 0, toJSON: () => ({}),
+      } as DOMRect);
       const result = ParagraphSelector(doc);
       expect(result).toHaveLength(1);
       expect(result[0]).toHaveLength(2);

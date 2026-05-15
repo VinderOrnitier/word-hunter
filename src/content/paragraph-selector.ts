@@ -8,8 +8,11 @@ function countWords(el: Element): number {
 }
 
 function isHidden(el: Element): boolean {
-  const s = (el as HTMLElement).style;
-  return s.display === "none" || s.visibility === "hidden" || s.opacity === "0";
+  const s = getComputedStyle(el as HTMLElement);
+  if (s.display === "none" || s.visibility === "hidden" || s.opacity === "0") return true;
+  const rect = (el as HTMLElement).getBoundingClientRect();
+  if (rect.width < 4 && rect.height < 4) return true;
+  return false;
 }
 
 function hasBlockChildren(el: Element): boolean {
