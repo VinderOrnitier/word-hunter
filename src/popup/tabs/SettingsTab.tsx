@@ -18,6 +18,29 @@ export function SettingsTab(): JSX.Element {
   return (
     <div class="wh-settings">
       <Field
+        label="Minimum paragraph length"
+        helper="paragraphs below this word count are skipped"
+      >
+        <div class="wh-settings__input-row">
+          <input
+            type="range"
+            class="wh-settings__range"
+            min={30}
+            max={150}
+            step={10}
+            value={settings.minWordThreshold}
+            style={{
+              background: `linear-gradient(to right, var(--wh-primary) 0%, var(--wh-primary) ${((settings.minWordThreshold - 30) / 120) * 100}%, var(--wh-surface-2) ${((settings.minWordThreshold - 30) / 120) * 100}%, var(--wh-surface-2) 100%)`,
+            }}
+            onInput={(e) =>
+              update({ minWordThreshold: Number((e.target as HTMLInputElement).value) })
+            }
+          />
+          <span class="wh-settings__range-value">{settings.minWordThreshold}</span>
+        </div>
+      </Field>
+
+      <Field
         label="Hint delay"
         helper="minutes the page is open before the hint tooltip shows"
       >

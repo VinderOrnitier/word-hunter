@@ -20,7 +20,7 @@ async function inject(): Promise<void> {
   if (!activeWord) return;
 
   const settings = await getSettings();
-  const groups = ParagraphSelector(document, settings.minWordThreshold ?? 30);
+  const groups = ParagraphSelector(document, settings.minWordThreshold);
   if (groups.length === 0) {
     NoParagraphNotification(document).show();
     return;

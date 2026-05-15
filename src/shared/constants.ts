@@ -9,6 +9,7 @@ export const DEFAULT_WORDS = [
 export const DEFAULT_SETTINGS: GameSettings = {
   hintDelayMinutes: 5,
   celebrationHoverSeconds: 1.5,
+  minWordThreshold: 30,
 };
 
 export const MIN_PARAGRAPH_WORDS = 50;

@@ -10,7 +10,7 @@ export interface HuntRecord {
 export interface GameSettings {
   hintDelayMinutes: number;
   celebrationHoverSeconds: number;
-  minWordThreshold?: number;
+  minWordThreshold: number;
 }
 
 export type WordSource = "animals" | "pokemon" | "custom";

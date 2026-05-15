@@ -59,7 +59,7 @@ describe("SettingsTab", () => {
   });
 
   it("shows the stored settings values from storage", async () => {
-    const stored: GameSettings = { hintDelayMinutes: 10, celebrationHoverSeconds: 3 };
+    const stored: GameSettings = { hintDelayMinutes: 10, celebrationHoverSeconds: 3, minWordThreshold: 30 };
     setupChromeMock({ settings: stored });
     render(<SettingsTab />);
 
@@ -81,7 +81,7 @@ describe("SettingsTab", () => {
 
     await waitFor(() => {
       expect(setMock).toHaveBeenCalledWith({
-        settings: { hintDelayMinutes: 15, celebrationHoverSeconds: 1.5 },
+        settings: { hintDelayMinutes: 15, celebrationHoverSeconds: 1.5, minWordThreshold: 30 },
       });
     });
   });
@@ -95,7 +95,44 @@ describe("SettingsTab", () => {
 
     await waitFor(() => {
       expect(setMock).toHaveBeenCalledWith({
-        settings: { hintDelayMinutes: 5, celebrationHoverSeconds: 2.5 },
+        settings: { hintDelayMinutes: 5, celebrationHoverSeconds: 2.5, minWordThreshold: 30 },
+      });
+    });
+  });
+
+  it("renders a range slider for minimum paragraph length with default value 30", () => {
+    setupChromeMock();
+    render(<SettingsTab />);
+
+    const slider = screen.getByRole("slider") as HTMLInputElement;
+    expect(slider.value).toBe("30");
+    expect(slider.min).toBe("30");
+    expect(slider.max).toBe("150");
+    expect(slider.step).toBe("10");
+  });
+
+  it("displays the current minWordThreshold value next to the slider", async () => {
+    const stored: GameSettings = { hintDelayMinutes: 5, celebrationHoverSeconds: 1.5, minWordThreshold: 80 };
+    setupChromeMock({ settings: stored });
+    render(<SettingsTab />);
+
+    await waitFor(() => {
+      const slider = screen.getByRole("slider") as HTMLInputElement;
+      expect(slider.value).toBe("80");
+    });
+    expect(screen.getByText("80")).toBeInTheDocument();
+  });
+
+  it("persists a new minWordThreshold to storage when the slider changes", async () => {
+    const { setMock } = setupChromeMock();
+    render(<SettingsTab />);
+
+    const slider = screen.getByRole("slider") as HTMLInputElement;
+    fireEvent.input(slider, { target: { value: "70" } });
+
+    await waitFor(() => {
+      expect(setMock).toHaveBeenCalledWith({
+        settings: { hintDelayMinutes: 5, celebrationHoverSeconds: 1.5, minWordThreshold: 70 },
       });
     });
   });
