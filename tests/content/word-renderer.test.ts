@@ -18,7 +18,7 @@ describe("WordRenderer", () => {
 
   it("inserts one .hw-char span per letter with correct data-char", () => {
     const para = makePara(60);
-    WordRenderer(eagle, [para]);
+    WordRenderer(eagle, [[para]]);
 
     const chars = document.querySelectorAll(".hw-char");
     expect(chars).toHaveLength(5);
@@ -29,7 +29,7 @@ describe("WordRenderer", () => {
 
   it("places no text matching the word in any text node (Ctrl+F bypass)", () => {
     const para = makePara(60);
-    WordRenderer(eagle, [para]);
+    WordRenderer(eagle, [[para]]);
 
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     let node: Node | null;
@@ -40,14 +40,14 @@ describe("WordRenderer", () => {
 
   it("removes the previous .hw-word when called again", () => {
     const para = makePara(60);
-    WordRenderer(eagle, [para]);
-    WordRenderer({ word: "fox", insertedAt: 2000 }, [para]);
+    WordRenderer(eagle, [[para]]);
+    WordRenderer({ word: "fox", insertedAt: 2000 }, [[para]]);
 
     expect(document.querySelectorAll(".hw-word")).toHaveLength(1);
     expect(document.querySelectorAll(".hw-char")).toHaveLength(3); // "fox"
   });
 
-  it("does nothing and does not throw when paragraphs list is empty", () => {
+  it("does nothing and does not throw when groups list is empty", () => {
     expect(() => WordRenderer(eagle, [])).not.toThrow();
     expect(document.querySelectorAll(".hw-word")).toHaveLength(0);
   });
@@ -61,7 +61,7 @@ describe("WordRenderer", () => {
       lineHeight: "1.6",
     } as CSSStyleDeclaration);
 
-    WordRenderer(eagle, [para]);
+    WordRenderer(eagle, [[para]]);
 
     const wordEl = document.querySelector(".hw-word") as HTMLElement;
     expect(wordEl.style.fontFamily).toBe("Georgia");

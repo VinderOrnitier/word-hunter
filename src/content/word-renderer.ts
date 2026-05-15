@@ -12,20 +12,21 @@ export interface WordRendererOptions {
 
 export function WordRenderer(
   activeWord: ActiveWord,
-  paragraphs: Element[],
+  groups: Element[][],
   options: WordRendererOptions = {}
 ): void {
   const { onFind, onReview, resolveArt } = options;
-  if (paragraphs.length === 0) return;
+  if (groups.length === 0) return;
 
-  const doc = paragraphs[0].ownerDocument;
+  const doc = groups[0][0].ownerDocument;
 
   doc.querySelectorAll(`.${HW_HOST_CLASS}`).forEach((el) => {
     render(null, el);
     el.remove();
   });
 
-  const para = paragraphs[Math.floor(Math.random() * paragraphs.length)];
+  const group = groups[Math.floor(Math.random() * groups.length)];
+  const para = group[Math.floor(Math.random() * group.length)];
 
   const walker = doc.createTreeWalker(para, NodeFilter.SHOW_TEXT);
   const textNodes: Text[] = [];
@@ -48,7 +49,7 @@ export function WordRenderer(
 
   const insertAt = boundaries[Math.floor(Math.random() * boundaries.length)];
 
-  const computed = window.getComputedStyle(para);
+  const computed = window.getComputedStyle(textNode.parentElement ?? para);
   const host = doc.createElement("span");
   host.className = HW_HOST_CLASS;
 
@@ -68,6 +69,8 @@ export function WordRenderer(
         fontSize: computed.fontSize,
         color: computed.color,
         lineHeight: computed.lineHeight,
+        fontWeight: computed.fontWeight,
+        fontStyle: computed.fontStyle,
       },
     }),
     host

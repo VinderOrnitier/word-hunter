@@ -19,8 +19,9 @@ async function inject(): Promise<void> {
   const activeWord = await getActiveWord();
   if (!activeWord) return;
 
-  const paragraphs = ParagraphSelector(document);
-  if (paragraphs.length === 0) {
+  const settings = await getSettings();
+  const groups = ParagraphSelector(document, settings.minWordThreshold ?? 30);
+  if (groups.length === 0) {
     NoParagraphNotification(document).show();
     return;
   }
@@ -37,7 +38,7 @@ async function inject(): Promise<void> {
   }
 
   timer.cancel();
-  WordRenderer(activeWord, paragraphs, {
+  WordRenderer(activeWord, groups, {
     onFind: async (record) => {
       const current = await getActiveWord();
       if (!current) return; // stale tab — word already found elsewhere
@@ -51,7 +52,6 @@ async function inject(): Promise<void> {
     },
     resolveArt,
   });
-  const settings = await getSettings();
   timer.start(settings.hintDelayMinutes);
 }
 
