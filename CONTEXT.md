@@ -21,7 +21,7 @@ The identifier for the origin of the `ActiveWord`: `"animals"`, `"pokemon"`, or 
 _Avoid_: word type, list type, category
 
 **ParagraphGroup**:
-A set of adjacent sibling prose elements within the same parent whose combined word count meets the `MinWordThreshold`. The unit from which a `Paragraph` is selected for `ActiveWord` insertion. Structural, navigational, and heading elements (e.g. `<nav>`, `<h1>`–`<h6>`) do not form or contribute to a ParagraphGroup. Elements hidden from the user (not rendered, zero dimensions) are excluded.
+A set of adjacent sibling prose elements within the same parent whose combined word count meets the `MinWordThreshold`. The unit from which a `Paragraph` is selected for `ActiveWord` insertion. Structural, navigational, and heading elements (e.g. `<nav>`, `<h1>`–`<h6>`) do not form or contribute to a ParagraphGroup. Elements hidden from the user are excluded — this covers computed `display:none`/`visibility:hidden`/`opacity:0` (via any CSS, not just inline styles) and elements whose bounding box is smaller than 4 × 4 px (e.g. `sr-only` patterns).
 _Avoid_: text section, content block, merged paragraph
 
 **Paragraph**:

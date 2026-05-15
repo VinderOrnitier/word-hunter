@@ -52,6 +52,25 @@ Open **two** tabs with `smoke-article.html` before setting a word, then set `eag
 
 - [ ] Open a page with **no qualifying paragraph** (use `tests/fixtures/smoke-short-page.html`) while an ActiveWord is set. A banner appears at top-center for 3 seconds then auto-removes. Note: content scripts don't run on `data:` URLs, so use a `file://` or `http://` page.
 
+### Hidden element exclusion
+
+Tests that `ParagraphGroup` skips elements hidden via CSS class rules — not just inline styles.  
+Use `tests/fixtures/smoke-hidden-elements.html` (open as a `file://` URL with an ActiveWord already set).
+
+- [ ] The `.hw-word` span appears **only inside `#visible-1` or `#visible-2`**. Confirm in DevTools → Elements; the word must not appear inside `#hidden-display-none`, `#hidden-visibility`, or `#hidden-sr-only`.
+- [ ] In DevTools console, run:
+  ```js
+  document.querySelectorAll('#hidden-display-none .hw-word, #hidden-visibility .hw-word, #hidden-sr-only .hw-word').length
+  ```
+  Must return **0**.
+- [ ] Set the `minWordThreshold` slider to **150** (max) and reload. The hidden word still appears — the visible group's combined word count (~155 words) exceeds 150.
+- [ ] To confirm the class-based hiding is what matters, run in console:
+  ```js
+  getComputedStyle(document.getElementById('hidden-display-none')).display  // → "none"
+  getComputedStyle(document.getElementById('hidden-visibility')).visibility  // → "hidden"
+  document.getElementById('hidden-sr-only').getBoundingClientRect()          // width: 1, height: 1
+  ```
+
 ### Stats reactivity
 
 - [ ] Find the word on a fresh article tab. Open the popup → Stats — the new row is visible without manually reopening the popup.
@@ -67,3 +86,5 @@ Open **two** tabs with `smoke-article.html` before setting a word, then set `eag
 - The qualifying threshold is `minWordThreshold` from `GameSettings` (default **30**). The fixture's combined group (239 words) exceeds even the slider maximum of 150, so the NoParagraphBanner will never appear on this fixture regardless of the slider value.
 - `WordRenderer` skips text nodes whose closest ancestor is `a`, `button`, `code`, `kbd`, `samp`, `var`, `abbr`, or `acronym`. The smoke fixture has none of these in its article body, so all text nodes are eligible.
 - The fixture deliberately contains no words from the default Animals or Pokémon lists, so any pick is safe for the Ctrl+F bypass check.
+- `smoke-article.html` has **no CSS-class-hidden elements**, so the `getComputedStyle` + bbox guard in `isHidden()` is not exercised by the main article checks. Use `smoke-hidden-elements.html` for that coverage (see "Hidden element exclusion" section above).
+- `smoke-hidden-elements.html` contains three hidden elements: `#hidden-display-none` (class-applied `display:none`), `#hidden-visibility` (class-applied `visibility:hidden`), and `#hidden-sr-only` (1 × 1 px `sr-only` clip pattern). Only `#visible-1` and `#visible-2` form a qualifying ParagraphGroup.
