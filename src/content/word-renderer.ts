@@ -56,10 +56,11 @@ export function WordRenderer(
   const host = doc.createElement("span");
   host.className = HW_HOST_CLASS;
 
+  const tail = text.slice(insertAt);
   const parent = textNode.parentNode!;
   parent.insertBefore(doc.createTextNode(text.slice(0, insertAt)), textNode);
   parent.insertBefore(host, textNode);
-  parent.insertBefore(doc.createTextNode(text.slice(insertAt)), textNode);
+  parent.insertBefore(doc.createTextNode(tail ? " " + tail : tail), textNode);
   parent.removeChild(textNode);
 
   render(

@@ -22,6 +22,7 @@ End-to-end manual verification. Run after `pnpm build` produces a fresh `dist/`.
 ### Content script — overlays
 
 - [ ] Reload the smoke article. A `.hw-word` span appears somewhere inside one of the article's prose elements (use DevTools → Elements to confirm). Note: the byline `<p>` is grouped with the three long paragraphs by the ParagraphGroup algorithm, so it can occasionally be the target too.
+- [ ] In DevTools → Elements, locate the `.hw-host` span. The **text node immediately after it** must start with a space — confirm by inspecting its `nodeValue` in the console: `document.querySelector('.hw-host').nextSibling.nodeValue`. The word must not run directly into the next word (e.g. `"eagle update"` not `"eagleupdate"`).
 - [ ] Press <kbd>Ctrl</kbd>+<kbd>F</kbd> and search for `eagle`. Browser must report **0 matches** on the page — this is the `::before { content: attr(data-char) }` bypass at work.
 - [ ] Click the hidden word. `CelebrationPopup` appears with: `Found!`, the word `eagle`, the search duration in seconds, and `no hint`. The word's stripe turns green.
 - [ ] Click the dimmed backdrop — popup dismisses. The green-striped word **remains visible** in the text (it is not removed).

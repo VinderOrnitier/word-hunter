@@ -173,4 +173,46 @@ describe("WordRenderer", () => {
     expect(wordEl.style.fontWeight).toBe("700");
     expect(wordEl.style.fontStyle).toBe("italic");
   });
+
+  describe("word spacing", () => {
+    it("leaves a space between the span and the text that follows (mid-text insertion)", () => {
+      const para = makePara(60);
+      WordRenderer(eagle, [[para]]);
+
+      const host = document.querySelector(".hw-host")!;
+      const next = host.nextSibling;
+      if (next && next.nodeType === Node.TEXT_NODE && next.textContent) {
+        expect(next.textContent).toMatch(/^ /);
+      }
+    });
+
+    it("adds a trailing space when the span lands at position 0 of a single-word text node", () => {
+      const para = document.createElement("p");
+      para.textContent = "example";
+      document.body.appendChild(para);
+
+      WordRenderer(eagle, [[para]]);
+
+      const host = document.querySelector(".hw-host");
+      if (!host) return;
+      const next = host.nextSibling;
+      expect(next).not.toBeNull();
+      expect(next!.textContent).toMatch(/^ /);
+    });
+
+    it("does not add a trailing space when the insertion point is at the end of the text", () => {
+      const para = document.createElement("p");
+      para.textContent = "word ";
+      document.body.appendChild(para);
+
+      WordRenderer(eagle, [[para]]);
+
+      const host = document.querySelector(".hw-host");
+      if (!host) return;
+      const next = host.nextSibling;
+      if (next) {
+        expect(next.textContent).toBe("");
+      }
+    });
+  });
 });

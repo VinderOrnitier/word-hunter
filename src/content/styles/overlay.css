@@ -9,12 +9,13 @@
 
 .hw-word {
   cursor: pointer;
-  padding: 0 2px;
+  padding: 0;
   background-image: none;
   transition: background-image var(--wh-dur-base) var(--wh-ease-standard);
 }
 
 .hw-word--found {
+  padding: 0 2px;
   background-image: linear-gradient(
     180deg,
     transparent 0,
