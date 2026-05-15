@@ -52,13 +52,100 @@ describe("WordRenderer", () => {
     expect(document.querySelectorAll(".hw-word")).toHaveLength(0);
   });
 
-  it("copies font styles from the paragraph onto the .hw-word container", () => {
+  it("skips text nodes inside <code> and does not insert when nothing else is available", () => {
+    const para = document.createElement("p");
+    para.innerHTML = Array.from({ length: 60 }, (_, i) => `<code>word${i}</code>`).join(" ");
+    document.body.appendChild(para);
+
+    WordRenderer(eagle, [[para]]);
+
+    expect(document.querySelectorAll(".hw-word")).toHaveLength(0);
+  });
+
+  it("inserts into regular text even when paragraph also contains <code> text", () => {
+    const para = document.createElement("p");
+    para.innerHTML =
+      Array.from({ length: 30 }, (_, i) => `<code>code${i}</code>`).join(" ") +
+      " " +
+      Array.from({ length: 30 }, (_, i) => `plain${i}`).join(" ");
+    document.body.appendChild(para);
+
+    WordRenderer(eagle, [[para]]);
+
+    // insertion happened
+    expect(document.querySelectorAll(".hw-word")).toHaveLength(1);
+    // the hw-host must not be a descendant of any code element
+    const host = document.querySelector(".hw-host")!;
+    expect(host.closest("code")).toBeNull();
+  });
+
+  it.each(["a", "button", "code", "kbd", "samp", "var", "abbr", "acronym"])(
+    "skips text nodes whose closest ancestor is <%s>",
+    (tag) => {
+      const para = document.createElement("p");
+      para.innerHTML = Array.from(
+        { length: 60 },
+        (_, i) => `<${tag}>word${i}</${tag}>`
+      ).join(" ");
+      document.body.appendChild(para);
+
+      WordRenderer(eagle, [[para]]);
+
+      expect(document.querySelectorAll(".hw-word")).toHaveLength(0);
+    }
+  );
+
+  it("inserts into one of the elements across multiple groups", () => {
+    const paras = Array.from({ length: 4 }, (_, i) => {
+      const p = makePara(20);
+      p.dataset.idx = String(i);
+      return p;
+    });
+    const groups: Element[][] = [[paras[0], paras[1]], [paras[2], paras[3]]];
+
+    WordRenderer(eagle, groups);
+
+    expect(document.querySelectorAll(".hw-word")).toHaveLength(1);
+    const host = document.querySelector(".hw-host")!;
+    // host must be a descendant of one of the para elements
+    const inOne = paras.some((p) => p.contains(host));
+    expect(inOne).toBe(true);
+  });
+
+  it("reads computed style from the text node's parent element, not the paragraph container", () => {
+    const para = document.createElement("p");
+    const span = document.createElement("span");
+    span.textContent = Array.from({ length: 60 }, (_, i) => `word${i}`).join(" ");
+    para.appendChild(span);
+    document.body.appendChild(para);
+
+    const spy = jest.spyOn(window, "getComputedStyle").mockReturnValue({
+      fontFamily: "Courier",
+      fontSize: "12px",
+      color: "red",
+      lineHeight: "1",
+      fontWeight: "400",
+      fontStyle: "normal",
+    } as CSSStyleDeclaration);
+
+    WordRenderer(eagle, [[para]]);
+
+    // getComputedStyle must have been called with the span (textNode.parentElement),
+    // not with the para element
+    const calls = spy.mock.calls.map((c) => c[0]);
+    expect(calls).toContain(span);
+    expect(calls).not.toContain(para);
+  });
+
+  it("copies font styles including fontWeight and fontStyle onto the .hw-word container", () => {
     const para = makePara(60);
     jest.spyOn(window, "getComputedStyle").mockReturnValue({
       fontFamily: "Georgia",
       fontSize: "18px",
       color: "rgb(33, 33, 33)",
       lineHeight: "1.6",
+      fontWeight: "700",
+      fontStyle: "italic",
     } as CSSStyleDeclaration);
 
     WordRenderer(eagle, [[para]]);
@@ -68,5 +155,7 @@ describe("WordRenderer", () => {
     expect(wordEl.style.fontSize).toBe("18px");
     expect(wordEl.style.color).toBe("rgb(33, 33, 33)");
     expect(wordEl.style.lineHeight).toBe("1.6");
+    expect(wordEl.style.fontWeight).toBe("700");
+    expect(wordEl.style.fontStyle).toBe("italic");
   });
 });

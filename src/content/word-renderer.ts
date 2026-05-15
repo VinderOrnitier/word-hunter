@@ -3,6 +3,7 @@ import type { ActiveWord, HuntRecord } from "../shared/types";
 import { HiddenWordHost } from "./components/HiddenWordHost";
 
 const HW_HOST_CLASS = "hw-host";
+const SKIP_SELECTOR = "a, button, code, kbd, samp, var, abbr, acronym";
 
 export interface WordRendererOptions {
   onFind?: (record: HuntRecord) => void | Promise<void>;
@@ -32,7 +33,9 @@ export function WordRenderer(
   const textNodes: Text[] = [];
   let node: Node | null;
   while ((node = walker.nextNode())) {
-    if (node.textContent?.trim()) textNodes.push(node as Text);
+    if (!node.textContent?.trim()) continue;
+    if ((node as Text).parentElement?.closest(SKIP_SELECTOR)) continue;
+    textNodes.push(node as Text);
   }
   if (textNodes.length === 0) return;
 
