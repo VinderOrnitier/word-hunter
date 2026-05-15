@@ -14,7 +14,7 @@ export function RulesTab(): JSX.Element {
 
       <ul class="wh-rules__list">
         <li class="wh-rules__item">
-          <span class="wh-rules__marker">50 +</span>
+          <span class="wh-rules__marker">30 +</span>
           <span class="wh-body-sm">
             words required to qualify a paragraph
           </span>
