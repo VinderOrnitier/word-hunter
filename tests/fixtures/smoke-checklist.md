@@ -80,6 +80,10 @@ Use `tests/fixtures/smoke-hidden-elements.html` (open as a `file://` URL with an
 - [ ] **Settings → Clear all hunts**: `Stats` tab returns to the editorial empty state.
 - [ ] **Play → Clear**: the ActiveWord card returns to "No active word".
 
+## Known issues / limitations
+
+- **React/SPA timing race (issue #30):** On pages where the DOM is built by a client-side framework (e.g. GitHub), `inject()` may run before semantic wrappers (`<nav>`, `<ul>`) are fully mounted around navigation widgets. At that intermediate state `ParagraphSelector` can find `<li>` nodes from sidebars or file trees as qualifying groups, injecting the word into UI chrome instead of prose. Confirmed on `github.com` — the word appeared in the file-tree sidebar `<li>` rather than the README `<p>` content. Proposed fixes: ARIA-role guard in `ParagraphSelector` + DOM-stability delay. Tracked in [#30](https://github.com/VinderOrnitier/word-hunter/issues/30).
+
 ## Known fixture quirks
 
 - The article uses `<article>` + 3 `<p>` blocks (77 / 77 / 79 words) plus a `<p class="byline">` (~6 words). The ParagraphGroup algorithm scans siblings: `<h1>` triggers a group flush (BREAK tag), then the byline and all three paragraphs are grouped together into **one group** with ~239 combined words. `WordRenderer` picks a random element from that group, so the target can be the byline or any of the three paragraphs.
