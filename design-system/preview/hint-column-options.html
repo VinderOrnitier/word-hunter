@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    body {
+      padding: 28px;
+      font-family: var(--wh-font-sans);
+      font-size: 12px;
+      background: var(--wh-bg);
+      color: var(--wh-fg);
+    }
+
+    h2 {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--wh-fg-3);
+      margin: 0 0 12px;
+    }
+
+    .section { margin-bottom: 36px; }
+
+    /* Table shared */
+    table {
+      width: 320px;
+      border-collapse: collapse;
+      font-family: var(--wh-font-sans);
+      font-size: 12px;
+    }
+    th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--wh-fg-3);
+      padding: 0 10px 8px;
+      border-bottom: 1px solid var(--wh-border);
+    }
+    th.hint-col { text-align: center; width: 36px; }
+    td { padding: 8px 10px; border-bottom: 1px solid var(--wh-border-soft); color: var(--wh-fg-2); }
+    td.hint-col { text-align: center; }
+    tr:hover td { background: var(--wh-surface-2); }
+    .word { font-family: var(--wh-font-mono); color: var(--wh-fg); font-weight: 500; }
+
+    /* Option 1 — icon */
+    .icon-used   { color: var(--wh-hint); }
+    .icon-unused { color: var(--wh-fg-4); }
+    svg { display: inline-block; vertical-align: middle; }
+
+    /* Option 2 — dot */
+    .dot-used {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 999px;
+      background: var(--wh-hint);
+    }
+    .dot-unused {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 999px;
+      background: transparent;
+      border: 1.5px solid var(--wh-fg-4);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="section">
+    <h2>Option 1 — Lightbulb icon (colored / muted)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Word</th>
+          <th class="hint-col">Hint</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="word">flamingo</span></td>
+          <td class="hint-col">
+            <span class="icon-unused" title="no hint">
+              <!-- lightbulb outline -->
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5C17.7 10 18 8.9 18 8A6 6 0 0 0 6 8c0 .9.3 2 1.5 3.5.8.8 1.3 1.5 1.5 2.5"/>
+                <path d="M9 18h6"/><path d="M10 22h4"/>
+              </svg>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="word">Pikachu</span></td>
+          <td class="hint-col">
+            <span class="icon-used" title="hint used">
+              <!-- lightbulb filled -->
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5C17.7 10 18 8.9 18 8A6 6 0 0 0 6 8c0 .9.3 2 1.5 3.5.8.8 1.3 1.5 1.5 2.5"/>
+                <path d="M9 18h6"/><path d="M10 22h4"/>
+              </svg>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="word">otter</span></td>
+          <td class="hint-col">
+            <span class="icon-unused" title="no hint">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5C17.7 10 18 8.9 18 8A6 6 0 0 0 6 8c0 .9.3 2 1.5 3.5.8.8 1.3 1.5 1.5 2.5"/>
+                <path d="M9 18h6"/><path d="M10 22h4"/>
+              </svg>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="word">wolf</span></td>
+          <td class="hint-col">
+            <span class="icon-used" title="hint used">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5C17.7 10 18 8.9 18 8A6 6 0 0 0 6 8c0 .9.3 2 1.5 3.5.8.8 1.3 1.5 1.5 2.5"/>
+                <path d="M9 18h6"/><path d="M10 22h4"/>
+              </svg>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Option 2 — Dot (filled / outlined)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Word</th>
+          <th class="hint-col">Hint</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="word">flamingo</span></td>
+          <td class="hint-col"><span class="dot-unused" title="no hint"></span></td>
+        </tr>
+        <tr>
+          <td><span class="word">Pikachu</span></td>
+          <td class="hint-col"><span class="dot-used" title="hint used"></span></td>
+        </tr>
+        <tr>
+          <td><span class="word">otter</span></td>
+          <td class="hint-col"><span class="dot-unused" title="no hint"></span></td>
+        </tr>
+        <tr>
+          <td><span class="word">wolf</span></td>
+          <td class="hint-col"><span class="dot-used" title="hint used"></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>

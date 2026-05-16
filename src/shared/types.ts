@@ -5,6 +5,7 @@ export interface HuntRecord {
   pageTitle: string;
   searchDurationSeconds: number;
   hintUsed: boolean;
+  list?: WordSource;
 }
 
 export interface GameSettings {

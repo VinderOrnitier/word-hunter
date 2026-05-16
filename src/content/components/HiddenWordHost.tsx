@@ -41,6 +41,7 @@ export function HiddenWordHost({
       pageTitle: document.title,
       searchDurationSeconds: seconds,
       hintUsed: usedHint,
+      list: activeWord.list,
     };
 
     lastRecord.current = record;

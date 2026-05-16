@@ -1,5 +1,5 @@
 import type { JSX } from "preact";
-import type { HuntRecord } from "../../shared/types";
+import type { HuntRecord, WordSource } from "../../shared/types";
 import { useStorage } from "../hooks/useStorage";
 import { Eyebrow } from "../components/Eyebrow";
 import { Button } from "../components/Button";
@@ -35,6 +35,7 @@ export function StatsTab(): JSX.Element {
         </Button>
       </div>
       <div class="wh-stats__table" role="list">
+        <StatsHeader />
         {sorted.map((r) => (
           <StatsRow key={`${r.word}-${r.foundAt}`} record={r} />
         ))}
@@ -43,10 +44,38 @@ export function StatsTab(): JSX.Element {
   );
 }
 
+function StatsHeader(): JSX.Element {
+  return (
+    <div class="wh-stats__col-header" aria-hidden="true">
+      <span>Word</span>
+      <span>Found</span>
+      <span
+        class="wh-stats__col-header--icon"
+        data-tooltip="Duration"
+      >
+        <Icon name="timer" size={11} />
+      </span>
+      <span class="wh-stats__col-header--center">Hint</span>
+      <span class="wh-stats__col-header--center">Page</span>
+    </div>
+  );
+}
+
+const DOT_COLOR: Record<WordSource, string> = {
+  animals: "var(--wh-list-animals)",
+  pokemon: "var(--wh-list-pokemon)",
+  custom: "var(--wh-fg-3)",
+};
+
 function StatsRow({ record }: { record: HuntRecord }): JSX.Element {
+  const dotColor = record.list ? DOT_COLOR[record.list] : "var(--wh-fg-3)";
+
   return (
     <div class="wh-stats__row" role="listitem">
-      <span class="wh-stats__word">{record.word}</span>
+      <span class="wh-stats__word" data-tooltip={record.word}>
+        <span class="wh-stats__dot" style={{ background: dotColor }} />
+        <span class="wh-stats__word-text">{record.word}</span>
+      </span>
       <span class="wh-stats__meta">{formatRelative(record.foundAt)}</span>
       <span class="wh-stats__meta">{formatDuration(record.searchDurationSeconds)}</span>
       <span
@@ -55,17 +84,18 @@ function StatsRow({ record }: { record: HuntRecord }): JSX.Element {
             ? "wh-stats__hint wh-stats__hint--used"
             : "wh-stats__hint"
         }
-      >
-        {record.hintUsed ? "hint" : "—"}
-      </span>
+        aria-label={record.hintUsed ? "hint used" : "no hint"}
+        data-tooltip={record.hintUsed ? "Hint used" : "No hint"}
+      />
       <a
         class="wh-stats__link"
         href={record.pageUrl}
         target="_blank"
         rel="noopener"
+        aria-label={record.pageTitle}
+        data-tooltip={record.pageTitle}
       >
-        <span>{record.pageTitle}</span>
-        <Icon name="external" size={10} />
+        <Icon name="external" size={12} />
       </a>
     </div>
   );

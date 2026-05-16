@@ -25,6 +25,8 @@ function Icon({ name, size = 16 }) {
       return <svg {...props}><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>;
     case "refresh":
       return <svg {...props}><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>;
+    case "duration":
+      return <svg {...props}><circle cx="12" cy="13" r="8" data-om-id="41e6c60d:51"></circle><path d="M12 9v4l2.5 2.5" data-om-id="41e6c60d:52"></path><path d="M9 2h6" data-om-id="41e6c60d:53"></path><path d="M12 2v3" data-om-id="41e6c60d:54"></path></svg>;
     default: return null;
   }
 }

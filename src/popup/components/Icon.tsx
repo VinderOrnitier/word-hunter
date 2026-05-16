@@ -10,7 +10,8 @@ export type IconName =
   | "refresh"
   | "check"
   | "x"
-  | "target";
+  | "target"
+  | "timer";
 
 interface IconProps {
   name: IconName;
@@ -98,6 +99,14 @@ export function Icon({ name, size = 16 }: IconProps): JSX.Element | null {
           <circle cx="12" cy="12" r="10" />
           <circle cx="12" cy="12" r="6" />
           <circle cx="12" cy="12" r="2" />
+        </svg>
+      );
+    case "timer":
+      return (
+        <svg {...props}>
+          <line x1="10" x2="14" y1="2" y2="2" />
+          <line x1="12" x2="15" y1="14" y2="11" />
+          <circle cx="12" cy="14" r="8" />
         </svg>
       );
     default:
