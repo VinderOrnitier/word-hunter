@@ -17,7 +17,6 @@ export function HiddenWord({
   return (
     <span
       class={cls}
-      data-word={word}
       onClick={onFind}
       style={inheritedStyle}
     >

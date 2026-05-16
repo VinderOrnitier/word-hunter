@@ -10,6 +10,7 @@ import { NoParagraphNotification } from "./no-paragraph-notification";
 import { NavigationObserver } from "./navigation-observer";
 import { resolveArt } from "./art-resolver";
 import { ActiveWordWatcher } from "./active-word-watcher";
+import { validateCustomWord } from "../shared/word-validation";
 
 const timer = HintTimer(document);
 const celebration = CelebrationManager(document);
@@ -18,6 +19,7 @@ ActiveWordWatcher(timer, celebration, document).start();
 async function inject(): Promise<void> {
   const activeWord = await getActiveWord();
   if (!activeWord) return;
+  if (!activeWord.word || validateCustomWord(activeWord.word) !== undefined) return;
 
   const settings = await getSettings();
   const groups = ParagraphSelector(document, settings.minWordThreshold);

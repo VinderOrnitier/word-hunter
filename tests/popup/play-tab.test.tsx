@@ -203,6 +203,24 @@ describe("PlayTab", () => {
       unmount();
     });
 
+    it("does not show an error for a word with trailing space", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+      const input = screen.getByPlaceholderText(/type your own/i);
+      fireEvent.input(input, { target: { value: "hello " } });
+      fireEvent.click(screen.getByRole("button", { name: /new word/i }));
+      expect(screen.queryByText(/letters and hyphens only/i)).not.toBeInTheDocument();
+    });
+
+    it("shows an error and blocks submit for a hyphen-only string", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+      const input = screen.getByPlaceholderText(/type your own/i);
+      fireEvent.input(input, { target: { value: "--" } });
+      fireEvent.click(screen.getByRole("button", { name: /new word/i }));
+      expect(screen.getByText("Must contain at least one letter")).toBeInTheDocument();
+    });
+
     it("does not write to storage when an invalid custom word is submitted", async () => {
       const { setMock } = setupChromeMock();
       render(<PlayTab />);

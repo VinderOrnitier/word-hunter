@@ -3,6 +3,7 @@ import type { JSX } from "preact";
 import type { ActiveWord, WordSource } from "../../shared/types";
 import { WORD_LISTS, type WordListName } from "../word-lists";
 import { useStorage } from "../hooks/useStorage";
+import { validateCustomWord, MAX_CUSTOM_LEN } from "../../shared/word-validation";
 import { Card } from "../components/Card";
 import { Eyebrow } from "../components/Eyebrow";
 import { Badge, type BadgeTone } from "../components/Badge";
@@ -34,17 +35,6 @@ const LIST_DOT: Record<WordSource, string> = {
   custom: "var(--wh-fg-3)",
 };
 
-const MAX_CUSTOM_LEN = 25;
-const VALID_CUSTOM_RE = /^[\p{L}-]+$/u;
-
-function getCustomError(value: string): string | undefined {
-  if (!value) return undefined;
-  if (!VALID_CUSTOM_RE.test(value)) return "Letters and hyphens only";
-  if (value.length < 2) return "Min 2 characters";
-  if (value.length > MAX_CUSTOM_LEN) return `Max ${MAX_CUSTOM_LEN} characters`;
-  return undefined;
-}
-
 export function PlayTab(): JSX.Element {
   const [activeWord, setActiveWord] = useStorage("activeWord", null);
   const [list, setList] = useState<WordListName>("animals");
@@ -52,9 +42,10 @@ export function PlayTab(): JSX.Element {
   const [custom, setCustom] = useState<string>("");
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
-  const customError = getCustomError(custom);
+  const trimmed = custom.trim();
+  const customError = validateCustomWord(trimmed);
   const showCustomError = submitAttempted && customError !== undefined;
-  const customCounter = `${custom.length} / ${MAX_CUSTOM_LEN}`;
+  const customCounter = `${trimmed.length} / ${MAX_CUSTOM_LEN}`;
 
   const onListChange = (next: string): void => {
     const nextList = next as WordListName;
@@ -63,7 +54,6 @@ export function PlayTab(): JSX.Element {
   };
 
   const submit = (): void => {
-    const trimmed = custom.trim();
     if (trimmed) {
       if (customError) {
         setSubmitAttempted(true);

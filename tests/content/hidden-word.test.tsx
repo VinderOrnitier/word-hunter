@@ -36,4 +36,9 @@ describe("HiddenWord", () => {
     fireEvent.click(document.querySelector(".hw-word")!);
     expect(handler).toHaveBeenCalledTimes(1);
   });
+
+  it("does not expose the word via data-word attribute", () => {
+    render(<HiddenWord word="fox" found={false} onFind={() => {}} />);
+    expect(document.querySelector(".hw-word")?.getAttribute("data-word")).toBeNull();
+  });
 });
