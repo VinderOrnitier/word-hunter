@@ -24,22 +24,22 @@ export function App(): JSX.Element {
       <Tabs active={active} onNavigate={handleTabNavigate} />
       <main class="wh-popup__main">
         {active === "play" && (
-          <div data-testid="tab-panel-play">
+          <div class="wh-tab-panel" data-testid="tab-panel-play">
             <PlayTab />
           </div>
         )}
         {active === "stats" && (
-          <div data-testid="tab-panel-stats">
+          <div class="wh-tab-panel" data-testid="tab-panel-stats">
             <StatsTab />
           </div>
         )}
         {active === "settings" && (
-          <div data-testid="tab-panel-settings">
+          <div class="wh-tab-panel" data-testid="tab-panel-settings">
             <SettingsTab />
           </div>
         )}
         {active === "rules" && (
-          <div data-testid="tab-panel-rules">
+          <div class="wh-tab-panel" data-testid="tab-panel-rules">
             <RulesTab />
           </div>
         )}
