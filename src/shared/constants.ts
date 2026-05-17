@@ -7,9 +7,11 @@ export const DEFAULT_WORDS = [
 ];
 
 export const DEFAULT_SETTINGS: GameSettings = {
-  hintDelayMinutes: 5,
+  hintDelayMinutes: 3,
   celebrationHoverSeconds: 1.5,
   minWordThreshold: 30,
 };
 
 export const MIN_PARAGRAPH_WORDS = 50;
+
+export const HINT_USED_KEY = "hw-hint-used";

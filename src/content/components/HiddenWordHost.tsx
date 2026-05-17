@@ -2,6 +2,7 @@ import { useState, useRef } from "preact/hooks";
 import type { JSX } from "preact";
 import type { ActiveWord, HuntRecord } from "../../shared/types";
 import { HiddenWord } from "./HiddenWord";
+import { HINT_USED_KEY } from "../../shared/constants";
 
 interface HiddenWordHostProps {
   activeWord: ActiveWord;
@@ -9,8 +10,6 @@ interface HiddenWordHostProps {
   onFind: (record: HuntRecord) => void | Promise<void>;
   onReview?: (record: HuntRecord) => void;
 }
-
-const HINT_USED_KEY = "hw-hint-used";
 
 export function HiddenWordHost({
   activeWord,

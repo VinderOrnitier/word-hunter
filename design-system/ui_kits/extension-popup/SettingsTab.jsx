@@ -3,7 +3,7 @@
 const { useState: useStateSet } = React;
 
 function SettingsTab() {
-  const [hint, setHint] = useStateSet(5);
+  const [hint, setHint] = useStateSet(3);
   const [hover, setHover] = useStateSet(1.5);
 
   return (

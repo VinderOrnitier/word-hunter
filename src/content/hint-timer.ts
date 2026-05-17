@@ -1,7 +1,7 @@
 import { h, render } from "preact";
 import { HintTooltip } from "./components/HintTooltip";
+import { HINT_USED_KEY } from "../shared/constants";
 
-const HINT_USED_KEY = "hw-hint-used";
 const HOST_CLASS = "hw-hint-tooltip-host";
 
 export function HintTimer(doc: Document) {
@@ -38,6 +38,7 @@ export function HintTimer(doc: Document) {
   }
 
   function start(delayMinutes: number): void {
+    if (timerId !== null) clearTimeout(timerId);
     sessionStorage.removeItem(HINT_USED_KEY);
     timerId = setTimeout(showTooltip, delayMinutes * 60_000);
   }
