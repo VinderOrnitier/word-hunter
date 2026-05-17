@@ -72,34 +72,6 @@ describe("SettingsTab", () => {
     expect(hoverInput.value).toBe("3");
   });
 
-  it("persists a new hint delay to storage when the input changes", async () => {
-    const { setMock } = setupChromeMock();
-    render(<SettingsTab />);
-
-    const [hintInput] = screen.getAllByRole("spinbutton") as HTMLInputElement[];
-    fireEvent.input(hintInput, { target: { value: "15" } });
-
-    await waitFor(() => {
-      expect(setMock).toHaveBeenCalledWith({
-        settings: { hintDelayMinutes: 15, celebrationHoverSeconds: 1.5, minWordThreshold: 30 },
-      });
-    });
-  });
-
-  it("persists a new cursor reveal delay to storage when the input changes", async () => {
-    const { setMock } = setupChromeMock();
-    render(<SettingsTab />);
-
-    const [, hoverInput] = screen.getAllByRole("spinbutton") as HTMLInputElement[];
-    fireEvent.input(hoverInput, { target: { value: "2.5" } });
-
-    await waitFor(() => {
-      expect(setMock).toHaveBeenCalledWith({
-        settings: { hintDelayMinutes: 3, celebrationHoverSeconds: 2.5, minWordThreshold: 30 },
-      });
-    });
-  });
-
   it("renders a range slider for minimum paragraph length with default value 30", () => {
     setupChromeMock();
     render(<SettingsTab />);
@@ -123,18 +95,81 @@ describe("SettingsTab", () => {
     expect(screen.getByText("80")).toBeInTheDocument();
   });
 
-  it("persists a new minWordThreshold to storage when the slider changes", async () => {
+  it("does not show a Save button when no settings have been changed", () => {
+    setupChromeMock();
+    render(<SettingsTab />);
+
+    expect(screen.queryByRole("button", { name: /save/i })).not.toBeInTheDocument();
+  });
+
+  it("shows Save and Cancel buttons after a setting is changed", () => {
+    setupChromeMock();
+    render(<SettingsTab />);
+
+    const [hintInput] = screen.getAllByRole("spinbutton") as HTMLInputElement[];
+    fireEvent.input(hintInput, { target: { value: "10" } });
+
+    expect(screen.getByRole("button", { name: /save/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /cancel/i })).toBeInTheDocument();
+  });
+
+  it("Cancel reverts the input value and hides the Save button", () => {
+    setupChromeMock();
+    render(<SettingsTab />);
+
+    const [hintInput] = screen.getAllByRole("spinbutton") as HTMLInputElement[];
+    fireEvent.input(hintInput, { target: { value: "10" } });
+    expect((hintInput as HTMLInputElement).value).toBe("10");
+
+    fireEvent.click(screen.getByRole("button", { name: /cancel/i }));
+
+    expect((hintInput as HTMLInputElement).value).toBe("3");
+    expect(screen.queryByRole("button", { name: /save/i })).not.toBeInTheDocument();
+  });
+
+  it("Save writes all draft values to storage", async () => {
     const { setMock } = setupChromeMock();
     render(<SettingsTab />);
 
-    const slider = screen.getByRole("slider") as HTMLInputElement;
-    fireEvent.input(slider, { target: { value: "70" } });
+    const [hintInput, hoverInput] = screen.getAllByRole("spinbutton") as HTMLInputElement[];
+    fireEvent.input(hintInput, { target: { value: "8" } });
+    fireEvent.input(hoverInput, { target: { value: "2" } });
+
+    fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
     await waitFor(() => {
       expect(setMock).toHaveBeenCalledWith({
-        settings: { hintDelayMinutes: 3, celebrationHoverSeconds: 1.5, minWordThreshold: 70 },
+        settings: { hintDelayMinutes: 8, celebrationHoverSeconds: 2, minWordThreshold: 30 },
       });
     });
+  });
+
+  it("Save button disappears after saving", async () => {
+    setupChromeMock();
+    render(<SettingsTab />);
+
+    const [hintInput] = screen.getAllByRole("spinbutton") as HTMLInputElement[];
+    fireEvent.input(hintInput, { target: { value: "8" } });
+    expect(screen.getByRole("button", { name: /save/i })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /save/i }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole("button", { name: /save/i })).not.toBeInTheDocument();
+    });
+  });
+
+  it("does not show Save button after settings load from storage", async () => {
+    const stored: GameSettings = { hintDelayMinutes: 10, celebrationHoverSeconds: 3, minWordThreshold: 50 };
+    setupChromeMock({ settings: stored });
+    render(<SettingsTab />);
+
+    await waitFor(() => {
+      const [hintInput] = screen.getAllByRole("spinbutton") as HTMLInputElement[];
+      expect(hintInput.value).toBe("10");
+    });
+
+    expect(screen.queryByRole("button", { name: /save/i })).not.toBeInTheDocument();
   });
 
 });

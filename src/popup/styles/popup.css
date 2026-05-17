@@ -771,6 +771,21 @@
   flex-shrink: 0;
 }
 
+.wh-settings__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--wh-space-2);
+  padding-top: var(--wh-space-3);
+  margin-top: var(--wh-space-1);
+  border-top: 1px solid var(--wh-border-soft);
+  animation: wh-settings-footer-in var(--wh-dur-base) var(--wh-ease-standard);
+}
+
+@keyframes wh-settings-footer-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* ---------- RulesTab ---------- */
 
 .wh-rules {

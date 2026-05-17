@@ -1,15 +1,35 @@
 import type { JSX } from "preact";
+import { useEffect, useState } from "preact/hooks";
 import type { GameSettings } from "../../shared/types";
 import { DEFAULT_SETTINGS } from "../../shared/constants";
 import { useStorage } from "../hooks/useStorage";
 import { Field } from "../components/Field";
 import { Input } from "../components/Input";
+import { Button } from "../components/Button";
 
 export function SettingsTab(): JSX.Element {
-  const [settings, setSettings] = useStorage("settings", DEFAULT_SETTINGS);
+  const [saved, setSettings] = useStorage("settings", DEFAULT_SETTINGS);
+  const [draft, setDraft] = useState<GameSettings>(saved);
+
+  useEffect(() => {
+    setDraft(saved);
+  }, [saved]);
+
+  const isDirty =
+    draft.hintDelayMinutes !== saved.hintDelayMinutes ||
+    draft.celebrationHoverSeconds !== saved.celebrationHoverSeconds ||
+    draft.minWordThreshold !== saved.minWordThreshold;
 
   const update = (patch: Partial<GameSettings>): void => {
-    setSettings({ ...settings, ...patch });
+    setDraft({ ...draft, ...patch });
+  };
+
+  const handleSave = (): void => {
+    setSettings(draft);
+  };
+
+  const handleCancel = (): void => {
+    setDraft(saved);
   };
 
   return (
@@ -25,15 +45,15 @@ export function SettingsTab(): JSX.Element {
             min={30}
             max={150}
             step={10}
-            value={settings.minWordThreshold}
+            value={draft.minWordThreshold}
             style={{
-              background: `linear-gradient(to right, var(--wh-primary) 0%, var(--wh-primary) ${((settings.minWordThreshold - 30) / 120) * 100}%, var(--wh-surface-2) ${((settings.minWordThreshold - 30) / 120) * 100}%, var(--wh-surface-2) 100%)`,
+              background: `linear-gradient(to right, var(--wh-primary) 0%, var(--wh-primary) ${((draft.minWordThreshold - 30) / 120) * 100}%, var(--wh-surface-2) ${((draft.minWordThreshold - 30) / 120) * 100}%, var(--wh-surface-2) 100%)`,
             }}
             onInput={(e) =>
               update({ minWordThreshold: Number((e.target as HTMLInputElement).value) })
             }
           />
-          <span class="wh-settings__range-value">{settings.minWordThreshold}</span>
+          <span class="wh-settings__range-value">{draft.minWordThreshold}</span>
         </div>
       </Field>
 
@@ -47,7 +67,7 @@ export function SettingsTab(): JSX.Element {
               type="number"
               min={1}
               step={1}
-              value={String(settings.hintDelayMinutes)}
+              value={String(draft.hintDelayMinutes)}
               onInput={(v) => update({ hintDelayMinutes: Number(v) })}
             />
           </div>
@@ -65,7 +85,7 @@ export function SettingsTab(): JSX.Element {
               type="number"
               min={0.1}
               step={0.1}
-              value={String(settings.celebrationHoverSeconds)}
+              value={String(draft.celebrationHoverSeconds)}
               onInput={(v) => update({ celebrationHoverSeconds: Number(v) })}
             />
           </div>
@@ -73,6 +93,12 @@ export function SettingsTab(): JSX.Element {
         </div>
       </Field>
 
+      {isDirty && (
+        <div class="wh-settings__footer">
+          <Button variant="ghost" size="sm" onClick={handleCancel}>Cancel</Button>
+          <Button variant="primary" size="sm" onClick={handleSave}>Save</Button>
+        </div>
+      )}
     </div>
   );
 }
