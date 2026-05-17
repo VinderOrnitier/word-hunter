@@ -7,6 +7,8 @@
 html, body {
   margin: 0;
   padding: 0;
+  height: var(--wh-popup-min-h);
+  overflow: hidden;
   background: var(--wh-bg);
   color: var(--wh-fg);
   font-family: var(--wh-font-sans);
@@ -22,7 +24,7 @@ button {
 
 .wh-popup {
   width: var(--wh-popup-width);
-  min-height: var(--wh-popup-min-h);
+  height: 100%;
   display: flex;
   flex-direction: column;
   background: var(--wh-bg);
@@ -123,6 +125,8 @@ button {
 
 .wh-popup__main {
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   padding: var(--wh-space-4);
   display: flex;
   flex-direction: column;
