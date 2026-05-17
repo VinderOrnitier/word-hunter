@@ -18,7 +18,7 @@ describe("resolveArt", () => {
   });
 
   it("returns the emoji for a known animal", () => {
-    expect(resolveArt("cat", "animals")).toBe("🐱");
+    expect(resolveArt("Cat", "animals")).toBe("🐱");
   });
 
   it("returns undefined for an unknown animal", () => {

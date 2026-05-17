@@ -3,9 +3,25 @@ import { POKEMON_NAMES } from "../shared/pokemon-sprites";
 export type WordListName = "animals" | "pokemon";
 
 export const ANIMALS = [
-  "cat", "elephant", "fox", "wolf", "eagle", "bear", "giraffe", "tiger",
-  "dolphin", "hedgehog", "zebra", "kangaroo", "lion", "penguin", "owl",
-  "crocodile", "flamingo", "peacock",
+  "Alpaca", "Bat", "Bear", "Beaver",
+  "Camel", "Cat", "Chameleon", "Cheetah", "Cow", "Crocodile",
+  "Deer", "Dolphin", "Eagle", "Elephant", "Elk",
+  "Flamingo", "Fox", "Frog",
+  "Giraffe", "Gorilla",
+  "Hamster", "Hedgehog", "Hippo", "Horse",
+  "Iguana",
+  "Jaguar",
+  "Kangaroo", "Koala",
+  "Leopard", "Lion", "Llama",
+  "Moose",
+  "Octopus", "Otter", "Owl",
+  "Panda", "Parrot", "Peacock", "Penguin", "Pig",
+  "Rabbit", "Raccoon", "Raven", "Rhino",
+  "Shark", "Skunk", "Sloth", "Squirrel",
+  "Tiger", "Turtle",
+  "Vulture",
+  "Whale", "Wolf",
+  "Zebra",
 ];
 
 export const POKEMON = POKEMON_NAMES.map(

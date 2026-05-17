@@ -74,7 +74,7 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 The player selects an active list; the word is then chosen from that list.
 
 **Animals (default):**
-cat, elephant, fox, wolf, eagle, bear, giraffe, tiger, dolphin, hedgehog, zebra, kangaroo, lion, penguin, owl, crocodile, flamingo, peacock
+Alpaca, Bat, Bear, Beaver, Camel, Cat, Chameleon, Cheetah, Cow, Crocodile, Deer, Dolphin, Eagle, Elephant, Elk, Flamingo, Fox, Frog, Giraffe, Gorilla, Hamster, Hedgehog, Hippo, Horse, Iguana, Jaguar, Kangaroo, Koala, Leopard, Lion, Llama, Moose, Octopus, Otter, Owl, Panda, Parrot, Peacock, Penguin, Pig, Rabbit, Raccoon, Raven, Rhino, Shark, Skunk, Sloth, Squirrel, Tiger, Turtle, Vulture, Whale, Wolf, Zebra
 
 **Pokémon:**
 Pikachu, Bulbasaur, Charmander, Squirtle, Jigglypuff, Mewtwo, Eevee, Snorlax, Gengar, Psyduck, Machop, Alakazam, Magikarp, Gyarados, Lapras, Vaporeon, Flareon, Dragonite

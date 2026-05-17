@@ -8,7 +8,7 @@ import { Card } from "../components/Card";
 import { Eyebrow } from "../components/Eyebrow";
 import { Badge, type BadgeTone } from "../components/Badge";
 import { Field } from "../components/Field";
-import { Select } from "../components/Select";
+import { SearchableSelect } from "../components/SearchableSelect";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 
@@ -104,14 +104,14 @@ export function PlayTab(): JSX.Element {
       <div class="wh-play__picker">
         <div class="wh-play__row">
           <Field label="Word list">
-            <Select value={list} onChange={onListChange}>
+            <SearchableSelect value={list} onChange={onListChange}>
               {LIST_OPTIONS}
-            </Select>
+            </SearchableSelect>
           </Field>
           <Field label="Word">
-            <Select value={picked} onChange={setPicked}>
+            <SearchableSelect value={picked} onChange={setPicked}>
               {WORD_LISTS[list]}
-            </Select>
+            </SearchableSelect>
           </Field>
         </div>
 

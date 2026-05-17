@@ -5,7 +5,7 @@ A Chrome extension where the player searches for a hidden word embedded invisibl
 ## Language
 
 **Word**:
-A string candidate from a `WordList` (e.g. "cat", "Pikachu").
+A string candidate from a `WordList` (e.g. "Cat", "Pikachu").
 _Avoid_: target, search term
 
 **ActiveWord**:

@@ -74,10 +74,10 @@ describe("PlayTab", () => {
     setupChromeMock();
     render(<PlayTab />);
 
-    const lists = screen.getAllByRole("combobox");
-    const wordListSelect = lists[0];
-    fireEvent.change(wordListSelect, { target: { value: "pokemon" } });
+    fireEvent.click(screen.getByRole("button", { name: /animals/i }));
+    fireEvent.click(screen.getByRole("option", { name: /pokémon/i }));
 
+    fireEvent.click(screen.getByRole("button", { name: /bulbasaur/i }));
     expect(screen.getByRole("option", { name: "Pikachu" })).toBeInTheDocument();
   });
 
@@ -85,14 +85,14 @@ describe("PlayTab", () => {
     const { setMock } = setupChromeMock();
     render(<PlayTab />);
 
-    const selects = screen.getAllByRole("combobox");
-    fireEvent.change(selects[1], { target: { value: "fox" } });
+    fireEvent.click(screen.getByRole("button", { name: /alpaca/i }));
+    fireEvent.click(screen.getByRole("option", { name: "Fox" }));
     fireEvent.click(screen.getByRole("button", { name: /new word/i }));
 
     await waitFor(() => {
       expect(setMock).toHaveBeenCalledWith(
         expect.objectContaining({
-          activeWord: expect.objectContaining({ word: "fox", list: "animals" }),
+          activeWord: expect.objectContaining({ word: "Fox", list: "animals" }),
         })
       );
     });
