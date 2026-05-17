@@ -634,6 +634,40 @@
   text-align: center;
 }
 
+/* ---------- ConfirmOverlay ---------- */
+
+.wh-stats__confirm-anchor {
+  position: relative;
+}
+
+.wh-confirm-overlay {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--wh-space-2);
+  padding: var(--wh-space-2) var(--wh-space-2);
+  background: var(--wh-surface-2);
+  border-top: 1px solid var(--wh-border-soft);
+  border-bottom: 1px solid var(--wh-border-soft);
+  animation: wh-overlay-in var(--wh-dur-fast) var(--wh-ease-standard) both;
+}
+
+.wh-confirm-overlay__prompt {
+  flex: 1;
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-sm);
+  color: var(--wh-fg-3);
+}
+
+@keyframes wh-overlay-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* ---------- SettingsTab ---------- */
 
 .wh-settings {

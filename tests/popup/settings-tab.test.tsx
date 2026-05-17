@@ -137,14 +137,4 @@ describe("SettingsTab", () => {
     });
   });
 
-  it("writes finds=[] to storage when 'Clear all hunts' is clicked", async () => {
-    const { setMock } = setupChromeMock({ finds: [{ word: "fox" }] });
-    render(<SettingsTab />);
-
-    fireEvent.click(await screen.findByRole("button", { name: /clear all hunts/i }));
-
-    await waitFor(() => {
-      expect(setMock).toHaveBeenCalledWith({ finds: [] });
-    });
-  });
 });

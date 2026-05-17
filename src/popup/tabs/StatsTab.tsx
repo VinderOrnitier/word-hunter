@@ -1,13 +1,16 @@
 import type { JSX } from "preact";
 import type { HuntRecord, WordSource } from "../../shared/types";
 import { useStorage } from "../hooks/useStorage";
+import { useConfirmAction } from "../hooks/useConfirmAction";
 import { Eyebrow } from "../components/Eyebrow";
 import { Button } from "../components/Button";
+import { ConfirmOverlay } from "../components/ConfirmOverlay";
 import { Icon } from "../components/Icon";
 import { formatDuration, formatRelative } from "../utils/format";
 
 export function StatsTab(): JSX.Element {
   const [finds, setFinds] = useStorage("finds", []);
+  const clearAction = useConfirmAction({ onConfirm: () => setFinds([]) });
 
   if (finds.length === 0) {
     return (
@@ -23,16 +26,25 @@ export function StatsTab(): JSX.Element {
 
   return (
     <div class="wh-stats">
-      <div class="wh-stats__header">
-        <Eyebrow>{finds.length} hunts</Eyebrow>
-        <Button
-          variant="ghost"
-          size="sm"
-          leftIcon="trash"
-          onClick={() => setFinds([])}
-        >
-          Clear
-        </Button>
+      <div class="wh-stats__confirm-anchor">
+        <div class="wh-stats__header">
+          <Eyebrow>{finds.length} hunts</Eyebrow>
+          <Button
+            variant="ghost"
+            size="sm"
+            leftIcon="trash"
+            onClick={clearAction.arm}
+          >
+            Clear
+          </Button>
+        </div>
+        {clearAction.armed && (
+          <ConfirmOverlay
+            prompt="Clear all hunts?"
+            onConfirm={clearAction.confirm}
+            onCancel={clearAction.cancel}
+          />
+        )}
       </div>
       <div class="wh-stats__table" role="list">
         <StatsHeader />

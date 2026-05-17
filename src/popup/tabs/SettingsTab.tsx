@@ -4,12 +4,9 @@ import { DEFAULT_SETTINGS } from "../../shared/constants";
 import { useStorage } from "../hooks/useStorage";
 import { Field } from "../components/Field";
 import { Input } from "../components/Input";
-import { Button } from "../components/Button";
-import { Eyebrow } from "../components/Eyebrow";
 
 export function SettingsTab(): JSX.Element {
   const [settings, setSettings] = useStorage("settings", DEFAULT_SETTINGS);
-  const [, setFinds] = useStorage("finds", []);
 
   const update = (patch: Partial<GameSettings>): void => {
     setSettings({ ...settings, ...patch });
@@ -76,17 +73,6 @@ export function SettingsTab(): JSX.Element {
         </div>
       </Field>
 
-      <div class="wh-settings__divider" />
-
-      <Eyebrow>Danger zone</Eyebrow>
-      <Button
-        variant="danger"
-        size="sm"
-        leftIcon="trash"
-        onClick={() => setFinds([])}
-      >
-        Clear all hunts
-      </Button>
     </div>
   );
 }

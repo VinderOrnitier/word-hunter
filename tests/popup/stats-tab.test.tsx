@@ -132,19 +132,42 @@ describe("StatsTab", () => {
     expect(badges).toHaveLength(1);
   });
 
-  it("writes finds=[] to storage when Clear is clicked", async () => {
+  it("shows a confirm overlay after Clear is clicked", async () => {
+    setupChromeMock({ finds: [RECORD_A] });
+    render(<StatsTab />);
+
+    await waitFor(() => expect(screen.getByText("eagle")).toBeInTheDocument());
+
+    fireEvent.click(screen.getByRole("button", { name: /clear/i }));
+
+    expect(screen.getByRole("button", { name: /yes/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /cancel/i })).toBeInTheDocument();
+  });
+
+  it("writes finds=[] to storage when Clear then Yes is clicked", async () => {
     const { setMock } = setupChromeMock({ finds: [RECORD_A] });
     render(<StatsTab />);
 
-    await waitFor(() =>
-      expect(screen.getByText("eagle")).toBeInTheDocument()
-    );
+    await waitFor(() => expect(screen.getByText("eagle")).toBeInTheDocument());
 
     fireEvent.click(screen.getByRole("button", { name: /clear/i }));
+    fireEvent.click(screen.getByRole("button", { name: /yes/i }));
 
     await waitFor(() => {
       expect(setMock).toHaveBeenCalledWith({ finds: [] });
     });
+  });
+
+  it("does not write to storage when Clear then Cancel is clicked", async () => {
+    const { setMock } = setupChromeMock({ finds: [RECORD_A] });
+    render(<StatsTab />);
+
+    await waitFor(() => expect(screen.getByText("eagle")).toBeInTheDocument());
+
+    fireEvent.click(screen.getByRole("button", { name: /clear/i }));
+    fireEvent.click(screen.getByRole("button", { name: /cancel/i }));
+
+    expect(setMock).not.toHaveBeenCalledWith({ finds: [] });
   });
 
   it("reactively shows a new HuntRecord when storage changes from another context", async () => {
