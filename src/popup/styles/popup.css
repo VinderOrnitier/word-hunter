@@ -3,6 +3,23 @@
    All visual values resolve through --wh-* tokens defined in tokens.css.
    ============================================================ */
 
+/* Reset — popup only; intentionally NOT in tokens.css to avoid bleeding into host pages */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--wh-bg);
+  color: var(--wh-fg);
+  font-family: var(--wh-font-sans);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+button {
+  font-family: inherit;
+}
+
 .wh-popup {
   width: var(--wh-popup-width);
   min-height: var(--wh-popup-min-h);

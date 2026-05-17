@@ -238,22 +238,3 @@
   );
 }
 
-/* ============================================================
-   Reset & base
-   ============================================================ */
-
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--wh-bg);
-  color: var(--wh-fg);
-  font-family: var(--wh-font-sans);
-}
-
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-button {
-  font-family: inherit;
-}
