@@ -12,10 +12,14 @@ function asOption(opt: SelectOption): { value: string; label: string } {
   return typeof opt === "string" ? { value: opt, label: opt } : opt;
 }
 
+interface DropdownPos { top: number; left: number; width: number }
+
 export function SearchableSelect({ value, onChange, children }: SearchableSelectProps): JSX.Element {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [dropdownPos, setDropdownPos] = useState<DropdownPos | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const options = children.map(asOption);
@@ -43,8 +47,16 @@ export function SearchableSelect({ value, onChange, children }: SearchableSelect
   }, [open]);
 
   const toggle = () => {
-    if (open) { setOpen(false); setQuery(""); }
-    else       { setOpen(true); }
+    if (open) {
+      setOpen(false);
+      setQuery("");
+    } else {
+      const rect = triggerRef.current?.getBoundingClientRect();
+      if (rect) {
+        setDropdownPos({ top: rect.bottom - 1, left: rect.left, width: rect.width });
+      }
+      setOpen(true);
+    }
   };
 
   const select = (v: string) => {
@@ -60,6 +72,7 @@ export function SearchableSelect({ value, onChange, children }: SearchableSelect
   return (
     <div class="wh-ss" ref={wrapRef} onKeyDown={onKeyDown}>
       <button
+        ref={triggerRef}
         type="button"
         class={`wh-ss__trigger${open ? " is-open" : ""}`}
         onClick={toggle}
@@ -69,8 +82,12 @@ export function SearchableSelect({ value, onChange, children }: SearchableSelect
         {selectedLabel}
       </button>
 
-      {open && (
-        <div class="wh-ss__dropdown" role="listbox">
+      {open && dropdownPos && (
+        <div
+          class="wh-ss__dropdown"
+          role="listbox"
+          style={`top:${dropdownPos.top}px;left:${dropdownPos.left}px;width:${dropdownPos.width}px`}
+        >
           <input
             ref={inputRef}
             class="wh-ss__search"

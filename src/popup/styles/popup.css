@@ -324,16 +324,13 @@ button {
 }
 
 .wh-ss__dropdown {
-  position: absolute;
-  top: calc(100% - 1px);
-  left: 0;
-  right: 0;
+  position: fixed;
   background: var(--wh-surface-2);
   border: 1px solid var(--wh-primary);
   border-top: none;
   border-radius: 0 0 var(--wh-radius-2) var(--wh-radius-2);
   box-shadow: var(--wh-shadow-2);
-  z-index: 100;
+  z-index: 9999;
   overflow: hidden;
   animation: wh-ss-open var(--wh-dur-fast) var(--wh-ease-standard);
 }
