@@ -8,9 +8,9 @@ describe("RulesTab", () => {
     expect(opener?.textContent).toMatch(/quiet game/i);
   });
 
-  it("mentions the 50-word minimum rule", () => {
+  it("mentions the 30-word minimum rule", () => {
     render(<RulesTab />);
-    expect(screen.getByText(/50/)).toBeInTheDocument();
+    expect(screen.getByText(/30/)).toBeInTheDocument();
   });
 
   it("mentions the notification when no paragraph qualifies", () => {

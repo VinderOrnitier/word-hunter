@@ -1,4 +1,4 @@
-import { render, fireEvent } from "@testing-library/preact";
+import { render, fireEvent, act } from "@testing-library/preact";
 import { HiddenWord } from "../../src/content/components/HiddenWord";
 
 describe("HiddenWord", () => {
@@ -40,5 +40,43 @@ describe("HiddenWord", () => {
   it("does not expose the word via data-word attribute", () => {
     render(<HiddenWord word="fox" found={false} onFind={() => {}} />);
     expect(document.querySelector(".hw-word")?.getAttribute("data-word")).toBeNull();
+  });
+
+  describe("cursor reveal delay", () => {
+    beforeEach(() => { jest.useFakeTimers(); });
+    afterEach(() => { jest.useRealTimers(); });
+
+    it("cursor is not pointer immediately after mouseenter when hoverRevealSeconds is set", () => {
+      render(<HiddenWord word="fox" found={false} onFind={() => {}} hoverRevealSeconds={1.5} />);
+      const word = document.querySelector(".hw-word") as HTMLElement;
+      fireEvent.mouseEnter(word);
+      expect(word.style.cursor).not.toBe("pointer");
+    });
+
+    it("cursor becomes pointer after the configured delay", () => {
+      render(<HiddenWord word="fox" found={false} onFind={() => {}} hoverRevealSeconds={1.5} />);
+      const word = document.querySelector(".hw-word") as HTMLElement;
+      fireEvent.mouseEnter(word);
+      act(() => { jest.advanceTimersByTime(1500); });
+      expect(word.style.cursor).toBe("pointer");
+    });
+
+    it("cursor does not become pointer if mouse leaves before the delay", () => {
+      render(<HiddenWord word="fox" found={false} onFind={() => {}} hoverRevealSeconds={1.5} />);
+      const word = document.querySelector(".hw-word") as HTMLElement;
+      fireEvent.mouseEnter(word);
+      fireEvent.mouseLeave(word);
+      act(() => { jest.advanceTimersByTime(1500); });
+      expect(word.style.cursor).not.toBe("pointer");
+    });
+
+    it("cursor resets to default on mouseleave after the delay fired", () => {
+      render(<HiddenWord word="fox" found={false} onFind={() => {}} hoverRevealSeconds={1.5} />);
+      const word = document.querySelector(".hw-word") as HTMLElement;
+      fireEvent.mouseEnter(word);
+      act(() => { jest.advanceTimersByTime(1500); });
+      fireEvent.mouseLeave(word);
+      expect(word.style.cursor).not.toBe("pointer");
+    });
   });
 });

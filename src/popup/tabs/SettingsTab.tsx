@@ -59,8 +59,8 @@ export function SettingsTab(): JSX.Element {
       </Field>
 
       <Field
-        label="Celebration hover"
-        helper="seconds you must hover before the popup appears"
+        label="Cursor reveal delay"
+        helper="seconds of hovering before the cursor reveals the word"
       >
         <div class="wh-settings__input-row">
           <div class="wh-settings__input-cell">

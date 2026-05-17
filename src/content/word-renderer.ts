@@ -9,6 +9,7 @@ export interface WordRendererOptions {
   onFind?: (record: HuntRecord) => void | Promise<void>;
   onReview?: (record: HuntRecord) => void;
   resolveArt?: (word: string, source: ActiveWord["list"]) => string | undefined;
+  hoverRevealSeconds?: number;
 }
 
 export function WordRenderer(
@@ -16,7 +17,7 @@ export function WordRenderer(
   groups: Element[][],
   options: WordRendererOptions = {}
 ): void {
-  const { onFind, onReview, resolveArt } = options;
+  const { onFind, onReview, resolveArt, hoverRevealSeconds } = options;
   if (groups.length === 0) return;
 
   const doc = groups[0][0].ownerDocument;
@@ -68,6 +69,7 @@ export function WordRenderer(
       activeWord,
       onFind: onFind ?? (() => {}),
       onReview,
+      hoverRevealSeconds,
       inheritedStyle: {
         fontFamily: computed.fontFamily,
         fontSize: computed.fontSize,

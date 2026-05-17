@@ -9,6 +9,7 @@ interface HiddenWordHostProps {
   inheritedStyle?: JSX.CSSProperties;
   onFind: (record: HuntRecord) => void | Promise<void>;
   onReview?: (record: HuntRecord) => void;
+  hoverRevealSeconds?: number;
 }
 
 export function HiddenWordHost({
@@ -16,6 +17,7 @@ export function HiddenWordHost({
   inheritedStyle,
   onFind,
   onReview,
+  hoverRevealSeconds,
 }: HiddenWordHostProps): JSX.Element {
   const [found, setFound] = useState(false);
   const lastRecord = useRef<HuntRecord | null>(null);
@@ -54,6 +56,7 @@ export function HiddenWordHost({
       found={found}
       onFind={handleFind}
       inheritedStyle={inheritedStyle}
+      hoverRevealSeconds={hoverRevealSeconds}
     />
   );
 }

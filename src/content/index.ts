@@ -53,6 +53,7 @@ async function inject(): Promise<void> {
       celebration.show({ word: record.word, durationS: record.searchDurationSeconds, hintUsed: record.hintUsed, art }, undefined, clearFoundWord);
     },
     resolveArt,
+    hoverRevealSeconds: settings.celebrationHoverSeconds,
   });
   timer.start(settings.hintDelayMinutes);
 }

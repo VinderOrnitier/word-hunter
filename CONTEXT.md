@@ -40,6 +40,10 @@ _Avoid_: injected word, word span, word node
 The subsystem that starts counting when a page with a `HiddenWord` loads, displays a hint tooltip after a configured duration, and records the `hintUsed` flag.
 _Avoid_: timer, hint system, countdown
 
+**CursorRevealDelay**:
+The configured duration (in seconds) the player must hover over a `HiddenWord` before the cursor changes to `pointer`, revealing the word's position. Clicking the `HiddenWord` always registers a `FindEvent` regardless of whether the cursor has changed. User-configurable in Settings.
+_Avoid_: hover delay, pointer delay, cursor timer
+
 **FindEvent**:
 The player's click on a `HiddenWord` that registers the discovery and ends the current search. Immediately clears the `ActiveWord` from storage — other tabs remove their `HiddenWord` at this point, not when the `CelebrationPopup` is dismissed.
 _Avoid_: click event, discovery event, word found

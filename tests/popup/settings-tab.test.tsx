@@ -54,7 +54,7 @@ describe("SettingsTab", () => {
     render(<SettingsTab />);
 
     const [hintInput, hoverInput] = screen.getAllByRole("spinbutton") as HTMLInputElement[];
-    expect(hintInput.value).toBe("5");
+    expect(hintInput.value).toBe("3");
     expect(hoverInput.value).toBe("1.5");
   });
 
@@ -86,7 +86,7 @@ describe("SettingsTab", () => {
     });
   });
 
-  it("persists a new celebration hover duration to storage when the input changes", async () => {
+  it("persists a new cursor reveal delay to storage when the input changes", async () => {
     const { setMock } = setupChromeMock();
     render(<SettingsTab />);
 
@@ -95,7 +95,7 @@ describe("SettingsTab", () => {
 
     await waitFor(() => {
       expect(setMock).toHaveBeenCalledWith({
-        settings: { hintDelayMinutes: 5, celebrationHoverSeconds: 2.5, minWordThreshold: 30 },
+        settings: { hintDelayMinutes: 3, celebrationHoverSeconds: 2.5, minWordThreshold: 30 },
       });
     });
   });
@@ -112,7 +112,7 @@ describe("SettingsTab", () => {
   });
 
   it("displays the current minWordThreshold value next to the slider", async () => {
-    const stored: GameSettings = { hintDelayMinutes: 5, celebrationHoverSeconds: 1.5, minWordThreshold: 80 };
+    const stored: GameSettings = { hintDelayMinutes: 3, celebrationHoverSeconds: 1.5, minWordThreshold: 80 };
     setupChromeMock({ settings: stored });
     render(<SettingsTab />);
 
@@ -132,7 +132,7 @@ describe("SettingsTab", () => {
 
     await waitFor(() => {
       expect(setMock).toHaveBeenCalledWith({
-        settings: { hintDelayMinutes: 5, celebrationHoverSeconds: 1.5, minWordThreshold: 70 },
+        settings: { hintDelayMinutes: 3, celebrationHoverSeconds: 1.5, minWordThreshold: 70 },
       });
     });
   });
