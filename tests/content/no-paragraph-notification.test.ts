@@ -2,45 +2,41 @@ import { NoParagraphNotification } from "../../src/content/no-paragraph-notifica
 
 describe("NoParagraphNotification", () => {
   beforeEach(() => {
-    jest.useFakeTimers();
     document.body.innerHTML = "";
   });
 
-  afterEach(() => {
-    jest.useRealTimers();
-  });
-
-  it("no notification in DOM before show() is called", () => {
+  it("no toast in DOM before show() is called", () => {
     NoParagraphNotification(document);
-    expect(document.querySelector(".hw-no-paragraph")).toBeNull();
+    expect(document.querySelector(".hw-toast--info")).toBeNull();
   });
 
-  it("show() appends notification to DOM", () => {
+  it("show() appends info toast to DOM", () => {
     const notification = NoParagraphNotification(document);
     notification.show();
-    expect(document.querySelector(".hw-no-paragraph")).not.toBeNull();
+    expect(document.querySelector(".hw-toast--info")).not.toBeNull();
   });
 
-  it("notification has correct message", () => {
+  it("toast has the correct message", () => {
     const notification = NoParagraphNotification(document);
     notification.show();
-    expect(document.querySelector(".hw-no-paragraph")!.textContent).toBe(
-      "No long text found on this page — word not hidden"
+    expect(document.querySelector(".hw-toast__message")!.textContent).toBe(
+      "Not enough text to hide the word."
     );
   });
 
-  it("notification is removed automatically after 3 seconds", () => {
+  it("calling show() a second time replaces the existing toast — no duplicates", () => {
     const notification = NoParagraphNotification(document);
     notification.show();
-    expect(document.querySelector(".hw-no-paragraph")).not.toBeNull();
-    jest.advanceTimersByTime(3000);
-    expect(document.querySelector(".hw-no-paragraph")).toBeNull();
+    notification.show();
+    expect(document.querySelectorAll(".hw-toast--info").length).toBe(1);
   });
 
-  it("notification is not removed before 3 seconds", () => {
+  it("clicking close button removes the toast from DOM", () => {
     const notification = NoParagraphNotification(document);
     notification.show();
-    jest.advanceTimersByTime(2999);
-    expect(document.querySelector(".hw-no-paragraph")).not.toBeNull();
+    const closeBtn = document.querySelector(".hw-toast__close") as HTMLElement;
+    expect(closeBtn).not.toBeNull();
+    closeBtn.click();
+    expect(document.querySelector(".hw-toast--info")).toBeNull();
   });
 });

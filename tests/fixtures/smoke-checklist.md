@@ -40,18 +40,18 @@ Open **two** tabs with `smoke-article.html` before setting a word, then set `eag
 
 ### Hint timer
 
-- [ ] Lower hint delay to `0.05` min (3 s) via DevTools console: `await chrome.storage.local.set({ settings: { hintDelayMinutes: 0.05, celebrationHoverSeconds: 1.5, minWordThreshold: 30 } })`. Reload the smoke article and wait 3 seconds without clicking the hidden word. The `HintTooltip` fades in at top-right with the blue dot and the text "The word is hidden on this page".
+- [ ] Lower hint delay to `0.05` min (3 s) via DevTools console: `await chrome.storage.local.set({ settings: { hintDelayMinutes: 0.05, celebrationHoverSeconds: 1.5, minWordThreshold: 30 } })`. Reload the smoke article and wait 3 seconds without clicking the hidden word. The `InPageToast` (hint variant) fades in at top-right with the blue dot and the text "The word is hidden on this page."
 - [ ] Click the word — `CelebrationPopup` shows `hint used`. Dismiss. Set a **new** word and reload. Find it immediately — popup shows `no hint` (stale hint flag is cleared when a new hunt starts).
 
 ### Settings — minWordThreshold slider
 
 - [ ] Open **Settings**. Drag the slider to **150** (max) — the mono value badge next to it updates to `150` in real time.
 - [ ] Drag back to **30** — badge shows `30`. Reload the smoke article: the hidden word still appears (the fixture's combined group ~239 words exceeds any slider value).
-- [ ] Open a page with moderate-length paragraphs (50–140 words each, e.g. a short blog post). With slider at **30** the word is hidden; drag to **150** and reload — if no paragraph group exceeds 150 combined words, the NoParagraphBanner appears instead.
+- [ ] Open a page with moderate-length paragraphs (50–140 words each, e.g. a short blog post). With slider at **30** the word is hidden; drag to **150** and reload — if no paragraph group exceeds 150 combined words, the `InPageToast` (info variant) appears instead.
 
-### NoParagraphBanner
+### No-paragraph toast
 
-- [ ] Open a page with **no qualifying paragraph** (use `tests/fixtures/smoke-short-page.html`) while an ActiveWord is set. A banner appears at top-center for 3 seconds then auto-removes. Note: content scripts don't run on `data:` URLs, so use a `file://` or `http://` page.
+- [ ] Open a page with **no qualifying paragraph** (use `tests/fixtures/smoke-short-page.html`) while an ActiveWord is set. The `InPageToast` (info variant) appears at top-center with "Not enough text to hide the word." Dismiss it with the × button. Note: content scripts don't run on `data:` URLs, so use a `file://` or `http://` page.
 
 ### Hidden element exclusion
 
@@ -88,7 +88,7 @@ Use `tests/fixtures/smoke-hidden-elements.html` (open as a `file://` URL with an
 ## Known fixture quirks
 
 - The article uses `<article>` + 3 `<p>` blocks (77 / 77 / 79 words) plus a `<p class="byline">` (~6 words). The ParagraphGroup algorithm scans siblings: `<h1>` triggers a group flush (BREAK tag), then the byline and all three paragraphs are grouped together into **one group** with ~239 combined words. `WordRenderer` picks a random element from that group, so the target can be the byline or any of the three paragraphs.
-- The qualifying threshold is `minWordThreshold` from `GameSettings` (default **30**). The fixture's combined group (239 words) exceeds even the slider maximum of 150, so the NoParagraphBanner will never appear on this fixture regardless of the slider value.
+- The qualifying threshold is `minWordThreshold` from `GameSettings` (default **30**). The fixture's combined group (239 words) exceeds even the slider maximum of 150, so the no-paragraph toast will never appear on this fixture regardless of the slider value.
 - `WordRenderer` skips text nodes whose closest ancestor is `a`, `button`, `code`, `kbd`, `samp`, `var`, `abbr`, or `acronym`. The smoke fixture has none of these in its article body, so all text nodes are eligible.
 - The fixture deliberately contains no words from the default Animals or Pokémon lists, so any pick is safe for the Ctrl+F bypass check.
 - `smoke-article.html` has **no CSS-class-hidden elements**, so the `getComputedStyle` + bbox guard in `isHidden()` is not exercised by the main article checks. Use `smoke-hidden-elements.html` for that coverage (see "Hidden element exclusion" section above).

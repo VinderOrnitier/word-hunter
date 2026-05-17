@@ -26,24 +26,24 @@ describe("HintTimer", () => {
     expect(timer.hintUsed()).toBe(true);
   });
 
-  it("tooltip appears after the timer fires", () => {
+  it("toast appears after the timer fires with hint message", () => {
     const timer = HintTimer(document);
     timer.start(1);
-    expect(document.querySelector(".hw-hint-tooltip")).toBeNull();
+    expect(document.querySelector(".hw-toast--hint")).toBeNull();
     jest.advanceTimersByTime(60_000);
-    expect(document.querySelector(".hw-hint-tooltip")).not.toBeNull();
-    expect(document.querySelector(".hw-hint-tooltip__message")!.textContent).toBe(
-      "The word is hidden on this page"
+    expect(document.querySelector(".hw-toast--hint")).not.toBeNull();
+    expect(document.querySelector(".hw-toast__message")!.textContent).toBe(
+      "The word is hidden on this page."
     );
   });
 
-  it("cancel() before firing prevents tooltip and keeps hintUsed false", () => {
+  it("cancel() before firing prevents toast and keeps hintUsed false", () => {
     const timer = HintTimer(document);
     timer.start(1);
     timer.cancel();
     jest.advanceTimersByTime(60_000);
     expect(timer.hintUsed()).toBe(false);
-    expect(document.querySelector(".hw-hint-tooltip")).toBeNull();
+    expect(document.querySelector(".hw-toast--hint")).toBeNull();
   });
 
   it("hintUsed state persists in sessionStorage", () => {
@@ -60,28 +60,28 @@ describe("HintTimer", () => {
   });
 
   it("start() resets hintUsed to false — stale flag from previous hunt is cleared", () => {
-    sessionStorage.setItem(HINT_USED_KEY, "true"); // stale from a previous word hunt
+    sessionStorage.setItem(HINT_USED_KEY, "true");
     const timer = HintTimer(document);
     timer.start(1);
     expect(timer.hintUsed()).toBe(false);
   });
 
-  it("cancel() after tooltip is shown removes it from DOM", () => {
+  it("cancel() after toast is shown removes it from DOM", () => {
     const timer = HintTimer(document);
     timer.start(1);
     jest.advanceTimersByTime(60_000);
-    expect(document.querySelector(".hw-hint-tooltip")).not.toBeNull();
+    expect(document.querySelector(".hw-toast--hint")).not.toBeNull();
     timer.cancel();
-    expect(document.querySelector(".hw-hint-tooltip")).toBeNull();
+    expect(document.querySelector(".hw-toast--hint")).toBeNull();
   });
 
-  it("clicking close button removes the tooltip from DOM", () => {
+  it("clicking close button removes the toast from DOM", () => {
     const timer = HintTimer(document);
     timer.start(1);
     jest.advanceTimersByTime(60_000);
-    const closeBtn = document.querySelector(".hw-hint-tooltip__close") as HTMLElement;
+    const closeBtn = document.querySelector(".hw-toast__close") as HTMLElement;
     expect(closeBtn).not.toBeNull();
     closeBtn.click();
-    expect(document.querySelector(".hw-hint-tooltip")).toBeNull();
+    expect(document.querySelector(".hw-toast--hint")).toBeNull();
   });
 });

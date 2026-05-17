@@ -1,36 +1,35 @@
 import { h, render } from "preact";
-import { HintTooltip } from "./components/HintTooltip";
+import { InPageToast } from "./components/InPageToast";
 import { HINT_USED_KEY } from "../shared/constants";
 
-const HOST_CLASS = "hw-hint-tooltip-host";
+const HOST_CLASS = "hw-hint-toast-host";
 
 export function HintTimer(doc: Document) {
   let timerId: ReturnType<typeof setTimeout> | null = null;
-  let tooltipHost: HTMLElement | null = null;
+  let toastHost: HTMLElement | null = null;
 
   function hintUsed(): boolean {
     return sessionStorage.getItem(HINT_USED_KEY) === "true";
   }
 
-  function removeTooltip(): void {
-    if (tooltipHost !== null) {
-      render(null, tooltipHost);
-      tooltipHost.remove();
-      tooltipHost = null;
+  function removeToast(): void {
+    if (toastHost !== null) {
+      render(null, toastHost);
+      toastHost.remove();
+      toastHost = null;
     }
   }
 
-  function showTooltip(): void {
-    tooltipHost = doc.createElement("div");
-    tooltipHost.className = HOST_CLASS;
-    doc.body.appendChild(tooltipHost);
-    const host = tooltipHost;
+  function showToast(): void {
+    toastHost = doc.createElement("div");
+    toastHost.className = HOST_CLASS;
+    doc.body.appendChild(toastHost);
+    const host = toastHost;
     render(
-      h(HintTooltip, {
-        visible: true,
-        onClose: () => {
-          removeTooltip();
-        },
+      h(InPageToast, {
+        message: "The word is hidden on this page.",
+        variant: "hint",
+        onClose: () => { removeToast(); },
       }),
       host
     );
@@ -40,7 +39,7 @@ export function HintTimer(doc: Document) {
   function start(delayMinutes: number): void {
     if (timerId !== null) clearTimeout(timerId);
     sessionStorage.removeItem(HINT_USED_KEY);
-    timerId = setTimeout(showTooltip, delayMinutes * 60_000);
+    timerId = setTimeout(showToast, delayMinutes * 60_000);
   }
 
   function cancel(): void {
@@ -48,7 +47,7 @@ export function HintTimer(doc: Document) {
       clearTimeout(timerId);
       timerId = null;
     }
-    removeTooltip();
+    removeToast();
   }
 
   return { start, cancel, hintUsed };
