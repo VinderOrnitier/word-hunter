@@ -1,4 +1,4 @@
-import { resolveArt } from "../../src/content/art-resolver";
+import { resolveArt } from "../../src/shared/art-resolver";
 
 describe("resolveArt", () => {
   it("returns the CDN sprite URL for a known pokemon", () => {
