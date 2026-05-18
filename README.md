@@ -8,11 +8,12 @@ The extension picks a word from a chosen WordList and secretly hides it inside a
 
 - **WordLists** — curated sets of Words to choose from (Animals, Pokémon, etc.)
 - **HiddenWord** — inserted invisibly into page Paragraphs, bypasses Ctrl+F
-- **Per-word art** — emoji for Animals, animated Pokémon sprite (PokeAPI CDN) shown in the celebration popup
+- **Hunt Collection** — Pokédex-style grid on the Play tab: every word in the active list is a slot. Caught slots show art + catch counter, uncaught slots are silhouettes. Includes progress bar, daily streak, and 5 achievement badges.
+- **Per-word art** — emoji for Animals, animated Pokémon sprite (PokeAPI CDN) shown in the celebration popup and the collection grid
 - **HintTimer** — optional hint tooltip after a configurable delay
-- **HuntRecords** — statistics tracking per-hunt: word, duration, page, hint used
+- **HuntRecords** — statistics tracking per-hunt: word, duration, page, hint used, list source
 - **SPA support** — NavigationObserver re-injects on client-side navigation
-- **Settings** — configurable hint delay and celebration animation duration
+- **Settings** — configurable hint delay, celebration animation duration, minimum paragraph word threshold
 
 ## Development
 
@@ -37,4 +38,4 @@ pnpm dlx skills@latest add mattpocock/skills
 
 ## Version
 
-`0.1.0` — core game loop complete, pre-release (not yet published to Chrome Web Store).
+`0.1.0` — core game loop + Hunt Collection complete, pre-release (not yet published to Chrome Web Store).

@@ -11,8 +11,9 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 ## User Stories
 
 1. As a player, I want to choose an active word list (Animals or Pokémon), so that I can vary the theme of the game.
-2. As a player, I want to select a word from the active list, so that I can start playing without extra configuration.
-3. As a player, I want to type a custom word not in the list, so that I can diversify the game. The field accepts any Unicode letters and hyphens (min 2, max 25 characters). Validation errors appear only after I attempt to submit, then update in real-time as I correct the word.
+2. As a player, I want to see a Pokédex-style grid of every word in the active list — caught words showing their art and a catch counter, uncaught words shown as silhouettes / `???` — so that picking a new word feels like collecting a set.
+3. As a player, I want to filter the grid to only my caught or uncaught words, so that I can quickly see what's left to hunt.
+4. As a player, I want to type a custom word not in the list, so that I can diversify the game. The field accepts any Unicode letters and hyphens (min 2, max 25 characters). Validation errors appear only after I attempt to submit, then update in real-time as I correct the word. Custom words do not count toward the collection.
 3. As a player, I want the chosen word to appear automatically on every web page when it loads, so that I don't have to configure the game each time.
 4. As a player, I want the word to be inserted only into sufficiently long texts (50+ words), so that it can genuinely hide among other words.
 5. As a player, I want the word to look like normal page text, so that it cannot be easily spotted visually.
@@ -24,6 +25,9 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 11. As a player, I want to click on the found word to register the find, so that it is recorded in my statistics.
 12. As a player, I want to see statistics: how many words I found, which words, when and where I found them.
 13. As a player, I want to see in statistics whether I used a hint for each found word, so that I can evaluate my progress.
+13a. As a player, I want to see how many distinct words I've caught from each list (e.g. `27 / 54 Animals`) and a progress bar, so that I have a sense of overall completion.
+13b. As a player, I want to see how many days in a row I've hunted at least once (my "streak") with a one-day grace period so I don't lose the streak just because I haven't played yet today, so that the game encourages a gentle daily habit.
+13c. As a player, I want unlockable achievement badges for milestones — first catch, 50 %, 100 %, and 7- and 30-day streaks — with a hint tooltip telling me how to unlock each, so that long-term play feels rewarding.
 14. As a player, I want to see a link to the page where I found the word, so that I can return to it later.
 15. As a player, I want the hint timer to start counting from the moment the page containing the inserted word is loaded.
 16. As a player, I want to choose the next word myself after finding the current one (or press "new word"), rather than having it change automatically.
@@ -65,9 +69,15 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 - Full list of all found words
 
 **6. Popup UI**
-- Tab "Play": current active word, "Change word" button, dropdown with word list + custom input field. The custom field shows a live character counter (`X / 25`); validation (Unicode letters and hyphens only, min 2, max 25 chars) is triggered on submit and then updates in real-time.
+- Tab "Play": **Hunt Collection** is the primary surface.
+  - **ActiveWord card** at the top: shows the current word with its list badge, or an "No active word" placeholder.
+  - **CollectionToolbar**: two chip rows — `Animals | Pokémon` (list picker) and `All | Caught | Uncaught` (filter).
+  - **ProgressHeader**: `caught / total` count for the active list, a progress bar, a streak chip (`Nd streak`), a total-catches chip, and five `AchievementBadge`s (`First catch`, `Half-way`, `Master hunter`, `7-day streak`, `30-day streak`). Locked badges are dimmed and carry a hint tooltip.
+  - **CollectionGrid**: 4-column for Animals (54 slots), 5-column for Pokémon (151 slots). Each slot is a button — caught slots show emoji/sprite + `×N` counter; uncaught slots show `???` (Animals) or a `brightness(0)` silhouette (Pokémon). Clicking a slot sets it as the `ActiveWord`; the matching slot gets a primary-yellow glow.
+  - **Custom word block** below the grid: text input with live counter (`X / 25`) and the same validation rules (Unicode letters and hyphens only, min 2, max 25 chars; errors triggered on submit, then real-time). Submitting writes the word with `list: "custom"`; custom words are **not** counted toward the collection.
+  - **Clear** button (ghost) appears below the custom block when an `ActiveWord` is set.
 - Tab "Statistics": table of found words (word, date, search duration, hint used, link to page)
-- Tab "Settings": hint timer duration (minutes), hover duration for celebration tooltip (seconds)
+- Tab "Settings": hint timer duration (minutes), hover duration for celebration tooltip (seconds), minimum paragraph word threshold (range slider 30–150, default 30)
 
 ### Word Lists
 
@@ -114,6 +124,12 @@ Good tests verify behavior through public interfaces, not implementation details
 
 **Prior art:** unit tests via Jest + `jsdom` for DOM manipulation; Ctrl+F bypass verified via `TreeWalker` with `NodeFilter.SHOW_TEXT`.
 
+## In Scope (Shipped)
+
+- **Hunt Collection** Pokédex-style grid (Play tab): per-word art, catch counters, active-word glow, filter chips, all derived on-the-fly from `HuntRecord[]` with no storage migration. See [ADR 003](adr/003-hunt-collection-derivation.md).
+- **Streak tracking**: consecutive-day count with a one-day grace period (a yesterday-only player still sees a 1-day streak today). See [ADR 004](adr/004-streak-grace-period.md).
+- **Achievement badges** (5 of them): First catch, Half-way, Master hunter, 7-day streak, 30-day streak, with hint tooltips on locked badges.
+
 ## Out of Scope
 
 - Cross-browser sync (Chrome Sync)
@@ -121,6 +137,8 @@ Good tests verify behavior through public interfaces, not implementation details
 - Support for other browsers (Firefox, Safari)
 - Inserting the word into images or video
 - Additional word lists beyond Animals and Pokémon
+- Custom user-defined word lists (only single custom words today)
+- Achievement toasts on unlock (the badge row is the only surface; the CelebrationPopup is reserved for `FindEvent`s)
 - Localization into other languages
 
 ## Further Notes

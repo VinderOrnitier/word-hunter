@@ -53,8 +53,32 @@ A subsequent click on a `HiddenWord` that is already in its found state. Re-show
 _Avoid_: second click, repeat click, re-find
 
 **HuntRecord**:
-The record created after a `FindEvent`, stored in statistics. Contains: `word`, `foundAt`, `pageUrl`, `pageTitle`, `searchDurationSeconds`, `hintUsed`.
+The record created after a `FindEvent`, stored in statistics. Contains: `word`, `foundAt`, `pageUrl`, `pageTitle`, `searchDurationSeconds`, `hintUsed`, and the originating `list` (`WordSource`). The `list` field is what the Hunt Collection derives catch counts from.
 _Avoid_: stat entry, find record, discovery
+
+**HuntCollection**:
+The Pokédex-style grid that is the Play tab body: one `CollectionSlot` per `Word` in the active `WordList`. Derived entirely on-the-fly from `HuntRecord[]` and `WORD_LISTS[list]` — there is no separate storage key for collection state.
+_Avoid_: word grid, catch list, dex
+
+**CatchCount**:
+A `Map<word, number>` that records, for the active `WordList`, how many `HuntRecord`s exist for each `Word`. Records whose `list` differs from the active list are filtered out; legacy lowercase records are matched case-insensitively against the canonical Title-Case list.
+_Avoid_: hit count, find count, score
+
+**CollectionSlot**:
+A single grid cell representing one `Word`. Three visual states: `caught` (catch count ≥ 1) shows the word's art — emoji for Animals, PokeAPI sprite for Pokémon — plus an `×N` counter; `uncaught` shows `???` for Animals and a `brightness(0)` silhouette of the sprite for Pokémon; `active` overlays a primary-yellow glow when the slot's word equals the `ActiveWord`. Clicking a slot sets it as the `ActiveWord`.
+_Avoid_: cell, tile, card
+
+**CollectionFilter**:
+The visibility mode for the `HuntCollection`: `all`, `caught`, or `uncaught`. Selected via chip in `CollectionToolbar`.
+_Avoid_: filter mode, view mode
+
+**Streak**:
+The number of consecutive local-calendar days on which the player recorded at least one `HuntRecord`. Two values are exposed: `current` (the streak that ends today or — per the grace-period rule — yesterday) and `longest` (the longest contiguous run in history). See [ADR 004](docs/adr/004-streak-grace-period.md) for the grace-period rule.
+_Avoid_: streak count, consecutive days
+
+**Achievement**:
+One of five unlockable badges shown in `ProgressHeader`: `First catch` (≥ 1 total catch), `Half-way` (caught ratio ≥ 0.5 for the active list), `Master hunter` (caught ratio = 1), `7-day streak`, `30-day streak`. Locked badges are dimmed and carry a hint tooltip telling the player how to unlock them. Derived from `CollectionStats` + `Streak` on every popup render.
+_Avoid_: medal, milestone, trophy
 
 ## Relationships
 
@@ -66,6 +90,10 @@ _Avoid_: stat entry, find record, discovery
 - A **FindEvent** on a **HiddenWord** produces one **HuntRecord** and immediately clears the **ActiveWord**
 - A **ReviewClick** on an already-found **HiddenWord** replays the **CelebrationPopup** without producing a new **HuntRecord**
 - A **HintTimer** runs per page that contains a **HiddenWord**
+- The **HuntCollection** for a given **WordList** is derived from the subset of **HuntRecord**s whose `list` field matches that **WordList** — there is no denormalised collection state
+- A **CollectionSlot** is `caught` when the **CatchCount** for its **Word** is ≥ 1, and `active` when its **Word** equals the **ActiveWord**
+- A **Streak** is derived from the local-calendar dates of every **HuntRecord** regardless of which **WordList** the record came from
+- An **Achievement** is derived from the **CollectionStats** of the active list and the global **Streak**
 
 ## Example dialogue
 
@@ -74,8 +102,12 @@ _Avoid_: stat entry, find record, discovery
 >
 > **Dev:** "What if the page has no Paragraph?"
 > **Domain expert:** "No HiddenWord is inserted. The player sees a notification explaining why."
+>
+> **Dev:** "How does the HuntCollection know that 'fox' was caught three times?"
+> **Domain expert:** "It walks the HuntRecord list, keeps only the records whose list matches the active WordList, and groups them by Word — case-insensitively, so a legacy `'cat'` record still rolls up under the canonical `'Cat'` slot. Nothing is stored separately; the count is recomputed on every popup open."
 
 ## Flagged ambiguities
 
 - "word" was used loosely to mean both the string candidate and the thing currently being searched — resolved: `Word` (candidate) vs `ActiveWord` (what's live).
 - "find" was used for both hovering and clicking — resolved: `FindEvent` is only the click that registers the discovery; hover is a UI detail, not a domain concept.
+- "score" / "progress" / "collection" were ambiguous across the team — resolved: `CatchCount` is the per-Word number, `CollectionStats` aggregates them, `Streak` is the calendar dimension, and `Achievement` is the unlock state. There is no single "score" value.
