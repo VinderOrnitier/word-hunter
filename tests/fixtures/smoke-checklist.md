@@ -11,13 +11,43 @@ End-to-end manual verification. Run after `pnpm build` produces a fresh `dist/`.
 
 ## Acceptance checks
 
-### Popup — Play tab
+### Popup — Play tab (Hunt Collection)
 
-- [ ] Toolbar icon opens the popup. Dark theme, Word Hunter wordmark, 4 tabs visible.
-- [ ] **Play**: pick `eagle` from the Animals list → click **New word**. Card shows "Active word: eagle" with an animals badge.
+- [ ] Toolbar icon opens the popup. Dark theme, Word Hunter wordmark, 3 tabs (Play / Statistics / Settings) + Rules icon in header.
+- [ ] **ActiveWord card** at the top shows "No active word — pick a word below to start the hunt." on a fresh profile.
+- [ ] **CollectionToolbar** has two chip rows. Top: `Animals | Pokémon` (Animals selected). Bottom: `All | Caught | Uncaught` (All selected). Exactly one chip per row is highlighted.
+- [ ] **ProgressHeader** shows `ANIMALS` eyebrow + `0 / 54` (mono), a 0 %-wide progress bar, `0d streak` and `0 catches` chips, and five `AchievementBadge`s — all dimmed (locked).
+- [ ] Hover a locked badge → tooltip appears (e.g. "Catch 27 more to reach 50 %", "Hunt 7 days in a row").
+- [ ] **CollectionGrid**: 4-column grid of 54 Animals slots, every slot shows `???` in mono.
+- [ ] Click the **Fox** slot. ActiveWord card updates to "Fox" with animals badge. The Fox slot gets a primary-yellow glow (`is-active` class).
+- [ ] Switch toolbar to **Pokémon** → grid swaps to 5-column, 151 slots, all silhouettes (`brightness(0) opacity(0.35)` on the sprite `<img>`).
+- [ ] Scroll the grid — Pokémon sprites lazy-load (`loading="lazy"` on `<img>`).
+- [ ] **Custom word block** below the grid: text input with placeholder "type your own…", live counter `0 / 25`, "New word" button (primary yellow), "Clear" button (ghost).
 - [ ] **Stats**: shows the editorial empty state ("your hunts will appear here.") in Fraunces italic.
 - [ ] **Settings**: range slider for minimum paragraph length (default **30**, range 30–150, step 10) with a mono value badge showing the current value. Two number inputs below: hint delay **5** / celebration hover **1.5**. "Clear all hunts" button visible in danger zone.
 - [ ] **Rules**: opens with the Fraunces italic line "a quiet game while you read." and the 3 markers (30 + / 1× / —).
+
+### Hunt Collection — find loop
+
+After finding `Fox` on the smoke article (see "Content script — overlays" below):
+
+- [ ] Reopen the popup. Fox slot is now caught: 🦊 emoji + `×1` counter, no longer dimmed.
+- [ ] ActiveWord card returns to the empty state (cleared after the FindEvent).
+- [ ] ProgressHeader: `1 / 54`, progress bar ~2 % filled, `1d streak`, `1 catches`. **First catch** achievement is now solid (unlocked, primary-yellow dot).
+- [ ] Find Fox again. Slot reads `×2`. Total catches `2 catches`. Streak still `1d`.
+- [ ] Filter chips → **Caught**: only Fox is shown in the grid.
+- [ ] Filter chips → **Uncaught**: 53 silhouettes, no Fox.
+- [ ] Switch to **Pokémon** with the **Caught** filter still selected → empty state appears: "No caught words yet — go hunt!".
+
+### Hunt Collection — custom word isolation
+
+- [ ] In **Animals**, filter **All**. Type `dragon` in the custom block → click **New word**. ActiveWord card shows "dragon" with the neutral (custom) badge. The collection grid is unchanged.
+- [ ] Find `dragon` on the smoke article (insert it manually in a paragraph for the smoke check). Reopen the popup: collection still reads `1 / 54` — custom words do **not** count toward the collection.
+
+### Hunt Collection — clear flows
+
+- [ ] **Settings → Clear all hunts → confirm**: open Play tab. Collection resets to `0 / 54`, all achievements locked again, streak `0d`. (Confirms zero denormalisation — see ADR 003.)
+- [ ] Set an ActiveWord by clicking any slot, then click **Clear** below the custom block. ActiveWord card returns to the empty state. The slot loses its glow.
 
 ### Content script — overlays
 
@@ -78,8 +108,8 @@ Use `tests/fixtures/smoke-hidden-elements.html` (open as a `file://` URL with an
 
 ### Clear flows
 
-- [ ] **Settings → Clear all hunts**: `Stats` tab returns to the editorial empty state.
-- [ ] **Play → Clear**: the ActiveWord card returns to "No active word".
+- [ ] **Settings → Clear all hunts**: `Stats` tab returns to the editorial empty state; the Hunt Collection on the Play tab returns to `0 / N` with every slot a silhouette.
+- [ ] **Play → Clear**: the ActiveWord card returns to "No active word"; the previously active slot loses its primary-yellow glow.
 
 ## Known issues / limitations
 

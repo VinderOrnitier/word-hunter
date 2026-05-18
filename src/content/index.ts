@@ -8,7 +8,7 @@ import { HintTimer } from "./hint-timer";
 import { CelebrationManager } from "./celebration-manager";
 import { NoParagraphNotification } from "./no-paragraph-notification";
 import { NavigationObserver } from "./navigation-observer";
-import { resolveArt } from "./art-resolver";
+import { resolveArt } from "../shared/art-resolver";
 import { ActiveWordWatcher } from "./active-word-watcher";
 import { validateCustomWord } from "../shared/word-validation";
 

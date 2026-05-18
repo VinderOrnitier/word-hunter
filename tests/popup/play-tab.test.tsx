@@ -70,24 +70,23 @@ describe("PlayTab", () => {
     );
   });
 
-  it("updates the word dropdown when the WordList selection changes", () => {
+  it("swaps the collection grid when the toolbar list chip changes to Pokémon", () => {
     setupChromeMock();
     render(<PlayTab />);
 
-    fireEvent.click(screen.getByRole("button", { name: /animals/i }));
-    fireEvent.click(screen.getByRole("option", { name: /pokémon/i }));
+    expect(screen.getByRole("button", { name: /Fox, not caught yet/i })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /bulbasaur/i }));
-    expect(screen.getByRole("option", { name: "Pikachu" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: /pokémon/i }));
+
+    expect(screen.queryByRole("button", { name: /Fox, not caught yet/i })).toBeNull();
+    expect(screen.getByRole("button", { name: /Pikachu, not caught yet/i })).toBeInTheDocument();
   });
 
-  it("writes the dropdown selection to storage when 'New word' is clicked", async () => {
+  it("writes the slot's word to storage when a CollectionSlot is clicked", async () => {
     const { setMock } = setupChromeMock();
     render(<PlayTab />);
 
-    fireEvent.click(screen.getByRole("button", { name: /alpaca/i }));
-    fireEvent.click(screen.getByRole("option", { name: "Fox" }));
-    fireEvent.click(screen.getByRole("button", { name: /new word/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
 
     await waitFor(() => {
       expect(setMock).toHaveBeenCalledWith(
@@ -95,6 +94,39 @@ describe("PlayTab", () => {
           activeWord: expect.objectContaining({ word: "Fox", list: "animals" }),
         })
       );
+    });
+  });
+
+  it("marks the currently-active word's slot with the is-active class", async () => {
+    setupChromeMock({
+      activeWord: { word: "Fox", list: "animals", insertedAt: 1000 },
+    });
+    render(<PlayTab />);
+
+    await waitFor(() => {
+      const foxSlot = screen.getByRole("button", { name: /Fox/ });
+      expect(foxSlot).toHaveClass("is-active");
+    });
+  });
+
+  it("shows a caught Fox slot when finds contain a Fox record", async () => {
+    setupChromeMock({
+      finds: [
+        {
+          word: "Fox",
+          foundAt: Date.now(),
+          pageUrl: "https://example.com",
+          pageTitle: "Example",
+          searchDurationSeconds: 10,
+          hintUsed: false,
+          list: "animals",
+        },
+      ],
+    });
+    render(<PlayTab />);
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /Fox, caught 1 time$/i })).toBeInTheDocument();
     });
   });
 

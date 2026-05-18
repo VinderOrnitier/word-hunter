@@ -1,5 +1,5 @@
-import type { WordSource } from "../shared/types";
-import { getSpriteUrl } from "../shared/pokemon-sprites";
+import type { WordSource } from "./types";
+import { getSpriteUrl } from "./pokemon-sprites";
 
 const ANIMAL_EMOJI: Record<string, string> = {
   Alpaca:    "🦙",
