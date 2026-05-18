@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useMemo, useState } from "preact/hooks";
 import type { JSX } from "preact";
 import type { ActiveWord, WordSource } from "../../shared/types";
 import { WORD_LISTS, type WordListName } from "../word-lists";
@@ -8,14 +8,16 @@ import { Card } from "../components/Card";
 import { Eyebrow } from "../components/Eyebrow";
 import { Badge, type BadgeTone } from "../components/Badge";
 import { Field } from "../components/Field";
-import { SearchableSelect } from "../components/SearchableSelect";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
-
-const LIST_OPTIONS = [
-  { value: "animals", label: "Animals" },
-  { value: "pokemon", label: "Pokémon" },
-];
+import { CollectionToolbar } from "../collection/CollectionToolbar";
+import { ProgressHeader } from "../collection/ProgressHeader";
+import { CollectionGrid } from "../collection/CollectionGrid";
+import { computeCatchCounts } from "../collection/computeCatchCounts";
+import { computeCollectionStats } from "../collection/computeCollectionStats";
+import { computeStreak } from "../collection/computeStreak";
+import { listAchievements } from "../collection/listAchievements";
+import type { CollectionFilter } from "../collection/types";
 
 const LIST_LABEL: Record<WordSource, string> = {
   animals: "Animals",
@@ -37,35 +39,46 @@ const LIST_DOT: Record<WordSource, string> = {
 
 export function PlayTab(): JSX.Element {
   const [activeWord, setActiveWord] = useStorage("activeWord", null);
+  const [finds] = useStorage("finds", []);
   const [list, setList] = useState<WordListName>("animals");
-  const [picked, setPicked] = useState<string>(WORD_LISTS.animals[0]);
+  const [filter, setFilter] = useState<CollectionFilter>("all");
   const [custom, setCustom] = useState<string>("");
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
   const trimmed = custom.trim();
   const customError = validateCustomWord(trimmed);
-  const showCustomError = submitAttempted && customError !== undefined;
+  const showCustomError = submitAttempted && customError !== undefined && trimmed.length > 0;
   const customCounter = `${trimmed.length} / ${MAX_CUSTOM_LEN}`;
 
-  const onListChange = (next: string): void => {
-    const nextList = next as WordListName;
-    setList(nextList);
-    setPicked(WORD_LISTS[nextList][0]);
-  };
+  const counts = useMemo(() => computeCatchCounts(finds, list), [finds, list]);
+  const stats = useMemo(
+    () => computeCollectionStats(counts, WORD_LISTS[list].length),
+    [counts, list],
+  );
+  const streak = useMemo(() => computeStreak(finds, Date.now()), [finds]);
+  const achievements = useMemo(() => listAchievements(stats, streak), [stats, streak]);
 
-  const submit = (): void => {
-    if (trimmed) {
-      if (customError) {
-        setSubmitAttempted(true);
-        return;
-      }
-    }
-    const word = trimmed || picked;
-    if (!word) return;
-    const source: WordSource = trimmed ? "custom" : list;
+  const pickFromCollection = (word: string): void => {
     const next: ActiveWord = {
       word,
-      list: source,
+      list,
+      insertedAt: Date.now(),
+    };
+    setActiveWord(next);
+  };
+
+  const submitCustom = (): void => {
+    if (!trimmed) {
+      setSubmitAttempted(true);
+      return;
+    }
+    if (customError) {
+      setSubmitAttempted(true);
+      return;
+    }
+    const next: ActiveWord = {
+      word: trimmed,
+      list: "custom",
       insertedAt: Date.now(),
     };
     setActiveWord(next);
@@ -76,6 +89,8 @@ export function PlayTab(): JSX.Element {
   const clear = (): void => {
     setActiveWord(null);
   };
+
+  const activeWordValue = activeWord?.word ?? null;
 
   return (
     <div class="wh-play">
@@ -101,23 +116,32 @@ export function PlayTab(): JSX.Element {
         </Card>
       )}
 
-      <div class="wh-play__picker">
-        <div class="wh-play__row">
-          <Field label="Word list">
-            <SearchableSelect value={list} onChange={onListChange}>
-              {LIST_OPTIONS}
-            </SearchableSelect>
-          </Field>
-          <Field label="Word">
-            <SearchableSelect value={picked} onChange={setPicked}>
-              {WORD_LISTS[list]}
-            </SearchableSelect>
-          </Field>
-        </div>
+      <CollectionToolbar
+        list={list}
+        filter={filter}
+        onListChange={setList}
+        onFilterChange={setFilter}
+      />
 
+      <ProgressHeader
+        stats={stats}
+        streak={streak}
+        achievements={achievements}
+        listLabel={LIST_LABEL[list]}
+      />
+
+      <CollectionGrid
+        list={list}
+        filter={filter}
+        counts={counts}
+        activeWord={activeWordValue}
+        onPick={pickFromCollection}
+      />
+
+      <div class="wh-play__custom">
         <Field
           label="Custom word"
-          helper="overrides the list selection"
+          helper="set your own word — not counted in the collection"
           error={showCustomError ? customError : undefined}
           counter={customCounter}
         >
@@ -131,12 +155,14 @@ export function PlayTab(): JSX.Element {
         </Field>
 
         <div class="wh-play__actions">
-          <Button variant="primary" leftIcon="refresh" onClick={submit}>
+          <Button variant="primary" leftIcon="refresh" onClick={submitCustom}>
             New word
           </Button>
-          <Button variant="ghost" onClick={clear}>
-            Clear
-          </Button>
+          {activeWord && (
+            <Button variant="ghost" onClick={clear}>
+              Clear
+            </Button>
+          )}
         </div>
       </div>
     </div>
