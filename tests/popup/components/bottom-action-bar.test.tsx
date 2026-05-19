@@ -63,4 +63,56 @@ describe("BottomActionBar", () => {
     fireEvent.click(screen.getByRole("button", { name: /custom word/i }));
     expect(onCustom).toHaveBeenCalledTimes(1);
   });
+
+  describe("Auto-continue toggle", () => {
+    it("renders with aria-checked=false by default", () => {
+      render(
+        <BottomActionBar onStart={() => {}} onShuffle={() => {}} onCustom={() => {}} />,
+      );
+      const btn = screen.getByRole("switch", { name: /auto-continue/i });
+      expect(btn).toBeInTheDocument();
+      expect(btn).toHaveAttribute("aria-checked", "false");
+    });
+
+    it("renders with aria-checked=true when autoContinue=true", () => {
+      render(
+        <BottomActionBar
+          onStart={() => {}}
+          onShuffle={() => {}}
+          onCustom={() => {}}
+          autoContinue={true}
+        />,
+      );
+      expect(screen.getByRole("switch", { name: /auto-continue/i })).toHaveAttribute(
+        "aria-checked",
+        "true",
+      );
+    });
+
+    it("applies is-on class when autoContinue=true", () => {
+      render(
+        <BottomActionBar
+          onStart={() => {}}
+          onShuffle={() => {}}
+          onCustom={() => {}}
+          autoContinue={true}
+        />,
+      );
+      expect(screen.getByRole("switch", { name: /auto-continue/i })).toHaveClass("is-on");
+    });
+
+    it("invokes onAutoContinue when clicked", () => {
+      const onAutoContinue = jest.fn();
+      render(
+        <BottomActionBar
+          onStart={() => {}}
+          onShuffle={() => {}}
+          onCustom={() => {}}
+          onAutoContinue={onAutoContinue}
+        />,
+      );
+      fireEvent.click(screen.getByRole("switch", { name: /auto-continue/i }));
+      expect(onAutoContinue).toHaveBeenCalledTimes(1);
+    });
+  });
 });

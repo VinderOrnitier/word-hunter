@@ -95,23 +95,6 @@ export function PlayTab(): JSX.Element {
           ))}
         </div>
 
-        <button
-          type="button"
-          role="switch"
-          class={`wh-auto-toggle${settings.autoContinue ? " is-on" : ""}`}
-          aria-checked={settings.autoContinue}
-          aria-label="Auto-Continue"
-          onClick={toggleAutoContinue}
-        >
-          <span class="wh-auto-toggle__track">
-            <span class="wh-auto-toggle__thumb" />
-          </span>
-          <span class="wh-auto-toggle__body">
-            <span class="wh-auto-toggle__label">Auto-Continue</span>
-            <span class="wh-auto-toggle__hint">Pick next word after each find</span>
-          </span>
-        </button>
-
         <ProgressRow stats={stats} streak={streak} achievements={achievements} />
 
         <div class="wh-chip-group" role="tablist" data-group="filter" aria-label="Filter">
@@ -144,6 +127,8 @@ export function PlayTab(): JSX.Element {
         onShuffle={shufflePick}
         onCustom={() => setCustomOpen(true)}
         startDisabled={pendingWord === null}
+        autoContinue={settings.autoContinue}
+        onAutoContinue={toggleAutoContinue}
       />
 
       <CustomWordModal
