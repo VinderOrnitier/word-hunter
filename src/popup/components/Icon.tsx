@@ -11,19 +11,25 @@ export type IconName =
   | "check"
   | "x"
   | "target"
-  | "timer";
+  | "timer"
+  | "play"
+  | "shuffle"
+  | "pencil"
+  | "star"
+  | "chevron-down";
 
 interface IconProps {
   name: IconName;
   size?: number;
+  filled?: boolean;
 }
 
-export function Icon({ name, size = 16 }: IconProps): JSX.Element | null {
+export function Icon({ name, size = 16, filled = false }: IconProps): JSX.Element | null {
   const props = {
     width: size,
     height: size,
     viewBox: "0 0 24 24",
-    fill: "none",
+    fill: filled ? "currentColor" : "none",
     stroke: "currentColor",
     "stroke-width": 2,
     "stroke-linecap": "round" as const,
@@ -107,6 +113,41 @@ export function Icon({ name, size = 16 }: IconProps): JSX.Element | null {
           <line x1="10" x2="14" y1="2" y2="2" />
           <line x1="12" x2="15" y1="14" y2="11" />
           <circle cx="12" cy="14" r="8" />
+        </svg>
+      );
+    case "play":
+      return (
+        <svg {...props}>
+          <polygon points="6 3 20 12 6 21 6 3" />
+        </svg>
+      );
+    case "shuffle":
+      return (
+        <svg {...props}>
+          <path d="M16 3h5v5" />
+          <path d="M4 20 21 3" />
+          <path d="M21 16v5h-5" />
+          <path d="m15 15 6 6" />
+          <path d="M4 4l5 5" />
+        </svg>
+      );
+    case "pencil":
+      return (
+        <svg {...props}>
+          <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+          <path d="m15 5 4 4" />
+        </svg>
+      );
+    case "star":
+      return (
+        <svg {...props}>
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+      );
+    case "chevron-down":
+      return (
+        <svg {...props}>
+          <path d="m6 9 6 6 6-6" />
         </svg>
       );
     default:

@@ -24,7 +24,7 @@ export function App(): JSX.Element {
       <Tabs active={active} onNavigate={handleTabNavigate} />
       <main class="wh-popup__main">
         {active === "play" && (
-          <div class="wh-tab-panel" data-testid="tab-panel-play">
+          <div class="wh-tab-panel wh-tab-panel--play" data-testid="tab-panel-play">
             <PlayTab />
           </div>
         )}

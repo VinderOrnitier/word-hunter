@@ -77,7 +77,7 @@ The number of consecutive local-calendar days on which the player recorded at le
 _Avoid_: streak count, consecutive days
 
 **Achievement**:
-One of five unlockable badges shown in `ProgressHeader`: `First catch` (≥ 1 total catch), `Half-way` (caught ratio ≥ 0.5 for the active list), `Master hunter` (caught ratio = 1), `7-day streak`, `30-day streak`. Locked badges are dimmed and carry a hint tooltip telling the player how to unlock them. Derived from `CollectionStats` + `Streak` on every popup render.
+One of five unlockable badges shown in the `ProgressRow` accordion: `First catch` (≥ 1 total catch), `Half-way` (caught ratio ≥ 0.5 for the active list), `Master hunter` (caught ratio = 1), `7-day streak`, `30-day streak`. Locked pills are dimmed and carry a hint tooltip telling the player how to unlock them. Derived from `CollectionStats` + `Streak` on every popup render.
 _Avoid_: medal, milestone, trophy
 
 ## Relationships

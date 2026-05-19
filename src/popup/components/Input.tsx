@@ -1,4 +1,4 @@
-import type { JSX } from "preact";
+import type { JSX, Ref } from "preact";
 
 interface InputProps {
   value: string;
@@ -9,6 +9,7 @@ interface InputProps {
   min?: number;
   step?: number;
   error?: boolean;
+  inputRef?: Ref<HTMLInputElement>;
 }
 
 export function Input({
@@ -20,9 +21,11 @@ export function Input({
   min,
   step,
   error = false,
+  inputRef,
 }: InputProps): JSX.Element {
   return (
     <input
+      ref={inputRef}
       type={type}
       class={`wh-input${mono ? " wh-input--mono" : ""}${error ? " wh-input--error" : ""}`}
       value={value}
