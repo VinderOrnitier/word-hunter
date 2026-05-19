@@ -329,4 +329,68 @@ describe("PlayTab", () => {
       expect(setMock).not.toHaveBeenCalled();
     });
   });
+
+  describe("Auto-Continue toggle", () => {
+    it("renders the Auto-Continue switch in the off state by default", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+      const toggle = screen.getByRole("switch", { name: /auto-continue/i });
+      expect(toggle).toBeInTheDocument();
+      expect(toggle).toHaveAttribute("aria-checked", "false");
+    });
+
+    it("reflects autoContinue=true from stored settings", async () => {
+      setupChromeMock({
+        settings: {
+          hintDelayMinutes: 3,
+          celebrationHoverSeconds: 1.5,
+          minWordThreshold: 30,
+          autoContinue: true,
+          showNextWordPreview: true,
+        },
+      });
+      render(<PlayTab />);
+      await waitFor(() => {
+        const toggle = screen.getByRole("switch", { name: /auto-continue/i });
+        expect(toggle).toHaveAttribute("aria-checked", "true");
+      });
+    });
+
+    it("saves autoContinue=true to storage when the toggle is clicked from off", async () => {
+      const { setMock } = setupChromeMock();
+      render(<PlayTab />);
+      fireEvent.click(screen.getByRole("switch", { name: /auto-continue/i }));
+      await waitFor(() =>
+        expect(setMock).toHaveBeenCalledWith(
+          expect.objectContaining({
+            settings: expect.objectContaining({ autoContinue: true }),
+          }),
+        ),
+      );
+    });
+
+    it("saves autoContinue=false when the toggle is clicked from on", async () => {
+      const { setMock } = setupChromeMock({
+        settings: {
+          hintDelayMinutes: 3,
+          celebrationHoverSeconds: 1.5,
+          minWordThreshold: 30,
+          autoContinue: true,
+          showNextWordPreview: true,
+        },
+      });
+      render(<PlayTab />);
+      await waitFor(() => {
+        expect(screen.getByRole("switch", { name: /auto-continue/i })).toHaveAttribute("aria-checked", "true");
+      });
+      fireEvent.click(screen.getByRole("switch", { name: /auto-continue/i }));
+      await waitFor(() =>
+        expect(setMock).toHaveBeenCalledWith(
+          expect.objectContaining({
+            settings: expect.objectContaining({ autoContinue: false }),
+          }),
+        ),
+      );
+    });
+  });
 });

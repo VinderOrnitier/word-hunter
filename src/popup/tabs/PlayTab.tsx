@@ -1,6 +1,7 @@
 import { useMemo, useState } from "preact/hooks";
 import type { JSX } from "preact";
 import type { ActiveWord } from "../../shared/types";
+import { DEFAULT_SETTINGS } from "../../shared/constants";
 import { WORD_LISTS, type WordListName } from "../word-lists";
 import { useStorage } from "../hooks/useStorage";
 import { CollectionGrid } from "../collection/CollectionGrid";
@@ -30,6 +31,7 @@ export function PlayTab(): JSX.Element {
   const [activeWord, setActiveWord] = useStorage("activeWord", null);
   const [finds] = useStorage("finds", []);
   const [list, setList] = useStorage("selectedList", "animals");
+  const [settings, setSettings] = useStorage("settings", DEFAULT_SETTINGS);
   const [filter, setFilter] = useState<CollectionFilter>("all");
   const [customOpen, setCustomOpen] = useState(false);
   const [pendingWord, setPendingWord] = useState<string | null>(null);
@@ -67,6 +69,10 @@ export function PlayTab(): JSX.Element {
     setActiveWord(null);
   };
 
+  const toggleAutoContinue = (): void => {
+    setSettings({ ...settings, autoContinue: !settings.autoContinue });
+  };
+
   const activeWordValue = activeWord?.word ?? null;
 
   return (
@@ -88,6 +94,23 @@ export function PlayTab(): JSX.Element {
             </button>
           ))}
         </div>
+
+        <button
+          type="button"
+          role="switch"
+          class={`wh-auto-toggle${settings.autoContinue ? " is-on" : ""}`}
+          aria-checked={settings.autoContinue}
+          aria-label="Auto-Continue"
+          onClick={toggleAutoContinue}
+        >
+          <span class="wh-auto-toggle__track">
+            <span class="wh-auto-toggle__thumb" />
+          </span>
+          <span class="wh-auto-toggle__body">
+            <span class="wh-auto-toggle__label">Auto-Continue</span>
+            <span class="wh-auto-toggle__hint">Pick next word after each find</span>
+          </span>
+        </button>
 
         <ProgressRow stats={stats} streak={streak} achievements={achievements} />
 

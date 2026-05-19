@@ -1,4 +1,5 @@
-import { getActiveWord, setActiveWord, clearActiveWord } from "../../src/shared/storage";
+import { getActiveWord, setActiveWord, clearActiveWord, getSettings, saveSettings } from "../../src/shared/storage";
+import { DEFAULT_SETTINGS } from "../../src/shared/constants";
 
 function makeStorage(): Record<string, unknown> {
   return {};
@@ -64,5 +65,34 @@ describe("ActiveWord storage", () => {
     await setActiveWord({ word: "wolf", insertedAt: 1000 });
     await clearActiveWord();
     expect(await getActiveWord()).toBeNull();
+  });
+});
+
+describe("GameSettings storage", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    setupChromeMock();
+  });
+
+  it("returns DEFAULT_SETTINGS with autoContinue=false when no settings stored", async () => {
+    const settings = await getSettings();
+    expect(settings.autoContinue).toBe(false);
+  });
+
+  it("returns DEFAULT_SETTINGS with showNextWordPreview=true when no settings stored", async () => {
+    const settings = await getSettings();
+    expect(settings.showNextWordPreview).toBe(true);
+  });
+
+  it("round-trips autoContinue=true through saveSettings", async () => {
+    await saveSettings({ ...DEFAULT_SETTINGS, autoContinue: true });
+    const settings = await getSettings();
+    expect(settings.autoContinue).toBe(true);
+  });
+
+  it("round-trips showNextWordPreview=false through saveSettings", async () => {
+    await saveSettings({ ...DEFAULT_SETTINGS, showNextWordPreview: false });
+    const settings = await getSettings();
+    expect(settings.showNextWordPreview).toBe(false);
   });
 });

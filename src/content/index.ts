@@ -1,7 +1,7 @@
 import "../shared/styles/tokens.css";
 import "./styles/overlay.css";
 import { render } from "preact";
-import { getActiveWord, clearActiveWord, getSettings, saveFind } from "../shared/storage";
+import { getActiveWord, setActiveWord, clearActiveWord, getSettings, getFinds, saveFind } from "../shared/storage";
 import { ParagraphSelector } from "./paragraph-selector";
 import { WordRenderer } from "./word-renderer";
 import { HintTimer } from "./hint-timer";
@@ -11,9 +11,13 @@ import { NavigationObserver } from "./navigation-observer";
 import { resolveArt } from "../shared/art-resolver";
 import { ActiveWordWatcher } from "./active-word-watcher";
 import { validateCustomWord } from "../shared/word-validation";
+import { handleFind } from "./find-handler";
+import { pickRandomWord } from "../popup/collection/pickRandomWord";
+import { AutoModeToast } from "./auto-mode-toast";
 
 const timer = HintTimer(document);
 const celebration = CelebrationManager(document);
+const autoModeToast = AutoModeToast(document);
 ActiveWordWatcher(timer, celebration, document).start();
 
 async function inject(): Promise<void> {
@@ -26,6 +30,10 @@ async function inject(): Promise<void> {
   if (groups.length === 0) {
     NoParagraphNotification(document).show();
     return;
+  }
+
+  if (settings.autoContinue) {
+    autoModeToast.show(activeWord.word);
   }
 
   const art = resolveArt(activeWord.word, activeWord.list);
@@ -42,12 +50,23 @@ async function inject(): Promise<void> {
   timer.cancel();
   WordRenderer(activeWord, groups, {
     onFind: async (record) => {
-      const current = await getActiveWord();
-      if (!current) return; // stale tab — word already found elsewhere
-      if (current.insertedAt !== activeWord.insertedAt) return; // active word changed since injection
-      celebration.show({ word: record.word, durationS: record.searchDurationSeconds, hintUsed: record.hintUsed, art }, undefined, clearFoundWord);
-      await saveFind(record);
-      await clearActiveWord();
+      const result = await handleFind(record, activeWord.insertedAt, {
+        getActiveWord,
+        setActiveWord,
+        clearActiveWord,
+        saveFind,
+        getSettings,
+        getFinds,
+        pickNextWord: pickRandomWord,
+        resolveArt,
+        now: () => Date.now(),
+      });
+      if (!result.proceeded) return;
+      celebration.show(
+        { word: record.word, durationS: record.searchDurationSeconds, hintUsed: record.hintUsed, art, next: result.next },
+        undefined,
+        clearFoundWord,
+      );
       timer.cancel();
     },
     onReview: (record) => {

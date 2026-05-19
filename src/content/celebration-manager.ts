@@ -6,6 +6,7 @@ export interface CelebrationProps {
   durationS: number;
   hintUsed: boolean;
   art?: string;
+  next?: { word: string; art?: string };
 }
 
 export function CelebrationManager(doc: Document) {

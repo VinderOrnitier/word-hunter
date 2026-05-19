@@ -59,7 +59,7 @@ describe("SettingsTab", () => {
   });
 
   it("shows the stored settings values from storage", async () => {
-    const stored: GameSettings = { hintDelayMinutes: 10, celebrationHoverSeconds: 3, minWordThreshold: 30 };
+    const stored: GameSettings = { hintDelayMinutes: 10, celebrationHoverSeconds: 3, minWordThreshold: 30, autoContinue: false, showNextWordPreview: true };
     setupChromeMock({ settings: stored });
     render(<SettingsTab />);
 
@@ -84,7 +84,7 @@ describe("SettingsTab", () => {
   });
 
   it("displays the current minWordThreshold value next to the slider", async () => {
-    const stored: GameSettings = { hintDelayMinutes: 3, celebrationHoverSeconds: 1.5, minWordThreshold: 80 };
+    const stored: GameSettings = { hintDelayMinutes: 3, celebrationHoverSeconds: 1.5, minWordThreshold: 80, autoContinue: false, showNextWordPreview: true };
     setupChromeMock({ settings: stored });
     render(<SettingsTab />);
 
@@ -139,7 +139,7 @@ describe("SettingsTab", () => {
 
     await waitFor(() => {
       expect(setMock).toHaveBeenCalledWith({
-        settings: { hintDelayMinutes: 8, celebrationHoverSeconds: 2, minWordThreshold: 30 },
+        settings: { hintDelayMinutes: 8, celebrationHoverSeconds: 2, minWordThreshold: 30, autoContinue: false, showNextWordPreview: true },
       });
     });
   });
@@ -160,7 +160,7 @@ describe("SettingsTab", () => {
   });
 
   it("does not show Save button after settings load from storage", async () => {
-    const stored: GameSettings = { hintDelayMinutes: 10, celebrationHoverSeconds: 3, minWordThreshold: 50 };
+    const stored: GameSettings = { hintDelayMinutes: 10, celebrationHoverSeconds: 3, minWordThreshold: 50, autoContinue: false, showNextWordPreview: true };
     setupChromeMock({ settings: stored });
     render(<SettingsTab />);
 
@@ -170,6 +170,50 @@ describe("SettingsTab", () => {
     });
 
     expect(screen.queryByRole("button", { name: /save/i })).not.toBeInTheDocument();
+  });
+
+  describe("Next-word preview toggle", () => {
+    it("renders the 'Show next word preview' switch in the on state by default", () => {
+      setupChromeMock();
+      render(<SettingsTab />);
+      const toggle = screen.getByRole("switch", { name: /next word preview/i });
+      expect(toggle).toHaveAttribute("aria-checked", "true");
+    });
+
+    it("reflects showNextWordPreview=false from stored settings", async () => {
+      const stored: GameSettings = {
+        hintDelayMinutes: 3,
+        celebrationHoverSeconds: 1.5,
+        minWordThreshold: 30,
+        autoContinue: false,
+        showNextWordPreview: false,
+      };
+      setupChromeMock({ settings: stored });
+      render(<SettingsTab />);
+      await waitFor(() => {
+        expect(screen.getByRole("switch", { name: /next word preview/i })).toHaveAttribute("aria-checked", "false");
+      });
+    });
+
+    it("clicking the toggle dirties the form, requiring Save to persist", async () => {
+      setupChromeMock();
+      render(<SettingsTab />);
+      fireEvent.click(screen.getByRole("switch", { name: /next word preview/i }));
+      expect(screen.getByRole("switch", { name: /next word preview/i })).toHaveAttribute("aria-checked", "false");
+      expect(screen.getByRole("button", { name: /save/i })).toBeInTheDocument();
+    });
+
+    it("Save persists showNextWordPreview=false to storage after toggling off", async () => {
+      const { setMock } = setupChromeMock();
+      render(<SettingsTab />);
+      fireEvent.click(screen.getByRole("switch", { name: /next word preview/i }));
+      fireEvent.click(screen.getByRole("button", { name: /save/i }));
+      await waitFor(() => {
+        expect(setMock).toHaveBeenCalledWith({
+          settings: expect.objectContaining({ showNextWordPreview: false }),
+        });
+      });
+    });
   });
 
 });

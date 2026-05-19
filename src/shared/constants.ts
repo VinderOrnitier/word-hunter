@@ -10,6 +10,8 @@ export const DEFAULT_SETTINGS: GameSettings = {
   hintDelayMinutes: 3,
   celebrationHoverSeconds: 1.5,
   minWordThreshold: 30,
+  autoContinue: false,
+  showNextWordPreview: true,
 };
 
 export const MIN_PARAGRAPH_WORDS = 50;
