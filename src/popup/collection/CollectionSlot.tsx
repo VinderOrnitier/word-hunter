@@ -7,6 +7,7 @@ interface CollectionSlotProps {
   source: WordListName;
   count: number;
   isActive: boolean;
+  isPending?: boolean;
   onClick: () => void;
 }
 
@@ -15,6 +16,7 @@ export function CollectionSlot({
   source,
   count,
   isActive,
+  isPending,
   onClick,
 }: CollectionSlotProps): JSX.Element {
   const caught = count > 0;
@@ -23,6 +25,7 @@ export function CollectionSlot({
     "wh-slot",
     caught ? "is-caught" : "is-uncaught",
     isActive ? "is-active" : "",
+    isPending === true ? "is-pending" : "",
   ]
     .filter(Boolean)
     .join(" ");

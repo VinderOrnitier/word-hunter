@@ -81,19 +81,14 @@ describe("PlayTab", () => {
     expect(screen.getByRole("button", { name: /Pikachu, not caught yet/i })).toBeInTheDocument();
   });
 
-  it("writes the slot's word to storage when a CollectionSlot is clicked", async () => {
+  it("clicking a CollectionSlot does NOT write activeWord to storage immediately", async () => {
     const { setMock } = setupChromeMock();
     render(<PlayTab />);
 
     fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
 
-    await waitFor(() => {
-      expect(setMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          activeWord: expect.objectContaining({ word: "Fox", list: "animals" }),
-        }),
-      );
-    });
+    await new Promise((r) => setTimeout(r, 50));
+    expect(setMock).not.toHaveBeenCalled();
   });
 
   it("marks the currently-active word's slot with the is-active class", async () => {
@@ -150,10 +145,66 @@ describe("PlayTab", () => {
   });
 
   describe("Start a hunt action bar", () => {
-    it("sets a random word from the active list when 'Start a hunt' is clicked", async () => {
+    it("clicking a slot marks it with is-pending class", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+
+      expect(screen.getByRole("button", { name: /^Fox/ })).toHaveClass("is-pending");
+    });
+
+    it("'Start a hunt' is disabled when no slot is selected", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+
+      expect(screen.getByRole("button", { name: /start a hunt/i })).toBeDisabled();
+    });
+
+    it("'Start a hunt' confirms the pending slot and writes to storage", async () => {
       const { setMock } = setupChromeMock();
       render(<PlayTab />);
 
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+      fireEvent.click(screen.getByRole("button", { name: /start a hunt/i }));
+
+      await waitFor(() => {
+        expect(setMock).toHaveBeenCalledWith(
+          expect.objectContaining({
+            activeWord: expect.objectContaining({ word: "Fox", list: "animals" }),
+          }),
+        );
+      });
+    });
+
+    it("'Start a hunt' clears the pending state after confirming", async () => {
+      setupChromeMock();
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+      fireEvent.click(screen.getByRole("button", { name: /start a hunt/i }));
+
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: /^Fox/ })).not.toHaveClass("is-pending");
+      });
+    });
+
+    it("shuffle sets a pending word without writing to storage", async () => {
+      const { setMock } = setupChromeMock();
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /pick a random word/i }));
+
+      await new Promise((r) => setTimeout(r, 50));
+      expect(setMock).not.toHaveBeenCalled();
+      expect(screen.getByRole("button", { name: /start a hunt/i })).not.toBeDisabled();
+    });
+
+    it("confirming shuffle via 'Start a hunt' writes a word from the active list", async () => {
+      const { setMock } = setupChromeMock();
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /pick a random word/i }));
       fireEvent.click(screen.getByRole("button", { name: /start a hunt/i }));
 
       await waitFor(() => {
@@ -167,32 +218,34 @@ describe("PlayTab", () => {
       expect(WORD_LISTS.animals).toContain(call.activeWord.word);
     });
 
-    it("respects the chosen list for the random pick", async () => {
-      const { setMock } = setupChromeMock();
+    it("clicking a slot while a hunt is active updates the pending word", async () => {
+      setupChromeMock({
+        activeWord: { word: "Eagle", list: "animals", insertedAt: 1000 },
+      });
       render(<PlayTab />);
 
-      fireEvent.click(screen.getByRole("tab", { name: /pokémon/i }));
+      await waitFor(() => expect(screen.getByText("Eagle")).toBeInTheDocument());
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+
+      expect(screen.getByRole("button", { name: /^Fox/ })).toHaveClass("is-pending");
+    });
+
+    it("confirming a new word while a hunt is active replaces the activeWord", async () => {
+      const { setMock } = setupChromeMock({
+        activeWord: { word: "Eagle", list: "animals", insertedAt: 1000 },
+      });
+      render(<PlayTab />);
+
+      await waitFor(() => expect(screen.getByText("Eagle")).toBeInTheDocument());
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
       fireEvent.click(screen.getByRole("button", { name: /start a hunt/i }));
 
       await waitFor(() => {
         expect(setMock).toHaveBeenCalledWith(
           expect.objectContaining({
-            activeWord: expect.objectContaining({ list: "pokemon" }),
-          }),
-        );
-      });
-    });
-
-    it("shuffle icon button picks a random word", async () => {
-      const { setMock } = setupChromeMock();
-      render(<PlayTab />);
-
-      fireEvent.click(screen.getByRole("button", { name: /pick a random word/i }));
-
-      await waitFor(() => {
-        expect(setMock).toHaveBeenCalledWith(
-          expect.objectContaining({
-            activeWord: expect.objectContaining({ list: "animals" }),
+            activeWord: expect.objectContaining({ word: "Fox" }),
           }),
         );
       });

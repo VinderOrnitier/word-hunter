@@ -896,8 +896,13 @@ button {
   transition: background var(--wh-dur-base) var(--wh-ease-standard);
 }
 
-.wh-action-bar__primary:hover {
+.wh-action-bar__primary:hover:not(:disabled) {
   background: #ffdc5c;
+}
+
+.wh-action-bar__primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .wh-action-bar__primary:focus-visible {
@@ -1112,6 +1117,11 @@ button {
 .wh-slot.is-active {
   border-color: var(--wh-primary);
   box-shadow: var(--wh-shadow-glow);
+}
+
+.wh-slot.is-pending {
+  border-color: var(--wh-hint);
+  box-shadow: 0 0 0 4px var(--wh-hint-soft);
 }
 
 .wh-slot__art {

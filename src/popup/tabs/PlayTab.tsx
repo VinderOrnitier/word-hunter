@@ -32,6 +32,7 @@ export function PlayTab(): JSX.Element {
   const [list, setList] = useState<WordListName>("animals");
   const [filter, setFilter] = useState<CollectionFilter>("all");
   const [customOpen, setCustomOpen] = useState(false);
+  const [pendingWord, setPendingWord] = useState<string | null>(null);
 
   const counts = useMemo(() => computeCatchCounts(finds, list), [finds, list]);
   const stats = useMemo(
@@ -42,12 +43,18 @@ export function PlayTab(): JSX.Element {
   const achievements = useMemo(() => listAchievements(stats, streak), [stats, streak]);
 
   const pickFromCollection = (word: string): void => {
-    setActiveWord({ word, list, insertedAt: Date.now() });
+    setPendingWord(word);
   };
 
-  const startRandom = (): void => {
+  const startHunt = (): void => {
+    if (!pendingWord) return;
+    setActiveWord({ word: pendingWord, list, insertedAt: Date.now() });
+    setPendingWord(null);
+  };
+
+  const shufflePick = (): void => {
     const word = pickRandomWord(list, counts, "uncaught");
-    setActiveWord({ word, list, insertedAt: Date.now() });
+    setPendingWord(word);
   };
 
   const submitCustom = (word: string): void => {
@@ -104,14 +111,16 @@ export function PlayTab(): JSX.Element {
           filter={filter}
           counts={counts}
           activeWord={activeWordValue}
+          pendingWord={pendingWord}
           onPick={pickFromCollection}
         />
       </div>
 
       <BottomActionBar
-        onStart={startRandom}
-        onShuffle={startRandom}
+        onStart={startHunt}
+        onShuffle={shufflePick}
         onCustom={() => setCustomOpen(true)}
+        startDisabled={pendingWord === null}
       />
 
       <CustomWordModal

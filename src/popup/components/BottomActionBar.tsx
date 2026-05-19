@@ -5,12 +5,14 @@ interface BottomActionBarProps {
   onStart: () => void;
   onShuffle: () => void;
   onCustom: () => void;
+  startDisabled?: boolean;
 }
 
 export function BottomActionBar({
   onStart,
   onShuffle,
   onCustom,
+  startDisabled = false,
 }: BottomActionBarProps): JSX.Element {
   return (
     <div class="wh-action-bar">
@@ -18,6 +20,7 @@ export function BottomActionBar({
         type="button"
         class="wh-action-bar__primary"
         onClick={onStart}
+        disabled={startDisabled}
       >
         <Icon name="play" size={14} filled />
         <span>Start a hunt</span>

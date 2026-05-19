@@ -8,6 +8,7 @@ interface CollectionGridProps {
   filter: CollectionFilter;
   counts: CatchCounts;
   activeWord: string | null;
+  pendingWord?: string | null;
   onPick: (word: string) => void;
 }
 
@@ -16,6 +17,7 @@ export function CollectionGrid({
   filter,
   counts,
   activeWord,
+  pendingWord,
   onPick,
 }: CollectionGridProps): JSX.Element {
   const words = WORD_LISTS[list];
@@ -44,6 +46,7 @@ export function CollectionGrid({
           source={list}
           count={count}
           isActive={activeWord === word}
+          isPending={(pendingWord ?? null) === word}
           onClick={() => onPick(word)}
         />
       ))}
