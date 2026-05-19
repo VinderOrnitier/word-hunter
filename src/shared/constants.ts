@@ -12,6 +12,7 @@ export const DEFAULT_SETTINGS: GameSettings = {
   minWordThreshold: 30,
   autoContinue: false,
   showNextWordPreview: true,
+  showReloadHint: true,
 };
 
 export const MIN_PARAGRAPH_WORDS = 50;

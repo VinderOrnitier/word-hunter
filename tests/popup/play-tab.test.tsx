@@ -16,17 +16,25 @@ type ChromeMock = {
         removeListener: jest.Mock;
       };
     };
+    tabs: {
+      query: jest.Mock;
+    };
+    scripting: {
+      executeScript: jest.Mock;
+    };
   };
 };
 
 function setupChromeMock(initial: Record<string, unknown> = {}): {
   store: Record<string, unknown>;
   setMock: jest.Mock;
+  executeScriptMock: jest.Mock;
 } {
   const store: Record<string, unknown> = { ...initial };
   const setMock = jest.fn(async (items: Record<string, unknown>) => {
     Object.assign(store, items);
   });
+  const executeScriptMock = jest.fn();
 
   (globalThis as unknown as ChromeMock).chrome = {
     storage: {
@@ -42,9 +50,15 @@ function setupChromeMock(initial: Record<string, unknown> = {}): {
         removeListener: jest.fn(),
       },
     },
+    tabs: {
+      query: jest.fn((_q: unknown, cb: (tabs: { id: number }[]) => void) => cb([{ id: 42 }])),
+    },
+    scripting: {
+      executeScript: executeScriptMock,
+    },
   };
 
-  return { store, setMock };
+  return { store, setMock, executeScriptMock };
 }
 
 describe("PlayTab", () => {
@@ -391,6 +405,118 @@ describe("PlayTab", () => {
           }),
         ),
       );
+    });
+  });
+
+  describe("Reload hint banner", () => {
+    const settingsWithHint = {
+      hintDelayMinutes: 3,
+      celebrationHoverSeconds: 1.5,
+      minWordThreshold: 30,
+      autoContinue: false,
+      showNextWordPreview: true,
+      showReloadHint: true,
+    };
+
+    const settingsWithoutHint = { ...settingsWithHint, showReloadHint: false };
+
+    it("is not visible before any hunt is started", () => {
+      setupChromeMock({ settings: settingsWithHint });
+      render(<PlayTab />);
+      expect(screen.queryByText(/reload the page to begin hunting/i)).not.toBeInTheDocument();
+    });
+
+    it("shows the reload hint banner after starting a hunt when showReloadHint is on", async () => {
+      setupChromeMock({ settings: settingsWithHint });
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+      fireEvent.click(screen.getByRole("button", { name: /start a hunt/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText(/reload the page to begin hunting/i)).toBeInTheDocument();
+      });
+    });
+
+    it("does not show the banner after starting a hunt when showReloadHint is off", async () => {
+      setupChromeMock({ settings: settingsWithoutHint });
+      render(<PlayTab />);
+
+      await waitFor(() => {
+        expect(screen.getByRole("tab", { name: /animals/i })).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+      fireEvent.click(screen.getByRole("button", { name: /start a hunt/i }));
+
+      await new Promise((r) => setTimeout(r, 50));
+      expect(screen.queryByText(/reload the page to begin hunting/i)).not.toBeInTheDocument();
+    });
+
+    it("hides the banner when the dismiss button is clicked", async () => {
+      setupChromeMock({ settings: settingsWithHint });
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+      fireEvent.click(screen.getByRole("button", { name: /start a hunt/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText(/reload the page to begin hunting/i)).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByRole("button", { name: /dismiss/i }));
+
+      expect(screen.queryByText(/reload the page to begin hunting/i)).not.toBeInTheDocument();
+    });
+
+    it("calls chrome.scripting.executeScript on the active tab when Reload is clicked", async () => {
+      const { executeScriptMock } = setupChromeMock({ settings: settingsWithHint });
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+      fireEvent.click(screen.getByRole("button", { name: /start a hunt/i }));
+
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: /^reload$/i })).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByRole("button", { name: /^reload$/i }));
+
+      expect(executeScriptMock).toHaveBeenCalledWith(
+        expect.objectContaining({ target: { tabId: 42 } }),
+      );
+    });
+
+    it("hides the banner after Reload is clicked", async () => {
+      setupChromeMock({ settings: settingsWithHint });
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+      fireEvent.click(screen.getByRole("button", { name: /start a hunt/i }));
+
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: /^reload$/i })).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByRole("button", { name: /^reload$/i }));
+
+      expect(screen.queryByText(/reload the page to begin hunting/i)).not.toBeInTheDocument();
+    });
+
+    it("hides the banner when the active hunt is stopped", async () => {
+      setupChromeMock({ settings: settingsWithHint });
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+      fireEvent.click(screen.getByRole("button", { name: /start a hunt/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText(/reload the page to begin hunting/i)).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByRole("button", { name: /clear active word/i }));
+
+      expect(screen.queryByText(/reload the page to begin hunting/i)).not.toBeInTheDocument();
     });
   });
 });

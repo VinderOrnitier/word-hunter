@@ -19,7 +19,8 @@ export function SettingsTab(): JSX.Element {
     draft.hintDelayMinutes !== saved.hintDelayMinutes ||
     draft.celebrationHoverSeconds !== saved.celebrationHoverSeconds ||
     draft.minWordThreshold !== saved.minWordThreshold ||
-    draft.showNextWordPreview !== saved.showNextWordPreview;
+    draft.showNextWordPreview !== saved.showNextWordPreview ||
+    draft.showReloadHint !== saved.showReloadHint;
 
   const update = (patch: Partial<GameSettings>): void => {
     setDraft({ ...draft, ...patch });
@@ -92,6 +93,25 @@ export function SettingsTab(): JSX.Element {
           </div>
           <span class="wh-settings__unit">s</span>
         </div>
+      </Field>
+
+      <Field
+        label="Reload hint"
+        helper="prompt to reload the page after starting a hunt"
+      >
+        <button
+          type="button"
+          role="switch"
+          class={`wh-settings__switch${draft.showReloadHint ? " is-on" : ""}`}
+          aria-checked={draft.showReloadHint}
+          aria-label="Reload hint"
+          onClick={() => update({ showReloadHint: !draft.showReloadHint })}
+        >
+          <span class="wh-settings__switch-track">
+            <span class="wh-settings__switch-thumb" />
+          </span>
+          <span class="wh-settings__switch-state">{draft.showReloadHint ? "On" : "Off"}</span>
+        </button>
       </Field>
 
       <Field

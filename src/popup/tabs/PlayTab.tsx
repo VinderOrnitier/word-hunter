@@ -14,6 +14,7 @@ import type { CollectionFilter } from "../collection/types";
 import { ActiveWordCard } from "../play/ActiveWordCard";
 import { ProgressRow } from "../play/ProgressRow";
 import { CustomWordModal } from "../play/CustomWordModal";
+import { ReloadHint } from "../play/ReloadHint";
 import { BottomActionBar } from "../components/BottomActionBar";
 
 const LIST_CHIPS: Array<{ value: WordListName; label: string }> = [
@@ -35,6 +36,7 @@ export function PlayTab(): JSX.Element {
   const [filter, setFilter] = useState<CollectionFilter>("all");
   const [customOpen, setCustomOpen] = useState(false);
   const [pendingWord, setPendingWord] = useState<string | null>(null);
+  const [showReloadBanner, setShowReloadBanner] = useState(false);
 
   const counts = useMemo(() => computeCatchCounts(finds, list), [finds, list]);
   const stats = useMemo(
@@ -52,6 +54,19 @@ export function PlayTab(): JSX.Element {
     if (!pendingWord) return;
     setActiveWord({ word: pendingWord, list, insertedAt: Date.now() });
     setPendingWord(null);
+    if (settings.showReloadHint) setShowReloadBanner(true);
+  };
+
+  const handleReload = (): void => {
+    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+      if (tab?.id) {
+        chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: () => window.location.reload(),
+        });
+      }
+    });
+    setShowReloadBanner(false);
   };
 
   const shufflePick = (): void => {
@@ -78,6 +93,10 @@ export function PlayTab(): JSX.Element {
   return (
     <div class="wh-play">
       <div class="wh-play__scroll">
+        {showReloadBanner && activeWord && (
+          <ReloadHint onReload={handleReload} onDismiss={() => setShowReloadBanner(false)} />
+        )}
+
         <ActiveWordCard activeWord={activeWord} onClear={clear} />
 
         <div class="wh-chip-group" role="tablist" data-group="list" aria-label="Word list">

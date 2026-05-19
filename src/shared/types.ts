@@ -14,6 +14,7 @@ export interface GameSettings {
   minWordThreshold: number;
   autoContinue: boolean;
   showNextWordPreview: boolean;
+  showReloadHint: boolean;
 }
 
 export type WordListName = "animals" | "pokemon";

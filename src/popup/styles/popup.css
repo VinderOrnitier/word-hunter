@@ -1051,6 +1051,93 @@ button {
   }
 }
 
+/* ---------- ReloadHint ---------- */
+
+.wh-reload-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--wh-space-2) 10px;
+  background: var(--wh-hint-soft);
+  border: 1px solid rgba(138, 180, 255, 0.2);
+  border-radius: var(--wh-radius-2);
+  animation: wh-reload-hint-in var(--wh-dur-base) var(--wh-ease-standard) both;
+}
+
+@keyframes wh-reload-hint-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.wh-reload-hint__text {
+  flex: 1;
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-xs);
+  color: var(--wh-hint);
+  line-height: var(--wh-leading-snug);
+  white-space: nowrap;
+}
+
+.wh-reload-hint__info {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  color: var(--wh-fg-4);
+  cursor: default;
+}
+
+.wh-reload-hint__info:hover {
+  color: var(--wh-fg-2);
+}
+
+.wh-reload-hint__btn {
+  flex: 0 0 auto;
+  padding: 2px var(--wh-space-2);
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-sm);
+  font-weight: var(--wh-weight-medium);
+  color: var(--wh-hint);
+  background: rgba(138, 180, 255, 0.12);
+  border: 1px solid rgba(138, 180, 255, 0.25);
+  border-radius: var(--wh-radius-1);
+  cursor: pointer;
+  transition: background var(--wh-dur-fast) var(--wh-ease-standard);
+}
+
+.wh-reload-hint__btn:hover {
+  background: rgba(138, 180, 255, 0.22);
+}
+
+.wh-reload-hint__btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(138, 180, 255, 0.22);
+}
+
+.wh-reload-hint__dismiss {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  color: var(--wh-fg-4);
+  background: transparent;
+  border: none;
+  border-radius: var(--wh-radius-1);
+  cursor: pointer;
+  transition: color var(--wh-dur-fast) var(--wh-ease-standard);
+}
+
+.wh-reload-hint__dismiss:hover {
+  color: var(--wh-fg-2);
+}
+
+.wh-reload-hint__dismiss:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(138, 180, 255, 0.22);
+}
+
 /* ---------- Collection ---------- */
 
 .wh-chip-group {
