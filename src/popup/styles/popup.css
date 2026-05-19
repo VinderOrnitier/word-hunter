@@ -581,7 +581,9 @@ button {
 }
 
 .wh-active-card--empty .wh-active-card__art {
-  display: none;
+  border-color: var(--wh-border);
+  box-shadow: none;
+  color: var(--wh-fg-4);
 }
 
 .wh-active-card__emoji {

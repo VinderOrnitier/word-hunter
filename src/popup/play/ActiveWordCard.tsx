@@ -12,6 +12,9 @@ export function ActiveWordCard({ activeWord, onClear }: ActiveWordCardProps): JS
   if (!activeWord) {
     return (
       <div class="wh-active-card wh-active-card--empty">
+        <div class="wh-active-card__art" aria-hidden="true">
+          <Icon name="search" size={18} />
+        </div>
         <div class="wh-active-card__body">
           <span class="wh-active-card__eyebrow">No active word</span>
           <span class="wh-active-card__hint">pick a word below to start the hunt.</span>
