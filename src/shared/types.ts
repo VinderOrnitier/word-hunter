@@ -14,6 +14,8 @@ export interface GameSettings {
   minWordThreshold: number;
 }
 
+export type WordListName = "animals" | "pokemon";
+
 export type WordSource = "animals" | "pokemon" | "custom";
 
 export interface ActiveWord {

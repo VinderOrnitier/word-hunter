@@ -1,10 +1,11 @@
-import type { HuntRecord, GameSettings, ActiveWord } from "./types";
+import type { HuntRecord, GameSettings, ActiveWord, WordListName } from "./types";
 import { DEFAULT_SETTINGS } from "./constants";
 
 export type StorageSchema = {
   finds: HuntRecord[];
   settings: GameSettings;
   activeWord: ActiveWord | null;
+  selectedList: WordListName;
 };
 
 async function get<K extends keyof StorageSchema>(key: K): Promise<StorageSchema[K] | undefined> {

@@ -52,6 +52,37 @@ describe("PlayTab", () => {
     jest.clearAllMocks();
   });
 
+  describe("selectedList persistence", () => {
+    it("defaults to the Animals grid when nothing is stored", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+
+      expect(screen.getByRole("tab", { name: /animals/i })).toHaveAttribute("aria-selected", "true");
+      expect(screen.getByRole("tab", { name: /pokémon/i })).toHaveAttribute("aria-selected", "false");
+    });
+
+    it("restores the Pokémon grid when selectedList:'pokemon' is stored", async () => {
+      setupChromeMock({ selectedList: "pokemon" });
+      render(<PlayTab />);
+
+      await waitFor(() =>
+        expect(screen.getByRole("tab", { name: /pokémon/i })).toHaveAttribute("aria-selected", "true"),
+      );
+      expect(screen.getByRole("button", { name: /Pikachu, not caught yet/i })).toBeInTheDocument();
+    });
+
+    it("writes selectedList to storage when the Pokémon chip is clicked", async () => {
+      const { setMock } = setupChromeMock();
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("tab", { name: /pokémon/i }));
+
+      await waitFor(() =>
+        expect(setMock).toHaveBeenCalledWith(expect.objectContaining({ selectedList: "pokemon" })),
+      );
+    });
+  });
+
   it("shows the 'no active word' placeholder when none is stored", () => {
     setupChromeMock();
     render(<PlayTab />);

@@ -1,6 +1,7 @@
 import { POKEMON_NAMES } from "../shared/pokemon-sprites";
+import type { WordListName } from "../shared/types";
 
-export type WordListName = "animals" | "pokemon";
+export type { WordListName };
 
 export const ANIMALS = [
   "Alpaca", "Bat", "Bear", "Beaver",

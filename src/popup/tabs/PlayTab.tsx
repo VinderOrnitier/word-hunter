@@ -29,7 +29,7 @@ const FILTER_CHIPS: Array<{ value: CollectionFilter; label: string }> = [
 export function PlayTab(): JSX.Element {
   const [activeWord, setActiveWord] = useStorage("activeWord", null);
   const [finds] = useStorage("finds", []);
-  const [list, setList] = useState<WordListName>("animals");
+  const [list, setList] = useStorage("selectedList", "animals");
   const [filter, setFilter] = useState<CollectionFilter>("all");
   const [customOpen, setCustomOpen] = useState(false);
   const [pendingWord, setPendingWord] = useState<string | null>(null);
