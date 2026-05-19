@@ -10,10 +10,11 @@ The extension picks a word from a chosen WordList and secretly hides it inside a
 - **HiddenWord** — inserted invisibly into page Paragraphs, bypasses Ctrl+F
 - **Hunt Collection** — Pokédex-style grid on the Play tab: every word in the active list is a slot. Caught slots show art + catch counter, uncaught slots are silhouettes. Includes progress bar, daily streak, and 5 achievement badges.
 - **Per-word art** — emoji for Animals, animated Pokémon sprite (PokeAPI CDN) shown in the celebration popup and the collection grid
+- **Auto-Continue mode** — opt-in toggle that auto-picks the next word from the active list after each find, so you can keep hunting by simply reloading the page. A top-right toast confirms the mode on every page load; the celebration popup shows an optional "Next up" preview (toggleable in Settings).
 - **HintTimer** — optional hint tooltip after a configurable delay
 - **HuntRecords** — statistics tracking per-hunt: word, duration, page, hint used, list source
 - **SPA support** — NavigationObserver re-injects on client-side navigation
-- **Settings** — configurable hint delay, celebration animation duration, minimum paragraph word threshold
+- **Settings** — configurable hint delay, celebration animation duration, minimum paragraph word threshold, next-word preview spoiler toggle
 
 ## Development
 

@@ -45,7 +45,7 @@ The configured duration (in seconds) the player must hover over a `HiddenWord` b
 _Avoid_: hover delay, pointer delay, cursor timer
 
 **FindEvent**:
-The player's click on a `HiddenWord` that registers the discovery and ends the current search. Immediately clears the `ActiveWord` from storage — other tabs remove their `HiddenWord` at this point, not when the `CelebrationPopup` is dismissed.
+The player's click on a `HiddenWord` that registers the discovery and ends the current search. By default immediately clears the `ActiveWord` from storage; when `AutoContinueMode` is on for a non-`custom` `WordList`, the `ActiveWord` is replaced with the next auto-selected `Word` instead. Either way, other tabs reconcile at this point (not when the `CelebrationPopup` is dismissed).
 _Avoid_: click event, discovery event, word found
 
 **ReviewClick**:
@@ -80,6 +80,18 @@ _Avoid_: streak count, consecutive days
 One of five unlockable badges shown in the `ProgressRow` accordion: `First catch` (≥ 1 total catch), `Half-way` (caught ratio ≥ 0.5 for the active list), `Master hunter` (caught ratio = 1), `7-day streak`, `30-day streak`. Locked pills are dimmed and carry a hint tooltip telling the player how to unlock them. Derived from `CollectionStats` + `Streak` on every popup render.
 _Avoid_: medal, milestone, trophy
 
+**AutoContinueMode**:
+The opt-in mode where, after a `FindEvent`, the system automatically picks the next `ActiveWord` from the same `WordList` (via the existing `pickRandomWord` — random uncaught, falling back to the full list when everything is caught). Lets the player keep hunting by just reloading the page — no popup interaction needed. Skipped for `WordSource = "custom"`: there is no list to cycle through, so the `ActiveWord` is cleared as in default behavior. Stored as `GameSettings.autoContinue` (default `false`), toggled from the Play tab. See [ADR 005](docs/adr/005-auto-continue-mode.md).
+_Avoid_: auto-mode, autoplay, continuous mode
+
+**NextWordPreview**:
+The optional "Next up: …" section appended to the `CelebrationPopup` showing the `Word` (with art) that `AutoContinueMode` just auto-selected. Suppressed when the player prefers to discover the next `Word` only on page reload. Stored as `GameSettings.showNextWordPreview` (default `true`), toggled from Settings. Only meaningful when `AutoContinueMode` is on.
+_Avoid_: spoiler, next hint, upcoming word
+
+**AutoModeToast**:
+The top-right pill notification shown on every page load while `AutoContinueMode` is active, confirming the mode is on and naming the current `ActiveWord` to hunt. Auto-dismisses after 4 seconds or on click. Mutually exclusive with `NoParagraphNotification` — when the page has no qualifying `ParagraphGroup`, the no-paragraph notification takes precedence and the `AutoModeToast` is not shown for that load.
+_Avoid_: auto banner, mode indicator, hunt toast
+
 ## Relationships
 
 - A **WordList** contains many **Words**
@@ -94,6 +106,9 @@ _Avoid_: medal, milestone, trophy
 - A **CollectionSlot** is `caught` when the **CatchCount** for its **Word** is ≥ 1, and `active` when its **Word** equals the **ActiveWord**
 - A **Streak** is derived from the local-calendar dates of every **HuntRecord** regardless of which **WordList** the record came from
 - An **Achievement** is derived from the **CollectionStats** of the active list and the global **Streak**
+- When **AutoContinueMode** is on, a **FindEvent** on a non-custom-list **HiddenWord** auto-selects the next **Word** from the same **WordList** as the new **ActiveWord**; otherwise the **ActiveWord** is cleared
+- The **NextWordPreview** in the **CelebrationPopup** mirrors the auto-selected next **Word** when **AutoContinueMode** and the spoiler-toggle are both on
+- An **AutoModeToast** is shown at most once per page load while **AutoContinueMode** is on, unless the page is already showing a **NoParagraphNotification**
 
 ## Example dialogue
 

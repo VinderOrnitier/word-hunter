@@ -30,7 +30,7 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 13c. As a player, I want unlockable achievement badges for milestones — first catch, 50 %, 100 %, and 7- and 30-day streaks — with a hint tooltip telling me how to unlock each, so that long-term play feels rewarding.
 14. As a player, I want to see a link to the page where I found the word, so that I can return to it later.
 15. As a player, I want the hint timer to start counting from the moment the page containing the inserted word is loaded.
-16. As a player, I want to choose the next word myself after finding the current one (or press "new word"), rather than having it change automatically.
+16. As a player, I want to choose the next word myself after finding the current one (or press "new word") by default, but with an opt-in **Auto-Continue mode** I can flip on for hands-free play — when it's on, after I find a word the next one from the same list is picked automatically (skipped for one-off custom words), so I can just reload the page and keep hunting without reopening the popup. While Auto-Continue is on, every page load shows a brief top-right toast confirming the mode and naming the current word; the celebration popup gains a "Next up: …" preview (optional, can be hidden in Settings if I'd rather discover the next word on reload).
 17. As a player, I want one active word across all tabs simultaneously, so that I can search on any page.
 18. As a player, I want to see a notification when a page has no suitable text blocks (no paragraphs with 50+ words), so that I know why the word is not hidden on this page.
 19. As a player, I want to view a page inside the extension that explains the rules for what qualifies as a valid text block, so that I understand where the word can be hidden.
@@ -61,7 +61,8 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 **4. Celebration Tooltip**
 - On hover over the word span — begins a 1.5s countdown (configurable)
 - After the countdown — shows a popup with a built-in celebration GIF
-- Click on the span → registers the word as found, writes to statistics, clears the active word
+- Click on the span → registers the word as found, writes to statistics, then either clears the active word (default) or replaces it with the next auto-selected word (Auto-Continue mode, non-custom list)
+- When Auto-Continue is on, the celebration popup includes an optional "Next up: …" preview with the next word's art and label (suppressed when the Settings spoiler-toggle is off)
 
 **5. Statistics Store**
 - `chrome.storage.local` for persistence
@@ -72,13 +73,14 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 - Tab "Play": **Hunt Collection** is the primary surface. Layout is a scrollable body above a non-scrolling `BottomActionBar`.
   - **ActiveWordCard** at the top: 40 × 40 art square + `Active word` eyebrow + the word in mono, with a stop button that clears the `ActiveWord`. Renders a compact `No active word` placeholder when nothing is hunting.
   - **List chip group**: `Animals | Pokémon` (list picker).
+  - **Auto-Continue toggle**: a single-row switch with label `Auto-Continue` and helper `Pick next word after each find`. Off by default; when on, the row gains a primary-yellow accent and the switch thumb slides to the on state. Persists to `GameSettings.autoContinue`. Custom-word hunts ignore the toggle and always clear the active word on find.
   - **ProgressRow** (collapsible): a single button row with `caught/total` count, a slim progress bar, an achievement counter (`unlocked/total` with a star icon), and a chevron. Clicking expands an accordion with the **Streak** block (`current` vs `longest`) and the full **Achievements** list (`First catch`, `Half-way`, `Master hunter`, `7-day streak`, `30-day streak`). Locked pills are dimmed and carry a hint tooltip. Expansion is transient (not persisted).
   - **Filter chip group**: `All | Caught | Uncaught`.
   - **CollectionGrid**: 4-column for Animals (54 slots), 5-column for Pokémon (151 slots). Each slot is a button — caught slots show emoji/sprite + `×N` counter; uncaught slots show `???` (Animals) or a `brightness(0)` silhouette (Pokémon). Clicking a slot sets it as the `ActiveWord`; the matching slot gets a primary-yellow glow.
   - **BottomActionBar** (sticky, edge-to-edge): primary `Start a hunt` CTA (picks a random uncaught word from the active list, falling back to the full list if everything is caught), a `shuffle` icon button that does the same, and a `pencil` icon button that opens the **CustomWordModal**.
   - **CustomWordModal**: overlay modal with a `Type a word` input (Unicode letters and hyphens only, min 2, max 25 chars; validation triggers on submit then real-time), a counter (`X / 25`), a `Cancel` ghost button, and a `Start hunt` primary button. Submitting writes the word with `list: "custom"`; custom words are **not** counted toward the collection. Closes on backdrop click, `Esc`, or the close icon; focus is trapped inside the dialog.
 - Tab "Statistics": table of found words (word, date, search duration, hint used, link to page)
-- Tab "Settings": hint timer duration (minutes), hover duration for celebration tooltip (seconds), minimum paragraph word threshold (range slider 30–150, default 30)
+- Tab "Settings": hint timer duration (minutes), hover duration for celebration tooltip (seconds), minimum paragraph word threshold (range slider 30–150, default 30), and a `Show next word preview` switch that controls whether the celebration popup reveals the upcoming word while Auto-Continue is on (default on).
 
 ### Word Lists
 
@@ -130,6 +132,7 @@ Good tests verify behavior through public interfaces, not implementation details
 - **Hunt Collection** Pokédex-style grid (Play tab): per-word art, catch counters, active-word glow, filter chips, all derived on-the-fly from `HuntRecord[]` with no storage migration. See [ADR 003](adr/003-hunt-collection-derivation.md).
 - **Streak tracking**: consecutive-day count with a one-day grace period (a yesterday-only player still sees a 1-day streak today). See [ADR 004](adr/004-streak-grace-period.md).
 - **Achievement badges** (5 of them): First catch, Half-way, Master hunter, 7-day streak, 30-day streak, with hint tooltips on locked badges.
+- **Auto-Continue mode**: opt-in hands-free hunting. After a `FindEvent`, the next `ActiveWord` is auto-selected from the same list via the existing `pickRandomWord` (random uncaught, fallback to the full list). The celebration popup shows an optional `Next up: …` preview (toggleable in Settings to avoid spoilers), and a 🎯 top-right toast confirms the mode on each page load. Custom-word hunts are excluded — there is no list to cycle. See [ADR 005](adr/005-auto-continue-mode.md).
 
 ## Out of Scope
 
