@@ -6,6 +6,8 @@ interface BottomActionBarProps {
   onShuffle: () => void;
   onCustom: () => void;
   startDisabled?: boolean;
+  autoContinue?: boolean;
+  onAutoContinue?: () => void;
 }
 
 export function BottomActionBar({
@@ -13,9 +15,22 @@ export function BottomActionBar({
   onShuffle,
   onCustom,
   startDisabled = false,
+  autoContinue = false,
+  onAutoContinue,
 }: BottomActionBarProps): JSX.Element {
   return (
     <div class="wh-action-bar">
+      <button
+        type="button"
+        role="switch"
+        class={`wh-action-bar__icon${autoContinue ? " is-on" : ""}`}
+        aria-checked={autoContinue}
+        title="Auto-continue — pick next word after each find"
+        aria-label="Auto-continue"
+        onClick={onAutoContinue}
+      >
+        <Icon name="refresh" size={16} />
+      </button>
       <button
         type="button"
         class="wh-action-bar__primary"

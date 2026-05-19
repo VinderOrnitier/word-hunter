@@ -18,7 +18,8 @@ export function SettingsTab(): JSX.Element {
   const isDirty =
     draft.hintDelayMinutes !== saved.hintDelayMinutes ||
     draft.celebrationHoverSeconds !== saved.celebrationHoverSeconds ||
-    draft.minWordThreshold !== saved.minWordThreshold;
+    draft.minWordThreshold !== saved.minWordThreshold ||
+    draft.showNextWordPreview !== saved.showNextWordPreview;
 
   const update = (patch: Partial<GameSettings>): void => {
     setDraft({ ...draft, ...patch });
@@ -91,6 +92,25 @@ export function SettingsTab(): JSX.Element {
           </div>
           <span class="wh-settings__unit">s</span>
         </div>
+      </Field>
+
+      <Field
+        label="Show next word preview"
+        helper="Reveal the upcoming word in the celebration popup when Auto-Continue is on"
+      >
+        <button
+          type="button"
+          role="switch"
+          class={`wh-settings__switch${draft.showNextWordPreview ? " is-on" : ""}`}
+          aria-checked={draft.showNextWordPreview}
+          aria-label="Show next word preview"
+          onClick={() => update({ showNextWordPreview: !draft.showNextWordPreview })}
+        >
+          <span class="wh-settings__switch-track">
+            <span class="wh-settings__switch-thumb" />
+          </span>
+          <span class="wh-settings__switch-state">{draft.showNextWordPreview ? "On" : "Off"}</span>
+        </button>
       </Field>
 
       {isDirty && (

@@ -12,6 +12,8 @@ export interface GameSettings {
   hintDelayMinutes: number;
   celebrationHoverSeconds: number;
   minWordThreshold: number;
+  autoContinue: boolean;
+  showNextWordPreview: boolean;
 }
 
 export type WordListName = "animals" | "pokemon";

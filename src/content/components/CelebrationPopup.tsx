@@ -1,12 +1,18 @@
 import type { JSX } from "preact";
 import placeholderUrl from "../../assets/pokemon/_placeholder.png";
 
+interface NextWordPreview {
+  word: string;
+  art?: string;
+}
+
 interface CelebrationPopupProps {
   visible: boolean;
   word: string;
   durationS: number;
   hintUsed: boolean;
   art?: string;
+  next?: NextWordPreview;
   onDismiss: () => void;
   onClear?: () => void;
 }
@@ -19,11 +25,13 @@ export function CelebrationPopup({
   durationS,
   hintUsed,
   art,
+  next,
   onDismiss,
   onClear,
 }: CelebrationPopupProps): JSX.Element | null {
   if (!visible) return null;
   const artIsImage = typeof art === "string" && IMAGE_URL_RE.test(art);
+  const nextArtIsImage = typeof next?.art === "string" && IMAGE_URL_RE.test(next.art);
 
   return (
     <div class="hw-celebration" onClick={onDismiss}>
@@ -60,6 +68,30 @@ export function CelebrationPopup({
             </div>
           </div>
         </div>
+        {next !== undefined && (
+          <div class="hw-celebration__next">
+            <span class="hw-celebration__next-label">Next up</span>
+            {next.art !== undefined && (
+              <span class="hw-celebration__next-art" aria-hidden="true">
+                {nextArtIsImage ? (
+                  <img
+                    class="hw-celebration__next-art-img"
+                    src={next.art}
+                    alt=""
+                    onError={(e) => {
+                      const img = e.currentTarget as HTMLImageElement;
+                      img.onerror = null;
+                      img.src = placeholderUrl;
+                    }}
+                  />
+                ) : (
+                  next.art
+                )}
+              </span>
+            )}
+            <span class="hw-celebration__next-word">{next.word}</span>
+          </div>
+        )}
         {onClear !== undefined && (
           <button class="hw-celebration__clear-btn" onClick={onClear}>
             Remove word

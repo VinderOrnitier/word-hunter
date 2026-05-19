@@ -938,6 +938,10 @@ button {
   box-shadow: var(--wh-shadow-glow);
 }
 
+.wh-action-bar__icon.is-on {
+  color: var(--wh-primary);
+}
+
 /* ---------- Modal ---------- */
 
 .wh-modal__backdrop {
@@ -1582,6 +1586,64 @@ button {
   min-width: 36px;
   text-align: center;
   flex-shrink: 0;
+}
+
+.wh-settings__switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wh-space-2);
+  padding: var(--wh-space-1) var(--wh-space-2);
+  background: transparent;
+  border: none;
+  border-radius: var(--wh-radius-2);
+  cursor: pointer;
+}
+
+.wh-settings__switch:focus-visible {
+  outline: none;
+  box-shadow: var(--wh-shadow-glow);
+}
+
+.wh-settings__switch-track {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  flex: 0 0 auto;
+  background: var(--wh-surface-3);
+  border-radius: var(--wh-radius-pill);
+  transition: background var(--wh-dur-fast) var(--wh-ease-standard);
+}
+
+.wh-settings__switch.is-on .wh-settings__switch-track {
+  background: var(--wh-primary);
+}
+
+.wh-settings__switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: var(--wh-fg);
+  border-radius: 50%;
+  transition: transform var(--wh-dur-fast) var(--wh-ease-standard),
+              background var(--wh-dur-fast) var(--wh-ease-standard);
+}
+
+.wh-settings__switch.is-on .wh-settings__switch-thumb {
+  transform: translateX(14px);
+  background: var(--wh-on-primary);
+}
+
+.wh-settings__switch-state {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-sm);
+  font-weight: var(--wh-weight-medium);
+  color: var(--wh-fg-3);
+}
+
+.wh-settings__switch.is-on .wh-settings__switch-state {
+  color: var(--wh-primary);
 }
 
 .wh-settings__footer {

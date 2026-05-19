@@ -1,6 +1,7 @@
 import { useMemo, useState } from "preact/hooks";
 import type { JSX } from "preact";
 import type { ActiveWord } from "../../shared/types";
+import { DEFAULT_SETTINGS } from "../../shared/constants";
 import { WORD_LISTS, type WordListName } from "../word-lists";
 import { useStorage } from "../hooks/useStorage";
 import { CollectionGrid } from "../collection/CollectionGrid";
@@ -30,6 +31,7 @@ export function PlayTab(): JSX.Element {
   const [activeWord, setActiveWord] = useStorage("activeWord", null);
   const [finds] = useStorage("finds", []);
   const [list, setList] = useStorage("selectedList", "animals");
+  const [settings, setSettings] = useStorage("settings", DEFAULT_SETTINGS);
   const [filter, setFilter] = useState<CollectionFilter>("all");
   const [customOpen, setCustomOpen] = useState(false);
   const [pendingWord, setPendingWord] = useState<string | null>(null);
@@ -65,6 +67,10 @@ export function PlayTab(): JSX.Element {
 
   const clear = (): void => {
     setActiveWord(null);
+  };
+
+  const toggleAutoContinue = (): void => {
+    setSettings({ ...settings, autoContinue: !settings.autoContinue });
   };
 
   const activeWordValue = activeWord?.word ?? null;
@@ -121,6 +127,8 @@ export function PlayTab(): JSX.Element {
         onShuffle={shufflePick}
         onCustom={() => setCustomOpen(true)}
         startDisabled={pendingWord === null}
+        autoContinue={settings.autoContinue}
+        onAutoContinue={toggleAutoContinue}
       />
 
       <CustomWordModal

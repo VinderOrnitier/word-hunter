@@ -170,4 +170,64 @@ describe("CelebrationPopup", () => {
     fireEvent.click(document.querySelector(".hw-celebration__clear-btn") as Element);
     expect(onDismiss).not.toHaveBeenCalled();
   });
+
+  it("does not render a next-up section when 'next' prop is omitted", () => {
+    render(
+      <CelebrationPopup
+        visible={true}
+        word="eagle"
+        durationS={5}
+        hintUsed={false}
+        onDismiss={() => {}}
+      />
+    );
+    expect(document.querySelector(".hw-celebration__next")).toBeNull();
+  });
+
+  it("renders a next-up section showing the upcoming word when 'next' prop is provided", () => {
+    render(
+      <CelebrationPopup
+        visible={true}
+        word="eagle"
+        durationS={5}
+        hintUsed={false}
+        next={{ word: "capybara" }}
+        onDismiss={() => {}}
+      />
+    );
+    const next = document.querySelector(".hw-celebration__next");
+    expect(next).not.toBeNull();
+    expect(next!.textContent).toContain("capybara");
+  });
+
+  it("renders the next word art (emoji) when provided in 'next' prop", () => {
+    render(
+      <CelebrationPopup
+        visible={true}
+        word="eagle"
+        durationS={5}
+        hintUsed={false}
+        next={{ word: "otter", art: "🦦" }}
+        onDismiss={() => {}}
+      />
+    );
+    expect(document.querySelector(".hw-celebration__next-art")?.textContent).toBe("🦦");
+  });
+
+  it("renders the next word art as an img when art is a URL", () => {
+    const url = "https://example.com/sprite.png";
+    render(
+      <CelebrationPopup
+        visible={true}
+        word="eagle"
+        durationS={5}
+        hintUsed={false}
+        next={{ word: "pikachu", art: url }}
+        onDismiss={() => {}}
+      />
+    );
+    const img = document.querySelector(".hw-celebration__next-art-img") as HTMLImageElement;
+    expect(img).not.toBeNull();
+    expect(img.getAttribute("src")).toBe(url);
+  });
 });
