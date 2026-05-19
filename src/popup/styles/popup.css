@@ -466,12 +466,16 @@ button {
 .wh-field__helper {
   font-family: var(--wh-font-sans);
   font-size: var(--wh-text-xs);
+  line-height: 1.4;
+  min-height: calc(var(--wh-text-xs) * 1.4);
   color: var(--wh-fg-3);
 }
 
 .wh-field__error {
   font-family: var(--wh-font-sans);
   font-size: var(--wh-text-xs);
+  line-height: 1.4;
+  min-height: calc(var(--wh-text-xs) * 1.4);
   color: var(--wh-danger);
 }
 
@@ -981,6 +985,13 @@ button {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--wh-fg-3);
+}
+
+.wh-modal__heading {
+  font-family: var(--wh-font-sans);
+  font-size: 14px;
+  font-weight: var(--wh-weight-semibold);
+  color: var(--wh-fg);
 }
 
 .wh-modal__helper {

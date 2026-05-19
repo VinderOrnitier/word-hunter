@@ -100,8 +100,7 @@ export function CustomWordModal({ open, onClose, onSubmit }: CustomWordModalProp
       >
         <div class="wh-modal__header">
           <div class="wh-modal__title">
-            <span class="wh-modal__eyebrow">Custom word</span>
-            <span class="wh-modal__helper">hunt anything — not counted in the collection.</span>
+            <span class="wh-modal__heading">Custom word</span>
           </div>
           <button
             type="button"
@@ -115,10 +114,10 @@ export function CustomWordModal({ open, onClose, onSubmit }: CustomWordModalProp
         </div>
 
         <Field
-          label="Type a word"
+          label="Word"
           error={showError ? error : undefined}
           counter={counter}
-          helper=" "
+          helper={" "}
         >
           <Input
             value={value}
