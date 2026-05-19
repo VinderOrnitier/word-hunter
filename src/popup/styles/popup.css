@@ -598,9 +598,7 @@ button {
   image-rendering: pixelated;
 }
 
-.wh-active-card__placeholder {
-  font-family: var(--wh-font-mono);
-  font-size: 18px;
+.wh-active-card__art--icon {
   color: var(--wh-fg-4);
 }
 

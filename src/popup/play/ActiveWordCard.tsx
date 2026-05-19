@@ -26,9 +26,11 @@ export function ActiveWordCard({ activeWord, onClear }: ActiveWordCardProps): JS
   const source: WordSource = activeWord.list ?? "custom";
   const art = resolveArt(activeWord.word, source);
 
+  const isIconArt = source === "custom" || !art;
+
   return (
     <div class="wh-active-card">
-      <div class="wh-active-card__art" aria-hidden="true">
+      <div class={`wh-active-card__art${isIconArt ? " wh-active-card__art--icon" : ""}`} aria-hidden="true">
         {renderArt(source, art)}
       </div>
       <div class="wh-active-card__body">
@@ -65,5 +67,5 @@ function renderArt(source: WordSource, art: string | undefined): JSX.Element | n
   if (source === "animals" && art) {
     return <span class="wh-active-card__emoji">{art}</span>;
   }
-  return <span class="wh-active-card__placeholder">·</span>;
+  return <Icon name="pencil" size={18} />;
 }
