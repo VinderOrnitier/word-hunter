@@ -69,13 +69,14 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 - Full list of all found words
 
 **6. Popup UI**
-- Tab "Play": **Hunt Collection** is the primary surface.
-  - **ActiveWord card** at the top: shows the current word with its list badge, or an "No active word" placeholder.
-  - **CollectionToolbar**: two chip rows — `Animals | Pokémon` (list picker) and `All | Caught | Uncaught` (filter).
-  - **ProgressHeader**: `caught / total` count for the active list, a progress bar, a streak chip (`Nd streak`), a total-catches chip, and five `AchievementBadge`s (`First catch`, `Half-way`, `Master hunter`, `7-day streak`, `30-day streak`). Locked badges are dimmed and carry a hint tooltip.
+- Tab "Play": **Hunt Collection** is the primary surface. Layout is a scrollable body above a non-scrolling `BottomActionBar`.
+  - **ActiveWordCard** at the top: 40 × 40 art square + `Active word` eyebrow + the word in mono, with a stop button that clears the `ActiveWord`. Renders a compact `No active word` placeholder when nothing is hunting.
+  - **List chip group**: `Animals | Pokémon` (list picker).
+  - **ProgressRow** (collapsible): a single button row with `caught/total` count, a slim progress bar, an achievement counter (`unlocked/total` with a star icon), and a chevron. Clicking expands an accordion with the **Streak** block (`current` vs `longest`) and the full **Achievements** list (`First catch`, `Half-way`, `Master hunter`, `7-day streak`, `30-day streak`). Locked pills are dimmed and carry a hint tooltip. Expansion is transient (not persisted).
+  - **Filter chip group**: `All | Caught | Uncaught`.
   - **CollectionGrid**: 4-column for Animals (54 slots), 5-column for Pokémon (151 slots). Each slot is a button — caught slots show emoji/sprite + `×N` counter; uncaught slots show `???` (Animals) or a `brightness(0)` silhouette (Pokémon). Clicking a slot sets it as the `ActiveWord`; the matching slot gets a primary-yellow glow.
-  - **Custom word block** below the grid: text input with live counter (`X / 25`) and the same validation rules (Unicode letters and hyphens only, min 2, max 25 chars; errors triggered on submit, then real-time). Submitting writes the word with `list: "custom"`; custom words are **not** counted toward the collection.
-  - **Clear** button (ghost) appears below the custom block when an `ActiveWord` is set.
+  - **BottomActionBar** (sticky, edge-to-edge): primary `Start a hunt` CTA (picks a random uncaught word from the active list, falling back to the full list if everything is caught), a `shuffle` icon button that does the same, and a `pencil` icon button that opens the **CustomWordModal**.
+  - **CustomWordModal**: overlay modal with a `Type a word` input (Unicode letters and hyphens only, min 2, max 25 chars; validation triggers on submit then real-time), a counter (`X / 25`), a `Cancel` ghost button, and a `Start hunt` primary button. Submitting writes the word with `list: "custom"`; custom words are **not** counted toward the collection. Closes on backdrop click, `Esc`, or the close icon; focus is trapped inside the dialog.
 - Tab "Statistics": table of found words (word, date, search duration, hint used, link to page)
 - Tab "Settings": hint timer duration (minutes), hover duration for celebration tooltip (seconds), minimum paragraph word threshold (range slider 30–150, default 30)
 

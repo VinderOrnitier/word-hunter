@@ -44,6 +44,7 @@ async function inject(): Promise<void> {
     onFind: async (record) => {
       const current = await getActiveWord();
       if (!current) return; // stale tab — word already found elsewhere
+      if (current.insertedAt !== activeWord.insertedAt) return; // active word changed since injection
       celebration.show({ word: record.word, durationS: record.searchDurationSeconds, hintUsed: record.hintUsed, art }, undefined, clearFoundWord);
       await saveFind(record);
       await clearActiveWord();

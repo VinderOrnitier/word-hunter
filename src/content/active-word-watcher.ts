@@ -19,7 +19,7 @@ export function ActiveWordWatcher(
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area !== "local") return;
       if (!("activeWord" in changes)) return;
-      if (changes.activeWord.newValue !== undefined) return;
+
 
       timer.cancel();
       if (!doc.querySelector(".hw-word--found")) {

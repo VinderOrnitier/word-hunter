@@ -70,14 +70,55 @@ describe("ActiveWordWatcher", () => {
     expect(document.querySelector(".hw-host")).toBeNull();
   });
 
-  it("does nothing when activeWord is set to a new value", () => {
+  it("calls timer.cancel() when activeWord changes to a new value", () => {
     const cancel = jest.fn();
     ActiveWordWatcher({ cancel }, { dismiss: jest.fn() }, document).start();
     fireChange(
       { activeWord: { oldValue: { word: "cat" }, newValue: { word: "fox" } } },
       "local"
     );
-    expect(cancel).not.toHaveBeenCalled();
+    expect(cancel).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls celebration.dismiss() when activeWord changes to a new value (no found word)", () => {
+    const dismiss = jest.fn();
+    ActiveWordWatcher({ cancel: jest.fn() }, { dismiss }, document).start();
+    fireChange(
+      { activeWord: { oldValue: { word: "cat" }, newValue: { word: "fox" } } },
+      "local"
+    );
+    expect(dismiss).toHaveBeenCalledTimes(1);
+  });
+
+  it("removes .hw-host from DOM when activeWord changes to a new value", () => {
+    const host = document.createElement("span");
+    host.className = "hw-host";
+    document.body.appendChild(host);
+
+    ActiveWordWatcher({ cancel: jest.fn() }, { dismiss: jest.fn() }, document).start();
+    fireChange(
+      { activeWord: { oldValue: { word: "cat" }, newValue: { word: "fox" } } },
+      "local"
+    );
+
+    expect(document.querySelector(".hw-host")).toBeNull();
+  });
+
+  it("preserves found .hw-word--found when activeWord changes to a new value", () => {
+    const foundHost = document.createElement("span");
+    foundHost.className = "hw-host";
+    const foundWord = document.createElement("span");
+    foundWord.className = "hw-word hw-word--found";
+    foundHost.appendChild(foundWord);
+    document.body.appendChild(foundHost);
+
+    ActiveWordWatcher({ cancel: jest.fn() }, { dismiss: jest.fn() }, document).start();
+    fireChange(
+      { activeWord: { oldValue: { word: "cat" }, newValue: { word: "fox" } } },
+      "local"
+    );
+
+    expect(document.querySelector(".hw-word--found")).not.toBeNull();
   });
 
   it("does nothing when an unrelated key changes", () => {

@@ -1,54 +1,38 @@
 import { useMemo, useState } from "preact/hooks";
 import type { JSX } from "preact";
-import type { ActiveWord, WordSource } from "../../shared/types";
+import type { ActiveWord } from "../../shared/types";
 import { WORD_LISTS, type WordListName } from "../word-lists";
 import { useStorage } from "../hooks/useStorage";
-import { validateCustomWord, MAX_CUSTOM_LEN } from "../../shared/word-validation";
-import { Card } from "../components/Card";
-import { Eyebrow } from "../components/Eyebrow";
-import { Badge, type BadgeTone } from "../components/Badge";
-import { Field } from "../components/Field";
-import { Input } from "../components/Input";
-import { Button } from "../components/Button";
-import { CollectionToolbar } from "../collection/CollectionToolbar";
-import { ProgressHeader } from "../collection/ProgressHeader";
 import { CollectionGrid } from "../collection/CollectionGrid";
 import { computeCatchCounts } from "../collection/computeCatchCounts";
 import { computeCollectionStats } from "../collection/computeCollectionStats";
 import { computeStreak } from "../collection/computeStreak";
 import { listAchievements } from "../collection/listAchievements";
+import { pickRandomWord } from "../collection/pickRandomWord";
 import type { CollectionFilter } from "../collection/types";
+import { ActiveWordCard } from "../play/ActiveWordCard";
+import { ProgressRow } from "../play/ProgressRow";
+import { CustomWordModal } from "../play/CustomWordModal";
+import { BottomActionBar } from "../components/BottomActionBar";
 
-const LIST_LABEL: Record<WordSource, string> = {
-  animals: "Animals",
-  pokemon: "Pokémon",
-  custom: "Custom",
-};
+const LIST_CHIPS: Array<{ value: WordListName; label: string }> = [
+  { value: "animals", label: "Animals" },
+  { value: "pokemon", label: "Pokémon" },
+];
 
-const LIST_TONE: Record<WordSource, BadgeTone> = {
-  animals: "animals",
-  pokemon: "pokemon",
-  custom: "neutral",
-};
-
-const LIST_DOT: Record<WordSource, string> = {
-  animals: "var(--wh-list-animals)",
-  pokemon: "var(--wh-list-pokemon)",
-  custom: "var(--wh-fg-3)",
-};
+const FILTER_CHIPS: Array<{ value: CollectionFilter; label: string }> = [
+  { value: "all", label: "All" },
+  { value: "caught", label: "Caught" },
+  { value: "uncaught", label: "Uncaught" },
+];
 
 export function PlayTab(): JSX.Element {
   const [activeWord, setActiveWord] = useStorage("activeWord", null);
   const [finds] = useStorage("finds", []);
   const [list, setList] = useState<WordListName>("animals");
   const [filter, setFilter] = useState<CollectionFilter>("all");
-  const [custom, setCustom] = useState<string>("");
-  const [submitAttempted, setSubmitAttempted] = useState(false);
-
-  const trimmed = custom.trim();
-  const customError = validateCustomWord(trimmed);
-  const showCustomError = submitAttempted && customError !== undefined && trimmed.length > 0;
-  const customCounter = `${trimmed.length} / ${MAX_CUSTOM_LEN}`;
+  const [customOpen, setCustomOpen] = useState(false);
+  const [pendingWord, setPendingWord] = useState<string | null>(null);
 
   const counts = useMemo(() => computeCatchCounts(finds, list), [finds, list]);
   const stats = useMemo(
@@ -59,31 +43,24 @@ export function PlayTab(): JSX.Element {
   const achievements = useMemo(() => listAchievements(stats, streak), [stats, streak]);
 
   const pickFromCollection = (word: string): void => {
-    const next: ActiveWord = {
-      word,
-      list,
-      insertedAt: Date.now(),
-    };
-    setActiveWord(next);
+    setPendingWord(word);
   };
 
-  const submitCustom = (): void => {
-    if (!trimmed) {
-      setSubmitAttempted(true);
-      return;
-    }
-    if (customError) {
-      setSubmitAttempted(true);
-      return;
-    }
-    const next: ActiveWord = {
-      word: trimmed,
-      list: "custom",
-      insertedAt: Date.now(),
-    };
+  const startHunt = (): void => {
+    if (!pendingWord) return;
+    setActiveWord({ word: pendingWord, list, insertedAt: Date.now() });
+    setPendingWord(null);
+  };
+
+  const shufflePick = (): void => {
+    const word = pickRandomWord(list, counts, "uncaught");
+    setPendingWord(word);
+  };
+
+  const submitCustom = (word: string): void => {
+    const next: ActiveWord = { word, list: "custom", insertedAt: Date.now() };
     setActiveWord(next);
-    setCustom("");
-    setSubmitAttempted(false);
+    setCustomOpen(false);
   };
 
   const clear = (): void => {
@@ -94,77 +71,63 @@ export function PlayTab(): JSX.Element {
 
   return (
     <div class="wh-play">
-      {activeWord ? (
-        <Card>
-          <Eyebrow>Active word</Eyebrow>
-          <span class="wh-word-display">{activeWord.word}</span>
-          <div class="wh-play__meta">
-            <Badge
-              tone={LIST_TONE[activeWord.list ?? "custom"]}
-              dotColor={LIST_DOT[activeWord.list ?? "custom"]}
+      <div class="wh-play__scroll">
+        <ActiveWordCard activeWord={activeWord} onClear={clear} />
+
+        <div class="wh-chip-group" role="tablist" data-group="list" aria-label="Word list">
+          {LIST_CHIPS.map((chip) => (
+            <button
+              key={chip.value}
+              type="button"
+              role="tab"
+              class={`wh-chip${list === chip.value ? " is-selected" : ""}`}
+              aria-selected={list === chip.value}
+              onClick={() => setList(chip.value)}
             >
-              {LIST_LABEL[activeWord.list ?? "custom"]}
-            </Badge>
-            <span class="wh-play__sep">·</span>
-            <span class="wh-body-sm">hidden across all your tabs</span>
-          </div>
-        </Card>
-      ) : (
-        <Card>
-          <Eyebrow>No active word</Eyebrow>
-          <span class="wh-editorial">pick a word below to start the hunt.</span>
-        </Card>
-      )}
-
-      <CollectionToolbar
-        list={list}
-        filter={filter}
-        onListChange={setList}
-        onFilterChange={setFilter}
-      />
-
-      <ProgressHeader
-        stats={stats}
-        streak={streak}
-        achievements={achievements}
-        listLabel={LIST_LABEL[list]}
-      />
-
-      <CollectionGrid
-        list={list}
-        filter={filter}
-        counts={counts}
-        activeWord={activeWordValue}
-        onPick={pickFromCollection}
-      />
-
-      <div class="wh-play__custom">
-        <Field
-          label="Custom word"
-          helper="set your own word — not counted in the collection"
-          error={showCustomError ? customError : undefined}
-          counter={customCounter}
-        >
-          <Input
-            value={custom}
-            onInput={setCustom}
-            placeholder="type your own…"
-            mono
-            error={showCustomError}
-          />
-        </Field>
-
-        <div class="wh-play__actions">
-          <Button variant="primary" leftIcon="refresh" onClick={submitCustom}>
-            New word
-          </Button>
-          {activeWord && (
-            <Button variant="ghost" onClick={clear}>
-              Clear
-            </Button>
-          )}
+              {chip.label}
+            </button>
+          ))}
         </div>
+
+        <ProgressRow stats={stats} streak={streak} achievements={achievements} />
+
+        <div class="wh-chip-group" role="tablist" data-group="filter" aria-label="Filter">
+          {FILTER_CHIPS.map((chip) => (
+            <button
+              key={chip.value}
+              type="button"
+              role="tab"
+              class={`wh-chip${filter === chip.value ? " is-selected" : ""}`}
+              aria-selected={filter === chip.value}
+              onClick={() => setFilter(chip.value)}
+            >
+              {chip.label}
+            </button>
+          ))}
+        </div>
+
+        <CollectionGrid
+          list={list}
+          filter={filter}
+          counts={counts}
+          activeWord={activeWordValue}
+          pendingWord={pendingWord}
+          onPick={pickFromCollection}
+        />
       </div>
+
+      <BottomActionBar
+        onStart={startHunt}
+        onShuffle={shufflePick}
+        onCustom={() => setCustomOpen(true)}
+        startDisabled={pendingWord === null}
+      />
+
+      <CustomWordModal
+        open={customOpen}
+        onClose={() => setCustomOpen(false)}
+        onSubmit={submitCustom}
+      />
     </div>
   );
 }

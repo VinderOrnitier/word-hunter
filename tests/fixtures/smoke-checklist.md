@@ -14,15 +14,16 @@ End-to-end manual verification. Run after `pnpm build` produces a fresh `dist/`.
 ### Popup — Play tab (Hunt Collection)
 
 - [ ] Toolbar icon opens the popup. Dark theme, Word Hunter wordmark, 3 tabs (Play / Statistics / Settings) + Rules icon in header.
-- [ ] **ActiveWord card** at the top shows "No active word — pick a word below to start the hunt." on a fresh profile.
-- [ ] **CollectionToolbar** has two chip rows. Top: `Animals | Pokémon` (Animals selected). Bottom: `All | Caught | Uncaught` (All selected). Exactly one chip per row is highlighted.
-- [ ] **ProgressHeader** shows `ANIMALS` eyebrow + `0 / 54` (mono), a 0 %-wide progress bar, `0d streak` and `0 catches` chips, and five `AchievementBadge`s — all dimmed (locked).
-- [ ] Hover a locked badge → tooltip appears (e.g. "Catch 27 more to reach 50 %", "Hunt 7 days in a row").
+- [ ] **ActiveWordCard** at the top shows "No active word — pick a word below to start the hunt." on a fresh profile (compact one-line layout with no art square).
+- [ ] **List chip group**: `Animals | Pokémon` (Animals selected). **Filter chip group** below the ProgressRow: `All | Caught | Uncaught` (All selected). Exactly one chip per row is highlighted.
+- [ ] **ProgressRow** (collapsed): single row with `0/54` count (mono), 0 %-wide progress bar, `0/5` achievement counter (star icon dim), chevron-down. Clicking it expands the accordion.
+- [ ] **ProgressRow** (expanded): shows a **Streak** block with `0d current` / `0d longest` and an **Achievements** list of five dimmed pills (`First catch`, `Half-way`, `Master hunter`, `7-day streak`, `30-day streak`). Hover a locked pill → tooltip appears.
 - [ ] **CollectionGrid**: 4-column grid of 54 Animals slots, every slot shows `???` in mono.
-- [ ] Click the **Fox** slot. ActiveWord card updates to "Fox" with animals badge. The Fox slot gets a primary-yellow glow (`is-active` class).
-- [ ] Switch toolbar to **Pokémon** → grid swaps to 5-column, 151 slots, all silhouettes (`brightness(0) opacity(0.35)` on the sprite `<img>`).
+- [ ] Click the **Fox** slot. ActiveWordCard updates to "Fox" with the animal art (🦊). The Fox slot gets a primary-yellow glow (`is-active` class).
+- [ ] Switch the list chips to **Pokémon** → grid swaps to 5-column, 151 slots, all silhouettes (`brightness(0) opacity(0.35)` on the sprite `<img>`).
 - [ ] Scroll the grid — Pokémon sprites lazy-load (`loading="lazy"` on `<img>`).
-- [ ] **Custom word block** below the grid: text input with placeholder "type your own…", live counter `0 / 25`, "New word" button (primary yellow), "Clear" button (ghost).
+- [ ] **BottomActionBar** (pinned at the bottom, edge-to-edge): primary `Start a hunt` button (yellow with play icon) + shuffle icon button + pencil icon button. Clicking `Start a hunt` or shuffle picks a random uncaught word from the active list and sets it as the ActiveWord.
+- [ ] **CustomWordModal**: click the pencil icon → modal opens over the popup body with backdrop blur. Input has placeholder "serendipity", live counter `0 / 25`, `Cancel` (ghost) and `Start hunt` (primary). Pressing `Esc`, clicking the backdrop, or the close (×) button closes the modal. Tab cycles focus inside the dialog.
 - [ ] **Stats**: shows the editorial empty state ("your hunts will appear here.") in Fraunces italic.
 - [ ] **Settings**: range slider for minimum paragraph length (default **30**, range 30–150, step 10) with a mono value badge showing the current value. Two number inputs below: hint delay **5** / celebration hover **1.5**. "Clear all hunts" button visible in danger zone.
 - [ ] **Rules**: opens with the Fraunces italic line "a quiet game while you read." and the 3 markers (30 + / 1× / —).
@@ -32,22 +33,22 @@ End-to-end manual verification. Run after `pnpm build` produces a fresh `dist/`.
 After finding `Fox` on the smoke article (see "Content script — overlays" below):
 
 - [ ] Reopen the popup. Fox slot is now caught: 🦊 emoji + `×1` counter, no longer dimmed.
-- [ ] ActiveWord card returns to the empty state (cleared after the FindEvent).
-- [ ] ProgressHeader: `1 / 54`, progress bar ~2 % filled, `1d streak`, `1 catches`. **First catch** achievement is now solid (unlocked, primary-yellow dot).
-- [ ] Find Fox again. Slot reads `×2`. Total catches `2 catches`. Streak still `1d`.
+- [ ] ActiveWordCard returns to the empty state (cleared after the FindEvent).
+- [ ] ProgressRow (collapsed): `1/54` count, progress bar ~2 % filled, achievement counter shows `1/5` with a primary-yellow star. Expanding the row reveals the **First catch** pill as solid (unlocked, primary-yellow star).
+- [ ] Find Fox again. Slot reads `×2`. ProgressRow still shows `1/54` (catch count, not catches), streak still `1d` in the expanded panel.
 - [ ] Filter chips → **Caught**: only Fox is shown in the grid.
 - [ ] Filter chips → **Uncaught**: 53 silhouettes, no Fox.
 - [ ] Switch to **Pokémon** with the **Caught** filter still selected → empty state appears: "No caught words yet — go hunt!".
 
 ### Hunt Collection — custom word isolation
 
-- [ ] In **Animals**, filter **All**. Type `dragon` in the custom block → click **New word**. ActiveWord card shows "dragon" with the neutral (custom) badge. The collection grid is unchanged.
-- [ ] Find `dragon` on the smoke article (insert it manually in a paragraph for the smoke check). Reopen the popup: collection still reads `1 / 54` — custom words do **not** count toward the collection.
+- [ ] In **Animals**, filter **All**. Click the pencil icon → modal opens. Type `dragon` → click **Start hunt**. Modal closes, ActiveWordCard shows "dragon" (no art square since custom words have no resolved art). The collection grid is unchanged.
+- [ ] Find `dragon` on the smoke article (insert it manually in a paragraph for the smoke check). Reopen the popup: collection still reads `1/54` — custom words do **not** count toward the collection.
 
 ### Hunt Collection — clear flows
 
-- [ ] **Settings → Clear all hunts → confirm**: open Play tab. Collection resets to `0 / 54`, all achievements locked again, streak `0d`. (Confirms zero denormalisation — see ADR 003.)
-- [ ] Set an ActiveWord by clicking any slot, then click **Clear** below the custom block. ActiveWord card returns to the empty state. The slot loses its glow.
+- [ ] **Settings → Clear all hunts → confirm**: open Play tab. Collection resets to `0/54`, all achievements locked again, streak `0d`. (Confirms zero denormalisation — see ADR 003.)
+- [ ] Set an ActiveWord by clicking any slot, then click the stop button on the ActiveWordCard. ActiveWordCard returns to the empty state. The slot loses its glow.
 
 ### Content script — overlays
 

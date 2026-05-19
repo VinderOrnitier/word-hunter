@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/preact";
 import { PlayTab } from "../../src/popup/tabs/PlayTab";
+import { WORD_LISTS } from "../../src/popup/word-lists";
 import type { ActiveWord } from "../../src/shared/types";
 
 type ChromeMock = {
@@ -59,18 +60,16 @@ describe("PlayTab", () => {
 
   it("shows the current ActiveWord after it loads from storage", async () => {
     const active: ActiveWord = {
-      word: "eagle",
+      word: "Eagle",
       list: "animals",
       insertedAt: 1000,
     };
     setupChromeMock({ activeWord: active });
     render(<PlayTab />);
-    await waitFor(() =>
-      expect(screen.getByText("eagle")).toBeInTheDocument()
-    );
+    await waitFor(() => expect(screen.getByText("Eagle")).toBeInTheDocument());
   });
 
-  it("swaps the collection grid when the toolbar list chip changes to Pokémon", () => {
+  it("swaps the collection grid when the list chip changes to Pokémon", () => {
     setupChromeMock();
     render(<PlayTab />);
 
@@ -82,19 +81,14 @@ describe("PlayTab", () => {
     expect(screen.getByRole("button", { name: /Pikachu, not caught yet/i })).toBeInTheDocument();
   });
 
-  it("writes the slot's word to storage when a CollectionSlot is clicked", async () => {
+  it("clicking a CollectionSlot does NOT write activeWord to storage immediately", async () => {
     const { setMock } = setupChromeMock();
     render(<PlayTab />);
 
     fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
 
-    await waitFor(() => {
-      expect(setMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          activeWord: expect.objectContaining({ word: "Fox", list: "animals" }),
-        })
-      );
-    });
+    await new Promise((r) => setTimeout(r, 50));
+    expect(setMock).not.toHaveBeenCalled();
   });
 
   it("marks the currently-active word's slot with the is-active class", async () => {
@@ -104,7 +98,7 @@ describe("PlayTab", () => {
     render(<PlayTab />);
 
     await waitFor(() => {
-      const foxSlot = screen.getByRole("button", { name: /Fox/ });
+      const foxSlot = screen.getByRole("button", { name: /^Fox/ });
       expect(foxSlot).toHaveClass("is-active");
     });
   });
@@ -130,159 +124,178 @@ describe("PlayTab", () => {
     });
   });
 
-  it("writes a custom word with list='custom' when the custom input is filled", async () => {
-    const { setMock } = setupChromeMock();
-    render(<PlayTab />);
-
-    const custom = screen.getByPlaceholderText(/type your own/i);
-    fireEvent.input(custom, { target: { value: "unicorn" } });
-    fireEvent.click(screen.getByRole("button", { name: /new word/i }));
-
-    await waitFor(() => {
-      expect(setMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          activeWord: expect.objectContaining({
-            word: "unicorn",
-            list: "custom",
-          }),
-        })
-      );
-    });
-  });
-
-  describe("custom word validation", () => {
-    it("shows a '0 / 25' counter when the custom field is empty", () => {
-      setupChromeMock();
-      render(<PlayTab />);
-      expect(screen.getByText("0 / 25")).toBeInTheDocument();
-    });
-
-    it("updates the counter as the user types", () => {
-      setupChromeMock();
-      render(<PlayTab />);
-      const input = screen.getByPlaceholderText(/type your own/i);
-      fireEvent.input(input, { target: { value: "dragon" } });
-      expect(screen.getByText("6 / 25")).toBeInTheDocument();
-    });
-
-    it("does not show an error while typing invalid characters before submit", () => {
-      setupChromeMock();
-      render(<PlayTab />);
-      const input = screen.getByPlaceholderText(/type your own/i);
-      fireEvent.input(input, { target: { value: "hello123" } });
-      expect(screen.queryByText("Letters and hyphens only")).not.toBeInTheDocument();
-      expect(screen.getByRole("button", { name: /new word/i })).not.toBeDisabled();
-    });
-
-    it("shows an error and blocks submit when invalid characters are submitted", () => {
-      setupChromeMock();
-      render(<PlayTab />);
-      const input = screen.getByPlaceholderText(/type your own/i);
-      fireEvent.input(input, { target: { value: "hello123" } });
-      fireEvent.click(screen.getByRole("button", { name: /new word/i }));
-      expect(screen.getByText("Letters and hyphens only")).toBeInTheDocument();
-    });
-
-    it("shows an error and blocks submit when the word is too short", () => {
-      setupChromeMock();
-      render(<PlayTab />);
-      const input = screen.getByPlaceholderText(/type your own/i);
-      fireEvent.input(input, { target: { value: "a" } });
-      fireEvent.click(screen.getByRole("button", { name: /new word/i }));
-      expect(screen.getByText("Min 2 characters")).toBeInTheDocument();
-    });
-
-    it("shows an error and blocks submit when the word exceeds 25 characters", () => {
-      setupChromeMock();
-      render(<PlayTab />);
-      const input = screen.getByPlaceholderText(/type your own/i);
-      fireEvent.input(input, { target: { value: "superlongwordthatexceedslimit" } });
-      fireEvent.click(screen.getByRole("button", { name: /new word/i }));
-      expect(screen.getByText("Max 25 characters")).toBeInTheDocument();
-    });
-
-    it("updates the error in real-time after the first submit attempt", () => {
-      setupChromeMock();
-      render(<PlayTab />);
-      const input = screen.getByPlaceholderText(/type your own/i);
-      fireEvent.input(input, { target: { value: "a" } });
-      fireEvent.click(screen.getByRole("button", { name: /new word/i }));
-      expect(screen.getByText("Min 2 characters")).toBeInTheDocument();
-      fireEvent.input(input, { target: { value: "hello123" } });
-      expect(screen.getByText("Letters and hyphens only")).toBeInTheDocument();
-    });
-
-    it("allows a word with a hyphen", () => {
-      setupChromeMock();
-      render(<PlayTab />);
-      const input = screen.getByPlaceholderText(/type your own/i);
-      fireEvent.input(input, { target: { value: "self-aware" } });
-      expect(screen.queryByText(/letters and hyphens only/i)).not.toBeInTheDocument();
-      expect(screen.getByRole("button", { name: /new word/i })).not.toBeDisabled();
-    });
-
-    it("allows words in non-Latin scripts (Cyrillic, Arabic, Japanese)", () => {
-      setupChromeMock();
-      const { unmount } = render(<PlayTab />);
-      const input = screen.getByPlaceholderText(/type your own/i);
-
-      for (const word of ["дракон", "تنين", "ドラゴン"]) {
-        fireEvent.input(input, { target: { value: word } });
-        expect(screen.queryByText(/letters and hyphens only/i)).not.toBeInTheDocument();
-        expect(screen.getByRole("button", { name: /new word/i })).not.toBeDisabled();
-      }
-
-      unmount();
-    });
-
-    it("does not show an error for a word with trailing space", () => {
-      setupChromeMock();
-      render(<PlayTab />);
-      const input = screen.getByPlaceholderText(/type your own/i);
-      fireEvent.input(input, { target: { value: "hello " } });
-      fireEvent.click(screen.getByRole("button", { name: /new word/i }));
-      expect(screen.queryByText(/letters and hyphens only/i)).not.toBeInTheDocument();
-    });
-
-    it("shows an error and blocks submit for a hyphen-only string", () => {
-      setupChromeMock();
-      render(<PlayTab />);
-      const input = screen.getByPlaceholderText(/type your own/i);
-      fireEvent.input(input, { target: { value: "--" } });
-      fireEvent.click(screen.getByRole("button", { name: /new word/i }));
-      expect(screen.getByText("Must contain at least one letter")).toBeInTheDocument();
-    });
-
-    it("does not write to storage when an invalid custom word is submitted", async () => {
-      const { setMock } = setupChromeMock();
-      render(<PlayTab />);
-      const input = screen.getByPlaceholderText(/type your own/i);
-      fireEvent.input(input, { target: { value: "bad word!" } });
-      fireEvent.click(screen.getByRole("button", { name: /new word/i }));
-      await new Promise((r) => setTimeout(r, 50));
-      expect(setMock).not.toHaveBeenCalled();
-    });
-  });
-
-  it("clears the ActiveWord when the Clear button is clicked", async () => {
+  it("clears the ActiveWord when the active-word card's stop button is clicked", async () => {
     const active: ActiveWord = {
-      word: "fox",
+      word: "Fox",
       list: "animals",
       insertedAt: 1000,
     };
     const { setMock } = setupChromeMock({ activeWord: active });
     render(<PlayTab />);
 
-    await waitFor(() =>
-      expect(screen.getByText("fox")).toBeInTheDocument()
-    );
+    await waitFor(() => expect(screen.getByText("Fox")).toBeInTheDocument());
 
-    fireEvent.click(screen.getByRole("button", { name: /clear/i }));
+    fireEvent.click(screen.getByRole("button", { name: /clear active word/i }));
 
     await waitFor(() => {
       expect(setMock).toHaveBeenCalledWith(
-        expect.objectContaining({ activeWord: null })
+        expect.objectContaining({ activeWord: null }),
       );
+    });
+  });
+
+  describe("Start a hunt action bar", () => {
+    it("clicking a slot marks it with is-pending class", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+
+      expect(screen.getByRole("button", { name: /^Fox/ })).toHaveClass("is-pending");
+    });
+
+    it("'Start a hunt' is disabled when no slot is selected", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+
+      expect(screen.getByRole("button", { name: /start a hunt/i })).toBeDisabled();
+    });
+
+    it("'Start a hunt' confirms the pending slot and writes to storage", async () => {
+      const { setMock } = setupChromeMock();
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+      fireEvent.click(screen.getByRole("button", { name: /start a hunt/i }));
+
+      await waitFor(() => {
+        expect(setMock).toHaveBeenCalledWith(
+          expect.objectContaining({
+            activeWord: expect.objectContaining({ word: "Fox", list: "animals" }),
+          }),
+        );
+      });
+    });
+
+    it("'Start a hunt' clears the pending state after confirming", async () => {
+      setupChromeMock();
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+      fireEvent.click(screen.getByRole("button", { name: /start a hunt/i }));
+
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: /^Fox/ })).not.toHaveClass("is-pending");
+      });
+    });
+
+    it("shuffle sets a pending word without writing to storage", async () => {
+      const { setMock } = setupChromeMock();
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /pick a random word/i }));
+
+      await new Promise((r) => setTimeout(r, 50));
+      expect(setMock).not.toHaveBeenCalled();
+      expect(screen.getByRole("button", { name: /start a hunt/i })).not.toBeDisabled();
+    });
+
+    it("confirming shuffle via 'Start a hunt' writes a word from the active list", async () => {
+      const { setMock } = setupChromeMock();
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /pick a random word/i }));
+      fireEvent.click(screen.getByRole("button", { name: /start a hunt/i }));
+
+      await waitFor(() => {
+        expect(setMock).toHaveBeenCalledWith(
+          expect.objectContaining({
+            activeWord: expect.objectContaining({ list: "animals" }),
+          }),
+        );
+      });
+      const call = setMock.mock.calls[0]?.[0] as { activeWord: ActiveWord };
+      expect(WORD_LISTS.animals).toContain(call.activeWord.word);
+    });
+
+    it("clicking a slot while a hunt is active updates the pending word", async () => {
+      setupChromeMock({
+        activeWord: { word: "Eagle", list: "animals", insertedAt: 1000 },
+      });
+      render(<PlayTab />);
+
+      await waitFor(() => expect(screen.getByText("Eagle")).toBeInTheDocument());
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+
+      expect(screen.getByRole("button", { name: /^Fox/ })).toHaveClass("is-pending");
+    });
+
+    it("confirming a new word while a hunt is active replaces the activeWord", async () => {
+      const { setMock } = setupChromeMock({
+        activeWord: { word: "Eagle", list: "animals", insertedAt: 1000 },
+      });
+      render(<PlayTab />);
+
+      await waitFor(() => expect(screen.getByText("Eagle")).toBeInTheDocument());
+
+      fireEvent.click(screen.getByRole("button", { name: /Fox, not caught yet/i }));
+      fireEvent.click(screen.getByRole("button", { name: /start a hunt/i }));
+
+      await waitFor(() => {
+        expect(setMock).toHaveBeenCalledWith(
+          expect.objectContaining({
+            activeWord: expect.objectContaining({ word: "Fox" }),
+          }),
+        );
+      });
+    });
+  });
+
+  describe("Custom word modal", () => {
+    it("does not render the modal by default", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+      expect(screen.queryByPlaceholderText(/serendipity/i)).toBeNull();
+    });
+
+    it("opens the modal when the custom-word icon button is pressed", () => {
+      setupChromeMock();
+      render(<PlayTab />);
+      fireEvent.click(screen.getByRole("button", { name: /custom word/i }));
+      expect(screen.getByPlaceholderText(/serendipity/i)).toBeInTheDocument();
+    });
+
+    it("writes a custom word with list='custom' on submit and closes the modal", async () => {
+      const { setMock } = setupChromeMock();
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /custom word/i }));
+      const input = screen.getByPlaceholderText(/serendipity/i);
+      fireEvent.input(input, { target: { value: "unicorn" } });
+      fireEvent.click(screen.getByRole("button", { name: /start hunt/i }));
+
+      await waitFor(() => {
+        expect(setMock).toHaveBeenCalledWith(
+          expect.objectContaining({
+            activeWord: expect.objectContaining({ word: "unicorn", list: "custom" }),
+          }),
+        );
+      });
+      expect(screen.queryByPlaceholderText(/serendipity/i)).toBeNull();
+    });
+
+    it("does not write to storage for an invalid custom word", async () => {
+      const { setMock } = setupChromeMock();
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /custom word/i }));
+      const input = screen.getByPlaceholderText(/serendipity/i);
+      fireEvent.input(input, { target: { value: "bad!" } });
+      fireEvent.click(screen.getByRole("button", { name: /start hunt/i }));
+
+      await new Promise((r) => setTimeout(r, 50));
+      expect(setMock).not.toHaveBeenCalled();
     });
   });
 });
