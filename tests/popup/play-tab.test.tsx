@@ -518,5 +518,36 @@ describe("PlayTab", () => {
 
       expect(screen.queryByText(/reload the page to begin hunting/i)).not.toBeInTheDocument();
     });
+
+    it("shows the reload hint banner after submitting a custom word when showReloadHint is on", async () => {
+      setupChromeMock({ settings: settingsWithHint });
+      render(<PlayTab />);
+
+      fireEvent.click(screen.getByRole("button", { name: /custom word/i }));
+      const input = screen.getByPlaceholderText(/serendipity/i);
+      fireEvent.input(input, { target: { value: "unicorn" } });
+      fireEvent.click(screen.getByRole("button", { name: /start hunt/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText(/reload the page to begin hunting/i)).toBeInTheDocument();
+      });
+    });
+
+    it("does not show the banner after submitting a custom word when showReloadHint is off", async () => {
+      setupChromeMock({ settings: settingsWithoutHint });
+      render(<PlayTab />);
+
+      await waitFor(() => {
+        expect(screen.getByRole("tab", { name: /animals/i })).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByRole("button", { name: /custom word/i }));
+      const input = screen.getByPlaceholderText(/serendipity/i);
+      fireEvent.input(input, { target: { value: "unicorn" } });
+      fireEvent.click(screen.getByRole("button", { name: /start hunt/i }));
+
+      await new Promise((r) => setTimeout(r, 50));
+      expect(screen.queryByText(/reload the page to begin hunting/i)).not.toBeInTheDocument();
+    });
   });
 });

@@ -78,6 +78,7 @@ export function PlayTab(): JSX.Element {
     const next: ActiveWord = { word, list: "custom", insertedAt: Date.now() };
     setActiveWord(next);
     setCustomOpen(false);
+    if (settings.showReloadHint) setShowReloadBanner(true);
   };
 
   const clear = (): void => {
