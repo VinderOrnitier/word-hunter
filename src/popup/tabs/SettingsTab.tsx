@@ -36,102 +36,104 @@ export function SettingsTab(): JSX.Element {
 
   return (
     <div class="wh-settings">
-      <Field
-        label="Minimum paragraph length"
-        helper="paragraphs below this word count are skipped"
-      >
-        <div class="wh-settings__input-row">
-          <input
-            type="range"
-            class="wh-settings__range"
-            min={30}
-            max={150}
-            step={10}
-            value={draft.minWordThreshold}
-            style={{
-              background: `linear-gradient(to right, var(--wh-primary) 0%, var(--wh-primary) ${((draft.minWordThreshold - 30) / 120) * 100}%, var(--wh-surface-2) ${((draft.minWordThreshold - 30) / 120) * 100}%, var(--wh-surface-2) 100%)`,
-            }}
-            onInput={(e) =>
-              update({ minWordThreshold: Number((e.target as HTMLInputElement).value) })
-            }
-          />
-          <span class="wh-settings__range-value">{draft.minWordThreshold}</span>
-        </div>
-      </Field>
-
-      <Field
-        label="Hint delay"
-        helper="minutes the page is open before the hint tooltip shows"
-      >
-        <div class="wh-settings__input-row">
-          <div class="wh-settings__input-cell">
-            <Input
-              type="number"
-              min={1}
-              step={1}
-              value={String(draft.hintDelayMinutes)}
-              onInput={(v) => update({ hintDelayMinutes: Number(v) })}
-            />
-          </div>
-          <span class="wh-settings__unit">min</span>
-        </div>
-      </Field>
-
-      <Field
-        label="Cursor reveal delay"
-        helper="seconds of hovering before the cursor reveals the word"
-      >
-        <div class="wh-settings__input-row">
-          <div class="wh-settings__input-cell">
-            <Input
-              type="number"
-              min={0.1}
-              step={0.1}
-              value={String(draft.celebrationHoverSeconds)}
-              onInput={(v) => update({ celebrationHoverSeconds: Number(v) })}
-            />
-          </div>
-          <span class="wh-settings__unit">s</span>
-        </div>
-      </Field>
-
-      <Field
-        label="Reload hint"
-        helper="prompt to reload the page after starting a hunt"
-      >
-        <button
-          type="button"
-          role="switch"
-          class={`wh-settings__switch${draft.showReloadHint ? " is-on" : ""}`}
-          aria-checked={draft.showReloadHint}
-          aria-label="Reload hint"
-          onClick={() => update({ showReloadHint: !draft.showReloadHint })}
+      <div class="wh-settings__scroll">
+        <Field
+          label="Minimum paragraph length"
+          helper="paragraphs below this word count are skipped"
         >
-          <span class="wh-settings__switch-track">
-            <span class="wh-settings__switch-thumb" />
-          </span>
-          <span class="wh-settings__switch-state">{draft.showReloadHint ? "On" : "Off"}</span>
-        </button>
-      </Field>
+          <div class="wh-settings__input-row">
+            <input
+              type="range"
+              class="wh-settings__range"
+              min={30}
+              max={150}
+              step={10}
+              value={draft.minWordThreshold}
+              style={{
+                background: `linear-gradient(to right, var(--wh-primary) 0%, var(--wh-primary) ${((draft.minWordThreshold - 30) / 120) * 100}%, var(--wh-surface-2) ${((draft.minWordThreshold - 30) / 120) * 100}%, var(--wh-surface-2) 100%)`,
+              }}
+              onInput={(e) =>
+                update({ minWordThreshold: Number((e.target as HTMLInputElement).value) })
+              }
+            />
+            <span class="wh-settings__range-value">{draft.minWordThreshold}</span>
+          </div>
+        </Field>
 
-      <Field
-        label="Show next word preview"
-        helper="Reveal the upcoming word in the celebration popup when Auto-Continue is on"
-      >
-        <button
-          type="button"
-          role="switch"
-          class={`wh-settings__switch${draft.showNextWordPreview ? " is-on" : ""}`}
-          aria-checked={draft.showNextWordPreview}
-          aria-label="Show next word preview"
-          onClick={() => update({ showNextWordPreview: !draft.showNextWordPreview })}
+        <Field
+          label="Hint delay"
+          helper="minutes the page is open before the hint tooltip shows"
         >
-          <span class="wh-settings__switch-track">
-            <span class="wh-settings__switch-thumb" />
-          </span>
-          <span class="wh-settings__switch-state">{draft.showNextWordPreview ? "On" : "Off"}</span>
-        </button>
-      </Field>
+          <div class="wh-settings__input-row">
+            <div class="wh-settings__input-cell">
+              <Input
+                type="number"
+                min={1}
+                step={1}
+                value={String(draft.hintDelayMinutes)}
+                onInput={(v) => update({ hintDelayMinutes: Number(v) })}
+              />
+            </div>
+            <span class="wh-settings__unit">min</span>
+          </div>
+        </Field>
+
+        <Field
+          label="Cursor reveal delay"
+          helper="seconds of hovering before the cursor reveals the word"
+        >
+          <div class="wh-settings__input-row">
+            <div class="wh-settings__input-cell">
+              <Input
+                type="number"
+                min={0.1}
+                step={0.1}
+                value={String(draft.celebrationHoverSeconds)}
+                onInput={(v) => update({ celebrationHoverSeconds: Number(v) })}
+              />
+            </div>
+            <span class="wh-settings__unit">s</span>
+          </div>
+        </Field>
+
+        <Field
+          label="Reload hint"
+          helper="prompt to reload the page after starting a hunt"
+        >
+          <button
+            type="button"
+            role="switch"
+            class={`wh-settings__switch${draft.showReloadHint ? " is-on" : ""}`}
+            aria-checked={draft.showReloadHint}
+            aria-label="Reload hint"
+            onClick={() => update({ showReloadHint: !draft.showReloadHint })}
+          >
+            <span class="wh-settings__switch-track">
+              <span class="wh-settings__switch-thumb" />
+            </span>
+            <span class="wh-settings__switch-state">{draft.showReloadHint ? "On" : "Off"}</span>
+          </button>
+        </Field>
+
+        <Field
+          label="Show next word preview"
+          helper="Reveal the upcoming word in the celebration popup when Auto-Continue is on"
+        >
+          <button
+            type="button"
+            role="switch"
+            class={`wh-settings__switch${draft.showNextWordPreview ? " is-on" : ""}`}
+            aria-checked={draft.showNextWordPreview}
+            aria-label="Show next word preview"
+            onClick={() => update({ showNextWordPreview: !draft.showNextWordPreview })}
+          >
+            <span class="wh-settings__switch-track">
+              <span class="wh-settings__switch-thumb" />
+            </span>
+            <span class="wh-settings__switch-state">{draft.showNextWordPreview ? "On" : "Off"}</span>
+          </button>
+        </Field>
+      </div>
 
       {isDirty && (
         <div class="wh-settings__footer">

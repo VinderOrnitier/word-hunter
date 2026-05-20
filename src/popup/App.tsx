@@ -34,7 +34,7 @@ export function App(): JSX.Element {
           </div>
         )}
         {active === "settings" && (
-          <div class="wh-tab-panel" data-testid="tab-panel-settings">
+          <div class="wh-tab-panel wh-tab-panel--settings" data-testid="tab-panel-settings">
             <SettingsTab />
           </div>
         )}
