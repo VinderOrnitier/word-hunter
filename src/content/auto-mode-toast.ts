@@ -1,5 +1,5 @@
 import { h, render } from "preact";
-import { AutoModeToastView } from "./components/AutoModeToastView";
+import { InPageToast } from "./components/InPageToast";
 
 const HOST_CLASS = "hw-auto-mode-host";
 const AUTO_DISMISS_MS = 4000;
@@ -21,13 +21,13 @@ export function AutoModeToast(doc: Document) {
   }
 
   return {
-    show(word: string): void {
+    show(): void {
       remove();
       host = doc.createElement("div");
       host.className = HOST_CLASS;
       doc.body.appendChild(host);
       render(
-        h(AutoModeToastView, { word, onClose: remove }),
+        h(InPageToast, { message: "Auto-Hunter active", variant: "info", onClose: remove }),
         host,
       );
       dismissTimer = setTimeout(remove, AUTO_DISMISS_MS);

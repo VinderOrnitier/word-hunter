@@ -12,48 +12,43 @@ describe("AutoModeToast", () => {
 
   it("does not render anything before show() is called", () => {
     AutoModeToast(document);
-    expect(document.querySelector(".hw-auto-toast")).toBeNull();
+    expect(document.querySelector(".hw-toast--info")).toBeNull();
   });
 
-  it("show(word) appends a toast containing the word", () => {
-    AutoModeToast(document).show("capybara");
-    const toast = document.querySelector(".hw-auto-toast");
+  it("show() appends an info toast with 'Auto-Hunter active'", () => {
+    AutoModeToast(document).show();
+    const toast = document.querySelector(".hw-toast--info");
     expect(toast).not.toBeNull();
-    expect(toast!.textContent).toContain("capybara");
-    expect(toast!.textContent?.toLowerCase()).toContain("auto-hunter");
+    expect(toast!.textContent).toContain("Auto-Hunter active");
   });
 
   it("calling show() twice replaces the previous toast (no duplicates)", () => {
     const toast = AutoModeToast(document);
-    toast.show("fox");
-    toast.show("eagle");
-    const all = document.querySelectorAll(".hw-auto-toast");
-    expect(all.length).toBe(1);
-    expect(all[0].textContent).toContain("eagle");
-    expect(all[0].textContent).not.toContain("fox");
+    toast.show();
+    toast.show();
+    expect(document.querySelectorAll(".hw-toast--info").length).toBe(1);
   });
 
   it("auto-dismisses after 4 seconds", () => {
-    AutoModeToast(document).show("wolf");
-    expect(document.querySelector(".hw-auto-toast")).not.toBeNull();
+    AutoModeToast(document).show();
+    expect(document.querySelector(".hw-toast--info")).not.toBeNull();
     jest.advanceTimersByTime(4000);
-    expect(document.querySelector(".hw-auto-toast")).toBeNull();
+    expect(document.querySelector(".hw-toast--info")).toBeNull();
   });
 
-  it("clicking the toast dismisses it immediately", () => {
-    AutoModeToast(document).show("otter");
-    const el = document.querySelector(".hw-auto-toast") as HTMLElement;
-    el.click();
-    expect(document.querySelector(".hw-auto-toast")).toBeNull();
+  it("clicking the × button dismisses the toast immediately", () => {
+    AutoModeToast(document).show();
+    const btn = document.querySelector(".hw-toast__close") as HTMLElement;
+    btn.click();
+    expect(document.querySelector(".hw-toast--info")).toBeNull();
   });
 
   it("dismiss() removes the toast and cancels the auto-dismiss timer", () => {
     const toast = AutoModeToast(document);
-    toast.show("bear");
+    toast.show();
     toast.dismiss();
-    expect(document.querySelector(".hw-auto-toast")).toBeNull();
-    // advancing time after dismiss should not throw or re-show anything
+    expect(document.querySelector(".hw-toast--info")).toBeNull();
     jest.advanceTimersByTime(5000);
-    expect(document.querySelector(".hw-auto-toast")).toBeNull();
+    expect(document.querySelector(".hw-toast--info")).toBeNull();
   });
 });

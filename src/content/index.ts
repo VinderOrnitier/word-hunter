@@ -33,7 +33,7 @@ async function inject(): Promise<void> {
   }
 
   if (settings.autoContinue) {
-    autoModeToast.show(activeWord.word);
+    autoModeToast.show();
   }
 
   const art = resolveArt(activeWord.word, activeWord.list);
