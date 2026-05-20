@@ -5,6 +5,16 @@ export type ActiveWordChangedMessage = {
   activeWord: ActiveWord | null;
 };
 
+export type OpenPopupMessage = {
+  type: "OPEN_POPUP";
+};
+
+chrome.runtime.onMessage.addListener((message: OpenPopupMessage | ActiveWordChangedMessage) => {
+  if (message?.type === "OPEN_POPUP") {
+    chrome.action.openPopup().catch(() => {});
+  }
+});
+
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== "local" || !("activeWord" in changes)) return;
 

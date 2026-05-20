@@ -85,10 +85,6 @@
   border: 1px solid var(--wh-hint);
 }
 
-.hw-toast--hint .hw-toast__dot {
-  background: var(--wh-hint);
-}
-
 /* info — top-center, muted accent (shown when no Paragraph qualifies) */
 .hw-toast--info {
   left: 50%;
@@ -96,15 +92,37 @@
   border: 1px solid var(--wh-border);
 }
 
-.hw-toast--info .hw-toast__dot {
-  background: var(--wh-fg-3);
+.hw-toast__glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--wh-radius-1);
+  cursor: pointer;
+  transition: opacity var(--wh-dur-fast) var(--wh-ease-standard);
 }
 
-.hw-toast__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: var(--wh-radius-pill);
-  flex-shrink: 0;
+.hw-toast__glyph:hover {
+  opacity: 0.75;
+}
+
+.hw-toast__glyph:focus-visible {
+  outline: none;
+  box-shadow: var(--wh-shadow-glow);
+}
+
+.hw-toast__glyph:active {
+  transform: translateY(1px);
+}
+
+.hw-toast__glyph img {
+  display: block;
+  border-radius: var(--wh-radius-1);
 }
 
 .hw-toast__close {

@@ -1,5 +1,7 @@
 import type { JSX } from "preact";
-import placeholderUrl from "../../assets/pokemon/_placeholder.png";
+import rawPlaceholderUrl from "../../assets/pokemon/_placeholder.png";
+
+const placeholderUrl = chrome.runtime.getURL(rawPlaceholderUrl.replace(/^\//, ""));
 
 interface NextWordPreview {
   word: string;

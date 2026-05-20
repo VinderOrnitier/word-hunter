@@ -1,4 +1,7 @@
 import type { JSX } from "preact";
+import rawLogoUrl from "../../assets/logo.png";
+
+const logoUrl = chrome.runtime.getURL(rawLogoUrl.replace(/^\//, ""));
 
 interface InPageToastProps {
   message: string;
@@ -9,7 +12,14 @@ interface InPageToastProps {
 export function InPageToast({ message, variant, onClose }: InPageToastProps): JSX.Element {
   return (
     <div class={`hw-toast hw-toast--${variant}`}>
-      <span class="hw-toast__dot" />
+      <button
+        class="hw-toast__glyph"
+        onClick={() => { chrome.runtime.sendMessage({ type: "OPEN_POPUP" }); }}
+        aria-label="Open Word Hunter"
+        title="Open Word Hunter"
+      >
+        <img src={logoUrl} width="20" height="20" alt="" aria-hidden="true" />
+      </button>
       <span class="hw-toast__message">{message}</span>
       <button class="hw-toast__close" onClick={onClose} aria-label="Dismiss">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
