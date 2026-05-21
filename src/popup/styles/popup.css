@@ -1634,6 +1634,10 @@ button {
   margin: var(--wh-space-1) 0;
 }
 
+.wh-settings__divider--strong {
+  background: var(--wh-border);
+}
+
 .wh-settings__range {
   -webkit-appearance: none;
   appearance: none;
@@ -1763,6 +1767,21 @@ button {
 
 .wh-settings__switch.is-on .wh-settings__switch-state {
   color: var(--wh-primary);
+}
+
+.wh-settings__notif-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--wh-space-3);
+  margin-top: var(--wh-space-1);
+  margin-bottom: var(--wh-space-2);
+  border-top: 1px solid var(--wh-border);
+}
+
+.wh-settings__switch:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .wh-settings__footer {

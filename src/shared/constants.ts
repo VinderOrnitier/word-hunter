@@ -13,6 +13,10 @@ export const DEFAULT_SETTINGS: GameSettings = {
   autoContinue: false,
   showNextWordPreview: true,
   showReloadHint: true,
+  notificationsEnabled: true,
+  showAutoModeToast: true,
+  showHintToast: true,
+  showNoParagraphToast: true,
 };
 
 export const MIN_PARAGRAPH_WORDS = 50;

@@ -37,7 +37,7 @@ The DOM representation of an `ActiveWord` inserted into a `Paragraph` — render
 _Avoid_: injected word, word span, word node
 
 **HintTimer**:
-The subsystem that starts counting when a page with a `HiddenWord` loads, displays a hint tooltip after a configured duration, and records the `hintUsed` flag.
+The subsystem that starts counting when a page with a `HiddenWord` loads, displays a hint tooltip after a configured duration, and records the `hintUsed` flag. Only started (and the toast only shown) when both `GameSettings.notificationsEnabled` and `GameSettings.showHintToast` are `true`; if either is off the timer is never scheduled and `hintUsed` stays `false` for that hunt.
 _Avoid_: timer, hint system, countdown
 
 **CursorRevealDelay**:
@@ -89,8 +89,16 @@ The optional "Next up: …" section appended to the `CelebrationPopup` showing t
 _Avoid_: spoiler, next hint, upcoming word
 
 **AutoModeToast**:
-The top-right pill notification shown on every page load while `AutoContinueMode` is active, confirming the mode is on and naming the current `ActiveWord` to hunt. Auto-dismisses after 4 seconds or on click. Mutually exclusive with `NoParagraphNotification` — when the page has no qualifying `ParagraphGroup`, the no-paragraph notification takes precedence and the `AutoModeToast` is not shown for that load.
+The top-right pill notification shown on every page load while `AutoContinueMode` is active, confirming the mode is on and naming the current `ActiveWord` to hunt. Auto-dismisses after 4 seconds or on click. Mutually exclusive with `NoParagraphNotification` — when the page has no qualifying `ParagraphGroup`, the no-paragraph notification takes precedence and the `AutoModeToast` is not shown for that load. Only shown when both `GameSettings.notificationsEnabled` and `GameSettings.showAutoModeToast` are `true`.
 _Avoid_: auto banner, mode indicator, hunt toast
+
+**NoParagraphNotification**:
+The centered info toast shown when `inject()` finds no eligible `ParagraphGroup` on the page, explaining why the `ActiveWord` was not hidden. Does not auto-dismiss. Only shown when both `GameSettings.notificationsEnabled` and `GameSettings.showNoParagraphToast` are `true`; the early-return from `inject()` still fires regardless so no `HiddenWord` is inserted either way.
+_Avoid_: no-paragraph banner, empty-page toast, paragraph error
+
+**InPageNotifications**:
+The collective set of four `GameSettings` fields that control whether toasts appear on the page during a hunt: `notificationsEnabled` (master toggle, default `true`), `showAutoModeToast`, `showHintToast`, `showNoParagraphToast` (each default `true`). When `notificationsEnabled` is `false`, all three individual guards are bypassed regardless of their own values; the individual values are preserved so turning the master back on restores prior state. Configured in the Settings tab under the "Notifications" section.
+_Avoid_: notification settings, toast settings, toast toggles
 
 ## Relationships
 
@@ -108,7 +116,8 @@ _Avoid_: auto banner, mode indicator, hunt toast
 - An **Achievement** is derived from the **CollectionStats** of the active list and the global **Streak**
 - When **AutoContinueMode** is on, a **FindEvent** on a non-custom-list **HiddenWord** auto-selects the next **Word** from the same **WordList** as the new **ActiveWord**; otherwise the **ActiveWord** is cleared
 - The **NextWordPreview** in the **CelebrationPopup** mirrors the auto-selected next **Word** when **AutoContinueMode** and the spoiler-toggle are both on
-- An **AutoModeToast** is shown at most once per page load while **AutoContinueMode** is on, unless the page is already showing a **NoParagraphNotification**
+- An **AutoModeToast** is shown at most once per page load while **AutoContinueMode** is on, unless the page is already showing a **NoParagraphNotification**, and only when **InPageNotifications** permits it
+- A **HintTimer** only starts, and a **NoParagraphNotification** only shows, when **InPageNotifications** permits them
 
 ## Example dialogue
 

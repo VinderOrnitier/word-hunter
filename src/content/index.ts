@@ -28,11 +28,13 @@ async function inject(): Promise<void> {
   const settings = await getSettings();
   const groups = ParagraphSelector(document, settings.minWordThreshold);
   if (groups.length === 0) {
-    NoParagraphNotification(document).show();
+    if (settings.notificationsEnabled && settings.showNoParagraphToast) {
+      NoParagraphNotification(document).show();
+    }
     return;
   }
 
-  if (settings.autoContinue) {
+  if (settings.autoContinue && settings.notificationsEnabled && settings.showAutoModeToast) {
     autoModeToast.show();
   }
 
@@ -75,7 +77,9 @@ async function inject(): Promise<void> {
     resolveArt,
     hoverRevealSeconds: settings.celebrationHoverSeconds,
   });
-  timer.start(settings.hintDelayMinutes);
+  if (settings.notificationsEnabled && settings.showHintToast) {
+    timer.start(settings.hintDelayMinutes);
+  }
 }
 
 NavigationObserver(window, inject);

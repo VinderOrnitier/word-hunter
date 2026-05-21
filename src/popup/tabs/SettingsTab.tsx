@@ -6,6 +6,7 @@ import { useStorage } from "../hooks/useStorage";
 import { Field } from "../components/Field";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
+import { Eyebrow } from "../components/Eyebrow";
 
 export function SettingsTab(): JSX.Element {
   const [saved, setSettings] = useStorage("settings", DEFAULT_SETTINGS);
@@ -20,7 +21,11 @@ export function SettingsTab(): JSX.Element {
     draft.celebrationHoverSeconds !== saved.celebrationHoverSeconds ||
     draft.minWordThreshold !== saved.minWordThreshold ||
     draft.showNextWordPreview !== saved.showNextWordPreview ||
-    draft.showReloadHint !== saved.showReloadHint;
+    draft.showReloadHint !== saved.showReloadHint ||
+    draft.notificationsEnabled !== saved.notificationsEnabled ||
+    draft.showAutoModeToast !== saved.showAutoModeToast ||
+    draft.showHintToast !== saved.showHintToast ||
+    draft.showNoParagraphToast !== saved.showNoParagraphToast;
 
   const update = (patch: Partial<GameSettings>): void => {
     setDraft({ ...draft, ...patch });
@@ -131,6 +136,83 @@ export function SettingsTab(): JSX.Element {
               <span class="wh-settings__switch-thumb" />
             </span>
             <span class="wh-settings__switch-state">{draft.showNextWordPreview ? "On" : "Off"}</span>
+          </button>
+        </Field>
+
+        <div class="wh-settings__notif-header">
+          <Eyebrow>Notifications</Eyebrow>
+          <button
+            type="button"
+            role="switch"
+            class={`wh-settings__switch${draft.notificationsEnabled ? " is-on" : ""}`}
+            aria-checked={draft.notificationsEnabled}
+            aria-label="In-page notifications"
+            title="All notifications"
+            onClick={() => update({ notificationsEnabled: !draft.notificationsEnabled })}
+          >
+            <span class="wh-settings__switch-track">
+              <span class="wh-settings__switch-thumb" />
+            </span>
+          </button>
+        </div>
+
+        <Field
+          label="Auto-Continue started"
+          helper="brief confirmation when Auto-Continue begins a new hunt"
+        >
+          <button
+            type="button"
+            role="switch"
+            class={`wh-settings__switch${draft.showAutoModeToast ? " is-on" : ""}`}
+            aria-checked={draft.showAutoModeToast}
+            aria-label="Auto-Continue started"
+            disabled={!draft.notificationsEnabled}
+            onClick={() => update({ showAutoModeToast: !draft.showAutoModeToast })}
+          >
+            <span class="wh-settings__switch-track">
+              <span class="wh-settings__switch-thumb" />
+            </span>
+            <span class="wh-settings__switch-state">{draft.showAutoModeToast ? "On" : "Off"}</span>
+          </button>
+        </Field>
+
+        <Field
+          label="Hint reminder"
+          helper="shown after the hint delay passes with no find"
+        >
+          <button
+            type="button"
+            role="switch"
+            class={`wh-settings__switch${draft.showHintToast ? " is-on" : ""}`}
+            aria-checked={draft.showHintToast}
+            aria-label="Hint reminder"
+            disabled={!draft.notificationsEnabled}
+            onClick={() => update({ showHintToast: !draft.showHintToast })}
+          >
+            <span class="wh-settings__switch-track">
+              <span class="wh-settings__switch-thumb" />
+            </span>
+            <span class="wh-settings__switch-state">{draft.showHintToast ? "On" : "Off"}</span>
+          </button>
+        </Field>
+
+        <Field
+          label="No paragraphs"
+          helper="shown when the page has no suitable text"
+        >
+          <button
+            type="button"
+            role="switch"
+            class={`wh-settings__switch${draft.showNoParagraphToast ? " is-on" : ""}`}
+            aria-checked={draft.showNoParagraphToast}
+            aria-label="No paragraphs"
+            disabled={!draft.notificationsEnabled}
+            onClick={() => update({ showNoParagraphToast: !draft.showNoParagraphToast })}
+          >
+            <span class="wh-settings__switch-track">
+              <span class="wh-settings__switch-thumb" />
+            </span>
+            <span class="wh-settings__switch-state">{draft.showNoParagraphToast ? "On" : "Off"}</span>
           </button>
         </Field>
       </div>

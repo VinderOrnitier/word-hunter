@@ -95,4 +95,26 @@ describe("GameSettings storage", () => {
     const settings = await getSettings();
     expect(settings.showNextWordPreview).toBe(false);
   });
+
+  it("fills in new notification fields with defaults when stored settings predate them", async () => {
+    const store = makeStorage();
+    (globalThis as unknown as { chrome: unknown }).chrome = {
+      storage: {
+        local: {
+          get: jest.fn(async (key: string) => ({
+            [key]: { hintDelayMinutes: 5, celebrationHoverSeconds: 2, minWordThreshold: 40, autoContinue: false, showNextWordPreview: true, showReloadHint: true },
+          })),
+          set: jest.fn(),
+          remove: jest.fn(),
+        },
+        onChanged: { addListener: jest.fn() },
+      },
+    };
+    const settings = await getSettings();
+    expect(settings.notificationsEnabled).toBe(true);
+    expect(settings.showAutoModeToast).toBe(true);
+    expect(settings.showHintToast).toBe(true);
+    expect(settings.showNoParagraphToast).toBe(true);
+    expect(settings.hintDelayMinutes).toBe(5);
+  });
 });

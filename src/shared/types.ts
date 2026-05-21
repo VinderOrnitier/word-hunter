@@ -15,6 +15,10 @@ export interface GameSettings {
   autoContinue: boolean;
   showNextWordPreview: boolean;
   showReloadHint: boolean;
+  notificationsEnabled: boolean;
+  showAutoModeToast: boolean;
+  showHintToast: boolean;
+  showNoParagraphToast: boolean;
 }
 
 export type WordListName = "animals" | "pokemon";

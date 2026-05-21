@@ -59,7 +59,7 @@ describe("SettingsTab", () => {
   });
 
   it("shows the stored settings values from storage", async () => {
-    const stored: GameSettings = { hintDelayMinutes: 10, celebrationHoverSeconds: 3, minWordThreshold: 30, autoContinue: false, showNextWordPreview: true, showReloadHint: true };
+    const stored: GameSettings = { hintDelayMinutes: 10, celebrationHoverSeconds: 3, minWordThreshold: 30, autoContinue: false, showNextWordPreview: true, showReloadHint: true, notificationsEnabled: true, showAutoModeToast: true, showHintToast: true, showNoParagraphToast: true };
     setupChromeMock({ settings: stored });
     render(<SettingsTab />);
 
@@ -84,7 +84,7 @@ describe("SettingsTab", () => {
   });
 
   it("displays the current minWordThreshold value next to the slider", async () => {
-    const stored: GameSettings = { hintDelayMinutes: 3, celebrationHoverSeconds: 1.5, minWordThreshold: 80, autoContinue: false, showNextWordPreview: true, showReloadHint: true };
+    const stored: GameSettings = { hintDelayMinutes: 3, celebrationHoverSeconds: 1.5, minWordThreshold: 80, autoContinue: false, showNextWordPreview: true, showReloadHint: true, notificationsEnabled: true, showAutoModeToast: true, showHintToast: true, showNoParagraphToast: true };
     setupChromeMock({ settings: stored });
     render(<SettingsTab />);
 
@@ -139,7 +139,7 @@ describe("SettingsTab", () => {
 
     await waitFor(() => {
       expect(setMock).toHaveBeenCalledWith({
-        settings: { hintDelayMinutes: 8, celebrationHoverSeconds: 2, minWordThreshold: 30, autoContinue: false, showNextWordPreview: true, showReloadHint: true },
+        settings: { hintDelayMinutes: 8, celebrationHoverSeconds: 2, minWordThreshold: 30, autoContinue: false, showNextWordPreview: true, showReloadHint: true, notificationsEnabled: true, showAutoModeToast: true, showHintToast: true, showNoParagraphToast: true },
       });
     });
   });
@@ -160,7 +160,7 @@ describe("SettingsTab", () => {
   });
 
   it("does not show Save button after settings load from storage", async () => {
-    const stored: GameSettings = { hintDelayMinutes: 10, celebrationHoverSeconds: 3, minWordThreshold: 50, autoContinue: false, showNextWordPreview: true, showReloadHint: true };
+    const stored: GameSettings = { hintDelayMinutes: 10, celebrationHoverSeconds: 3, minWordThreshold: 50, autoContinue: false, showNextWordPreview: true, showReloadHint: true, notificationsEnabled: true, showAutoModeToast: true, showHintToast: true, showNoParagraphToast: true };
     setupChromeMock({ settings: stored });
     render(<SettingsTab />);
 
@@ -188,6 +188,10 @@ describe("SettingsTab", () => {
         autoContinue: false,
         showNextWordPreview: false,
         showReloadHint: true,
+        notificationsEnabled: true,
+        showAutoModeToast: true,
+        showHintToast: true,
+        showNoParagraphToast: true,
       };
       setupChromeMock({ settings: stored });
       render(<SettingsTab />);
@@ -233,6 +237,10 @@ describe("SettingsTab", () => {
         autoContinue: false,
         showNextWordPreview: true,
         showReloadHint: false,
+        notificationsEnabled: true,
+        showAutoModeToast: true,
+        showHintToast: true,
+        showNoParagraphToast: true,
       };
       setupChromeMock({ settings: stored });
       render(<SettingsTab />);
@@ -257,6 +265,63 @@ describe("SettingsTab", () => {
       await waitFor(() => {
         expect(setMock).toHaveBeenCalledWith({
           settings: expect.objectContaining({ showReloadHint: false }),
+        });
+      });
+    });
+  });
+
+  describe("Notifications section", () => {
+    it("renders the master 'In-page notifications' switch in the on state by default", () => {
+      setupChromeMock();
+      render(<SettingsTab />);
+      expect(screen.getByRole("switch", { name: /in-page notifications/i })).toHaveAttribute("aria-checked", "true");
+    });
+
+    it("child switches are enabled when master is on", () => {
+      setupChromeMock();
+      render(<SettingsTab />);
+      expect(screen.getByRole("switch", { name: /auto-continue started/i })).not.toBeDisabled();
+      expect(screen.getByRole("switch", { name: /hint reminder/i })).not.toBeDisabled();
+      expect(screen.getByRole("switch", { name: /no paragraphs/i })).not.toBeDisabled();
+    });
+
+    it("child switches are disabled when master is off", () => {
+      setupChromeMock();
+      render(<SettingsTab />);
+      fireEvent.click(screen.getByRole("switch", { name: /in-page notifications/i }));
+      expect(screen.getByRole("switch", { name: /auto-continue started/i })).toBeDisabled();
+      expect(screen.getByRole("switch", { name: /hint reminder/i })).toBeDisabled();
+      expect(screen.getByRole("switch", { name: /no paragraphs/i })).toBeDisabled();
+    });
+
+    it("toggling master off dirties the form", () => {
+      setupChromeMock();
+      render(<SettingsTab />);
+      fireEvent.click(screen.getByRole("switch", { name: /in-page notifications/i }));
+      expect(screen.getByRole("button", { name: /save/i })).toBeInTheDocument();
+    });
+
+    it("toggling a child switch dirties the form and Save persists the value", async () => {
+      const { setMock } = setupChromeMock();
+      render(<SettingsTab />);
+      fireEvent.click(screen.getByRole("switch", { name: /hint reminder/i }));
+      expect(screen.getByRole("switch", { name: /hint reminder/i })).toHaveAttribute("aria-checked", "false");
+      fireEvent.click(screen.getByRole("button", { name: /save/i }));
+      await waitFor(() => {
+        expect(setMock).toHaveBeenCalledWith({
+          settings: expect.objectContaining({ showHintToast: false }),
+        });
+      });
+    });
+
+    it("Save persists notificationsEnabled=false when master is toggled off", async () => {
+      const { setMock } = setupChromeMock();
+      render(<SettingsTab />);
+      fireEvent.click(screen.getByRole("switch", { name: /in-page notifications/i }));
+      fireEvent.click(screen.getByRole("button", { name: /save/i }));
+      await waitFor(() => {
+        expect(setMock).toHaveBeenCalledWith({
+          settings: expect.objectContaining({ notificationsEnabled: false }),
         });
       });
     });

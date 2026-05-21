@@ -23,7 +23,8 @@ export async function getFinds(): Promise<HuntRecord[]> {
 }
 
 export async function getSettings(): Promise<GameSettings> {
-  return (await get("settings")) ?? DEFAULT_SETTINGS;
+  const stored = await get("settings");
+  return stored ? { ...DEFAULT_SETTINGS, ...stored } : DEFAULT_SETTINGS;
 }
 
 export async function saveSettings(settings: GameSettings): Promise<void> {
