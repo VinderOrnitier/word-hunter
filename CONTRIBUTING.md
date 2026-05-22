@@ -13,6 +13,7 @@ By participating you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 - [Privacy policy (`PRIVACY.md`)](PRIVACY.md) — what data the extension touches
 - [Security reporting (`SECURITY.md`)](SECURITY.md) — private disclosure channel
 - [Issue triage labels](docs/agents/triage-labels.md)
+- [Releasing](docs/release/releasing.md) — how to cut a new release (maintainer-only)
 
 ## Before you start
 

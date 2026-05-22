@@ -26,6 +26,13 @@ Pre-release. Not yet published to the Chrome Web Store.
   repo settings that should be in place before the repo goes public
   (branch protection, Dependabot, CodeQL, secret scanning, allowed
   merge types, fork-PR workflow approval).
+- `.github/workflows/release.yml` — tag-triggered release workflow:
+  verifies tag matches `package.json#version`, builds, packages
+  `dist/` as `word-hunter-v{version}.zip`, extracts the matching
+  changelog section, and publishes a GitHub Release with the ZIP
+  attached. Auto-marks `vX.Y.Z-rc*` tags as pre-releases.
+- `docs/release/releasing.md` — the per-release walkthrough (version
+  bump, changelog rotation, tag, troubleshoot).
 - Core gameplay: `HiddenWord` rendering via CSS `::before` on empty `<span>`s
   (invisible to Ctrl+F), `HintTimer`, `FindEvent` registration, and
   `CelebrationPopup`.
