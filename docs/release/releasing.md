@@ -75,6 +75,12 @@ The workflow detects the hyphen and marks the GitHub Release as a
 pre-release automatically. Pre-releases are useful for asking testers
 to load an unpacked ZIP before flipping the stable release switch.
 
+The tag-vs-`package.json` verify step accepts both the exact match
+(`v0.1.0` against `0.1.0`) and any pre-release suffix on the same
+base version (`v0.1.0-rc1` is fine while `package.json` is still
+`0.1.0`). This means you can dry-run the release workflow with an
+`-rc` tag without first having to bump the package version.
+
 ## Recovering from a bad tag
 
 If you tagged a commit and the workflow failed before publishing, or
