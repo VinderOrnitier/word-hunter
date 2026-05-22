@@ -36,14 +36,21 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Verify tag matches package.json#version
+        # Accepts the exact match (e.g. v0.1.0 == package 0.1.0) or a
+        # pre-release suffix on top of the same base (e.g. v0.1.0-rc1
+        # is valid when package.json is still 0.1.0 — useful for
+        # smoke-testing this workflow with a release candidate tag
+        # before bumping package.json to the real release).
         run: |
           tag="${GITHUB_REF_NAME#v}"
           pkg=$(node -p "require('./package.json').version")
-          if [ "$tag" != "$pkg" ]; then
-            echo "::error::Tag v$tag does not match package.json version $pkg"
-            exit 1
-          fi
-          echo "Tag and package.json agree on version $pkg"
+          case "$tag" in
+            "$pkg"|"$pkg-"*) echo "Tag v$tag is compatible with package.json version $pkg" ;;
+            *)
+              echo "::error::Tag v$tag does not match package.json version $pkg (allowed: v$pkg or v$pkg-<prerelease>)"
+              exit 1
+              ;;
+          esac
 
       - name: Build extension
         run: pnpm build
