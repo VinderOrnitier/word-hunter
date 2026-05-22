@@ -33,6 +33,12 @@ Pre-release. Not yet published to the Chrome Web Store.
   attached. Auto-marks `vX.Y.Z-rc*` tags as pre-releases.
 - `docs/release/releasing.md` — the per-release walkthrough (version
   bump, changelog rotation, tag, troubleshoot).
+- `docs/release/chrome-web-store.md` — Chrome Web Store submission
+  checklist: single-purpose statement, permission justifications,
+  full listing copy (short + detailed description), privacy-disclosure
+  answers, screenshot and promo-tile specs, post-submission flow, and
+  pointers to the automation work the
+  [github-settings.md](docs/release/github-settings.md) secrets enable.
 - Core gameplay: `HiddenWord` rendering via CSS `::before` on empty `<span>`s
   (invisible to Ctrl+F), `HintTimer`, `FindEvent` registration, and
   `CelebrationPopup`.
@@ -64,6 +70,14 @@ Pre-release. Not yet published to the Chrome Web Store.
   `dist/manifest.json` so `manifest.json` and `package.json` cannot drift.
 - `manifest.json` version aligned from `1.0.0` to `0.1.0` to match
   `package.json`.
+- Extension description rewritten as a single-purpose statement —
+  `"A vocabulary game that hides a word invisibly in web-page text and
+  lets you hunt for it as you read."` — and aligned across
+  `package.json`, `manifest.json`, and the dist build. `package.json` is
+  the source of truth; `vite.config.ts` now injects both `version` and
+  `description` into `dist/manifest.json`. Matches the single-purpose
+  statement in
+  [docs/release/chrome-web-store.md](docs/release/chrome-web-store.md).
 - `onlyBuiltDependencies` (for `unrs-resolver`) migrated from the
   deprecated `package.json#pnpm` field to `pnpm-workspace.yaml`, matching
   the pnpm 11 settings layout.

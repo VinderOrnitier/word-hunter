@@ -60,9 +60,12 @@ this doc walks through every step explicitly.
 7. **(Manual) Upload to the Chrome Web Store.** Go to the
    [Developer Dashboard](https://chrome.google.com/webstore/devconsole),
    download the ZIP from the GitHub Release page, upload it, and
-   submit for review. Automated CWS upload is intentionally out of
-   scope for now — see [`github-settings.md`](github-settings.md) for
-   the secrets that will be required if you wire it up later.
+   submit for review. The listing-side prep (single-purpose statement,
+   permission justifications, screenshots, listing copy) is laid out
+   in [`chrome-web-store.md`](chrome-web-store.md). Automated CWS
+   upload is intentionally out of scope for now — see
+   [`github-settings.md`](github-settings.md) for the secrets that
+   will be required if you wire it up later.
 
 ## Pre-releases
 

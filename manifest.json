@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Word Hunter",
   "version": "0.1.0",
-  "description": "Find a hidden word embedded in page text",
+  "description": "A vocabulary game that hides a word invisibly in web-page text and lets you hunt for it as you read.",
   "permissions": ["storage", "activeTab", "scripting"],
   "content_scripts": [
     {
