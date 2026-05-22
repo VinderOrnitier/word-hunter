@@ -32,11 +32,13 @@ describe("InPageToast", () => {
     );
   });
 
-  it("renders a dot indicator", () => {
+  it("renders a glyph button that opens the popup", () => {
     const { container } = render(
       <InPageToast message="Test" variant="info" onClose={() => {}} />
     );
-    expect(container.querySelector(".hw-toast__dot")).not.toBeNull();
+    const btn = container.querySelector(".hw-toast__glyph");
+    expect(btn).not.toBeNull();
+    expect(btn?.getAttribute("aria-label")).toBe("Open Word Hunter");
   });
 
   it("renders a close button with accessible label", () => {

@@ -9,6 +9,14 @@ function setupChromeMock() {
   const storageListeners: StorageChangeListener[] = [];
 
   (globalThis as unknown as { chrome: unknown }).chrome = {
+    runtime: {
+      onMessage: {
+        addListener: jest.fn(),
+      },
+    },
+    action: {
+      openPopup: jest.fn().mockResolvedValue(undefined),
+    },
     storage: {
       onChanged: {
         addListener: jest.fn((fn: StorageChangeListener) => storageListeners.push(fn)),
