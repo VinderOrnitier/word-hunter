@@ -1,0 +1,98 @@
+name: Bug report
+description: Something is broken or behaves unexpectedly in Word Hunter.
+title: "bug: "
+labels:
+  - bug
+  - needs-triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. Please answer as many of the
+        questions below as you can — the more we know, the faster we can fix it.
+
+        For **security** issues, please use
+        [private vulnerability reporting](https://github.com/VinderOrnitier/word-hunter/security/advisories/new)
+        instead.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of what went wrong.
+      placeholder: When I clicked the hidden word, …
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+      description: What were you trying to do, and what did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Minimal step-by-step. If possible, include a URL of a page where the bug happens.
+      placeholder: |
+        1. Open the extension popup
+        2. Pick the Animals WordList
+        3. Navigate to https://example.com/article
+        4. …
+    validations:
+      required: true
+
+  - type: input
+    id: word-list
+    attributes:
+      label: Which WordList were you using?
+      placeholder: Animals / Pokémon / Custom / N/A
+
+  - type: input
+    id: extension-version
+    attributes:
+      label: Extension version
+      description: Found in `chrome://extensions` → Word Hunter → Details.
+      placeholder: 0.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser & version
+      placeholder: Chrome 130 / Edge 130 / Brave 1.x
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - ChromeOS
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console / service-worker errors
+      description: |
+        Open DevTools on the page (F12) and on the extension service worker
+        (`chrome://extensions` → Details → "Inspect views: service worker"). Paste any
+        relevant errors here.
+      render: shell
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Screenshots, GIFs, or additional context.
