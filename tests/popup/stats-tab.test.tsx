@@ -1,11 +1,8 @@
-import { render, screen, fireEvent, waitFor, act } from "@testing-library/preact";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/preact";
 import { StatsTab } from "../../src/popup/tabs/StatsTab";
 import type { HuntRecord } from "../../src/shared/types";
 
-type OnChangedCallback = (
-  changes: Record<string, { newValue?: unknown }>,
-  area: string
-) => void;
+type OnChangedCallback = (changes: Record<string, { newValue?: unknown }>, area: string) => void;
 
 type ChromeMock = {
   chrome: {
@@ -96,9 +93,7 @@ describe("StatsTab", () => {
     setupChromeMock({ finds: [RECORD_A, RECORD_B] });
     render(<StatsTab />);
 
-    await waitFor(() =>
-      expect(screen.getByText(/2 hunts/i)).toBeInTheDocument()
-    );
+    await waitFor(() => expect(screen.getByText(/2 hunts/i)).toBeInTheDocument());
 
     const rows = document.querySelectorAll(".wh-stats__row");
     expect(rows).toHaveLength(2);
@@ -110,9 +105,7 @@ describe("StatsTab", () => {
     setupChromeMock({ finds: [RECORD_A] });
     render(<StatsTab />);
 
-    await waitFor(() =>
-      expect(screen.getByText("eagle")).toBeInTheDocument()
-    );
+    await waitFor(() => expect(screen.getByText("eagle")).toBeInTheDocument());
 
     expect(screen.getByText("42s")).toBeInTheDocument();
     const link = screen.getByRole("link", { name: /example a/i }) as HTMLAnchorElement;
@@ -182,8 +175,6 @@ describe("StatsTab", () => {
       triggerOnChanged({ finds: { newValue: [RECORD_A] } }, "local");
     });
 
-    await waitFor(() =>
-      expect(screen.getByText("eagle")).toBeInTheDocument()
-    );
+    await waitFor(() => expect(screen.getByText("eagle")).toBeInTheDocument());
   });
 });

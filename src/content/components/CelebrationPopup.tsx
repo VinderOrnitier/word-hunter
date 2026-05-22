@@ -37,10 +37,7 @@ export function CelebrationPopup({
 
   return (
     <div class="hw-celebration" onClick={onDismiss}>
-      <div
-        class="hw-celebration__wrap"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div class="hw-celebration__wrap" onClick={(e) => e.stopPropagation()}>
         <div class="hw-celebration__modal">
           {art !== undefined && (
             <div class="hw-celebration__art" aria-hidden="true">

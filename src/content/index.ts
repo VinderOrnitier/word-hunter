@@ -1,19 +1,26 @@
 import "../shared/styles/tokens.css";
 import "./styles/overlay.css";
 import { render } from "preact";
-import { getActiveWord, setActiveWord, clearActiveWord, getSettings, getFinds, saveFind } from "../shared/storage";
+import { pickRandomWord } from "../popup/collection/pickRandomWord";
+import { resolveArt } from "../shared/art-resolver";
+import {
+  clearActiveWord,
+  getActiveWord,
+  getFinds,
+  getSettings,
+  saveFind,
+  setActiveWord,
+} from "../shared/storage";
+import { validateCustomWord } from "../shared/word-validation";
+import { ActiveWordWatcher } from "./active-word-watcher";
+import { AutoModeToast } from "./auto-mode-toast";
+import { CelebrationManager } from "./celebration-manager";
+import { handleFind } from "./find-handler";
+import { HintTimer } from "./hint-timer";
+import { NavigationObserver } from "./navigation-observer";
+import { NoParagraphNotification } from "./no-paragraph-notification";
 import { ParagraphSelector } from "./paragraph-selector";
 import { WordRenderer } from "./word-renderer";
-import { HintTimer } from "./hint-timer";
-import { CelebrationManager } from "./celebration-manager";
-import { NoParagraphNotification } from "./no-paragraph-notification";
-import { NavigationObserver } from "./navigation-observer";
-import { resolveArt } from "../shared/art-resolver";
-import { ActiveWordWatcher } from "./active-word-watcher";
-import { validateCustomWord } from "../shared/word-validation";
-import { handleFind } from "./find-handler";
-import { pickRandomWord } from "../popup/collection/pickRandomWord";
-import { AutoModeToast } from "./auto-mode-toast";
 
 const timer = HintTimer(document);
 const celebration = CelebrationManager(document);
@@ -65,14 +72,29 @@ async function inject(): Promise<void> {
       });
       if (!result.proceeded) return;
       celebration.show(
-        { word: record.word, durationS: record.searchDurationSeconds, hintUsed: record.hintUsed, art, next: result.next },
+        {
+          word: record.word,
+          durationS: record.searchDurationSeconds,
+          hintUsed: record.hintUsed,
+          art,
+          next: result.next,
+        },
         undefined,
-        clearFoundWord,
+        clearFoundWord
       );
       timer.cancel();
     },
     onReview: (record) => {
-      celebration.show({ word: record.word, durationS: record.searchDurationSeconds, hintUsed: record.hintUsed, art }, undefined, clearFoundWord);
+      celebration.show(
+        {
+          word: record.word,
+          durationS: record.searchDurationSeconds,
+          hintUsed: record.hintUsed,
+          art,
+        },
+        undefined,
+        clearFoundWord
+      );
     },
     resolveArt,
     hoverRevealSeconds: settings.celebrationHoverSeconds,

@@ -20,7 +20,6 @@ export function ActiveWordWatcher(
       if (area !== "local") return;
       if (!("activeWord" in changes)) return;
 
-
       timer.cancel();
       if (!doc.querySelector(".hw-word--found")) {
         celebration.dismiss();

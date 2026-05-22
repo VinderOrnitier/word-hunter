@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/preact";
+import { fireEvent, render, screen, waitFor } from "@testing-library/preact";
 import { CustomWordModal } from "../../../src/popup/play/CustomWordModal";
 
 describe("CustomWordModal", () => {
@@ -11,16 +11,14 @@ describe("CustomWordModal", () => {
 
   it("renders nothing when open is false", () => {
     const { container } = render(
-      <CustomWordModal open={false} onClose={() => {}} onSubmit={() => {}} />,
+      <CustomWordModal open={false} onClose={() => {}} onSubmit={() => {}} />
     );
     expect(container.firstChild).toBeNull();
   });
 
   it("calls onClose when the backdrop is clicked", () => {
     const onClose = jest.fn();
-    const { container } = render(
-      <CustomWordModal open onClose={onClose} onSubmit={() => {}} />,
-    );
+    const { container } = render(<CustomWordModal open onClose={onClose} onSubmit={() => {}} />);
     const backdrop = container.querySelector(".wh-modal__backdrop") as HTMLElement;
     fireEvent.click(backdrop);
     expect(onClose).toHaveBeenCalledTimes(1);
@@ -28,9 +26,7 @@ describe("CustomWordModal", () => {
 
   it("does NOT call onClose when the dialog itself is clicked", () => {
     const onClose = jest.fn();
-    const { container } = render(
-      <CustomWordModal open onClose={onClose} onSubmit={() => {}} />,
-    );
+    const { container } = render(<CustomWordModal open onClose={onClose} onSubmit={() => {}} />);
     const dialog = container.querySelector(".wh-modal__dialog") as HTMLElement;
     fireEvent.click(dialog);
     expect(onClose).not.toHaveBeenCalled();
@@ -90,9 +86,7 @@ describe("CustomWordModal", () => {
   });
 
   it("resets local state when reopened", () => {
-    const { rerender } = render(
-      <CustomWordModal open onClose={() => {}} onSubmit={() => {}} />,
-    );
+    const { rerender } = render(<CustomWordModal open onClose={() => {}} onSubmit={() => {}} />);
     const input = screen.getByPlaceholderText(/serendipity/i) as HTMLInputElement;
     fireEvent.input(input, { target: { value: "abc" } });
     expect(input.value).toBe("abc");

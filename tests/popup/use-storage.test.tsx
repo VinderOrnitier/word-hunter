@@ -1,4 +1,4 @@
-import { renderHook, act, waitFor } from "@testing-library/preact";
+import { act, renderHook, waitFor } from "@testing-library/preact";
 import { useStorage } from "../../src/popup/hooks/useStorage";
 import type { ActiveWord, HuntRecord } from "../../src/shared/types";
 
@@ -70,9 +70,7 @@ describe("useStorage", () => {
 
   it("returns the default value on initial render", () => {
     setupChromeMock();
-    const { result } = renderHook(() =>
-      useStorage<"finds">("finds", [] as HuntRecord[])
-    );
+    const { result } = renderHook(() => useStorage<"finds">("finds", [] as HuntRecord[]));
     expect(result.current[0]).toEqual([]);
   });
 
@@ -80,18 +78,14 @@ describe("useStorage", () => {
     const stored: ActiveWord = { word: "eagle", insertedAt: 1000 };
     setupChromeMock({ activeWord: stored });
 
-    const { result } = renderHook(() =>
-      useStorage<"activeWord">("activeWord", null)
-    );
+    const { result } = renderHook(() => useStorage<"activeWord">("activeWord", null));
 
     await waitFor(() => expect(result.current[0]).toEqual(stored));
   });
 
   it("setter writes the new value via chrome.storage.local.set and updates state", async () => {
     const { store } = setupChromeMock();
-    const { result } = renderHook(() =>
-      useStorage<"activeWord">("activeWord", null)
-    );
+    const { result } = renderHook(() => useStorage<"activeWord">("activeWord", null));
 
     const next: ActiveWord = { word: "wolf", insertedAt: 2000 };
     await act(async () => {
@@ -104,9 +98,7 @@ describe("useStorage", () => {
 
   it("re-renders with the new value when chrome.storage.onChanged fires", async () => {
     const mock = setupChromeMock();
-    const { result } = renderHook(() =>
-      useStorage<"activeWord">("activeWord", null)
-    );
+    const { result } = renderHook(() => useStorage<"activeWord">("activeWord", null));
 
     const next: ActiveWord = { word: "fox", insertedAt: 3000 };
     await act(async () => {

@@ -31,9 +31,7 @@ export function CollectionGrid({
 
   if (slots.length === 0) {
     const message =
-      filter === "caught"
-        ? "No caught words yet — go hunt!"
-        : "Every word in this list is caught.";
+      filter === "caught" ? "No caught words yet — go hunt!" : "Every word in this list is caught.";
     return <div class="wh-collection-empty">{message}</div>;
   }
 

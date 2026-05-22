@@ -29,7 +29,7 @@ describe("ActiveWordWatcher", () => {
     document.body.innerHTML = "";
   });
 
-  const noop = { cancel: jest.fn(), dismiss: jest.fn() };
+  const _noop = { cancel: jest.fn(), dismiss: jest.fn() };
 
   it("calls timer.cancel() when activeWord is removed from storage", () => {
     const cancel = jest.fn();
@@ -73,20 +73,14 @@ describe("ActiveWordWatcher", () => {
   it("calls timer.cancel() when activeWord changes to a new value", () => {
     const cancel = jest.fn();
     ActiveWordWatcher({ cancel }, { dismiss: jest.fn() }, document).start();
-    fireChange(
-      { activeWord: { oldValue: { word: "cat" }, newValue: { word: "fox" } } },
-      "local"
-    );
+    fireChange({ activeWord: { oldValue: { word: "cat" }, newValue: { word: "fox" } } }, "local");
     expect(cancel).toHaveBeenCalledTimes(1);
   });
 
   it("calls celebration.dismiss() when activeWord changes to a new value (no found word)", () => {
     const dismiss = jest.fn();
     ActiveWordWatcher({ cancel: jest.fn() }, { dismiss }, document).start();
-    fireChange(
-      { activeWord: { oldValue: { word: "cat" }, newValue: { word: "fox" } } },
-      "local"
-    );
+    fireChange({ activeWord: { oldValue: { word: "cat" }, newValue: { word: "fox" } } }, "local");
     expect(dismiss).toHaveBeenCalledTimes(1);
   });
 
@@ -96,10 +90,7 @@ describe("ActiveWordWatcher", () => {
     document.body.appendChild(host);
 
     ActiveWordWatcher({ cancel: jest.fn() }, { dismiss: jest.fn() }, document).start();
-    fireChange(
-      { activeWord: { oldValue: { word: "cat" }, newValue: { word: "fox" } } },
-      "local"
-    );
+    fireChange({ activeWord: { oldValue: { word: "cat" }, newValue: { word: "fox" } } }, "local");
 
     expect(document.querySelector(".hw-host")).toBeNull();
   });
@@ -113,10 +104,7 @@ describe("ActiveWordWatcher", () => {
     document.body.appendChild(foundHost);
 
     ActiveWordWatcher({ cancel: jest.fn() }, { dismiss: jest.fn() }, document).start();
-    fireChange(
-      { activeWord: { oldValue: { word: "cat" }, newValue: { word: "fox" } } },
-      "local"
-    );
+    fireChange({ activeWord: { oldValue: { word: "cat" }, newValue: { word: "fox" } } }, "local");
 
     expect(document.querySelector(".hw-word--found")).not.toBeNull();
   });

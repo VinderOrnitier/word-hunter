@@ -29,11 +29,18 @@ Prerequisites: Node.js 20+, pnpm 11+.
 
 ```sh
 pnpm install
-pnpm dev      # vite build --watch
-pnpm build    # production build (writes dist/)
-pnpm test     # Jest
+pnpm dev        # vite build --watch
+pnpm build      # production build (writes dist/)
+pnpm test       # Jest
 pnpm test:watch
+pnpm lint       # Biome (lint + format check)
+pnpm format     # Biome auto-fix (writes changes)
+pnpm typecheck  # tsc --noEmit
 ```
+
+CI runs `lint → typecheck → test → build` on every push and pull request
+([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) — please run the
+same chain locally before opening a PR.
 
 Load the extension in Chrome:
 

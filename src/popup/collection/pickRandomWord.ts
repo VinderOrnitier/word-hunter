@@ -6,7 +6,7 @@ export type PickMode = "any" | "uncaught";
 export function pickRandomWord(
   list: WordListName,
   counts: CatchCounts,
-  mode: PickMode = "uncaught",
+  mode: PickMode = "uncaught"
 ): string {
   const all = WORD_LISTS[list];
   let pool = all;

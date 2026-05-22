@@ -1,6 +1,76 @@
-const BREAK = new Set(["H1","H2","H3","H4","H5","H6","HR","FIGURE","TABLE","UL","OL","BLOCKQUOTE","NAV","ASIDE"]);
-const EXCLUDED = new Set(["H1","H2","H3","H4","H5","H6","NAV","HEADER","FOOTER","ASIDE","MENU","BUTTON","SELECT","TEXTAREA","INPUT","LABEL","TABLE","THEAD","TBODY","TR","TD","TH","UL","OL","FIGURE","FIGCAPTION","IFRAME","SCRIPT","STYLE","NOSCRIPT"]);
-const BLOCK_CHILDREN = new Set(["DIV","P","UL","OL","LI","BLOCKQUOTE","PRE","ARTICLE","SECTION","MAIN","ASIDE","NAV","HEADER","FOOTER","TABLE","FIGURE","H1","H2","H3","H4","H5","H6","HR"]);
+const BREAK = new Set([
+  "H1",
+  "H2",
+  "H3",
+  "H4",
+  "H5",
+  "H6",
+  "HR",
+  "FIGURE",
+  "TABLE",
+  "UL",
+  "OL",
+  "BLOCKQUOTE",
+  "NAV",
+  "ASIDE",
+]);
+const EXCLUDED = new Set([
+  "H1",
+  "H2",
+  "H3",
+  "H4",
+  "H5",
+  "H6",
+  "NAV",
+  "HEADER",
+  "FOOTER",
+  "ASIDE",
+  "MENU",
+  "BUTTON",
+  "SELECT",
+  "TEXTAREA",
+  "INPUT",
+  "LABEL",
+  "TABLE",
+  "THEAD",
+  "TBODY",
+  "TR",
+  "TD",
+  "TH",
+  "UL",
+  "OL",
+  "FIGURE",
+  "FIGCAPTION",
+  "IFRAME",
+  "SCRIPT",
+  "STYLE",
+  "NOSCRIPT",
+]);
+const BLOCK_CHILDREN = new Set([
+  "DIV",
+  "P",
+  "UL",
+  "OL",
+  "LI",
+  "BLOCKQUOTE",
+  "PRE",
+  "ARTICLE",
+  "SECTION",
+  "MAIN",
+  "ASIDE",
+  "NAV",
+  "HEADER",
+  "FOOTER",
+  "TABLE",
+  "FIGURE",
+  "H1",
+  "H2",
+  "H3",
+  "H4",
+  "H5",
+  "H6",
+  "HR",
+]);
 
 function countWords(el: Element): number {
   const text = (el as HTMLElement).innerText || el.textContent || "";
@@ -38,8 +108,13 @@ function scanLevel(parent: Element, threshold: number, out: Element[][]): void {
     const tag = child.tagName;
     if (tag === "IMG") continue;
     if (!child.textContent?.trim()) continue;
-    if (EXCLUDED.has(tag) || BREAK.has(tag)) { flush(); continue; }
-    if (isHidden(child)) { continue; }
+    if (EXCLUDED.has(tag) || BREAK.has(tag)) {
+      flush();
+      continue;
+    }
+    if (isHidden(child)) {
+      continue;
+    }
     if (hasBlockChildren(child)) {
       flush();
       scanLevel(child as Element, threshold, out);

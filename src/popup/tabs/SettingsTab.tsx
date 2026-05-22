@@ -1,12 +1,12 @@
 import type { JSX } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import type { GameSettings } from "../../shared/types";
 import { DEFAULT_SETTINGS } from "../../shared/constants";
-import { useStorage } from "../hooks/useStorage";
-import { Field } from "../components/Field";
-import { Input } from "../components/Input";
+import type { GameSettings } from "../../shared/types";
 import { Button } from "../components/Button";
 import { Eyebrow } from "../components/Eyebrow";
+import { Field } from "../components/Field";
+import { Input } from "../components/Input";
+import { useStorage } from "../hooks/useStorage";
 
 export function SettingsTab(): JSX.Element {
   const [saved, setSettings] = useStorage("settings", DEFAULT_SETTINGS);
@@ -65,10 +65,7 @@ export function SettingsTab(): JSX.Element {
           </div>
         </Field>
 
-        <Field
-          label="Hint delay"
-          helper="minutes the page is open before the hint tooltip shows"
-        >
+        <Field label="Hint delay" helper="minutes the page is open before the hint tooltip shows">
           <div class="wh-settings__input-row">
             <div class="wh-settings__input-cell">
               <Input
@@ -101,10 +98,7 @@ export function SettingsTab(): JSX.Element {
           </div>
         </Field>
 
-        <Field
-          label="Reload hint"
-          helper="prompt to reload the page after starting a hunt"
-        >
+        <Field label="Reload hint" helper="prompt to reload the page after starting a hunt">
           <button
             type="button"
             role="switch"
@@ -135,7 +129,9 @@ export function SettingsTab(): JSX.Element {
             <span class="wh-settings__switch-track">
               <span class="wh-settings__switch-thumb" />
             </span>
-            <span class="wh-settings__switch-state">{draft.showNextWordPreview ? "On" : "Off"}</span>
+            <span class="wh-settings__switch-state">
+              {draft.showNextWordPreview ? "On" : "Off"}
+            </span>
           </button>
         </Field>
 
@@ -176,10 +172,7 @@ export function SettingsTab(): JSX.Element {
           </button>
         </Field>
 
-        <Field
-          label="Hint reminder"
-          helper="shown after the hint delay passes with no find"
-        >
+        <Field label="Hint reminder" helper="shown after the hint delay passes with no find">
           <button
             type="button"
             role="switch"
@@ -196,10 +189,7 @@ export function SettingsTab(): JSX.Element {
           </button>
         </Field>
 
-        <Field
-          label="No paragraphs"
-          helper="shown when the page has no suitable text"
-        >
+        <Field label="No paragraphs" helper="shown when the page has no suitable text">
           <button
             type="button"
             role="switch"
@@ -212,15 +202,21 @@ export function SettingsTab(): JSX.Element {
             <span class="wh-settings__switch-track">
               <span class="wh-settings__switch-thumb" />
             </span>
-            <span class="wh-settings__switch-state">{draft.showNoParagraphToast ? "On" : "Off"}</span>
+            <span class="wh-settings__switch-state">
+              {draft.showNoParagraphToast ? "On" : "Off"}
+            </span>
           </button>
         </Field>
       </div>
 
       {isDirty && (
         <div class="wh-settings__footer">
-          <Button variant="ghost" size="sm" onClick={handleCancel}>Cancel</Button>
-          <Button variant="primary" size="sm" onClick={handleSave}>Save</Button>
+          <Button variant="ghost" size="sm" onClick={handleCancel}>
+            Cancel
+          </Button>
+          <Button variant="primary" size="sm" onClick={handleSave}>
+            Save
+          </Button>
         </div>
       )}
     </div>

@@ -1,19 +1,17 @@
-import { renderHook, act } from "@testing-library/preact";
+import { act, renderHook } from "@testing-library/preact";
 import { useConfirmAction } from "../../../src/popup/hooks/useConfirmAction";
 
 describe("useConfirmAction", () => {
   it("armed is false on initial render", () => {
-    const { result } = renderHook(() =>
-      useConfirmAction({ onConfirm: jest.fn() })
-    );
+    const { result } = renderHook(() => useConfirmAction({ onConfirm: jest.fn() }));
     expect(result.current.armed).toBe(false);
   });
 
   it("arm() sets armed to true", () => {
-    const { result } = renderHook(() =>
-      useConfirmAction({ onConfirm: jest.fn() })
-    );
-    act(() => { result.current.arm(); });
+    const { result } = renderHook(() => useConfirmAction({ onConfirm: jest.fn() }));
+    act(() => {
+      result.current.arm();
+    });
     expect(result.current.armed).toBe(true);
   });
 
@@ -21,8 +19,12 @@ describe("useConfirmAction", () => {
     const onConfirm = jest.fn();
     const { result } = renderHook(() => useConfirmAction({ onConfirm }));
 
-    act(() => { result.current.arm(); });
-    act(() => { result.current.confirm(); });
+    act(() => {
+      result.current.arm();
+    });
+    act(() => {
+      result.current.confirm();
+    });
 
     expect(onConfirm).toHaveBeenCalledTimes(1);
     expect(result.current.armed).toBe(false);
@@ -32,8 +34,12 @@ describe("useConfirmAction", () => {
     const onConfirm = jest.fn();
     const { result } = renderHook(() => useConfirmAction({ onConfirm }));
 
-    act(() => { result.current.arm(); });
-    act(() => { result.current.cancel(); });
+    act(() => {
+      result.current.arm();
+    });
+    act(() => {
+      result.current.cancel();
+    });
 
     expect(onConfirm).not.toHaveBeenCalled();
     expect(result.current.armed).toBe(false);

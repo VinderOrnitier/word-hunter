@@ -17,7 +17,7 @@ export function WordRenderer(
   groups: Element[][],
   options: WordRendererOptions = {}
 ): void {
-  const { onFind, onReview, resolveArt, hoverRevealSeconds } = options;
+  const { onFind, onReview, hoverRevealSeconds } = options;
   if (groups.length === 0) return;
 
   const doc = groups[0][0].ownerDocument;
@@ -61,7 +61,7 @@ export function WordRenderer(
   const parent = textNode.parentNode!;
   parent.insertBefore(doc.createTextNode(text.slice(0, insertAt)), textNode);
   parent.insertBefore(host, textNode);
-  parent.insertBefore(doc.createTextNode(tail ? " " + tail : tail), textNode);
+  parent.insertBefore(doc.createTextNode(tail ? ` ${tail}` : tail), textNode);
   parent.removeChild(textNode);
 
   render(

@@ -13,12 +13,12 @@ export function NavigationObserver(
   const originalPushState = win.history.pushState;
   const originalReplaceState = win.history.replaceState;
 
-  win.history.pushState = function (...args: Parameters<typeof history.pushState>) {
+  win.history.pushState = (...args: Parameters<typeof history.pushState>) => {
     originalPushState.apply(win.history, args);
     schedule();
   };
 
-  win.history.replaceState = function (...args: Parameters<typeof history.replaceState>) {
+  win.history.replaceState = (...args: Parameters<typeof history.replaceState>) => {
     originalReplaceState.apply(win.history, args);
     schedule();
   };

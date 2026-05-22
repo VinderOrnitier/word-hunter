@@ -1,9 +1,6 @@
 import type { CatchCounts, CollectionStats } from "./types";
 
-export function computeCollectionStats(
-  counts: CatchCounts,
-  listLength: number,
-): CollectionStats {
+export function computeCollectionStats(counts: CatchCounts, listLength: number): CollectionStats {
   let totalCatches = 0;
   for (const count of counts.values()) {
     totalCatches += count;

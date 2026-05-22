@@ -1,7 +1,7 @@
-import type { ActiveWord, GameSettings, HuntRecord, WordSource } from "../shared/types";
-import type { WordListName } from "../popup/word-lists";
-import type { CatchCounts } from "../popup/collection/types";
 import { computeCatchCounts } from "../popup/collection/computeCatchCounts";
+import type { CatchCounts } from "../popup/collection/types";
+import type { WordListName } from "../popup/word-lists";
+import type { ActiveWord, GameSettings, HuntRecord, WordSource } from "../shared/types";
 
 export interface FindHandlerDeps {
   getActiveWord: () => Promise<ActiveWord | null>;
@@ -27,7 +27,7 @@ function isAutoSelectableList(list: WordSource | undefined): list is WordListNam
 export async function handleFind(
   record: HuntRecord,
   expectedInsertedAt: number,
-  deps: FindHandlerDeps,
+  deps: FindHandlerDeps
 ): Promise<FindHandlerResult> {
   const current = await deps.getActiveWord();
   if (current === null) return { proceeded: false };

@@ -1,6 +1,6 @@
 import type { JSX } from "preact";
-import { Icon } from "./Icon";
 import logoUrl from "../../assets/logo.png";
+import { Icon } from "./Icon";
 
 interface PopupHeaderProps {
   onRules: () => void;

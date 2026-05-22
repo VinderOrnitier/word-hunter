@@ -1,9 +1,6 @@
 import type { Achievement, CollectionStats, StreakStats } from "./types";
 
-export function listAchievements(
-  stats: CollectionStats,
-  streak: StreakStats,
-): Achievement[] {
+export function listAchievements(stats: CollectionStats, streak: StreakStats): Achievement[] {
   const missing = Math.max(0, Math.ceil(stats.total / 2) - stats.caught);
   const remaining = Math.max(0, stats.total - stats.caught);
 

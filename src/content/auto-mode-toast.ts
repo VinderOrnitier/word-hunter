@@ -28,7 +28,7 @@ export function AutoModeToast(doc: Document) {
       doc.body.appendChild(host);
       render(
         h(InPageToast, { message: "Auto-Hunter active", variant: "info", onClose: remove }),
-        host,
+        host
       );
       dismissTimer = setTimeout(remove, AUTO_DISMISS_MS);
     },

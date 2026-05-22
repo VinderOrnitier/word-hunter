@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/preact";
+import { fireEvent, render, screen } from "@testing-library/preact";
 import { ActiveWordCard } from "../../../src/popup/play/ActiveWordCard";
 import type { ActiveWord } from "../../../src/shared/types";
 

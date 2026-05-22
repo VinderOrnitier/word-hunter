@@ -1,5 +1,5 @@
 const SPRITE_BASE_URL =
-  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown';
+  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown";
 
 const POKEMON_IDS: Record<string, number> = {
   bulbasaur: 1,
@@ -30,10 +30,10 @@ const POKEMON_IDS: Record<string, number> = {
   raichu: 26,
   sandshrew: 27,
   sandslash: 28,
-  'nidoran-f': 29,
+  "nidoran-f": 29,
   nidorina: 30,
   nidoqueen: 31,
-  'nidoran-m': 32,
+  "nidoran-m": 32,
   nidorino: 33,
   nidoking: 34,
   clefairy: 35,
@@ -123,7 +123,7 @@ const POKEMON_IDS: Record<string, number> = {
   seaking: 119,
   staryu: 120,
   starmie: 121,
-  'mr-mime': 122,
+  "mr-mime": 122,
   scyther: 123,
   jynx: 124,
   electabuzz: 125,

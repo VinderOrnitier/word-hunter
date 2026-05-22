@@ -15,10 +15,7 @@ function addDays(timestamp: number, delta: number): number {
   return d.getTime();
 }
 
-export function computeStreak(
-  finds: ReadonlyArray<HuntRecord>,
-  now: number,
-): StreakStats {
+export function computeStreak(finds: ReadonlyArray<HuntRecord>, now: number): StreakStats {
   if (finds.length === 0) return { current: 0, longest: 0 };
 
   const dayHits = new Set<string>();
@@ -50,7 +47,7 @@ export function computeStreak(
     if (prev === null) {
       run = 1;
     } else {
-      const expected = localDateKey(addDays(new Date(prev + "T12:00:00").getTime(), 1));
+      const expected = localDateKey(addDays(new Date(`${prev}T12:00:00`).getTime(), 1));
       run = key === expected ? run + 1 : 1;
     }
     if (run > longest) longest = run;

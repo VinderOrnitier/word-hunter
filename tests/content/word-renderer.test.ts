@@ -23,7 +23,11 @@ describe("WordRenderer", () => {
     const chars = document.querySelectorAll(".hw-char");
     expect(chars).toHaveLength(5);
     expect(Array.from(chars).map((el) => el.getAttribute("data-char"))).toEqual([
-      "e", "a", "g", "l", "e",
+      "e",
+      "a",
+      "g",
+      "l",
+      "e",
     ]);
   });
 
@@ -79,21 +83,27 @@ describe("WordRenderer", () => {
     expect(host.closest("code")).toBeNull();
   });
 
-  it.each(["a", "button", "code", "kbd", "samp", "var", "abbr", "acronym", "script", "style", "noscript"])(
-    "skips text nodes whose closest ancestor is <%s>",
-    (tag) => {
-      const para = document.createElement("p");
-      para.innerHTML = Array.from(
-        { length: 60 },
-        (_, i) => `<${tag}>word${i}</${tag}>`
-      ).join(" ");
-      document.body.appendChild(para);
+  it.each([
+    "a",
+    "button",
+    "code",
+    "kbd",
+    "samp",
+    "var",
+    "abbr",
+    "acronym",
+    "script",
+    "style",
+    "noscript",
+  ])("skips text nodes whose closest ancestor is <%s>", (tag) => {
+    const para = document.createElement("p");
+    para.innerHTML = Array.from({ length: 60 }, (_, i) => `<${tag}>word${i}</${tag}>`).join(" ");
+    document.body.appendChild(para);
 
-      WordRenderer(eagle, [[para]]);
+    WordRenderer(eagle, [[para]]);
 
-      expect(document.querySelectorAll(".hw-word")).toHaveLength(0);
-    }
-  );
+    expect(document.querySelectorAll(".hw-word")).toHaveLength(0);
+  });
 
   it("inserts into plain text even when paragraph also contains a <script> element", () => {
     const para = document.createElement("p");
@@ -116,7 +126,10 @@ describe("WordRenderer", () => {
       p.dataset.idx = String(i);
       return p;
     });
-    const groups: Element[][] = [[paras[0], paras[1]], [paras[2], paras[3]]];
+    const groups: Element[][] = [
+      [paras[0], paras[1]],
+      [paras[2], paras[3]],
+    ];
 
     WordRenderer(eagle, groups);
 
@@ -197,7 +210,7 @@ describe("WordRenderer", () => {
       if (!host) return;
       const next = host.nextSibling;
       expect(next).not.toBeNull();
-      expect(next!.textContent).toMatch(/^ /);
+      expect(next?.textContent).toMatch(/^ /);
     });
 
     it("does not add a trailing space when the insertion point is at the end of the text", () => {

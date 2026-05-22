@@ -1,4 +1,4 @@
-import { render, fireEvent } from "@testing-library/preact";
+import { fireEvent, render } from "@testing-library/preact";
 import { CelebrationPopup } from "../../src/content/components/CelebrationPopup";
 
 describe("CelebrationPopup", () => {
@@ -27,9 +27,9 @@ describe("CelebrationPopup", () => {
     );
     const popup = document.querySelector(".hw-celebration");
     expect(popup).not.toBeNull();
-    expect(popup!.textContent).toContain("eagle");
-    expect(popup!.textContent).toContain("42s");
-    expect(popup!.textContent?.toLowerCase()).toContain("no hint");
+    expect(popup?.textContent).toContain("eagle");
+    expect(popup?.textContent).toContain("42s");
+    expect(popup?.textContent?.toLowerCase()).toContain("no hint");
   });
 
   it("shows 'hint used' when hintUsed=true", () => {
@@ -42,8 +42,9 @@ describe("CelebrationPopup", () => {
         onDismiss={() => {}}
       />
     );
-    expect(document.querySelector(".hw-celebration")!.textContent?.toLowerCase())
-      .toContain("hint used");
+    expect(document.querySelector(".hw-celebration")?.textContent?.toLowerCase()).toContain(
+      "hint used"
+    );
   });
 
   it("renders the art slot when provided", () => {
@@ -88,9 +89,7 @@ describe("CelebrationPopup", () => {
         onDismiss={() => {}}
       />
     );
-    const img = document.querySelector(
-      ".hw-celebration__art-img"
-    ) as HTMLImageElement;
+    const img = document.querySelector(".hw-celebration__art-img") as HTMLImageElement;
     expect(img).not.toBeNull();
     expect(img.getAttribute("src")).toBe(pokemonUrl);
   });
@@ -136,7 +135,7 @@ describe("CelebrationPopup", () => {
     );
     const btn = document.querySelector(".hw-celebration__clear-btn");
     expect(btn).not.toBeNull();
-    expect(btn!.textContent).toBe("Remove word");
+    expect(btn?.textContent).toBe("Remove word");
   });
 
   it("calls onClear when the clear button is clicked", () => {
@@ -197,7 +196,7 @@ describe("CelebrationPopup", () => {
     );
     const next = document.querySelector(".hw-celebration__next");
     expect(next).not.toBeNull();
-    expect(next!.textContent).toContain("capybara");
+    expect(next?.textContent).toContain("capybara");
   });
 
   it("renders the next word art (emoji) when provided in 'next' prop", () => {

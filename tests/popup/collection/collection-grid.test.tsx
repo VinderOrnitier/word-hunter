@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/preact";
+import { fireEvent, render, screen } from "@testing-library/preact";
 import { CollectionGrid } from "../../../src/popup/collection/CollectionGrid";
 import { WORD_LISTS } from "../../../src/popup/word-lists";
 

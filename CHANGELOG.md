@@ -15,6 +15,10 @@ Pre-release. Not yet published to the Chrome Web Store.
   `NOTICE.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `.editorconfig`,
   GitHub issue / pull-request templates, `CODEOWNERS`, and `dependabot`
   configuration.
+- Tooling: [Biome](https://biomejs.dev) for lint + format
+  (`pnpm lint`, `pnpm format`), `tsc --noEmit` as `pnpm typecheck`, and a
+  GitHub Actions CI workflow (`.github/workflows/ci.yml`) that runs
+  lint → typecheck → test → build on every push and pull request.
 - Core gameplay: `HiddenWord` rendering via CSS `::before` on empty `<span>`s
   (invisible to Ctrl+F), `HintTimer`, `FindEvent` registration, and
   `CelebrationPopup`.
@@ -46,10 +50,18 @@ Pre-release. Not yet published to the Chrome Web Store.
   `dist/manifest.json` so `manifest.json` and `package.json` cannot drift.
 - `manifest.json` version aligned from `1.0.0` to `0.1.0` to match
   `package.json`.
+- `onlyBuiltDependencies` (for `unrs-resolver`) migrated from the
+  deprecated `package.json#pnpm` field to `pnpm-workspace.yaml`, matching
+  the pnpm 11 settings layout.
 
 ### Fixed
 
 - Test setup: missing `chrome` global stub in `tests/setup.ts` was causing
   7 of 47 suites to fail at module-import time. ([#34](https://github.com/VinderOrnitier/word-hunter/issues/34))
+- `popup.css`: duplicate `transform` declaration in
+  `.wh-stats__col-header--icon::after` (the second one overrode the
+  starting state used by the hover transition).
+- `word-renderer.ts`: removed unused `resolveArt` from the
+  `WordRendererOptions` destructure.
 
 [Unreleased]: https://github.com/VinderOrnitier/word-hunter/commits/master

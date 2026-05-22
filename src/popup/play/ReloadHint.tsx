@@ -9,10 +9,7 @@ interface ReloadHintProps {
 export function ReloadHint({ onReload, onDismiss }: ReloadHintProps): JSX.Element {
   return (
     <div class="wh-reload-hint">
-      <span
-        class="wh-reload-hint__info"
-        title="Can be disabled in Settings."
-      >
+      <span class="wh-reload-hint__info" title="Can be disabled in Settings.">
         <Icon name="info" size={12} />
       </span>
       <span class="wh-reload-hint__text">Reload the page to begin hunting.</span>

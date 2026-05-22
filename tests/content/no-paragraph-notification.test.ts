@@ -19,7 +19,7 @@ describe("NoParagraphNotification", () => {
   it("toast has the correct message", () => {
     const notification = NoParagraphNotification(document);
     notification.show();
-    expect(document.querySelector(".hw-toast__message")!.textContent).toBe(
+    expect(document.querySelector(".hw-toast__message")?.textContent).toBe(
       "Not enough text to hide the word."
     );
   });

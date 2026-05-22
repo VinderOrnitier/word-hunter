@@ -1,4 +1,4 @@
-import { render, fireEvent, waitFor } from "@testing-library/preact";
+import { fireEvent, render } from "@testing-library/preact";
 import { HiddenWordHost } from "../../src/content/components/HiddenWordHost";
 import type { ActiveWord, HuntRecord } from "../../src/shared/types";
 
@@ -15,27 +15,19 @@ describe("HiddenWordHost", () => {
   });
 
   it("shows the HiddenWord initially", () => {
-    render(
-      <HiddenWordHost activeWord={ACTIVE} onFind={() => {}} />
-    );
+    render(<HiddenWordHost activeWord={ACTIVE} onFind={() => {}} />);
     expect(document.querySelector(".hw-word")).not.toBeNull();
   });
 
   it("applies the found stripe when the word is clicked", () => {
-    render(
-      <HiddenWordHost activeWord={ACTIVE} onFind={() => {}} />
-    );
+    render(<HiddenWordHost activeWord={ACTIVE} onFind={() => {}} />);
     fireEvent.click(document.querySelector(".hw-word") as Element);
-    expect(
-      document.querySelector(".hw-word")?.classList.contains("hw-word--found")
-    ).toBe(true);
+    expect(document.querySelector(".hw-word")?.classList.contains("hw-word--found")).toBe(true);
   });
 
   it("calls onFind with a HuntRecord shaped from the click context", () => {
     const onFind = jest.fn();
-    render(
-      <HiddenWordHost activeWord={ACTIVE} onFind={onFind} />
-    );
+    render(<HiddenWordHost activeWord={ACTIVE} onFind={onFind} />);
 
     fireEvent.click(document.querySelector(".hw-word") as Element);
 
@@ -52,9 +44,7 @@ describe("HiddenWordHost", () => {
   it("reports hintUsed=true when the hw-hint-used session flag is set", () => {
     sessionStorage.setItem("hw-hint-used", "true");
     const onFind = jest.fn();
-    render(
-      <HiddenWordHost activeWord={ACTIVE} onFind={onFind} />
-    );
+    render(<HiddenWordHost activeWord={ACTIVE} onFind={onFind} />);
 
     fireEvent.click(document.querySelector(".hw-word") as Element);
 
@@ -71,9 +61,7 @@ describe("HiddenWordHost", () => {
 
   it("does not call onFind a second time on a repeated click", () => {
     const onFind = jest.fn();
-    render(
-      <HiddenWordHost activeWord={ACTIVE} onFind={onFind} />
-    );
+    render(<HiddenWordHost activeWord={ACTIVE} onFind={onFind} />);
 
     const word = document.querySelector(".hw-word") as Element;
     fireEvent.click(word);
@@ -85,9 +73,7 @@ describe("HiddenWordHost", () => {
   it("calls onReview on re-click with the same record that was passed to onFind", () => {
     const onFind = jest.fn();
     const onReview = jest.fn();
-    render(
-      <HiddenWordHost activeWord={ACTIVE} onFind={onFind} onReview={onReview} />
-    );
+    render(<HiddenWordHost activeWord={ACTIVE} onFind={onFind} onReview={onReview} />);
 
     const word = document.querySelector(".hw-word") as Element;
     fireEvent.click(word);
@@ -100,13 +86,10 @@ describe("HiddenWordHost", () => {
 
   it("does not call onReview on the first click", () => {
     const onReview = jest.fn();
-    render(
-      <HiddenWordHost activeWord={ACTIVE} onFind={jest.fn()} onReview={onReview} />
-    );
+    render(<HiddenWordHost activeWord={ACTIVE} onFind={jest.fn()} onReview={onReview} />);
 
     fireEvent.click(document.querySelector(".hw-word") as Element);
 
     expect(onReview).not.toHaveBeenCalled();
   });
-
 });

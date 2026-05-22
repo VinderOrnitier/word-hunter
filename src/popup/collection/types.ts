@@ -12,12 +12,7 @@ export interface StreakStats {
   longest: number;
 }
 
-export type AchievementId =
-  | "first-catch"
-  | "half-way"
-  | "master-hunter"
-  | "streak-7"
-  | "streak-30";
+export type AchievementId = "first-catch" | "half-way" | "master-hunter" | "streak-7" | "streak-30";
 
 export interface Achievement {
   id: AchievementId;

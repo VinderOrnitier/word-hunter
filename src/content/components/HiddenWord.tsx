@@ -1,5 +1,5 @@
-import { useState, useRef } from "preact/hooks";
 import type { JSX } from "preact";
+import { useRef, useState } from "preact/hooks";
 
 export interface HiddenWordProps {
   word: string;
@@ -21,10 +21,7 @@ export function HiddenWord({
 
   const handleMouseEnter = (): void => {
     if (found) return;
-    timerRef.current = setTimeout(
-      () => setPointerReady(true),
-      hoverRevealSeconds * 1000
-    );
+    timerRef.current = setTimeout(() => setPointerReady(true), hoverRevealSeconds * 1000);
   };
 
   const handleMouseLeave = (): void => {

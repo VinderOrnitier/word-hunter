@@ -1,4 +1,4 @@
-import { handleFind, type FindHandlerDeps } from "../../src/content/find-handler";
+import { type FindHandlerDeps, handleFind } from "../../src/content/find-handler";
 import { DEFAULT_SETTINGS } from "../../src/shared/constants";
 import type { ActiveWord, GameSettings, HuntRecord } from "../../src/shared/types";
 
@@ -69,9 +69,15 @@ describe("handleFind", () => {
   it("saves the find record before clearing or setting next word", async () => {
     const calls: string[] = [];
     const { deps } = makeDeps({
-      saveFind: jest.fn(async () => { calls.push("save"); }),
-      clearActiveWord: jest.fn(async () => { calls.push("clear"); }),
-      setActiveWord: jest.fn(async () => { calls.push("set"); }),
+      saveFind: jest.fn(async () => {
+        calls.push("save");
+      }),
+      clearActiveWord: jest.fn(async () => {
+        calls.push("clear");
+      }),
+      setActiveWord: jest.fn(async () => {
+        calls.push("set");
+      }),
     });
     await handleFind(makeRecord(), 500, deps);
     expect(calls[0]).toBe("save");
@@ -102,14 +108,22 @@ describe("handleFind", () => {
   });
 
   it("includes next preview with art when autoContinue and showNextWordPreview are both true", async () => {
-    const settings: GameSettings = { ...DEFAULT_SETTINGS, autoContinue: true, showNextWordPreview: true };
+    const settings: GameSettings = {
+      ...DEFAULT_SETTINGS,
+      autoContinue: true,
+      showNextWordPreview: true,
+    };
     const { deps } = makeDeps({ getSettings: async () => settings });
     const result = await handleFind(makeRecord(), 500, deps);
     expect(result.next).toEqual({ word: "tiger", art: "🐯" });
   });
 
   it("omits next preview when showNextWordPreview is false but still auto-selects", async () => {
-    const settings: GameSettings = { ...DEFAULT_SETTINGS, autoContinue: true, showNextWordPreview: false };
+    const settings: GameSettings = {
+      ...DEFAULT_SETTINGS,
+      autoContinue: true,
+      showNextWordPreview: false,
+    };
     const { deps, calls } = makeDeps({ getSettings: async () => settings });
     const result = await handleFind(makeRecord(), 500, deps);
     expect(calls.setActiveWord).toHaveBeenCalledTimes(1);
@@ -137,7 +151,7 @@ describe("handleFind", () => {
       getSettings: async () => settings,
       getActiveWord: async () => activeWord,
     });
-    const result = await handleFind(makeRecord(), 500, deps);
+    const _result = await handleFind(makeRecord(), 500, deps);
     expect(calls.clearActiveWord).toHaveBeenCalledTimes(1);
     expect(calls.setActiveWord).not.toHaveBeenCalled();
   });

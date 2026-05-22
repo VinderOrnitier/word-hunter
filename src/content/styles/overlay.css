@@ -150,14 +150,17 @@
   box-shadow: var(--wh-shadow-glow);
 }
 
-
 /* ============================================================
    Celebration popup — fullscreen overlay + centered modal
    ============================================================ */
 
 @keyframes hw-fade {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .hw-celebration {
@@ -307,9 +310,10 @@
   cursor: pointer;
   backdrop-filter: blur(8px);
   white-space: nowrap;
-  transition: background var(--wh-dur-fast) var(--wh-ease-standard),
-              color var(--wh-dur-fast) var(--wh-ease-standard),
-              border-color var(--wh-dur-fast) var(--wh-ease-standard);
+  transition:
+    background var(--wh-dur-fast) var(--wh-ease-standard),
+    color var(--wh-dur-fast) var(--wh-ease-standard),
+    border-color var(--wh-dur-fast) var(--wh-ease-standard);
 }
 
 .hw-celebration__clear-btn:hover {

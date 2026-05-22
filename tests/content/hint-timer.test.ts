@@ -32,7 +32,7 @@ describe("HintTimer", () => {
     expect(document.querySelector(".hw-toast--hint")).toBeNull();
     jest.advanceTimersByTime(60_000);
     expect(document.querySelector(".hw-toast--hint")).not.toBeNull();
-    expect(document.querySelector(".hw-toast__message")!.textContent).toBe(
+    expect(document.querySelector(".hw-toast__message")?.textContent).toBe(
       "The word is hidden on this page."
     );
   });

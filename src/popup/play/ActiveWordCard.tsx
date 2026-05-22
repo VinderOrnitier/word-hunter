@@ -1,6 +1,6 @@
 import type { JSX } from "preact";
-import type { ActiveWord, WordSource } from "../../shared/types";
 import { resolveArt } from "../../shared/art-resolver";
+import type { ActiveWord, WordSource } from "../../shared/types";
 import { Icon } from "../components/Icon";
 
 interface ActiveWordCardProps {
@@ -30,7 +30,10 @@ export function ActiveWordCard({ activeWord, onClear }: ActiveWordCardProps): JS
 
   return (
     <div class="wh-active-card">
-      <div class={`wh-active-card__art${isIconArt ? " wh-active-card__art--icon" : ""}`} aria-hidden="true">
+      <div
+        class={`wh-active-card__art${isIconArt ? " wh-active-card__art--icon" : ""}`}
+        aria-hidden="true"
+      >
         {renderArt(source, art)}
       </div>
       <div class="wh-active-card__body">

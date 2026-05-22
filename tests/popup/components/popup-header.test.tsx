@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/preact";
+import { fireEvent, render, screen } from "@testing-library/preact";
 import { PopupHeader } from "../../../src/popup/components/PopupHeader";
 
 describe("PopupHeader", () => {
@@ -23,17 +23,11 @@ describe("PopupHeader", () => {
 
   it("marks the Rules button as pressed when rulesActive is true", () => {
     render(<PopupHeader onRules={() => {}} rulesActive={true} />);
-    expect(screen.getByRole("button", { name: /rules/i })).toHaveAttribute(
-      "aria-pressed",
-      "true"
-    );
+    expect(screen.getByRole("button", { name: /rules/i })).toHaveAttribute("aria-pressed", "true");
   });
 
   it("marks the Rules button as not pressed when rulesActive is false", () => {
     render(<PopupHeader onRules={() => {}} rulesActive={false} />);
-    expect(screen.getByRole("button", { name: /rules/i })).toHaveAttribute(
-      "aria-pressed",
-      "false"
-    );
+    expect(screen.getByRole("button", { name: /rules/i })).toHaveAttribute("aria-pressed", "false");
   });
 });

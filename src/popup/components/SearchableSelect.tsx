@@ -1,5 +1,5 @@
 import type { JSX } from "preact";
-import { useState, useEffect, useRef } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import type { SelectOption } from "./Select";
 
 interface SearchableSelectProps {
@@ -12,9 +12,17 @@ function asOption(opt: SelectOption): { value: string; label: string } {
   return typeof opt === "string" ? { value: opt, label: opt } : opt;
 }
 
-interface DropdownPos { top: number; left: number; width: number }
+interface DropdownPos {
+  top: number;
+  left: number;
+  width: number;
+}
 
-export function SearchableSelect({ value, onChange, children }: SearchableSelectProps): JSX.Element {
+export function SearchableSelect({
+  value,
+  onChange,
+  children,
+}: SearchableSelectProps): JSX.Element {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [dropdownPos, setDropdownPos] = useState<DropdownPos | null>(null);
@@ -66,7 +74,10 @@ export function SearchableSelect({ value, onChange, children }: SearchableSelect
   };
 
   const onKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "Escape") { setOpen(false); setQuery(""); }
+    if (e.key === "Escape") {
+      setOpen(false);
+      setQuery("");
+    }
   };
 
   return (

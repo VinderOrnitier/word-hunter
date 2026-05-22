@@ -1,9 +1,24 @@
 import type { GameSettings } from "./types";
 
 export const DEFAULT_WORDS = [
-  "cat", "elephant", "fox", "wolf", "eagle", "bear", "giraffe", "tiger",
-  "dolphin", "hedgehog", "zebra", "kangaroo", "lion", "penguin", "owl",
-  "crocodile", "flamingo", "peacock",
+  "cat",
+  "elephant",
+  "fox",
+  "wolf",
+  "eagle",
+  "bear",
+  "giraffe",
+  "tiger",
+  "dolphin",
+  "hedgehog",
+  "zebra",
+  "kangaroo",
+  "lion",
+  "penguin",
+  "owl",
+  "crocodile",
+  "flamingo",
+  "peacock",
 ];
 
 export const DEFAULT_SETTINGS: GameSettings = {

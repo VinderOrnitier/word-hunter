@@ -15,7 +15,10 @@
     "dev": "vite build --watch",
     "build": "vite build",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "lint": "biome check",
+    "format": "biome check --write",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [
     "chrome-extension",
@@ -38,12 +41,8 @@
     }
   },
   "type": "module",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "unrs-resolver"
-    ]
-  },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.15",
     "@crxjs/vite-plugin": "^2.4.0",
     "@preact/preset-vite": "^2.10.5",
     "@testing-library/dom": "^10.4.1",

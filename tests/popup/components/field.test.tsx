@@ -10,9 +10,7 @@ describe("Field", () => {
     );
     expect(screen.getByText("Word list")).toBeInTheDocument();
     expect(screen.getByTestId("inner")).toBeInTheDocument();
-    expect(
-      screen.getByText("overrides the list selection")
-    ).toBeInTheDocument();
+    expect(screen.getByText("overrides the list selection")).toBeInTheDocument();
   });
 
   it("does not render a helper element when helper is omitted", () => {
@@ -44,7 +42,11 @@ describe("Field", () => {
 
   it("shows error text instead of helper text when error prop is set", () => {
     render(
-      <Field label="Custom word" helper="overrides the list selection" error="Letters and hyphens only">
+      <Field
+        label="Custom word"
+        helper="overrides the list selection"
+        error="Letters and hyphens only"
+      >
         <input />
       </Field>
     );

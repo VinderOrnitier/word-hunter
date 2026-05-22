@@ -21,9 +21,7 @@ export function Field({ label, helper, error, counter, children }: FieldProps): 
       </div>
       {children}
       {helper && (
-        <span class={error ? "wh-field__error" : "wh-field__helper"}>
-          {error ?? helper}
-        </span>
+        <span class={error ? "wh-field__error" : "wh-field__helper"}>{error ?? helper}</span>
       )}
     </div>
   );

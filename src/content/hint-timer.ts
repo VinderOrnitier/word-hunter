@@ -1,6 +1,6 @@
 import { h, render } from "preact";
-import { InPageToast } from "./components/InPageToast";
 import { HINT_USED_KEY } from "../shared/constants";
+import { InPageToast } from "./components/InPageToast";
 
 const HOST_CLASS = "hw-hint-toast-host";
 
@@ -29,7 +29,9 @@ export function HintTimer(doc: Document) {
       h(InPageToast, {
         message: "The word is hidden on this page.",
         variant: "hint",
-        onClose: () => { removeToast(); },
+        onClose: () => {
+          removeToast();
+        },
       }),
       host
     );
