@@ -44,10 +44,13 @@ export function CelebrationManager(doc: Document) {
           dismissCurrent();
           void afterDismiss?.();
         },
-        onClear: onClear !== undefined ? () => {
-          dismissCurrent();
-          onClear();
-        } : undefined,
+        onClear:
+          onClear !== undefined
+            ? () => {
+                dismissCurrent();
+                onClear();
+              }
+            : undefined,
       }),
       host
     );

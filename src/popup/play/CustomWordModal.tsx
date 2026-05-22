@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "preact/hooks";
 import type { JSX } from "preact";
-import { Icon } from "../components/Icon";
-import { Field } from "../components/Field";
-import { Input } from "../components/Input";
-import { Button } from "../components/Button";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { MAX_CUSTOM_LEN, validateCustomWord } from "../../shared/word-validation";
+import { Button } from "../components/Button";
+import { Field } from "../components/Field";
+import { Icon } from "../components/Icon";
+import { Input } from "../components/Input";
 
 interface CustomWordModalProps {
   open: boolean;
@@ -15,7 +15,11 @@ interface CustomWordModalProps {
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-export function CustomWordModal({ open, onClose, onSubmit }: CustomWordModalProps): JSX.Element | null {
+export function CustomWordModal({
+  open,
+  onClose,
+  onSubmit,
+}: CustomWordModalProps): JSX.Element | null {
   const [value, setValue] = useState("");
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -46,7 +50,7 @@ export function CustomWordModal({ open, onClose, onSubmit }: CustomWordModalProp
       const dialog = dialogRef.current;
       if (!dialog) return;
       const focusables = Array.from(
-        dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+        dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
       ).filter((el) => !el.hasAttribute("disabled"));
       if (focusables.length === 0) return;
       const first = focusables[0];
@@ -85,11 +89,7 @@ export function CustomWordModal({ open, onClose, onSubmit }: CustomWordModalProp
   }
 
   return (
-    <div
-      class="wh-modal__backdrop"
-      role="presentation"
-      onClick={onClose}
-    >
+    <div class="wh-modal__backdrop" role="presentation" onClick={onClose}>
       <div
         class="wh-modal__dialog"
         role="dialog"
@@ -113,12 +113,7 @@ export function CustomWordModal({ open, onClose, onSubmit }: CustomWordModalProp
           </button>
         </div>
 
-        <Field
-          label="Word"
-          error={showError ? error : undefined}
-          counter={counter}
-          helper={" "}
-        >
+        <Field label="Word" error={showError ? error : undefined} counter={counter} helper={" "}>
           <Input
             value={value}
             onInput={setValue}

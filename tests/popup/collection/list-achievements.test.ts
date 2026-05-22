@@ -30,28 +30,58 @@ describe("listAchievements", () => {
   });
 
   it("unlocks half-way at ratio >= 0.5", () => {
-    expect(listAchievements(stats({ ratio: 0.49 }), streak()).find((a) => a.id === "half-way")?.unlocked).toBe(false);
-    expect(listAchievements(stats({ ratio: 0.5 }), streak()).find((a) => a.id === "half-way")?.unlocked).toBe(true);
+    expect(
+      listAchievements(stats({ ratio: 0.49 }), streak()).find((a) => a.id === "half-way")?.unlocked
+    ).toBe(false);
+    expect(
+      listAchievements(stats({ ratio: 0.5 }), streak()).find((a) => a.id === "half-way")?.unlocked
+    ).toBe(true);
   });
 
   it("unlocks master-hunter only at ratio === 1", () => {
-    expect(listAchievements(stats({ ratio: 0.99 }), streak()).find((a) => a.id === "master-hunter")?.unlocked).toBe(false);
-    expect(listAchievements(stats({ ratio: 1 }), streak()).find((a) => a.id === "master-hunter")?.unlocked).toBe(true);
+    expect(
+      listAchievements(stats({ ratio: 0.99 }), streak()).find((a) => a.id === "master-hunter")
+        ?.unlocked
+    ).toBe(false);
+    expect(
+      listAchievements(stats({ ratio: 1 }), streak()).find((a) => a.id === "master-hunter")
+        ?.unlocked
+    ).toBe(true);
   });
 
   it("unlocks streak-7 when either current or longest reaches 7", () => {
-    expect(listAchievements(stats(), streak({ current: 6, longest: 6 })).find((a) => a.id === "streak-7")?.unlocked).toBe(false);
-    expect(listAchievements(stats(), streak({ current: 7, longest: 7 })).find((a) => a.id === "streak-7")?.unlocked).toBe(true);
-    expect(listAchievements(stats(), streak({ current: 0, longest: 9 })).find((a) => a.id === "streak-7")?.unlocked).toBe(true);
+    expect(
+      listAchievements(stats(), streak({ current: 6, longest: 6 })).find((a) => a.id === "streak-7")
+        ?.unlocked
+    ).toBe(false);
+    expect(
+      listAchievements(stats(), streak({ current: 7, longest: 7 })).find((a) => a.id === "streak-7")
+        ?.unlocked
+    ).toBe(true);
+    expect(
+      listAchievements(stats(), streak({ current: 0, longest: 9 })).find((a) => a.id === "streak-7")
+        ?.unlocked
+    ).toBe(true);
   });
 
   it("unlocks streak-30 when either current or longest reaches 30", () => {
-    expect(listAchievements(stats(), streak({ current: 29, longest: 29 })).find((a) => a.id === "streak-30")?.unlocked).toBe(false);
-    expect(listAchievements(stats(), streak({ current: 30, longest: 30 })).find((a) => a.id === "streak-30")?.unlocked).toBe(true);
+    expect(
+      listAchievements(stats(), streak({ current: 29, longest: 29 })).find(
+        (a) => a.id === "streak-30"
+      )?.unlocked
+    ).toBe(false);
+    expect(
+      listAchievements(stats(), streak({ current: 30, longest: 30 })).find(
+        (a) => a.id === "streak-30"
+      )?.unlocked
+    ).toBe(true);
   });
 
   it("attaches a hint to locked achievements", () => {
-    const result = listAchievements(stats({ caught: 5, total: 55, ratio: 5 / 55 }), streak({ current: 0, longest: 0 }));
+    const result = listAchievements(
+      stats({ caught: 5, total: 55, ratio: 5 / 55 }),
+      streak({ current: 0, longest: 0 })
+    );
     const halfway = result.find((a) => a.id === "half-way")!;
     expect(halfway.unlocked).toBe(false);
     expect(halfway.hint).toBeTruthy();

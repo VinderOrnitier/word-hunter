@@ -1,8 +1,8 @@
-import { useState, useRef } from "preact/hooks";
 import type { JSX } from "preact";
+import { useRef, useState } from "preact/hooks";
+import { HINT_USED_KEY } from "../../shared/constants";
 import type { ActiveWord, HuntRecord } from "../../shared/types";
 import { HiddenWord } from "./HiddenWord";
-import { HINT_USED_KEY } from "../../shared/constants";
 
 interface HiddenWordHostProps {
   activeWord: ActiveWord;
@@ -28,12 +28,12 @@ export function HiddenWordHost({
       return;
     }
     const now = Date.now();
-    const seconds = activeWord.insertedAt != null
-      ? Math.max(0, Math.round((now - activeWord.insertedAt) / 1000))
-      : 0;
+    const seconds =
+      activeWord.insertedAt != null
+        ? Math.max(0, Math.round((now - activeWord.insertedAt) / 1000))
+        : 0;
     const usedHint =
-      typeof sessionStorage !== "undefined" &&
-      sessionStorage.getItem(HINT_USED_KEY) === "true";
+      typeof sessionStorage !== "undefined" && sessionStorage.getItem(HINT_USED_KEY) === "true";
 
     const record: HuntRecord = {
       word: activeWord.word,

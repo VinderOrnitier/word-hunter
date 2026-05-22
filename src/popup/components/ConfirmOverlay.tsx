@@ -11,8 +11,12 @@ export function ConfirmOverlay({ prompt, onConfirm, onCancel }: ConfirmOverlayPr
   return (
     <div class="wh-confirm-overlay">
       <span class="wh-confirm-overlay__prompt">{prompt}</span>
-      <Button variant="danger" size="sm" onClick={onConfirm}>Yes</Button>
-      <Button variant="ghost" size="sm" onClick={onCancel}>Cancel</Button>
+      <Button variant="danger" size="sm" onClick={onConfirm}>
+        Yes
+      </Button>
+      <Button variant="ghost" size="sm" onClick={onCancel}>
+        Cancel
+      </Button>
     </div>
   );
 }

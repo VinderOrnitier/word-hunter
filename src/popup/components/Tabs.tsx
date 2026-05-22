@@ -22,7 +22,7 @@ interface TabsProps {
 
 export function Tabs({ active, onNavigate }: TabsProps): JSX.Element {
   return (
-    <nav class="wh-tabs" role="tablist">
+    <nav class="wh-tabs">
       {TABS.map((tab) => {
         const isActive = active === tab.id;
         return (

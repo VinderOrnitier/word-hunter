@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/preact";
+import { fireEvent, render, screen, waitFor } from "@testing-library/preact";
 import { PlayTab } from "../../src/popup/tabs/PlayTab";
 import { WORD_LISTS } from "../../src/popup/word-lists";
 import type { ActiveWord } from "../../src/shared/types";
@@ -71,8 +71,14 @@ describe("PlayTab", () => {
       setupChromeMock();
       render(<PlayTab />);
 
-      expect(screen.getByRole("tab", { name: /animals/i })).toHaveAttribute("aria-selected", "true");
-      expect(screen.getByRole("tab", { name: /pokémon/i })).toHaveAttribute("aria-selected", "false");
+      expect(screen.getByRole("tab", { name: /animals/i })).toHaveAttribute(
+        "aria-selected",
+        "true"
+      );
+      expect(screen.getByRole("tab", { name: /pokémon/i })).toHaveAttribute(
+        "aria-selected",
+        "false"
+      );
     });
 
     it("restores the Pokémon grid when selectedList:'pokemon' is stored", async () => {
@@ -80,7 +86,10 @@ describe("PlayTab", () => {
       render(<PlayTab />);
 
       await waitFor(() =>
-        expect(screen.getByRole("tab", { name: /pokémon/i })).toHaveAttribute("aria-selected", "true"),
+        expect(screen.getByRole("tab", { name: /pokémon/i })).toHaveAttribute(
+          "aria-selected",
+          "true"
+        )
       );
       expect(screen.getByRole("button", { name: /Pikachu, not caught yet/i })).toBeInTheDocument();
     });
@@ -92,7 +101,7 @@ describe("PlayTab", () => {
       fireEvent.click(screen.getByRole("tab", { name: /pokémon/i }));
 
       await waitFor(() =>
-        expect(setMock).toHaveBeenCalledWith(expect.objectContaining({ selectedList: "pokemon" })),
+        expect(setMock).toHaveBeenCalledWith(expect.objectContaining({ selectedList: "pokemon" }))
       );
     });
   });
@@ -183,9 +192,7 @@ describe("PlayTab", () => {
     fireEvent.click(screen.getByRole("button", { name: /clear active word/i }));
 
     await waitFor(() => {
-      expect(setMock).toHaveBeenCalledWith(
-        expect.objectContaining({ activeWord: null }),
-      );
+      expect(setMock).toHaveBeenCalledWith(expect.objectContaining({ activeWord: null }));
     });
   });
 
@@ -217,7 +224,7 @@ describe("PlayTab", () => {
         expect(setMock).toHaveBeenCalledWith(
           expect.objectContaining({
             activeWord: expect.objectContaining({ word: "Fox", list: "animals" }),
-          }),
+          })
         );
       });
     });
@@ -256,7 +263,7 @@ describe("PlayTab", () => {
         expect(setMock).toHaveBeenCalledWith(
           expect.objectContaining({
             activeWord: expect.objectContaining({ list: "animals" }),
-          }),
+          })
         );
       });
       const call = setMock.mock.calls[0]?.[0] as { activeWord: ActiveWord };
@@ -291,7 +298,7 @@ describe("PlayTab", () => {
         expect(setMock).toHaveBeenCalledWith(
           expect.objectContaining({
             activeWord: expect.objectContaining({ word: "Fox" }),
-          }),
+          })
         );
       });
     });
@@ -324,7 +331,7 @@ describe("PlayTab", () => {
         expect(setMock).toHaveBeenCalledWith(
           expect.objectContaining({
             activeWord: expect.objectContaining({ word: "unicorn", list: "custom" }),
-          }),
+          })
         );
       });
       expect(screen.queryByPlaceholderText(/serendipity/i)).toBeNull();
@@ -378,8 +385,8 @@ describe("PlayTab", () => {
         expect(setMock).toHaveBeenCalledWith(
           expect.objectContaining({
             settings: expect.objectContaining({ autoContinue: true }),
-          }),
-        ),
+          })
+        )
       );
     });
 
@@ -395,15 +402,18 @@ describe("PlayTab", () => {
       });
       render(<PlayTab />);
       await waitFor(() => {
-        expect(screen.getByRole("switch", { name: /auto-continue/i })).toHaveAttribute("aria-checked", "true");
+        expect(screen.getByRole("switch", { name: /auto-continue/i })).toHaveAttribute(
+          "aria-checked",
+          "true"
+        );
       });
       fireEvent.click(screen.getByRole("switch", { name: /auto-continue/i }));
       await waitFor(() =>
         expect(setMock).toHaveBeenCalledWith(
           expect.objectContaining({
             settings: expect.objectContaining({ autoContinue: false }),
-          }),
-        ),
+          })
+        )
       );
     });
   });
@@ -483,7 +493,7 @@ describe("PlayTab", () => {
       fireEvent.click(screen.getByRole("button", { name: /^reload$/i }));
 
       expect(executeScriptMock).toHaveBeenCalledWith(
-        expect.objectContaining({ target: { tabId: 42 } }),
+        expect.objectContaining({ target: { tabId: 42 } })
       );
     });
 

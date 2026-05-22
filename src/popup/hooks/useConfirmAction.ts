@@ -16,8 +16,11 @@ export function useConfirmAction({ onConfirm }: UseConfirmActionOptions): UseCon
 
   return {
     armed,
-    arm:     () => setArmed(true),
-    cancel:  () => setArmed(false),
-    confirm: () => { setArmed(false); onConfirm(); },
+    arm: () => setArmed(true),
+    cancel: () => setArmed(false),
+    confirm: () => {
+      setArmed(false);
+      onConfirm();
+    },
   };
 }

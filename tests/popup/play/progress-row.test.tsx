@@ -1,6 +1,10 @@
-import { render, screen, fireEvent } from "@testing-library/preact";
+import { fireEvent, render, screen } from "@testing-library/preact";
+import type {
+  Achievement,
+  CollectionStats,
+  StreakStats,
+} from "../../../src/popup/collection/types";
 import { ProgressRow } from "../../../src/popup/play/ProgressRow";
-import type { Achievement, CollectionStats, StreakStats } from "../../../src/popup/collection/types";
 
 const stats: CollectionStats = { caught: 3, total: 10, totalCatches: 7, ratio: 0.3 };
 const streak: StreakStats = { current: 4, longest: 9 };
@@ -68,10 +72,10 @@ describe("ProgressRow", () => {
 
   it("renders the progress fill at the right ratio", () => {
     const { container } = render(
-      <ProgressRow stats={stats} streak={streak} achievements={achievements} />,
+      <ProgressRow stats={stats} streak={streak} achievements={achievements} />
     );
     const fill = container.querySelector(".wh-progress-row__fill") as HTMLElement | null;
     expect(fill).not.toBeNull();
-    expect(fill!.style.width).toBe("30%");
+    expect(fill?.style.width).toBe("30%");
   });
 });

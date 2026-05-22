@@ -1,11 +1,11 @@
-import { useState } from "preact/hooks";
 import type { JSX } from "preact";
+import { useState } from "preact/hooks";
 import { PopupHeader } from "./components/PopupHeader";
-import { Tabs, type TabId } from "./components/Tabs";
+import { type TabId, Tabs } from "./components/Tabs";
 import { PlayTab } from "./tabs/PlayTab";
-import { StatsTab } from "./tabs/StatsTab";
-import { SettingsTab } from "./tabs/SettingsTab";
 import { RulesTab } from "./tabs/RulesTab";
+import { SettingsTab } from "./tabs/SettingsTab";
+import { StatsTab } from "./tabs/StatsTab";
 
 export function App(): JSX.Element {
   const [active, setActive] = useState<TabId>("play");

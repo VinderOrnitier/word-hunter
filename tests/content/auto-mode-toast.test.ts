@@ -19,7 +19,7 @@ describe("AutoModeToast", () => {
     AutoModeToast(document).show();
     const toast = document.querySelector(".hw-toast--info");
     expect(toast).not.toBeNull();
-    expect(toast!.textContent).toContain("Auto-Hunter active");
+    expect(toast?.textContent).toContain("Auto-Hunter active");
   });
 
   it("calling show() twice replaces the previous toast (no duplicates)", () => {

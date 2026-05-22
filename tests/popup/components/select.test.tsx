@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/preact";
+import { fireEvent, render, screen } from "@testing-library/preact";
 import { Select } from "../../../src/popup/components/Select";
 
 describe("Select", () => {
@@ -24,9 +24,7 @@ describe("Select", () => {
         ]}
       </Select>
     );
-    expect((screen.getByRole("combobox") as HTMLSelectElement).value).toBe(
-      "pokemon"
-    );
+    expect((screen.getByRole("combobox") as HTMLSelectElement).value).toBe("pokemon");
   });
 
   it("calls onChange with the new value when the user picks an option", () => {

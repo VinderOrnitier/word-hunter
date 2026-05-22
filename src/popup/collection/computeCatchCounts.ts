@@ -4,7 +4,7 @@ import type { CatchCounts } from "./types";
 
 export function computeCatchCounts(
   finds: ReadonlyArray<HuntRecord>,
-  list: WordListName,
+  list: WordListName
 ): CatchCounts {
   const canonical = new Map<string, string>();
   for (const word of WORD_LISTS[list]) {

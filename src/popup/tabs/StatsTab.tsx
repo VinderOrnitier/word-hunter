@@ -1,11 +1,11 @@
 import type { JSX } from "preact";
 import type { HuntRecord, WordSource } from "../../shared/types";
-import { useStorage } from "../hooks/useStorage";
-import { useConfirmAction } from "../hooks/useConfirmAction";
-import { Eyebrow } from "../components/Eyebrow";
 import { Button } from "../components/Button";
 import { ConfirmOverlay } from "../components/ConfirmOverlay";
+import { Eyebrow } from "../components/Eyebrow";
 import { Icon } from "../components/Icon";
+import { useConfirmAction } from "../hooks/useConfirmAction";
+import { useStorage } from "../hooks/useStorage";
 import { formatDuration, formatRelative } from "../utils/format";
 
 export function StatsTab(): JSX.Element {
@@ -29,12 +29,7 @@ export function StatsTab(): JSX.Element {
       <div class="wh-stats__confirm-anchor">
         <div class="wh-stats__header">
           <Eyebrow>{finds.length} hunts</Eyebrow>
-          <Button
-            variant="ghost"
-            size="sm"
-            leftIcon="trash"
-            onClick={clearAction.arm}
-          >
+          <Button variant="ghost" size="sm" leftIcon="trash" onClick={clearAction.arm}>
             Clear
           </Button>
         </div>
@@ -61,10 +56,7 @@ function StatsHeader(): JSX.Element {
     <div class="wh-stats__col-header" aria-hidden="true">
       <span>Word</span>
       <span>Found</span>
-      <span
-        class="wh-stats__col-header--icon"
-        data-tooltip="Duration"
-      >
+      <span class="wh-stats__col-header--icon" data-tooltip="Duration">
         <Icon name="timer" size={11} />
       </span>
       <span class="wh-stats__col-header--center">Hint</span>
@@ -91,11 +83,7 @@ function StatsRow({ record }: { record: HuntRecord }): JSX.Element {
       <span class="wh-stats__meta">{formatRelative(record.foundAt)}</span>
       <span class="wh-stats__meta">{formatDuration(record.searchDurationSeconds)}</span>
       <span
-        class={
-          record.hintUsed
-            ? "wh-stats__hint wh-stats__hint--used"
-            : "wh-stats__hint"
-        }
+        class={record.hintUsed ? "wh-stats__hint wh-stats__hint--used" : "wh-stats__hint"}
         aria-label={record.hintUsed ? "hint used" : "no hint"}
         data-tooltip={record.hintUsed ? "Hint used" : "No hint"}
       />

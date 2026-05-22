@@ -1,5 +1,11 @@
-import { getActiveWord, setActiveWord, clearActiveWord, getSettings, saveSettings } from "../../src/shared/storage";
 import { DEFAULT_SETTINGS } from "../../src/shared/constants";
+import {
+  clearActiveWord,
+  getActiveWord,
+  getSettings,
+  saveSettings,
+  setActiveWord,
+} from "../../src/shared/storage";
 
 function makeStorage(): Record<string, unknown> {
   return {};
@@ -97,12 +103,19 @@ describe("GameSettings storage", () => {
   });
 
   it("fills in new notification fields with defaults when stored settings predate them", async () => {
-    const store = makeStorage();
+    const _store = makeStorage();
     (globalThis as unknown as { chrome: unknown }).chrome = {
       storage: {
         local: {
           get: jest.fn(async (key: string) => ({
-            [key]: { hintDelayMinutes: 5, celebrationHoverSeconds: 2, minWordThreshold: 40, autoContinue: false, showNextWordPreview: true, showReloadHint: true },
+            [key]: {
+              hintDelayMinutes: 5,
+              celebrationHoverSeconds: 2,
+              minWordThreshold: 40,
+              autoContinue: false,
+              showNextWordPreview: true,
+              showReloadHint: true,
+            },
           })),
           set: jest.fn(),
           remove: jest.fn(),

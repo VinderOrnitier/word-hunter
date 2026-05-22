@@ -1,0 +1,57 @@
+name: Feature request
+description: Suggest an idea, improvement, or new WordList.
+title: "feat: "
+labels:
+  - enhancement
+  - needs-triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Word Hunter is a small project — please describe the user value, not
+        just the implementation. Thanks!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What can't you do today? What's painful or missing?
+      placeholder: When I'm hunting on long pages, …
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How could it work from the user's point of view?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Anything you ruled out and why.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - Gameplay / hunt loop
+        - WordList / Pokédex collection
+        - Settings / Popup UI
+        - In-page UI (HiddenWord rendering, hint, celebration)
+        - Performance / accessibility
+        - Tooling / dev experience
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: mockup
+    attributes:
+      label: Mockup, sketch, or example
+      description: Screenshots, links, or a description of how this should look/feel.

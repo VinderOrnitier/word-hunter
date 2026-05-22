@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/preact";
+import { fireEvent, render, screen } from "@testing-library/preact";
 import { CollectionSlot } from "../../../src/popup/collection/CollectionSlot";
 
 describe("CollectionSlot", () => {
@@ -31,18 +31,30 @@ describe("CollectionSlot", () => {
 
   it("renders a lazy <img> with the showdown sprite URL for caught Pokémon", () => {
     render(
-      <CollectionSlot word="Pikachu" source="pokemon" count={2} isActive={false} onClick={() => {}} />
+      <CollectionSlot
+        word="Pikachu"
+        source="pokemon"
+        count={2}
+        isActive={false}
+        onClick={() => {}}
+      />
     );
     const img = screen.getByRole("button").querySelector("img");
     expect(img).not.toBeNull();
-    expect(img!.getAttribute("loading")).toBe("lazy");
-    expect(img!.getAttribute("src")).toContain("PokeAPI/sprites");
+    expect(img?.getAttribute("loading")).toBe("lazy");
+    expect(img?.getAttribute("src")).toContain("PokeAPI/sprites");
     expect(img).not.toHaveClass("wh-slot__silhouette");
   });
 
   it("applies the silhouette class to uncaught Pokémon sprites", () => {
     render(
-      <CollectionSlot word="Pikachu" source="pokemon" count={0} isActive={false} onClick={() => {}} />
+      <CollectionSlot
+        word="Pikachu"
+        source="pokemon"
+        count={0}
+        isActive={false}
+        onClick={() => {}}
+      />
     );
     const img = screen.getByRole("button").querySelector("img");
     expect(img).not.toBeNull();

@@ -1,0 +1,41 @@
+# Normalize line endings: LF in the repo, LF in working trees.
+# Matches `.editorconfig` (`end_of_line = lf`) so Biome, editors, and
+# Git all agree on the same end-of-line.
+
+* text=auto eol=lf
+
+# Source and config — explicit for clarity
+*.ts        text eol=lf
+*.tsx       text eol=lf
+*.js        text eol=lf
+*.jsx       text eol=lf
+*.mjs       text eol=lf
+*.cjs       text eol=lf
+*.json      text eol=lf
+*.md        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.html      text eol=lf
+*.css       text eol=lf
+*.svg       text eol=lf
+
+# Binary assets — never line-ending-converted, never diffed as text
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.webp      binary
+*.avif      binary
+*.woff      binary
+*.woff2     binary
+*.ttf       binary
+*.otf       binary
+*.eot       binary
+*.mp3       binary
+*.mp4       binary
+*.webm      binary
+*.zip       binary
+*.gz        binary
+*.tar       binary
+*.pdf       binary

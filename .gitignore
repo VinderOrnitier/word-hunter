@@ -1,6 +1,35 @@
+# Dependencies / build output
 node_modules/
 dist/
+
+# Environment
 .env
+.env.local
+
+# Test + tooling caches
+coverage/
+.vite/
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Release artifacts (built locally; production zips are GitHub Release assets)
+*.zip
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude Code local state
 .claude/settings.local.json
 .claude/worktrees/
 .claude/skills/

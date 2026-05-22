@@ -40,19 +40,13 @@ describe("computeStreak", () => {
 
   it("breaks the current streak when the last find is older than yesterday", () => {
     const now = ts(2026, 5, 18);
-    const finds = [
-      record(ts(2026, 5, 14, 9)),
-      record(ts(2026, 5, 15, 9)),
-    ];
+    const finds = [record(ts(2026, 5, 14, 9)), record(ts(2026, 5, 15, 9))];
     expect(computeStreak(finds, now)).toEqual({ current: 0, longest: 2 });
   });
 
   it("treats today and 2-days-ago as two separate runs of length 1 when yesterday is missing", () => {
     const now = ts(2026, 5, 18);
-    const finds = [
-      record(ts(2026, 5, 16, 9)),
-      record(ts(2026, 5, 18, 11)),
-    ];
+    const finds = [record(ts(2026, 5, 16, 9)), record(ts(2026, 5, 18, 11))];
     expect(computeStreak(finds, now)).toEqual({ current: 1, longest: 1 });
   });
 

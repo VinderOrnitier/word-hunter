@@ -1,4 +1,4 @@
-import { render, fireEvent, act } from "@testing-library/preact";
+import { act, fireEvent, render } from "@testing-library/preact";
 import { HiddenWord } from "../../src/content/components/HiddenWord";
 
 describe("HiddenWord", () => {
@@ -6,11 +6,7 @@ describe("HiddenWord", () => {
     render(<HiddenWord word="fox" found={false} onFind={() => {}} />);
     const chars = document.querySelectorAll(".hw-char");
     expect(chars).toHaveLength(3);
-    expect([...chars].map((el) => el.getAttribute("data-char"))).toEqual([
-      "f",
-      "o",
-      "x",
-    ]);
+    expect([...chars].map((el) => el.getAttribute("data-char"))).toEqual(["f", "o", "x"]);
   });
 
   it("emits no DOM text matching the word — Ctrl+F bypass survives", () => {
@@ -43,8 +39,12 @@ describe("HiddenWord", () => {
   });
 
   describe("cursor reveal delay", () => {
-    beforeEach(() => { jest.useFakeTimers(); });
-    afterEach(() => { jest.useRealTimers(); });
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+    afterEach(() => {
+      jest.useRealTimers();
+    });
 
     it("cursor is not pointer immediately after mouseenter when hoverRevealSeconds is set", () => {
       render(<HiddenWord word="fox" found={false} onFind={() => {}} hoverRevealSeconds={1.5} />);
@@ -57,7 +57,9 @@ describe("HiddenWord", () => {
       render(<HiddenWord word="fox" found={false} onFind={() => {}} hoverRevealSeconds={1.5} />);
       const word = document.querySelector(".hw-word") as HTMLElement;
       fireEvent.mouseEnter(word);
-      act(() => { jest.advanceTimersByTime(1500); });
+      act(() => {
+        jest.advanceTimersByTime(1500);
+      });
       expect(word.style.cursor).toBe("pointer");
     });
 
@@ -66,7 +68,9 @@ describe("HiddenWord", () => {
       const word = document.querySelector(".hw-word") as HTMLElement;
       fireEvent.mouseEnter(word);
       fireEvent.mouseLeave(word);
-      act(() => { jest.advanceTimersByTime(1500); });
+      act(() => {
+        jest.advanceTimersByTime(1500);
+      });
       expect(word.style.cursor).not.toBe("pointer");
     });
 
@@ -74,7 +78,9 @@ describe("HiddenWord", () => {
       render(<HiddenWord word="fox" found={false} onFind={() => {}} hoverRevealSeconds={1.5} />);
       const word = document.querySelector(".hw-word") as HTMLElement;
       fireEvent.mouseEnter(word);
-      act(() => { jest.advanceTimersByTime(1500); });
+      act(() => {
+        jest.advanceTimersByTime(1500);
+      });
       fireEvent.mouseLeave(word);
       expect(word.style.cursor).not.toBe("pointer");
     });

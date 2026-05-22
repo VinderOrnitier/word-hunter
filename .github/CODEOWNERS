@@ -1,0 +1,4 @@
+# Default reviewer for everything not matched by a more specific rule below.
+# See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+* @VinderOrnitier

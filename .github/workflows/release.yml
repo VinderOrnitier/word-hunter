@@ -1,0 +1,92 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build, package, publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        # See note in ci.yml — pnpm 11 strict-builds gate vs. unrs-resolver.
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Verify tag matches package.json#version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg=$(node -p "require('./package.json').version")
+          if [ "$tag" != "$pkg" ]; then
+            echo "::error::Tag v$tag does not match package.json version $pkg"
+            exit 1
+          fi
+          echo "Tag and package.json agree on version $pkg"
+
+      - name: Build extension
+        run: pnpm build
+
+      - name: Package dist/ as ZIP
+        id: zip
+        run: |
+          archive="word-hunter-${GITHUB_REF_NAME}.zip"
+          (cd dist && zip -r "../$archive" .)
+          echo "archive=$archive" >> "$GITHUB_OUTPUT"
+          echo "Created $archive ($(stat -c %s "$archive") bytes)"
+
+      - name: Extract release notes from CHANGELOG.md
+        id: notes
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          # Prefer the version-specific section (e.g. "## [0.1.0]")
+          # and fall back to [Unreleased] for ad-hoc tags where the
+          # maintainer hasn't moved the entries yet.
+          body=$(awk -v ver="$version" '
+            $0 == "## ["ver"]" || $0 ~ "^## \\["ver"\\] " { flag=1; next }
+            /^## \[/ { flag=0 }
+            flag
+          ' CHANGELOG.md)
+          if [ -z "$body" ]; then
+            body=$(awk '
+              /^## \[Unreleased\]/ { flag=1; next }
+              /^## \[/ { flag=0 }
+              flag
+            ' CHANGELOG.md)
+          fi
+          {
+            echo "body<<NOTES_EOF"
+            echo "$body"
+            echo "NOTES_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          body: ${{ steps.notes.outputs.body }}
+          files: ${{ steps.zip.outputs.archive }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          fail_on_unmatched_files: true

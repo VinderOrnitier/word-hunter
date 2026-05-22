@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/preact";
+import { fireEvent, render, screen } from "@testing-library/preact";
 import { App } from "../../src/popup/App";
 
 type ChromeMock = {
@@ -89,13 +89,7 @@ describe("App shell", () => {
   it("marks the active tab via aria-selected", () => {
     render(<App />);
     fireEvent.click(screen.getByRole("tab", { name: /settings/i }));
-    expect(screen.getByRole("tab", { name: /settings/i })).toHaveAttribute(
-      "aria-selected",
-      "true"
-    );
-    expect(screen.getByRole("tab", { name: /play/i })).toHaveAttribute(
-      "aria-selected",
-      "false"
-    );
+    expect(screen.getByRole("tab", { name: /settings/i })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tab", { name: /play/i })).toHaveAttribute("aria-selected", "false");
   });
 });

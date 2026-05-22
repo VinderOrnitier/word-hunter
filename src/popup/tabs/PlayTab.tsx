@@ -1,9 +1,7 @@
-import { useMemo, useState } from "preact/hooks";
 import type { JSX } from "preact";
-import type { ActiveWord } from "../../shared/types";
+import { useMemo, useState } from "preact/hooks";
 import { DEFAULT_SETTINGS } from "../../shared/constants";
-import { WORD_LISTS, type WordListName } from "../word-lists";
-import { useStorage } from "../hooks/useStorage";
+import type { ActiveWord } from "../../shared/types";
 import { CollectionGrid } from "../collection/CollectionGrid";
 import { computeCatchCounts } from "../collection/computeCatchCounts";
 import { computeCollectionStats } from "../collection/computeCollectionStats";
@@ -11,11 +9,13 @@ import { computeStreak } from "../collection/computeStreak";
 import { listAchievements } from "../collection/listAchievements";
 import { pickRandomWord } from "../collection/pickRandomWord";
 import type { CollectionFilter } from "../collection/types";
-import { ActiveWordCard } from "../play/ActiveWordCard";
-import { ProgressRow } from "../play/ProgressRow";
-import { CustomWordModal } from "../play/CustomWordModal";
-import { ReloadHint } from "../play/ReloadHint";
 import { BottomActionBar } from "../components/BottomActionBar";
+import { useStorage } from "../hooks/useStorage";
+import { ActiveWordCard } from "../play/ActiveWordCard";
+import { CustomWordModal } from "../play/CustomWordModal";
+import { ProgressRow } from "../play/ProgressRow";
+import { ReloadHint } from "../play/ReloadHint";
+import { WORD_LISTS, type WordListName } from "../word-lists";
 
 const LIST_CHIPS: Array<{ value: WordListName; label: string }> = [
   { value: "animals", label: "Animals" },
@@ -41,7 +41,7 @@ export function PlayTab(): JSX.Element {
   const counts = useMemo(() => computeCatchCounts(finds, list), [finds, list]);
   const stats = useMemo(
     () => computeCollectionStats(counts, WORD_LISTS[list].length),
-    [counts, list],
+    [counts, list]
   );
   const streak = useMemo(() => computeStreak(finds, Date.now()), [finds]);
   const achievements = useMemo(() => listAchievements(stats, streak), [stats, streak]);

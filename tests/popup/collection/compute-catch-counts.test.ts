@@ -23,7 +23,7 @@ describe("computeCatchCounts", () => {
   it("counts repeated catches of the same word", () => {
     const result = computeCatchCounts(
       [record({ word: "Cat" }), record({ word: "Cat" }), record({ word: "Cat" })],
-      "animals",
+      "animals"
     );
     expect(result.get("Cat")).toBe(3);
     expect(result.size).toBe(1);
@@ -31,12 +31,8 @@ describe("computeCatchCounts", () => {
 
   it("counts distinct words independently", () => {
     const result = computeCatchCounts(
-      [
-        record({ word: "Cat" }),
-        record({ word: "Fox" }),
-        record({ word: "Cat" }),
-      ],
-      "animals",
+      [record({ word: "Cat" }), record({ word: "Fox" }), record({ word: "Cat" })],
+      "animals"
     );
     expect(result.get("Cat")).toBe(2);
     expect(result.get("Fox")).toBe(1);
@@ -44,11 +40,8 @@ describe("computeCatchCounts", () => {
 
   it("filters out records from other lists", () => {
     const result = computeCatchCounts(
-      [
-        record({ word: "Cat", list: "animals" }),
-        record({ word: "Pikachu", list: "pokemon" }),
-      ],
-      "animals",
+      [record({ word: "Cat", list: "animals" }), record({ word: "Pikachu", list: "pokemon" })],
+      "animals"
     );
     expect(result.size).toBe(1);
     expect(result.get("Cat")).toBe(1);
@@ -58,24 +51,21 @@ describe("computeCatchCounts", () => {
   it("ignores custom records", () => {
     const result = computeCatchCounts(
       [record({ word: "dragon", list: "custom" }), record({ word: "Cat", list: "animals" })],
-      "animals",
+      "animals"
     );
     expect(result.size).toBe(1);
     expect(result.get("Cat")).toBe(1);
   });
 
   it("ignores records with undefined list (legacy safety)", () => {
-    const result = computeCatchCounts(
-      [record({ word: "Cat", list: undefined })],
-      "animals",
-    );
+    const result = computeCatchCounts([record({ word: "Cat", list: undefined })], "animals");
     expect(result.size).toBe(0);
   });
 
   it("normalizes case so legacy lowercase records still match the Title-Case list entry", () => {
     const result = computeCatchCounts(
       [record({ word: "cat", list: "animals" }), record({ word: "Cat", list: "animals" })],
-      "animals",
+      "animals"
     );
     expect(result.get("Cat")).toBe(2);
   });
