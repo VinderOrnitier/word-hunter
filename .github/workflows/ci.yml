@@ -35,7 +35,14 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        # --ignore-scripts: pnpm 11.x errors hard (ERR_PNPM_IGNORED_BUILDS) on
+        # unapproved postinstall scripts, and neither `pnpm-workspace.yaml`
+        # `ignoredBuiltDependencies` nor `.npmrc` `ignored-built-dependencies[]`
+        # bypass that gate on a clean CI install. The only postinstall in our
+        # tree (unrs-resolver) is just a binary verifier — the actual native
+        # module ships via optionalDependencies, which pnpm picks via
+        # os/cpu. Skipping all scripts is safe here.
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Lint (Biome)
         run: pnpm lint

@@ -32,7 +32,8 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        # See note in ci.yml — pnpm 11 strict-builds gate vs. unrs-resolver.
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Verify tag matches package.json#version
         run: |
