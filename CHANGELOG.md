@@ -19,6 +19,13 @@ Pre-release. Not yet published to the Chrome Web Store.
   (`pnpm lint`, `pnpm format`), `tsc --noEmit` as `pnpm typecheck`, and a
   GitHub Actions CI workflow (`.github/workflows/ci.yml`) that runs
   lint → typecheck → test → build on every push and pull request.
+- `.gitattributes` enforcing LF line endings across all text files,
+  matching `.editorconfig` and Biome — ends the CRLF/LF tug-of-war on
+  Windows working trees.
+- `docs/release/github-settings.md` — one-time checklist for the GitHub
+  repo settings that should be in place before the repo goes public
+  (branch protection, Dependabot, CodeQL, secret scanning, allowed
+  merge types, fork-PR workflow approval).
 - Core gameplay: `HiddenWord` rendering via CSS `::before` on empty `<span>`s
   (invisible to Ctrl+F), `HintTimer`, `FindEvent` registration, and
   `CelebrationPopup`.
