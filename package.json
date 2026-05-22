@@ -1,7 +1,15 @@
 {
   "name": "word-hunter",
   "version": "0.1.0",
-  "description": "",
+  "description": "Chrome extension where you hunt for a hidden word embedded invisibly in page text",
+  "homepage": "https://github.com/VinderOrnitier/word-hunter",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VinderOrnitier/word-hunter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/VinderOrnitier/word-hunter/issues"
+  },
   "main": "index.js",
   "scripts": {
     "dev": "vite build --watch",
@@ -9,9 +17,19 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "chrome-extension",
+    "browser-extension",
+    "mv3",
+    "preact",
+    "typescript",
+    "vite",
+    "word-game",
+    "gamification",
+    "vocabulary"
+  ],
+  "author": "Vinder Ornitier <vinder.ornitier@gmail.com>",
+  "license": "MIT",
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
