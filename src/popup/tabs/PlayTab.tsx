@@ -2,6 +2,8 @@ import type { JSX } from "preact";
 import { useMemo, useState } from "preact/hooks";
 import { DEFAULT_SETTINGS } from "../../shared/constants";
 import type { ActiveWord } from "../../shared/types";
+import type { MessageKey } from "../../i18n/types";
+import { useT } from "../../i18n";
 import { CollectionGrid } from "../collection/CollectionGrid";
 import { computeCatchCounts } from "../collection/computeCatchCounts";
 import { computeCollectionStats } from "../collection/computeCollectionStats";
@@ -17,18 +19,19 @@ import { ProgressRow } from "../play/ProgressRow";
 import { ReloadHint } from "../play/ReloadHint";
 import { WORD_LISTS, type WordListName } from "../word-lists";
 
-const LIST_CHIPS: Array<{ value: WordListName; label: string }> = [
-  { value: "animals", label: "Animals" },
-  { value: "pokemon", label: "Pokémon" },
+const LIST_CHIPS: Array<{ value: WordListName; labelKey: MessageKey }> = [
+  { value: "animals", labelKey: "play_list_animals" },
+  { value: "pokemon", labelKey: "play_list_pokemon" },
 ];
 
-const FILTER_CHIPS: Array<{ value: CollectionFilter; label: string }> = [
-  { value: "all", label: "All" },
-  { value: "caught", label: "Caught" },
-  { value: "uncaught", label: "Uncaught" },
+const FILTER_CHIPS: Array<{ value: CollectionFilter; labelKey: MessageKey }> = [
+  { value: "all", labelKey: "play_filter_all" },
+  { value: "caught", labelKey: "play_filter_caught" },
+  { value: "uncaught", labelKey: "play_filter_uncaught" },
 ];
 
 export function PlayTab(): JSX.Element {
+  const t = useT();
   const [activeWord, setActiveWord] = useStorage("activeWord", null);
   const [finds] = useStorage("finds", []);
   const [list, setList] = useStorage("selectedList", "animals");
@@ -100,7 +103,7 @@ export function PlayTab(): JSX.Element {
 
         <ActiveWordCard activeWord={activeWord} onClear={clear} />
 
-        <div class="wh-chip-group" role="tablist" data-group="list" aria-label="Word list">
+        <div class="wh-chip-group" role="tablist" data-group="list" aria-label={t("play_word_list_aria")}>
           {LIST_CHIPS.map((chip) => (
             <button
               key={chip.value}
@@ -110,14 +113,14 @@ export function PlayTab(): JSX.Element {
               aria-selected={list === chip.value}
               onClick={() => setList(chip.value)}
             >
-              {chip.label}
+              {t(chip.labelKey)}
             </button>
           ))}
         </div>
 
         <ProgressRow stats={stats} streak={streak} achievements={achievements} />
 
-        <div class="wh-chip-group" role="tablist" data-group="filter" aria-label="Filter">
+        <div class="wh-chip-group" role="tablist" data-group="filter" aria-label={t("play_filter_aria")}>
           {FILTER_CHIPS.map((chip) => (
             <button
               key={chip.value}
@@ -127,7 +130,7 @@ export function PlayTab(): JSX.Element {
               aria-selected={filter === chip.value}
               onClick={() => setFilter(chip.value)}
             >
-              {chip.label}
+              {t(chip.labelKey)}
             </button>
           ))}
         </div>
