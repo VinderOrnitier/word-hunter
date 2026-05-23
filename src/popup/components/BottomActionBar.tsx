@@ -1,4 +1,5 @@
 import type { JSX } from "preact";
+import { useT } from "../../i18n";
 import { Icon } from "./Icon";
 
 interface BottomActionBarProps {
@@ -18,6 +19,7 @@ export function BottomActionBar({
   autoContinue = false,
   onAutoContinue,
 }: BottomActionBarProps): JSX.Element {
+  const t = useT();
   return (
     <div class="wh-action-bar">
       <button
@@ -25,8 +27,8 @@ export function BottomActionBar({
         role="switch"
         class={`wh-action-bar__icon${autoContinue ? " is-on" : ""}`}
         aria-checked={autoContinue}
-        title="Auto-continue — pick next word after each find"
-        aria-label="Auto-continue"
+        title={t("action_bar_auto_continue_title")}
+        aria-label={t("action_bar_auto_continue_aria")}
         onClick={onAutoContinue}
       >
         <Icon name="refresh" size={16} />
@@ -38,13 +40,13 @@ export function BottomActionBar({
         disabled={startDisabled}
       >
         <Icon name="play" size={14} filled />
-        <span>Start a hunt</span>
+        <span>{t("action_bar_start")}</span>
       </button>
       <button
         type="button"
         class="wh-action-bar__icon"
-        title="Pick a random word"
-        aria-label="Pick a random word"
+        title={t("action_bar_shuffle_title")}
+        aria-label={t("action_bar_shuffle_aria")}
         onClick={onShuffle}
       >
         <Icon name="shuffle" size={16} />
@@ -52,8 +54,8 @@ export function BottomActionBar({
       <button
         type="button"
         class="wh-action-bar__icon"
-        title="Custom word"
-        aria-label="Custom word"
+        title={t("action_bar_custom_title")}
+        aria-label={t("action_bar_custom_aria")}
         onClick={onCustom}
       >
         <Icon name="pencil" size={16} />
