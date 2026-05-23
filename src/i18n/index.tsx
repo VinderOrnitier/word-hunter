@@ -1,5 +1,4 @@
-/** @jsx h */
-import { createContext, h, type ComponentChildren } from "preact";
+import { createContext, type ComponentChildren } from "preact";
 import { useCallback, useContext } from "preact/hooks";
 import type { JSX } from "preact";
 import type { Locale, MessageKey } from "./types";
