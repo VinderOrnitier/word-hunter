@@ -72,7 +72,7 @@ describe("CelebrationPopup", () => {
         onDismiss={handler}
       />
     );
-    fireEvent.click(document.querySelector(".hw-celebration") as Element);
+    fireEvent.click(document.querySelector(".hw-celebration__dismiss") as Element);
     expect(handler).toHaveBeenCalledTimes(1);
   });
 

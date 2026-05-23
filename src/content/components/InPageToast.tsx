@@ -13,6 +13,7 @@ export function InPageToast({ message, variant, onClose }: InPageToastProps): JS
   return (
     <div class={`hw-toast hw-toast--${variant}`}>
       <button
+        type="button"
         class="hw-toast__glyph"
         onClick={() => {
           chrome.runtime.sendMessage({ type: "OPEN_POPUP" });
@@ -23,7 +24,7 @@ export function InPageToast({ message, variant, onClose }: InPageToastProps): JS
         <img src={logoUrl} width="20" height="20" alt="" aria-hidden="true" />
       </button>
       <span class="hw-toast__message">{message}</span>
-      <button class="hw-toast__close" onClick={onClose} aria-label="Dismiss">
+      <button type="button" class="hw-toast__close" onClick={onClose} aria-label="Dismiss">
         <svg
           width="14"
           height="14"

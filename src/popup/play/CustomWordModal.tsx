@@ -89,14 +89,24 @@ export function CustomWordModal({
   }
 
   return (
-    <div class="wh-modal__backdrop" role="presentation" onClick={onClose}>
+    <div class="wh-modal__backdrop">
+      <button
+        type="button"
+        class="wh-modal__backdrop-dismiss"
+        onClick={onClose}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") onClose();
+        }}
+        aria-label="Close dialog"
+        tabIndex={-1}
+        aria-hidden="true"
+      />
       <div
         class="wh-modal__dialog"
         role="dialog"
         aria-modal="true"
         aria-label="Custom word"
         ref={dialogRef}
-        onClick={(e) => e.stopPropagation()}
       >
         <div class="wh-modal__header">
           <div class="wh-modal__title">
@@ -113,8 +123,15 @@ export function CustomWordModal({
           </button>
         </div>
 
-        <Field label="Word" error={showError ? error : undefined} counter={counter} helper={" "}>
+        <Field
+          label="Word"
+          htmlFor="custom-word-input"
+          error={showError ? error : undefined}
+          counter={counter}
+          helper={" "}
+        >
           <Input
+            id="custom-word-input"
             value={value}
             onInput={setValue}
             placeholder="serendipity"

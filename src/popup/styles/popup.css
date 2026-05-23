@@ -999,7 +999,19 @@ button {
   -webkit-backdrop-filter: blur(6px);
 }
 
+.wh-modal__backdrop-dismiss {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  border: none;
+  appearance: none;
+  cursor: default;
+  z-index: 0;
+}
+
 .wh-modal__dialog {
+  position: relative;
+  z-index: 1;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -1354,6 +1366,9 @@ button {
 .wh-stats__table {
   display: flex;
   flex-direction: column;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .wh-stats__col-header,

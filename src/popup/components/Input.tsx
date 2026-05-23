@@ -10,6 +10,7 @@ interface InputProps {
   step?: number;
   error?: boolean;
   inputRef?: Ref<HTMLInputElement>;
+  id?: string;
 }
 
 export function Input({
@@ -22,10 +23,12 @@ export function Input({
   step,
   error = false,
   inputRef,
+  id,
 }: InputProps): JSX.Element {
   return (
     <input
       ref={inputRef}
+      id={id}
       type={type}
       class={`wh-input${mono ? " wh-input--mono" : ""}${error ? " wh-input--error" : ""}`}
       value={value}

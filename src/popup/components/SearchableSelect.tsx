@@ -73,7 +73,7 @@ export function SearchableSelect({
     setQuery("");
   };
 
-  const onKeyDown = (e: KeyboardEvent) => {
+  const closeOnEscape = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
       setOpen(false);
       setQuery("");
@@ -81,12 +81,13 @@ export function SearchableSelect({
   };
 
   return (
-    <div class="wh-ss" ref={wrapRef} onKeyDown={onKeyDown}>
+    <div class="wh-ss" ref={wrapRef}>
       <button
         ref={triggerRef}
         type="button"
         class={`wh-ss__trigger${open ? " is-open" : ""}`}
         onClick={toggle}
+        onKeyDown={closeOnEscape}
         aria-haspopup="listbox"
         aria-expanded={open}
       >
@@ -106,6 +107,7 @@ export function SearchableSelect({
             placeholder="Search…"
             value={query}
             onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
+            onKeyDown={closeOnEscape}
           />
           <div class="wh-ss__list">
             {filtered.length === 0 ? (
@@ -117,7 +119,11 @@ export function SearchableSelect({
                   class={`wh-ss__option${opt.value === value ? " is-selected" : ""}`}
                   role="option"
                   aria-selected={opt.value === value}
+                  tabIndex={0}
                   onClick={() => select(opt.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") select(opt.value);
+                  }}
                 >
                   {opt.label}
                 </div>

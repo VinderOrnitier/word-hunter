@@ -44,10 +44,12 @@ export function SettingsTab(): JSX.Element {
       <div class="wh-settings__scroll">
         <Field
           label="Minimum paragraph length"
+          htmlFor="setting-min-paragraph"
           helper="paragraphs below this word count are skipped"
         >
           <div class="wh-settings__input-row">
             <input
+              id="setting-min-paragraph"
               type="range"
               class="wh-settings__range"
               min={30}
@@ -65,10 +67,15 @@ export function SettingsTab(): JSX.Element {
           </div>
         </Field>
 
-        <Field label="Hint delay" helper="minutes the page is open before the hint tooltip shows">
+        <Field
+          label="Hint delay"
+          htmlFor="setting-hint-delay"
+          helper="minutes the page is open before the hint tooltip shows"
+        >
           <div class="wh-settings__input-row">
             <div class="wh-settings__input-cell">
               <Input
+                id="setting-hint-delay"
                 type="number"
                 min={1}
                 step={1}
@@ -82,11 +89,13 @@ export function SettingsTab(): JSX.Element {
 
         <Field
           label="Cursor reveal delay"
+          htmlFor="setting-cursor-delay"
           helper="seconds of hovering before the cursor reveals the word"
         >
           <div class="wh-settings__input-row">
             <div class="wh-settings__input-cell">
               <Input
+                id="setting-cursor-delay"
                 type="number"
                 min={0.1}
                 step={0.1}

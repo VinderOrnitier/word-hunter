@@ -2,17 +2,27 @@ import type { ComponentChildren, JSX } from "preact";
 
 interface FieldProps {
   label: string;
+  htmlFor?: string;
   helper?: string;
   error?: string;
   counter?: string;
   children: ComponentChildren;
 }
 
-export function Field({ label, helper, error, counter, children }: FieldProps): JSX.Element {
+export function Field({
+  label,
+  htmlFor,
+  helper,
+  error,
+  counter,
+  children,
+}: FieldProps): JSX.Element {
   return (
     <div class="wh-field">
       <div class="wh-field__header">
-        <label class="wh-field__label">{label}</label>
+        <label class="wh-field__label" for={htmlFor}>
+          {label}
+        </label>
         {counter !== undefined && (
           <span class={`wh-field__counter${error ? " wh-field__counter--error" : ""}`}>
             {counter}
