@@ -22,10 +22,17 @@ End-to-end manual verification. Run after `pnpm build` produces a fresh `dist/`.
 - [ ] Click the **Fox** slot. ActiveWordCard updates to "Fox" with the animal art (🦊). The Fox slot gets a primary-yellow glow (`is-active` class).
 - [ ] Switch the list chips to **Pokémon** → grid swaps to 5-column, 151 slots, all silhouettes (`brightness(0) opacity(0.35)` on the sprite `<img>`).
 - [ ] Scroll the grid — Pokémon sprites lazy-load (`loading="lazy"` on `<img>`).
-- [ ] **BottomActionBar** (pinned at the bottom, edge-to-edge): primary `Start a hunt` button (yellow with play icon) + shuffle icon button + pencil icon button. Clicking `Start a hunt` or shuffle picks a random uncaught word from the active list and sets it as the ActiveWord.
+- [ ] **BottomActionBar** (pinned at the bottom, edge-to-edge): 4 buttons from left to right — Auto-Continue toggle (refresh icon, `role="switch"`, dim when off / yellow when on), primary `Start a hunt` button (yellow with play icon, disabled until a word is pending), shuffle icon, pencil icon. Clicking `Start a hunt` or the shuffle icon picks a random uncaught word from the active list and sets it as the ActiveWord.
 - [ ] **CustomWordModal**: click the pencil icon → modal opens over the popup body with backdrop blur. Input has placeholder "serendipity", live counter `0 / 25`, `Cancel` (ghost) and `Start hunt` (primary). Pressing `Esc`, clicking the backdrop, or the close (×) button closes the modal. Tab cycles focus inside the dialog.
-- [ ] **Stats**: shows the editorial empty state ("your hunts will appear here.") in Fraunces italic.
-- [ ] **Settings**: range slider for minimum paragraph length (default **30**, range 30–150, step 10) with a mono value badge showing the current value. Two number inputs below: hint delay **5** / celebration hover **1.5**. "Clear all hunts" button visible in danger zone.
+- [ ] **Stats**: shows the editorial empty state ("your hunts will appear here.") in Fraunces italic. A **Clear all hunts** button appears at the bottom once at least one hunt record exists.
+- [ ] **Settings**: has the following controls (in order):
+  - Range slider **Minimum paragraph length** (default **30**, range 30–150, step 10) — mono value badge updates in real time.
+  - Number input **Hint delay** (default **5** min).
+  - Number input **Cursor reveal delay** (default **1.5** s).
+  - Toggle switch **Reload hint** (default **On**) — prompt to reload after starting a hunt.
+  - Toggle switch **Show next word preview** (default **Off**) — reveals next word in the celebration popup when Auto-Continue is on.
+  - **Notifications** header with a master toggle switch. Three sub-toggles below it (disabled when master is off): **Auto-Continue started**, **Hint reminder**, **No paragraphs**.
+  - When any value is changed a **Save / Cancel** footer bar slides in at the bottom. Clicking Cancel reverts the draft; clicking Save persists it.
 - [ ] **Rules**: opens with the Fraunces italic line "a quiet game while you read." and the 3 markers (30 + / 1× / —).
 
 ### Hunt Collection — find loop
@@ -40,6 +47,16 @@ After finding `Fox` on the smoke article (see "Content script — overlays" belo
 - [ ] Filter chips → **Uncaught**: 53 silhouettes, no Fox.
 - [ ] Switch to **Pokémon** with the **Caught** filter still selected → empty state appears: "No caught words yet — go hunt!".
 
+### Auto-Continue mode
+
+- [ ] Enable Auto-Continue by clicking the refresh icon in `BottomActionBar` — it turns yellow. Set an ActiveWord and reload the smoke article. Find the word. `CelebrationPopup` auto-dismisses after the cursor-reveal delay and a new word is set automatically. Reopen the popup → new word is shown in `ActiveWordCard`.
+- [ ] With **Show next word preview** on (Settings): find the active word. `CelebrationPopup` shows a **"Next up"** row at the bottom with the upcoming word and its art (or just the word for custom). The row is absent when the setting is off.
+- [ ] Disable Auto-Continue. Find the next word — popup does not auto-dismiss; the `BottomActionBar` toggle is dim again.
+
+### Reload hint banner
+
+- [ ] Ensure **Reload hint** is On (Settings). Start a hunt from the popup — a `ReloadHint` banner slides in below the `ActiveWordCard` reading "Reload the page to start hunting". Clicking **Reload** reloads the active tab and dismisses the banner. Clicking the × dismisses it without reloading.
+
 ### Hunt Collection — custom word isolation
 
 - [ ] In **Animals**, filter **All**. Click the pencil icon → modal opens. Type `dragon` → click **Start hunt**. Modal closes, ActiveWordCard shows "dragon" (no art square since custom words have no resolved art). The collection grid is unchanged.
@@ -47,7 +64,7 @@ After finding `Fox` on the smoke article (see "Content script — overlays" belo
 
 ### Hunt Collection — clear flows
 
-- [ ] **Settings → Clear all hunts → confirm**: open Play tab. Collection resets to `0/54`, all achievements locked again, streak `0d`. (Confirms zero denormalisation — see ADR 003.)
+- [ ] **Stats → Clear all hunts → confirm**: open Play tab. Collection resets to `0/54`, all achievements locked again, streak `0d`. (Confirms zero denormalisation — see ADR 003.)
 - [ ] Set an ActiveWord by clicking any slot, then click the stop button on the ActiveWordCard. ActiveWordCard returns to the empty state. The slot loses its glow.
 
 ### Content script — overlays
@@ -71,7 +88,8 @@ Open **two** tabs with `smoke-article.html` before setting a word, then set `eag
 
 ### Hint timer
 
-- [ ] Lower hint delay to `0.05` min (3 s) via DevTools console: `await chrome.storage.local.set({ settings: { hintDelayMinutes: 0.05, celebrationHoverSeconds: 1.5, minWordThreshold: 30 } })`. Reload the smoke article and wait 3 seconds without clicking the hidden word. The `InPageToast` (hint variant) fades in at top-right with the blue dot and the text "The word is hidden on this page."
+- [ ] Lower hint delay to `0.05` min (3 s) via DevTools console: `await chrome.storage.local.set({ settings: { hintDelayMinutes: 0.05, celebrationHoverSeconds: 1.5, minWordThreshold: 30, showReloadHint: true, showNextWordPreview: false, notificationsEnabled: true, showAutoModeToast: true, showHintToast: true, showNoParagraphToast: true, autoContinue: false } })`. Reload the smoke article and wait 3 seconds without clicking the hidden word. The `InPageToast` (hint variant) fades in at top-right: a small **Word Hunter logo button** on the left (clicking it opens the popup), the text "The word is hidden on this page.", and an × dismiss button.
+- [ ] Click the logo button on the toast — the extension popup opens.
 - [ ] Click the word — `CelebrationPopup` shows `hint used`. Dismiss. Set a **new** word and reload. Find it immediately — popup shows `no hint` (stale hint flag is cleared when a new hunt starts).
 
 ### Settings — minWordThreshold slider
@@ -109,7 +127,7 @@ Use `tests/fixtures/smoke-hidden-elements.html` (open as a `file://` URL with an
 
 ### Clear flows
 
-- [ ] **Settings → Clear all hunts**: `Stats` tab returns to the editorial empty state; the Hunt Collection on the Play tab returns to `0 / N` with every slot a silhouette.
+- [ ] **Stats → Clear all hunts**: `Stats` tab returns to the editorial empty state; the Hunt Collection on the Play tab returns to `0 / N` with every slot a silhouette.
 - [ ] **Play → Clear**: the ActiveWord card returns to "No active word"; the previously active slot loses its primary-yellow glow.
 
 ## Known issues / limitations
