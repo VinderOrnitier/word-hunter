@@ -11,6 +11,13 @@ import "@fontsource/fraunces/600-italic.css";
 import "../shared/styles/tokens.css";
 import "./styles/popup.css";
 import { App } from "./App";
+import { LocaleProvider } from "../i18n";
 
 const root = document.getElementById("app");
-if (root) render(<App />, root);
+if (root)
+  render(
+    <LocaleProvider>
+      <App />
+    </LocaleProvider>,
+    root
+  );
