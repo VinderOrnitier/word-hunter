@@ -1,4 +1,5 @@
 import type { JSX } from "preact";
+import { useT } from "../../i18n";
 import type { HuntRecord, WordSource } from "../../shared/types";
 import { Button } from "../components/Button";
 import { ConfirmOverlay } from "../components/ConfirmOverlay";
@@ -9,6 +10,7 @@ import { useStorage } from "../hooks/useStorage";
 import { formatDuration, formatRelative } from "../utils/format";
 
 export function StatsTab(): JSX.Element {
+  const t = useT();
   const [finds, setFinds] = useStorage("finds", []);
   const clearAction = useConfirmAction({ onConfirm: () => setFinds([]) });
 
@@ -16,8 +18,8 @@ export function StatsTab(): JSX.Element {
     return (
       <div class="wh-stats__empty">
         <Icon name="search" size={28} />
-        <span class="wh-body-sm">No words found yet.</span>
-        <span class="wh-editorial">your hunts will appear here.</span>
+        <span class="wh-body-sm">{t("stats_empty_body")}</span>
+        <span class="wh-editorial">{t("stats_empty_editorial")}</span>
       </div>
     );
   }
@@ -28,14 +30,14 @@ export function StatsTab(): JSX.Element {
     <div class="wh-stats">
       <div class="wh-stats__confirm-anchor">
         <div class="wh-stats__header">
-          <Eyebrow>{finds.length} hunts</Eyebrow>
+          <Eyebrow>{t("stats_n_hunts", { count: finds.length })}</Eyebrow>
           <Button variant="ghost" size="sm" leftIcon="trash" onClick={clearAction.arm}>
-            Clear
+            {t("stats_clear")}
           </Button>
         </div>
         {clearAction.armed && (
           <ConfirmOverlay
-            prompt="Clear all hunts?"
+            prompt={t("stats_clear_confirm")}
             onConfirm={clearAction.confirm}
             onCancel={clearAction.cancel}
           />
@@ -52,15 +54,16 @@ export function StatsTab(): JSX.Element {
 }
 
 function StatsHeader(): JSX.Element {
+  const t = useT();
   return (
     <div class="wh-stats__col-header" aria-hidden="true">
-      <span>Word</span>
-      <span>Found</span>
-      <span class="wh-stats__col-header--icon" data-tooltip="Duration">
+      <span>{t("stats_col_word")}</span>
+      <span>{t("stats_col_found")}</span>
+      <span class="wh-stats__col-header--icon" data-tooltip={t("stats_col_duration_tooltip")}>
         <Icon name="timer" size={11} />
       </span>
-      <span class="wh-stats__col-header--center">Hint</span>
-      <span class="wh-stats__col-header--center">Page</span>
+      <span class="wh-stats__col-header--center">{t("stats_col_hint_header")}</span>
+      <span class="wh-stats__col-header--center">{t("stats_col_page")}</span>
     </div>
   );
 }
@@ -72,6 +75,7 @@ const DOT_COLOR: Record<WordSource, string> = {
 };
 
 function StatsRow({ record }: { record: HuntRecord }): JSX.Element {
+  const t = useT();
   const dotColor = record.list ? DOT_COLOR[record.list] : "var(--wh-fg-3)";
 
   return (
@@ -85,8 +89,8 @@ function StatsRow({ record }: { record: HuntRecord }): JSX.Element {
       <span
         class={record.hintUsed ? "wh-stats__hint wh-stats__hint--used" : "wh-stats__hint"}
         role="img"
-        aria-label={record.hintUsed ? "hint used" : "no hint"}
-        data-tooltip={record.hintUsed ? "Hint used" : "No hint"}
+        aria-label={record.hintUsed ? t("stats_hint_used_aria") : t("stats_no_hint_aria")}
+        data-tooltip={record.hintUsed ? t("stats_hint_used_tooltip") : t("stats_no_hint_tooltip")}
       />
       <a
         class="wh-stats__link"

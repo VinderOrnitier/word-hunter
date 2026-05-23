@@ -1,5 +1,6 @@
 import type { JSX } from "preact";
 import logoUrl from "../../assets/logo.png";
+import { useT } from "../../i18n";
 import { Icon } from "./Icon";
 
 interface PopupHeaderProps {
@@ -8,6 +9,7 @@ interface PopupHeaderProps {
 }
 
 export function PopupHeader({ onRules, rulesActive }: PopupHeaderProps): JSX.Element {
+  const t = useT();
   return (
     <header class="wh-header">
       <div class="wh-header__lockup">
@@ -24,7 +26,7 @@ export function PopupHeader({ onRules, rulesActive }: PopupHeaderProps): JSX.Ele
       <button
         type="button"
         class={`wh-header__rules-btn${rulesActive ? " wh-header__rules-btn--active" : ""}`}
-        aria-label="Rules"
+        aria-label={t("header_rules_aria")}
         aria-pressed={rulesActive ? "true" : "false"}
         onClick={onRules}
       >

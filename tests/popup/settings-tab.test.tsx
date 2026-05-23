@@ -388,4 +388,13 @@ describe("SettingsTab", () => {
       });
     });
   });
+
+  it("renders the language selector with four options in native script", () => {
+    setupChromeMock();
+    render(<SettingsTab />);
+    expect(screen.getByRole("option", { name: "English" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "Українська" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "Deutsch" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "日本語" })).toBeInTheDocument();
+  });
 });

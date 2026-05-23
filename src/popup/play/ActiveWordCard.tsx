@@ -1,4 +1,5 @@
 import type { JSX } from "preact";
+import { useT } from "../../i18n";
 import { resolveArt } from "../../shared/art-resolver";
 import type { ActiveWord, WordSource } from "../../shared/types";
 import { Icon } from "../components/Icon";
@@ -9,6 +10,8 @@ interface ActiveWordCardProps {
 }
 
 export function ActiveWordCard({ activeWord, onClear }: ActiveWordCardProps): JSX.Element {
+  const t = useT();
+
   if (!activeWord) {
     return (
       <div class="wh-active-card wh-active-card--empty">
@@ -16,8 +19,8 @@ export function ActiveWordCard({ activeWord, onClear }: ActiveWordCardProps): JS
           <Icon name="search" size={18} />
         </div>
         <div class="wh-active-card__body">
-          <span class="wh-active-card__eyebrow">No active word</span>
-          <span class="wh-active-card__hint">pick a word below to start the hunt.</span>
+          <span class="wh-active-card__eyebrow">{t("active_word_empty_eyebrow")}</span>
+          <span class="wh-active-card__hint">{t("active_word_empty_hint")}</span>
         </div>
       </div>
     );
@@ -25,7 +28,6 @@ export function ActiveWordCard({ activeWord, onClear }: ActiveWordCardProps): JS
 
   const source: WordSource = activeWord.list ?? "custom";
   const art = resolveArt(activeWord.word, source);
-
   const isIconArt = source === "custom" || !art;
 
   return (
@@ -37,14 +39,14 @@ export function ActiveWordCard({ activeWord, onClear }: ActiveWordCardProps): JS
         {renderArt(source, art)}
       </div>
       <div class="wh-active-card__body">
-        <span class="wh-active-card__eyebrow">Active word</span>
+        <span class="wh-active-card__eyebrow">{t("active_word_eyebrow")}</span>
         <span class="wh-active-card__word">{activeWord.word}</span>
       </div>
       <button
         type="button"
         class="wh-active-card__stop"
-        title="Stop hunt"
-        aria-label="Clear active word"
+        title={t("active_word_stop_title")}
+        aria-label={t("active_word_stop_aria")}
         onClick={onClear}
       >
         <Icon name="x" size={14} />
