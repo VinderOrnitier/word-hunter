@@ -1,7 +1,7 @@
 import type { JSX } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
-import { MAX_CUSTOM_LEN, validateCustomWord } from "../../shared/word-validation";
 import { useT } from "../../i18n";
+import { MAX_CUSTOM_LEN, validateCustomWord } from "../../shared/word-validation";
 import { Button } from "../components/Button";
 import { Field } from "../components/Field";
 import { Icon } from "../components/Icon";

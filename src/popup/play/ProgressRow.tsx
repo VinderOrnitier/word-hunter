@@ -1,7 +1,7 @@
 import type { JSX } from "preact";
 import { useState } from "preact/hooks";
-import type { Achievement, CollectionStats, StreakStats } from "../collection/types";
 import { useT } from "../../i18n";
+import type { Achievement, CollectionStats, StreakStats } from "../collection/types";
 import { Icon } from "../components/Icon";
 
 interface ProgressRowProps {

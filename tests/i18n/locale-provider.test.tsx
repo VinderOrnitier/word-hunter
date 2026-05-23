@@ -1,6 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/preact";
-import { h } from "preact";
-import { LocaleProvider, useT, getLocale } from "../../src/i18n";
+import { getLocale, LocaleProvider, useT } from "../../src/i18n";
 
 type StorageChangeListener = (
   changes: Record<string, chrome.storage.StorageChange>,
@@ -58,9 +57,7 @@ describe("useT()", () => {
         <EyebrowOutput />
       </LocaleProvider>
     );
-    await waitFor(() =>
-      expect(screen.getByTestId("output")).toHaveTextContent("Active word")
-    );
+    await waitFor(() => expect(screen.getByTestId("output")).toHaveTextContent("Active word"));
   });
 
   it("re-renders without error when locale storage changes", async () => {
@@ -70,13 +67,9 @@ describe("useT()", () => {
         <EyebrowOutput />
       </LocaleProvider>
     );
-    await waitFor(() =>
-      expect(screen.getByTestId("output")).toHaveTextContent("Active word")
-    );
+    await waitFor(() => expect(screen.getByTestId("output")).toHaveTextContent("Active word"));
     fireChange({ locale: { newValue: "uk", oldValue: "en" } });
-    await waitFor(() =>
-      expect(screen.getByTestId("output")).toHaveTextContent("Active word")
-    );
+    await waitFor(() => expect(screen.getByTestId("output")).toHaveTextContent("Active word"));
   });
 });
 

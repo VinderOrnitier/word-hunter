@@ -1,9 +1,9 @@
-import { createContext, type ComponentChildren } from "preact";
-import { useCallback, useContext } from "preact/hooks";
 import type { JSX } from "preact";
-import type { Locale, MessageKey } from "./types";
-import { en } from "./messages/en";
+import { type ComponentChildren, createContext } from "preact";
+import { useCallback, useContext } from "preact/hooks";
 import { useStorage } from "../popup/hooks/useStorage";
+import { en } from "./messages/en";
+import type { Locale, MessageKey } from "./types";
 
 export type { Locale, MessageKey } from "./types";
 
@@ -25,34 +25,21 @@ export function t(
 ): string {
   const raw = dictionaries[locale][key] ?? en[key];
   if (!params) return raw;
-  return Object.entries(params).reduce(
-    (str, [k, v]) => str.replaceAll(`{${k}}`, String(v)),
-    raw
-  );
+  return Object.entries(params).reduce((str, [k, v]) => str.replaceAll(`{${k}}`, String(v)), raw);
 }
 
 // ---------------------------------------------------------------------------
 // Preact context
 // ---------------------------------------------------------------------------
 
-type TFunction = (
-  key: MessageKey,
-  params?: Record<string, string | number>
-) => string;
+type TFunction = (key: MessageKey, params?: Record<string, string | number>) => string;
 
 const defaultT: TFunction = (key, params) => t(key, "en", params);
 const LocaleContext = createContext<TFunction>(defaultT);
 
-export function LocaleProvider({
-  children,
-}: {
-  children: ComponentChildren;
-}): JSX.Element {
+export function LocaleProvider({ children }: { children: ComponentChildren }): JSX.Element {
   const [locale] = useStorage("locale", "en");
-  const boundT = useCallback<TFunction>(
-    (key, params) => t(key, locale, params),
-    [locale]
-  );
+  const boundT = useCallback<TFunction>((key, params) => t(key, locale, params), [locale]);
   return <LocaleContext.Provider value={boundT}>{children}</LocaleContext.Provider>;
 }
 

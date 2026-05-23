@@ -1,9 +1,9 @@
 import type { JSX } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { DEFAULT_SETTINGS } from "../../shared/constants";
-import type { Locale } from "../../i18n/types";
-import type { GameSettings } from "../../shared/types";
 import { useT } from "../../i18n";
+import type { Locale } from "../../i18n/types";
+import { DEFAULT_SETTINGS } from "../../shared/constants";
+import type { GameSettings } from "../../shared/types";
 import { Button } from "../components/Button";
 import { Eyebrow } from "../components/Eyebrow";
 import { Field } from "../components/Field";
@@ -66,9 +66,7 @@ export function SettingsTab(): JSX.Element {
             id="setting-language"
             class="wh-select"
             value={draftLocale}
-            onChange={(e) =>
-              setDraftLocale((e.target as HTMLSelectElement).value as Locale)
-            }
+            onChange={(e) => setDraftLocale((e.target as HTMLSelectElement).value as Locale)}
           >
             {LANGUAGE_OPTIONS.map(({ value, label }) => (
               <option key={value} value={value}>
@@ -221,7 +219,10 @@ export function SettingsTab(): JSX.Element {
           </button>
         </Field>
 
-        <Field label={t("settings_hint_reminder_label")} helper={t("settings_hint_reminder_helper")}>
+        <Field
+          label={t("settings_hint_reminder_label")}
+          helper={t("settings_hint_reminder_helper")}
+        >
           <button
             type="button"
             role="switch"

@@ -1,6 +1,6 @@
 import type { JSX } from "preact";
-import type { MessageKey } from "../../i18n/types";
 import { useT } from "../../i18n";
+import type { MessageKey } from "../../i18n/types";
 import { Icon, type IconName } from "./Icon";
 
 export type TabId = "play" | "stats" | "settings" | "rules";

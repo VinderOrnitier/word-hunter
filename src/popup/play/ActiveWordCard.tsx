@@ -1,7 +1,7 @@
 import type { JSX } from "preact";
+import { useT } from "../../i18n";
 import { resolveArt } from "../../shared/art-resolver";
 import type { ActiveWord, WordSource } from "../../shared/types";
-import { useT } from "../../i18n";
 import { Icon } from "../components/Icon";
 
 interface ActiveWordCardProps {

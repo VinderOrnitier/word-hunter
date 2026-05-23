@@ -1,9 +1,9 @@
 import type { JSX } from "preact";
 import { useMemo, useState } from "preact/hooks";
+import { useT } from "../../i18n";
+import type { MessageKey } from "../../i18n/types";
 import { DEFAULT_SETTINGS } from "../../shared/constants";
 import type { ActiveWord } from "../../shared/types";
-import type { MessageKey } from "../../i18n/types";
-import { useT } from "../../i18n";
 import { CollectionGrid } from "../collection/CollectionGrid";
 import { computeCatchCounts } from "../collection/computeCatchCounts";
 import { computeCollectionStats } from "../collection/computeCollectionStats";
@@ -103,7 +103,12 @@ export function PlayTab(): JSX.Element {
 
         <ActiveWordCard activeWord={activeWord} onClear={clear} />
 
-        <div class="wh-chip-group" role="tablist" data-group="list" aria-label={t("play_word_list_aria")}>
+        <div
+          class="wh-chip-group"
+          role="tablist"
+          data-group="list"
+          aria-label={t("play_word_list_aria")}
+        >
           {LIST_CHIPS.map((chip) => (
             <button
               key={chip.value}
@@ -120,7 +125,12 @@ export function PlayTab(): JSX.Element {
 
         <ProgressRow stats={stats} streak={streak} achievements={achievements} />
 
-        <div class="wh-chip-group" role="tablist" data-group="filter" aria-label={t("play_filter_aria")}>
+        <div
+          class="wh-chip-group"
+          role="tablist"
+          data-group="filter"
+          aria-label={t("play_filter_aria")}
+        >
           {FILTER_CHIPS.map((chip) => (
             <button
               key={chip.value}

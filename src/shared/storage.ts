@@ -1,6 +1,6 @@
+import type { Locale } from "../i18n/types";
 import { DEFAULT_SETTINGS } from "./constants";
 import type { ActiveWord, GameSettings, HuntRecord, WordListName } from "./types";
-import type { Locale } from "../i18n/types";
 
 export type StorageSchema = {
   finds: HuntRecord[];

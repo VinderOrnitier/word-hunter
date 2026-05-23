@@ -21,9 +21,7 @@ describe("t()", () => {
         unlocked: 2,
         achTotal: 8,
       })
-    ).toBe(
-      "Progress: 5 of 24 words caught, 2 of 8 achievements unlocked"
-    );
+    ).toBe("Progress: 5 of 24 words caught, 2 of 8 achievements unlocked");
   });
 
   it("falls back to English when the requested locale has no translation", () => {

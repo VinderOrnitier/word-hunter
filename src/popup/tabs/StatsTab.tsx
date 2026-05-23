@@ -1,6 +1,6 @@
 import type { JSX } from "preact";
-import type { HuntRecord, WordSource } from "../../shared/types";
 import { useT } from "../../i18n";
+import type { HuntRecord, WordSource } from "../../shared/types";
 import { Button } from "../components/Button";
 import { ConfirmOverlay } from "../components/ConfirmOverlay";
 import { Eyebrow } from "../components/Eyebrow";
