@@ -1,6 +1,7 @@
 import type { JSX } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { MAX_CUSTOM_LEN, validateCustomWord } from "../../shared/word-validation";
+import { useT } from "../../i18n";
 import { Button } from "../components/Button";
 import { Field } from "../components/Field";
 import { Icon } from "../components/Icon";
@@ -20,12 +21,12 @@ export function CustomWordModal({
   onClose,
   onSubmit,
 }: CustomWordModalProps): JSX.Element | null {
+  const t = useT();
   const [value, setValue] = useState("");
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const dialogRef = useRef<HTMLDivElement | null>(null);
 
-  // Reset local state whenever the modal opens.
   useEffect(() => {
     if (open) {
       setValue("");
@@ -33,11 +34,10 @@ export function CustomWordModal({
     }
   }, [open]);
 
-  // Focus the input on open, and trap Tab navigation inside the dialog.
   useEffect(() => {
     if (!open) return;
 
-    const t = setTimeout(() => inputRef.current?.focus(), 0);
+    const timer = setTimeout(() => inputRef.current?.focus(), 0);
 
     function onKeyDown(e: KeyboardEvent): void {
       if (e.key === "Escape") {
@@ -68,7 +68,7 @@ export function CustomWordModal({
 
     document.addEventListener("keydown", onKeyDown);
     return () => {
-      clearTimeout(t);
+      clearTimeout(timer);
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [open, onClose]);
@@ -97,7 +97,7 @@ export function CustomWordModal({
         onKeyDown={(e) => {
           if (e.key === "Escape") onClose();
         }}
-        aria-label="Close dialog"
+        aria-label={t("custom_word_backdrop_aria")}
         tabIndex={-1}
         aria-hidden="true"
       />
@@ -105,18 +105,18 @@ export function CustomWordModal({
         class="wh-modal__dialog"
         role="dialog"
         aria-modal="true"
-        aria-label="Custom word"
+        aria-label={t("custom_word_dialog_aria")}
         ref={dialogRef}
       >
         <div class="wh-modal__header">
           <div class="wh-modal__title">
-            <span class="wh-modal__heading">Custom word</span>
+            <span class="wh-modal__heading">{t("custom_word_heading")}</span>
           </div>
           <button
             type="button"
             class="wh-modal__close"
-            aria-label="Close"
-            title="Close"
+            aria-label={t("custom_word_close_aria")}
+            title={t("custom_word_close_title")}
             onClick={onClose}
           >
             <Icon name="x" size={14} />
@@ -124,17 +124,17 @@ export function CustomWordModal({
         </div>
 
         <Field
-          label="Word"
+          label={t("custom_word_field_label")}
           htmlFor="custom-word-input"
           error={showError ? error : undefined}
           counter={counter}
-          helper={" "}
+          helper={" "}
         >
           <Input
             id="custom-word-input"
             value={value}
             onInput={setValue}
-            placeholder="serendipity"
+            placeholder={t("custom_word_placeholder")}
             mono
             error={showError}
             inputRef={inputRef}
@@ -143,10 +143,10 @@ export function CustomWordModal({
 
         <div class="wh-modal__footer">
           <Button variant="ghost" onClick={onClose}>
-            Cancel
+            {t("custom_word_cancel")}
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
-            Start hunt
+            {t("custom_word_submit")}
           </Button>
         </div>
       </div>

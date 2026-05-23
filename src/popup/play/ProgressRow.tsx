@@ -1,6 +1,7 @@
 import type { JSX } from "preact";
 import { useState } from "preact/hooks";
 import type { Achievement, CollectionStats, StreakStats } from "../collection/types";
+import { useT } from "../../i18n";
 import { Icon } from "../components/Icon";
 
 interface ProgressRowProps {
@@ -10,6 +11,7 @@ interface ProgressRowProps {
 }
 
 export function ProgressRow({ stats, streak, achievements }: ProgressRowProps): JSX.Element {
+  const t = useT();
   const [expanded, setExpanded] = useState(false);
   const pct = Math.round(stats.ratio * 100);
   const unlocked = achievements.filter((a) => a.unlocked).length;
@@ -22,7 +24,12 @@ export function ProgressRow({ stats, streak, achievements }: ProgressRowProps): 
         type="button"
         class={`wh-progress-row__button${expanded ? " is-expanded" : ""}`}
         aria-expanded={expanded}
-        aria-label={`Progress: ${stats.caught} of ${stats.total} words caught, ${unlocked} of ${total} achievements unlocked`}
+        aria-label={t("progress_aria_label", {
+          caught: stats.caught,
+          total: stats.total,
+          unlocked,
+          achTotal: total,
+        })}
         onClick={() => setExpanded((v) => !v)}
       >
         <span class="wh-progress-row__count">
@@ -56,22 +63,22 @@ export function ProgressRow({ stats, streak, achievements }: ProgressRowProps): 
       {expanded && (
         <div class="wh-progress-row__panel">
           <div class="wh-progress-row__streak">
-            <span class="wh-progress-row__eyebrow">Streak</span>
+            <span class="wh-progress-row__eyebrow">{t("progress_streak_eyebrow")}</span>
             <div class="wh-progress-row__streak-stats">
               <div class="wh-progress-row__stat wh-progress-row__stat--current">
                 <span class="wh-progress-row__stat-value">{streak.current}d</span>
-                <span class="wh-progress-row__stat-label">current</span>
+                <span class="wh-progress-row__stat-label">{t("progress_current_label")}</span>
               </div>
               <span class="wh-progress-row__stat-sep" aria-hidden="true" />
               <div class="wh-progress-row__stat">
                 <span class="wh-progress-row__stat-value">{streak.longest}d</span>
-                <span class="wh-progress-row__stat-label">longest</span>
+                <span class="wh-progress-row__stat-label">{t("progress_longest_label")}</span>
               </div>
             </div>
           </div>
           <div class="wh-progress-row__divider" aria-hidden="true" />
           <div class="wh-progress-row__achievements">
-            <span class="wh-progress-row__eyebrow">Achievements</span>
+            <span class="wh-progress-row__eyebrow">{t("progress_achievements_eyebrow")}</span>
             <div class="wh-progress-row__ach-list">
               {achievements.map((a) => (
                 <span
