@@ -44,5 +44,6 @@ updates:
       actions:
         applies-to: version-updates
         update-types:
+          - major
           - minor
           - patch

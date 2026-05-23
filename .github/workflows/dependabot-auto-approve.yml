@@ -1,0 +1,33 @@
+name: Dependabot auto-approve
+
+# Runs in the base-branch context (pull_request_target) so GITHUB_TOKEN
+# has write access to approve. We never check out PR code here, so the
+# elevated permission is safe.
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  auto-approve:
+    runs-on: ubuntu-latest
+    # Only fire for Dependabot PRs
+    if: github.actor == 'dependabot[bot]'
+
+    steps:
+      - name: Fetch Dependabot metadata
+        id: meta
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      # Auto-approve GitHub Actions dependency updates (all update types).
+      # npm updates are intentionally excluded — those get a human review.
+      - name: Approve GitHub Actions updates
+        if: steps.meta.outputs.package-ecosystem == 'github_actions'
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
