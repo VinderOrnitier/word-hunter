@@ -36,8 +36,19 @@ export function CelebrationPopup({
   const nextArtIsImage = typeof next?.art === "string" && IMAGE_URL_RE.test(next.art);
 
   return (
-    <div class="hw-celebration" onClick={onDismiss}>
-      <div class="hw-celebration__wrap" onClick={(e) => e.stopPropagation()}>
+    <div class="hw-celebration">
+      <button
+        type="button"
+        class="hw-celebration__dismiss"
+        onClick={onDismiss}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") onDismiss();
+        }}
+        aria-label="Dismiss"
+        tabIndex={-1}
+        aria-hidden="true"
+      />
+      <div class="hw-celebration__wrap" role="dialog" aria-modal="true" aria-label="Word found">
         <div class="hw-celebration__modal">
           {art !== undefined && (
             <div class="hw-celebration__art" aria-hidden="true">
@@ -92,7 +103,7 @@ export function CelebrationPopup({
           </div>
         )}
         {onClear !== undefined && (
-          <button class="hw-celebration__clear-btn" onClick={onClear}>
+          <button type="button" class="hw-celebration__clear-btn" onClick={onClear}>
             Remove word
           </button>
         )}

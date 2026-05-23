@@ -36,7 +36,9 @@ export function HiddenWord({
   const cls = found ? "hw-word hw-word--found" : "hw-word";
 
   return (
-    <span
+    <button
+      type="button"
+      tabIndex={-1}
       class={cls}
       onClick={onFind}
       onMouseEnter={handleMouseEnter}
@@ -46,6 +48,6 @@ export function HiddenWord({
       {[...word].map((c, i) => (
         <span key={i} class="hw-char" data-char={c} />
       ))}
-    </span>
+    </button>
   );
 }

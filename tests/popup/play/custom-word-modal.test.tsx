@@ -19,7 +19,7 @@ describe("CustomWordModal", () => {
   it("calls onClose when the backdrop is clicked", () => {
     const onClose = jest.fn();
     const { container } = render(<CustomWordModal open onClose={onClose} onSubmit={() => {}} />);
-    const backdrop = container.querySelector(".wh-modal__backdrop") as HTMLElement;
+    const backdrop = container.querySelector(".wh-modal__backdrop-dismiss") as HTMLElement;
     fireEvent.click(backdrop);
     expect(onClose).toHaveBeenCalledTimes(1);
   });

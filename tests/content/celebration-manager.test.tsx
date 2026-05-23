@@ -36,7 +36,7 @@ describe("CelebrationManager", () => {
 
   it("clicking the backdrop dismisses the popup", () => {
     CelebrationManager(document).show(PROPS);
-    const backdrop = document.querySelector(".hw-celebration") as HTMLElement;
+    const backdrop = document.querySelector(".hw-celebration__dismiss") as HTMLElement;
     backdrop.click();
     expect(document.querySelector(".hw-celebration")).toBeNull();
   });
@@ -48,7 +48,7 @@ describe("CelebrationManager", () => {
   it("calls afterDismiss when the user clicks the backdrop", () => {
     const afterDismiss = jest.fn();
     CelebrationManager(document).show(PROPS, afterDismiss);
-    const backdrop = document.querySelector(".hw-celebration") as HTMLElement;
+    const backdrop = document.querySelector(".hw-celebration__dismiss") as HTMLElement;
     backdrop.click();
     expect(afterDismiss).toHaveBeenCalledTimes(1);
   });

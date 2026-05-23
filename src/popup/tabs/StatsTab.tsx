@@ -41,12 +41,12 @@ export function StatsTab(): JSX.Element {
           />
         )}
       </div>
-      <div class="wh-stats__table" role="list">
+      <ul class="wh-stats__table">
         <StatsHeader />
         {sorted.map((r) => (
           <StatsRow key={`${r.word}-${r.foundAt}`} record={r} />
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
@@ -75,7 +75,7 @@ function StatsRow({ record }: { record: HuntRecord }): JSX.Element {
   const dotColor = record.list ? DOT_COLOR[record.list] : "var(--wh-fg-3)";
 
   return (
-    <div class="wh-stats__row" role="listitem">
+    <li class="wh-stats__row">
       <span class="wh-stats__word" data-tooltip={record.word}>
         <span class="wh-stats__dot" style={{ background: dotColor }} />
         <span class="wh-stats__word-text">{record.word}</span>
@@ -84,6 +84,7 @@ function StatsRow({ record }: { record: HuntRecord }): JSX.Element {
       <span class="wh-stats__meta">{formatDuration(record.searchDurationSeconds)}</span>
       <span
         class={record.hintUsed ? "wh-stats__hint wh-stats__hint--used" : "wh-stats__hint"}
+        role="img"
         aria-label={record.hintUsed ? "hint used" : "no hint"}
         data-tooltip={record.hintUsed ? "Hint used" : "No hint"}
       />
@@ -97,6 +98,6 @@ function StatsRow({ record }: { record: HuntRecord }): JSX.Element {
       >
         <Icon name="external" size={12} />
       </a>
-    </div>
+    </li>
   );
 }

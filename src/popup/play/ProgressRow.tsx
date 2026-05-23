@@ -22,7 +22,7 @@ export function ProgressRow({ stats, streak, achievements }: ProgressRowProps): 
         type="button"
         class={`wh-progress-row__button${expanded ? " is-expanded" : ""}`}
         aria-expanded={expanded}
-        aria-label="Progress"
+        aria-label={`Progress: ${stats.caught} of ${stats.total} words caught, ${unlocked} of ${total} achievements unlocked`}
         onClick={() => setExpanded((v) => !v)}
       >
         <span class="wh-progress-row__count">
@@ -33,7 +33,7 @@ export function ProgressRow({ stats, streak, achievements }: ProgressRowProps): 
         </span>
         <span
           class={`wh-progress-row__ach-chip${expanded ? " is-expanded" : ""}`}
-          aria-label={`${unlocked} of ${total} achievements unlocked`}
+          aria-hidden="true"
         >
           <span
             class={`wh-progress-row__ach-icon${hasUnlocked ? " is-unlocked" : ""}`}
