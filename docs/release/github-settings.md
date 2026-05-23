@@ -38,14 +38,19 @@ there is no file for it in the repo. Tick each item once it's set.
 
 ---
 
-## 2. Branches → branch protection rule for `master`
+## 2. Rulesets → `master` branch protection
 
-Path: **Settings → Branches → Add rule → Branch name pattern: `master`**.
+Path: **Settings → Rules → Rulesets** (the new GitHub Rulesets system, *not*
+the legacy *Settings → Branches → Branch protection rules*). The active ruleset
+is **"master branch protection"**.
 
 - [ ] **Require a pull request before merging** — on.
-  - [ ] **Required approvals** — `1` if you have a co-maintainer, `0` if solo. With 0 approvals the rule still enforces status checks, so it's worth keeping the rule on even solo.
+  - [ ] **Required approvals** — `0` (solo project; CI is the quality gate).
   - [ ] **Dismiss stale pull request approvals when new commits are pushed** — on.
-  - [ ] **Require review from Code Owners** — on (CODEOWNERS already maps `*` to `@VinderOrnitier`).
+  - [x] **Require review from Code Owners** — **off** (deliberately disabled for
+    solo development: code-owner review blocked the Dependabot automation
+    workflow without any meaningful safety benefit; CI checks serve that role.
+    See [`.github/workflows/dependabot-auto-approve.yml`](../../.github/workflows/dependabot-auto-approve.yml)).
 - [ ] **Require status checks to pass before merging** — on.
   - [ ] **Require branches to be up to date before merging** — on.
   - [ ] Add the CI check: `Lint, typecheck, test, build` (appears in the list once [the CI workflow](../../.github/workflows/ci.yml) has run at least once).
@@ -77,7 +82,10 @@ Path: **Settings → Branches → Add rule → Branch name pattern: `master`**.
 - [ ] **Actions permissions** — *Allow VinderOrnitier, and select non-VinderOrnitier, actions and reusable workflows* (already implicit). Restrict to verified creators if you want to be stricter.
 - [ ] **Fork pull request workflows from outside collaborators** — *Require approval for first-time contributors*. Prevents drive-by PRs from burning CI minutes or exfiltrating secrets via a malicious workflow.
 - [ ] **Workflow permissions** — *Read repository contents and packages permissions* (the more restrictive default). [`ci.yml`](../../.github/workflows/ci.yml) already declares `permissions: contents: read` explicitly per-workflow.
-- [ ] **Allow GitHub Actions to create and approve pull requests** — off (Dependabot uses a separate token).
+- [x] **Allow GitHub Actions to create and approve pull requests** — **on**
+  (`GITHUB_TOKEN` must be able to create PR reviews for the Dependabot
+  auto-approve workflow to work; see
+  [`.github/workflows/dependabot-auto-approve.yml`](../../.github/workflows/dependabot-auto-approve.yml)).
 
 ---
 

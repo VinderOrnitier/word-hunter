@@ -11,6 +11,9 @@ Pre-release. Not yet published to the Chrome Web Store.
 
 ### Added
 
+- Dependabot `github-actions` ecosystem now groups **major, minor, and patch**
+  updates into a single weekly PR (previously major updates arrived as
+  separate PRs, bypassing the group).
 - Public-release artifacts: `LICENSE` (MIT), `PRIVACY.md`, `SECURITY.md`,
   `NOTICE.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `.editorconfig`,
   GitHub issue / pull-request templates, `CODEOWNERS`, and `dependabot`
@@ -26,6 +29,10 @@ Pre-release. Not yet published to the Chrome Web Store.
   repo settings that should be in place before the repo goes public
   (branch protection, Dependabot, CodeQL, secret scanning, allowed
   merge types, fork-PR workflow approval).
+- `.github/workflows/dependabot-auto-approve.yml` — auto-approves and merges
+  Dependabot PRs for the `github-actions` ecosystem once CI is green (npm
+  updates are intentionally excluded and still require human review). Falls
+  back to enabling GitHub's auto-merge via GraphQL when CI hasn't finished yet.
 - `.github/workflows/release.yml` — tag-triggered release workflow:
   verifies tag matches `package.json#version`, builds, packages
   `dist/` as `word-hunter-v{version}.zip`, extracts the matching
