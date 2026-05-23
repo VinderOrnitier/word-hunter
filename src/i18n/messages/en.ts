@@ -37,6 +37,9 @@ export const en = {
   progress_longest_label: "longest",
   progress_achievements_eyebrow: "Achievements",
 
+  // Confirm overlay
+  confirm_yes: "Yes",
+
   // Custom word modal
   custom_word_backdrop_aria: "Close dialog",
   custom_word_dialog_aria: "Custom word",

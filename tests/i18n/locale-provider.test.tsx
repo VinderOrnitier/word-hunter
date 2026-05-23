@@ -62,6 +62,22 @@ describe("useT()", () => {
       expect(screen.getByTestId("output")).toHaveTextContent("Active word")
     );
   });
+
+  it("re-renders without error when locale storage changes", async () => {
+    const { fireChange } = setupChromeMock({ locale: "en" });
+    render(
+      <LocaleProvider>
+        <EyebrowOutput />
+      </LocaleProvider>
+    );
+    await waitFor(() =>
+      expect(screen.getByTestId("output")).toHaveTextContent("Active word")
+    );
+    fireChange({ locale: { newValue: "uk", oldValue: "en" } });
+    await waitFor(() =>
+      expect(screen.getByTestId("output")).toHaveTextContent("Active word")
+    );
+  });
 });
 
 describe("getLocale()", () => {
