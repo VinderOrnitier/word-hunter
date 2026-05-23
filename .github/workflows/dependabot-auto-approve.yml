@@ -1,13 +1,14 @@
 name: Dependabot auto-approve
 
 # Runs in the base-branch context (pull_request_target) so GITHUB_TOKEN
-# has write access to approve. We never check out PR code here, so the
-# elevated permission is safe.
+# has write access to approve and enable auto-merge. We never check out
+# PR code here, so the elevated permission is safe.
 on:
   pull_request_target:
     types: [opened, synchronize, reopened]
 
 permissions:
+  contents: write
   pull-requests: write
 
 jobs:
@@ -23,11 +24,12 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      # Auto-approve GitHub Actions dependency updates (all update types).
+      # Auto-approve and enable auto-merge for GitHub Actions dependency
+      # updates (all update types — patch, minor, major).
       # npm updates are intentionally excluded — those get a human review.
       # Uses actions/github-script so the authenticated client comes from the
       # workflow context directly (avoids GH_TOKEN env-var auth issues).
-      - name: Approve GitHub Actions updates
+      - name: Approve and auto-merge GitHub Actions updates
         if: steps.meta.outputs.package-ecosystem == 'github_actions'
         uses: actions/github-script@v7
         with:
@@ -37,4 +39,29 @@ jobs:
               repo: context.repo.repo,
               pull_number: context.payload.pull_request.number,
               event: 'APPROVE'
+            });
+            await github.rest.pulls.updateBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            }).catch(() => {
+              // Branch may already be up to date — ignore
+            });
+            await github.rest.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              merge_method: 'squash',
+            }).catch(async (err) => {
+              // CI not yet green — fall back to enabling auto-merge via GraphQL
+              if (err.status === 405 || err.status === 422) {
+                await github.graphql(`
+                  mutation($prId: ID!) {
+                    enablePullRequestAutoMerge(input: {
+                      pullRequestId: $prId,
+                      mergeMethod: SQUASH
+                    }) { pullRequest { number } }
+                  }
+                `, { prId: context.payload.pull_request.node_id });
+              }
             });
