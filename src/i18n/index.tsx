@@ -2,6 +2,7 @@ import type { JSX } from "preact";
 import { type ComponentChildren, createContext } from "preact";
 import { useCallback, useContext } from "preact/hooks";
 import { useStorage } from "../popup/hooks/useStorage";
+import { de } from "./messages/de";
 import { en } from "./messages/en";
 import { uk } from "./messages/uk";
 import type { Locale, MessageKey } from "./types";
@@ -15,7 +16,7 @@ export type { Locale, MessageKey } from "./types";
 const dictionaries: Record<Locale, Partial<Record<MessageKey, string>>> = {
   en,
   uk,
-  de: {},
+  de,
   ja: {},
 };
 

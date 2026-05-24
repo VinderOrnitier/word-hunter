@@ -27,8 +27,8 @@ export const uk: Record<MessageKey, string> = {
 
   // Reload hint
   reload_hint_info_title: "Можна вимкнути в Налаштуваннях.",
-  reload_hint_text: "Перезавантажте сторінку, щоб почати полювання.",
-  reload_hint_reload: "Перезавантажити",
+  reload_hint_text: "Оновіть сторінку, щоб почати.",
+  reload_hint_reload: "Оновити",
   reload_hint_dismiss_aria: "Закрити",
 
   // Progress row
@@ -69,8 +69,8 @@ export const uk: Record<MessageKey, string> = {
   stats_col_word: "Слово",
   stats_col_found: "Знайдено",
   stats_col_duration_tooltip: "Тривалість",
-  stats_col_hint_header: "Підказка",
-  stats_col_page: "Сторінка",
+  stats_col_hint_header: "Підк",
+  stats_col_page: "Сайт",
   stats_hint_used_aria: "підказка використана",
   stats_no_hint_aria: "без підказки",
   stats_hint_used_tooltip: "Підказка використана",
