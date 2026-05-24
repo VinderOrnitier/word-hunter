@@ -25,7 +25,11 @@ describe("t()", () => {
   });
 
   it("falls back to English when the requested locale has no translation", () => {
-    expect(t("active_word_eyebrow", "de")).toBe("Active word");
+    expect(t("active_word_eyebrow", "ja")).toBe("Active word");
+  });
+
+  it("returns the German translation when de locale is selected", () => {
+    expect(t("active_word_eyebrow", "de")).toBe("Aktives Wort");
   });
 
   it("returns the Ukrainian translation when uk locale is selected", () => {
