@@ -96,4 +96,29 @@ describe("HintTimer", () => {
     closeBtn.click();
     expect(document.querySelector(".hw-toast--hint")).toBeNull();
   });
+
+  describe("find button wiring", () => {
+    it("toast has no find button when start() is called without onFind", () => {
+      const timer = HintTimer(document, () => "en");
+      timer.start(1);
+      jest.advanceTimersByTime(60_000);
+      expect(document.querySelector(".hw-toast__find")).toBeNull();
+    });
+
+    it("toast has a find button when start() is called with onFind", () => {
+      const timer = HintTimer(document, () => "en");
+      timer.start(1, jest.fn());
+      jest.advanceTimersByTime(60_000);
+      expect(document.querySelector(".hw-toast__find")).not.toBeNull();
+    });
+
+    it("clicking the find button calls the onFind callback", () => {
+      const onFind = jest.fn();
+      const timer = HintTimer(document, () => "en");
+      timer.start(1, onFind);
+      jest.advanceTimersByTime(60_000);
+      (document.querySelector(".hw-toast__find") as HTMLElement).click();
+      expect(onFind).toHaveBeenCalledTimes(1);
+    });
+  });
 });

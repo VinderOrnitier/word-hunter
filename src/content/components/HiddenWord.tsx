@@ -4,6 +4,7 @@ import { useRef, useState } from "preact/hooks";
 export interface HiddenWordProps {
   word: string;
   found: boolean;
+  hinted?: boolean;
   onFind?: () => void;
   inheritedStyle?: JSX.CSSProperties;
   hoverRevealSeconds?: number;
@@ -12,6 +13,7 @@ export interface HiddenWordProps {
 export function HiddenWord({
   word,
   found,
+  hinted = false,
   onFind,
   inheritedStyle,
   hoverRevealSeconds = 0,
@@ -35,6 +37,11 @@ export function HiddenWord({
   const cursor = found || pointerReady ? "pointer" : "text";
   const cls = found ? "hw-word hw-word--found" : "hw-word";
 
+  const underlineColor = found ? "var(--wh-found)" : hinted ? "var(--wh-primary)" : null;
+  const backgroundImage = underlineColor
+    ? `linear-gradient(180deg, transparent 0, transparent 73%, ${underlineColor} 73%, ${underlineColor} 92%, transparent 92%)`
+    : undefined;
+
   return (
     <button
       type="button"
@@ -43,7 +50,7 @@ export function HiddenWord({
       onClick={onFind}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{ ...inheritedStyle, cursor }}
+      style={{ ...inheritedStyle, cursor, backgroundImage }}
     >
       {[...word].map((c, i) => (
         <span key={i} class="hw-char" data-char={c} />

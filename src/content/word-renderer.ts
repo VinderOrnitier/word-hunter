@@ -12,13 +12,17 @@ export interface WordRendererOptions {
   hoverRevealSeconds?: number;
 }
 
+export interface WordRendererResult {
+  setHinted: () => void;
+}
+
 export function WordRenderer(
   activeWord: ActiveWord,
   groups: Element[][],
   options: WordRendererOptions = {}
-): void {
+): WordRendererResult {
   const { onFind, onReview, hoverRevealSeconds } = options;
-  if (groups.length === 0) return;
+  if (groups.length === 0) return { setHinted: () => {} };
 
   const doc = groups[0][0].ownerDocument;
 
@@ -38,7 +42,7 @@ export function WordRenderer(
     if ((node as Text).parentElement?.closest(SKIP_SELECTOR)) continue;
     textNodes.push(node as Text);
   }
-  if (textNodes.length === 0) return;
+  if (textNodes.length === 0) return { setHinted: () => {} };
 
   const textNode = textNodes[Math.floor(Math.random() * textNodes.length)];
   const text = textNode.textContent ?? "";
@@ -64,21 +68,35 @@ export function WordRenderer(
   parent.insertBefore(doc.createTextNode(tail ? ` ${tail}` : tail), textNode);
   parent.removeChild(textNode);
 
-  render(
-    h(HiddenWordHost, {
-      activeWord,
-      onFind: onFind ?? (() => {}),
-      onReview,
-      hoverRevealSeconds,
-      inheritedStyle: {
-        fontFamily: computed.fontFamily,
-        fontSize: computed.fontSize,
-        color: computed.color,
-        lineHeight: computed.lineHeight,
-        fontWeight: computed.fontWeight,
-        fontStyle: computed.fontStyle,
-      },
-    }),
-    host
-  );
+  const inheritedStyle = {
+    fontFamily: computed.fontFamily,
+    fontSize: computed.fontSize,
+    color: computed.color,
+    lineHeight: computed.lineHeight,
+    fontWeight: computed.fontWeight,
+    fontStyle: computed.fontStyle,
+  };
+
+  const renderHost = (hinted: boolean): void => {
+    render(
+      h(HiddenWordHost, {
+        activeWord,
+        onFind: onFind ?? (() => {}),
+        onReview,
+        hoverRevealSeconds,
+        hinted,
+        inheritedStyle,
+      }),
+      host
+    );
+  };
+
+  renderHost(false);
+
+  return {
+    setHinted: () => {
+      renderHost(true);
+      host.scrollIntoView({ behavior: "smooth", block: "center" });
+    },
+  };
 }

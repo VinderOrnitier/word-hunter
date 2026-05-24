@@ -10,6 +10,7 @@ interface HiddenWordHostProps {
   onFind: (record: HuntRecord) => void | Promise<void>;
   onReview?: (record: HuntRecord) => void;
   hoverRevealSeconds?: number;
+  hinted?: boolean;
 }
 
 export function HiddenWordHost({
@@ -18,6 +19,7 @@ export function HiddenWordHost({
   onFind,
   onReview,
   hoverRevealSeconds,
+  hinted,
 }: HiddenWordHostProps): JSX.Element {
   const [found, setFound] = useState(false);
   const lastRecord = useRef<HuntRecord | null>(null);
@@ -54,6 +56,7 @@ export function HiddenWordHost({
     <HiddenWord
       word={activeWord.word}
       found={found}
+      hinted={hinted}
       onFind={handleFind}
       inheritedStyle={inheritedStyle}
       hoverRevealSeconds={hoverRevealSeconds}

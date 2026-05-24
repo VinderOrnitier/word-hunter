@@ -71,7 +71,7 @@ async function inject(): Promise<void> {
   }
 
   timer.cancel();
-  WordRenderer(activeWord, groups, {
+  const renderer = WordRenderer(activeWord, groups, {
     onFind: async (record) => {
       const result = await handleFind(record, activeWord.insertedAt, {
         getActiveWord,
@@ -114,7 +114,7 @@ async function inject(): Promise<void> {
     hoverRevealSeconds: settings.celebrationHoverSeconds,
   });
   if (settings.notificationsEnabled && settings.showHintToast) {
-    timer.start(settings.hintDelayMinutes);
+    timer.start(settings.hintDelayMinutes, renderer.setHinted);
   }
 }
 

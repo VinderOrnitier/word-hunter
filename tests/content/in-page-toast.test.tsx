@@ -73,4 +73,35 @@ describe("InPageToast", () => {
     fireEvent.click(container.querySelector(".hw-toast__close")!);
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+
+  describe("find button", () => {
+    it("is absent when onFind is not provided", () => {
+      const { container } = render(
+        <InPageToast message="Test" locale="en" variant="hint" onClose={() => {}} />
+      );
+      expect(container.querySelector(".hw-toast__find")).toBeNull();
+    });
+
+    it("is present when onFind is provided", () => {
+      const { container } = render(
+        <InPageToast
+          message="Test"
+          locale="en"
+          variant="hint"
+          onClose={() => {}}
+          onFind={() => {}}
+        />
+      );
+      expect(container.querySelector(".hw-toast__find")).not.toBeNull();
+    });
+
+    it("calls onFind when clicked", () => {
+      const onFind = jest.fn();
+      const { container } = render(
+        <InPageToast message="Test" locale="en" variant="hint" onClose={() => {}} onFind={onFind} />
+      );
+      fireEvent.click(container.querySelector(".hw-toast__find")!);
+      expect(onFind).toHaveBeenCalledTimes(1);
+    });
+  });
 });

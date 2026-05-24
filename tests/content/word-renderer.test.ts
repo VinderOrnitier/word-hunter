@@ -14,6 +14,7 @@ describe("WordRenderer", () => {
   beforeEach(() => {
     document.body.innerHTML = "";
     jest.restoreAllMocks();
+    Element.prototype.scrollIntoView = jest.fn();
   });
 
   it("inserts one .hw-char span per letter with correct data-char", () => {
@@ -185,6 +186,27 @@ describe("WordRenderer", () => {
     expect(wordEl.style.lineHeight).toBe("1.6");
     expect(wordEl.style.fontWeight).toBe("700");
     expect(wordEl.style.fontStyle).toBe("italic");
+  });
+
+  describe("setHinted", () => {
+    it("WordRenderer returns a setHinted function", () => {
+      const para = makePara(60);
+      const result = WordRenderer(eagle, [[para]]);
+      expect(typeof result.setHinted).toBe("function");
+    });
+
+    it("calling setHinted applies yellow underline to the rendered word", () => {
+      const para = makePara(60);
+      const { setHinted } = WordRenderer(eagle, [[para]]);
+      setHinted();
+      const word = document.querySelector(".hw-word") as HTMLElement;
+      expect(word.style.backgroundImage).toContain("var(--wh-primary)");
+    });
+
+    it("returns setHinted as a no-op when groups is empty", () => {
+      const result = WordRenderer(eagle, []);
+      expect(() => result.setHinted()).not.toThrow();
+    });
   });
 
   describe("word spacing", () => {

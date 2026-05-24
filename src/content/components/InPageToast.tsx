@@ -10,9 +10,16 @@ interface InPageToastProps {
   locale: Locale;
   variant: "hint" | "info";
   onClose: () => void;
+  onFind?: () => void;
 }
 
-export function InPageToast({ message, locale, variant, onClose }: InPageToastProps): JSX.Element {
+export function InPageToast({
+  message,
+  locale,
+  variant,
+  onClose,
+  onFind,
+}: InPageToastProps): JSX.Element {
   return (
     <div class={`hw-toast hw-toast--${variant}`}>
       <button
@@ -27,6 +34,30 @@ export function InPageToast({ message, locale, variant, onClose }: InPageToastPr
         <img src={logoUrl} width="20" height="20" alt="" aria-hidden="true" />
       </button>
       <span class="hw-toast__message">{message}</span>
+      {onFind != null && (
+        <button
+          type="button"
+          class="hw-toast__find"
+          onClick={onFind}
+          aria-label={t("toast_find_aria", locale)}
+          title={t("toast_find_aria", locale)}
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </button>
+      )}
       <button
         type="button"
         class="hw-toast__close"

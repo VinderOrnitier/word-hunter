@@ -117,6 +117,7 @@ export const en = {
   // InPageToast (shared aria labels)
   toast_open_aria: "Open Word Hunter",
   toast_dismiss_aria: "Dismiss",
+  toast_find_aria: "Find word",
 
   // Content-script toasts
   content_no_paragraph_message: "Not enough text to hide the word.",
