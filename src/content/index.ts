@@ -1,8 +1,8 @@
 import "../shared/styles/tokens.css";
 import "./styles/overlay.css";
 import { render } from "preact";
-import { getLocale as readLocale } from "../i18n";
 import type { Locale } from "../i18n";
+import { getLocale as readLocale } from "../i18n";
 import { pickRandomWord } from "../popup/collection/pickRandomWord";
 import { resolveArt } from "../shared/art-resolver";
 import {
@@ -25,10 +25,12 @@ import { ParagraphSelector } from "./paragraph-selector";
 import { WordRenderer } from "./word-renderer";
 
 let currentLocale: Locale = "en";
-readLocale().then((l) => { currentLocale = l; });
+readLocale().then((l) => {
+  currentLocale = l;
+});
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "local" && changes["locale"]?.newValue) {
-    currentLocale = changes["locale"].newValue as Locale;
+  if (area === "local" && changes.locale?.newValue) {
+    currentLocale = changes.locale.newValue as Locale;
   }
 });
 

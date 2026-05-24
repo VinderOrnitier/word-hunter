@@ -1,7 +1,7 @@
 import type { JSX } from "preact";
-import { t } from "../../i18n";
-import type { Locale } from "../../i18n";
 import rawLogoUrl from "../../assets/logo.png";
+import type { Locale } from "../../i18n";
+import { t } from "../../i18n";
 
 const logoUrl = chrome.runtime.getURL(rawLogoUrl.replace(/^\//, ""));
 
@@ -27,7 +27,12 @@ export function InPageToast({ message, locale, variant, onClose }: InPageToastPr
         <img src={logoUrl} width="20" height="20" alt="" aria-hidden="true" />
       </button>
       <span class="hw-toast__message">{message}</span>
-      <button type="button" class="hw-toast__close" onClick={onClose} aria-label={t("toast_dismiss_aria", locale)}>
+      <button
+        type="button"
+        class="hw-toast__close"
+        onClick={onClose}
+        aria-label={t("toast_dismiss_aria", locale)}
+      >
         <svg
           width="14"
           height="14"

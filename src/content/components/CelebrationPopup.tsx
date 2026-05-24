@@ -1,7 +1,7 @@
 import type { JSX } from "preact";
-import { t } from "../../i18n";
-import type { Locale } from "../../i18n";
 import rawPlaceholderUrl from "../../assets/pokemon/_placeholder.png";
+import type { Locale } from "../../i18n";
+import { t } from "../../i18n";
 
 const placeholderUrl = chrome.runtime.getURL(rawPlaceholderUrl.replace(/^\//, ""));
 
@@ -78,7 +78,9 @@ export function CelebrationPopup({
             <div class="hw-celebration__meta">
               <span>{durationS}s</span>
               <span class="hw-celebration__meta-sep">·</span>
-              <span>{hintUsed ? t("celebration_hint_used", locale) : t("celebration_no_hint", locale)}</span>
+              <span>
+                {hintUsed ? t("celebration_hint_used", locale) : t("celebration_no_hint", locale)}
+              </span>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { h, render } from "preact";
-import { t } from "../i18n";
 import type { Locale } from "../i18n";
+import { t } from "../i18n";
 import { InPageToast } from "./components/InPageToast";
 
 const HOST_CLASS = "hw-auto-mode-host";
