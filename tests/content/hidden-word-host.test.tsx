@@ -92,4 +92,16 @@ describe("HiddenWordHost", () => {
 
     expect(onReview).not.toHaveBeenCalled();
   });
+
+  it("applies yellow underline when hinted=true", () => {
+    render(<HiddenWordHost activeWord={ACTIVE} onFind={() => {}} hinted={true} />);
+    const word = document.querySelector(".hw-word") as HTMLElement;
+    expect(word.style.backgroundImage).toContain("var(--wh-primary)");
+  });
+
+  it("has no underline when hinted is not provided", () => {
+    render(<HiddenWordHost activeWord={ACTIVE} onFind={() => {}} />);
+    const word = document.querySelector(".hw-word") as HTMLElement;
+    expect(word.style.backgroundImage).toBeFalsy();
+  });
 });

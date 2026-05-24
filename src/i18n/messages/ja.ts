@@ -117,6 +117,7 @@ export const ja: Record<MessageKey, string> = {
   // InPageToast (shared aria labels)
   toast_open_aria: "Word Hunterを開く",
   toast_dismiss_aria: "閉じる",
+  toast_find_aria: "単語を見つける",
 
   // Content-script toasts
   content_no_paragraph_message: "単語を隠すのに十分なテキストがありません。",

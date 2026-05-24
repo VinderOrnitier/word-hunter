@@ -120,6 +120,7 @@ export const de: Record<MessageKey, string> = {
   // InPageToast (shared aria labels)
   toast_open_aria: "Word Hunter öffnen",
   toast_dismiss_aria: "Schließen",
+  toast_find_aria: "Wort finden",
 
   // Content-script toasts
   content_no_paragraph_message: "Nicht genug Text, um das Wort zu verstecken.",

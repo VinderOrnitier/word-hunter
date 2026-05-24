@@ -120,6 +120,7 @@ export const uk: Record<MessageKey, string> = {
   // InPageToast (shared aria labels)
   toast_open_aria: "Відкрити Word Hunter",
   toast_dismiss_aria: "Закрити",
+  toast_find_aria: "Знайти слово",
 
   // Content-script toasts
   content_no_paragraph_message: "Недостатньо тексту для приховування слова.",

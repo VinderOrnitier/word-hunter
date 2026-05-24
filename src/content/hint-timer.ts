@@ -22,6 +22,8 @@ export function HintTimer(doc: Document, getLocale: () => Locale) {
     }
   }
 
+  let pendingOnFind: (() => void) | undefined;
+
   function showToast(): void {
     const locale = getLocale();
     toastHost = doc.createElement("div");
@@ -36,15 +38,17 @@ export function HintTimer(doc: Document, getLocale: () => Locale) {
         onClose: () => {
           removeToast();
         },
+        onFind: pendingOnFind,
       }),
       host
     );
     sessionStorage.setItem(HINT_USED_KEY, "true");
   }
 
-  function start(delayMinutes: number): void {
+  function start(delayMinutes: number, onFind?: () => void): void {
     if (timerId !== null) clearTimeout(timerId);
     sessionStorage.removeItem(HINT_USED_KEY);
+    pendingOnFind = onFind;
     timerId = setTimeout(showToast, delayMinutes * 60_000);
   }
 
