@@ -12,7 +12,7 @@ export const uk: Record<MessageKey, string> = {
   // Bottom action bar
   action_bar_auto_continue_title: "Авто-продовження — вибирає наступне слово після кожної знахідки",
   action_bar_auto_continue_aria: "Авто-продовження",
-  action_bar_start: "Почати полювання",
+  action_bar_start: "Почати",
   action_bar_shuffle_title: "Вибрати випадкове слово",
   action_bar_shuffle_aria: "Вибрати випадкове слово",
   action_bar_custom_title: "Власне слово",
@@ -51,7 +51,7 @@ export const uk: Record<MessageKey, string> = {
   custom_word_field_label: "Слово",
   custom_word_placeholder: "мрія",
   custom_word_cancel: "Скасувати",
-  custom_word_submit: "Почати полювання",
+  custom_word_submit: "Почати",
 
   // Play tab
   play_list_animals: "Тварини",
