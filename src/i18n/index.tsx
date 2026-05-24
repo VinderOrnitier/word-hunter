@@ -4,6 +4,7 @@ import { useCallback, useContext } from "preact/hooks";
 import { useStorage } from "../popup/hooks/useStorage";
 import { de } from "./messages/de";
 import { en } from "./messages/en";
+import { ja } from "./messages/ja";
 import { uk } from "./messages/uk";
 import type { Locale, MessageKey } from "./types";
 
@@ -17,7 +18,7 @@ const dictionaries: Record<Locale, Partial<Record<MessageKey, string>>> = {
   en,
   uk,
   de,
-  ja: {},
+  ja,
 };
 
 export function t(

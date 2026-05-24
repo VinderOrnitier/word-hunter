@@ -24,8 +24,8 @@ describe("t()", () => {
     ).toBe("Progress: 5 of 24 words caught, 2 of 8 achievements unlocked");
   });
 
-  it("falls back to English when the requested locale has no translation", () => {
-    expect(t("active_word_eyebrow", "ja")).toBe("Active word");
+  it("returns the Japanese translation when ja locale is selected", () => {
+    expect(t("active_word_eyebrow", "ja")).toBe("アクティブな単語");
   });
 
   it("returns the German translation when de locale is selected", () => {

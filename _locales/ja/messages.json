@@ -1,0 +1,8 @@
+{
+  "name": {
+    "message": "Word Hunter"
+  },
+  "description": {
+    "message": "ウェブページのテキストに単語を見えない形で隠し、読みながら探すボキャブラリーゲームです。"
+  }
+}
