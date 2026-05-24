@@ -15,6 +15,7 @@ describe("uk translation", () => {
       expect(uk[key]).toBeDefined();
       expect(uk[key]).not.toBe("");
     }
+    expect(Object.keys(uk)).toHaveLength(enKeys.length);
   });
 
   it("preserves placeholder tokens for keys that have them", () => {
