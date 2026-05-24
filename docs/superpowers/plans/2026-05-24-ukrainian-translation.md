@@ -1,3 +1,91 @@
+# Ukrainian (uk) Translation Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Add a complete Ukrainian locale — all 98 message keys translated and type-enforced — plus the Chrome Web Store listing file.
+
+**Architecture:** Change `uk.ts` type from `Partial<Record<MessageKey, string>>` to `Record<MessageKey, string>` so TypeScript enforces full coverage at compile time. Fill all 98 keys with Ukrainian strings. Create `_locales/uk/messages.json` for the CWS listing. Update one existing test that currently asserts uk falls back to English (it won't after this change).
+
+**Tech Stack:** TypeScript, Jest, pnpm
+
+---
+
+### Task 1: Write failing tests and update the existing fallback test
+
+**Files:**
+- Create: `tests/i18n/uk.test.ts`
+- Modify: `tests/i18n/t.test.ts`
+
+- [ ] **Step 1: Write `tests/i18n/uk.test.ts`**
+
+```ts
+import { en } from "../../src/i18n/messages/en";
+import { uk } from "../../src/i18n/messages/uk";
+import type { MessageKey } from "../../src/i18n/types";
+
+const enKeys = Object.keys(en) as MessageKey[];
+const tokenRe = /\{(\w+)\}/g;
+
+function tokens(s: string): string[] {
+  return [...s.matchAll(tokenRe)].map((m) => m[1]).sort();
+}
+
+describe("uk translation", () => {
+  it("covers every key defined in en", () => {
+    for (const key of enKeys) {
+      expect(uk[key]).toBeDefined();
+      expect(uk[key]).not.toBe("");
+    }
+  });
+
+  it("preserves placeholder tokens for keys that have them", () => {
+    for (const key of enKeys) {
+      const enTokens = tokens(en[key]);
+      if (enTokens.length === 0) continue;
+      expect(tokens(uk[key] ?? "")).toEqual(enTokens);
+    }
+  });
+});
+```
+
+- [ ] **Step 2: Update the fallback test in `tests/i18n/t.test.ts`**
+
+Find this block (line 27–30):
+```ts
+  it("falls back to English when the requested locale has no translation", () => {
+    expect(t("active_word_eyebrow", "uk")).toBe("Active word");
+  });
+```
+
+Replace with:
+```ts
+  it("falls back to English when the requested locale has no translation", () => {
+    expect(t("active_word_eyebrow", "de")).toBe("Active word");
+  });
+
+  it("returns the Ukrainian translation when uk locale is selected", () => {
+    expect(t("active_word_eyebrow", "uk")).toBe("Активне слово");
+  });
+```
+
+- [ ] **Step 3: Run tests to confirm they fail**
+
+```bash
+pnpm test -- --testPathPattern="i18n"
+```
+
+Expected: `uk.test.ts` fails on the "covers every key" assertion because `uk.ts` is incomplete. `t.test.ts` may also fail on the new Ukrainian assertion.
+
+---
+
+### Task 2: Fill `uk.ts` — change type and add all 98 keys
+
+**Files:**
+- Modify: `src/i18n/messages/uk.ts`
+
+- [ ] **Step 1: Replace the entire file contents**
+
+```ts
 import type { MessageKey } from "../types";
 
 export const uk: Record<MessageKey, string> = {
@@ -10,9 +98,10 @@ export const uk: Record<MessageKey, string> = {
   tab_settings: "Налаштування",
 
   // Bottom action bar
-  action_bar_auto_continue_title: "Авто-продовження — вибирає наступне слово після кожної знахідки",
+  action_bar_auto_continue_title:
+    "Авто-продовження — вибирає наступне слово після кожної знахідки",
   action_bar_auto_continue_aria: "Авто-продовження",
-  action_bar_start: "Почати",
+  action_bar_start: "Почати полювання",
   action_bar_shuffle_title: "Вибрати випадкове слово",
   action_bar_shuffle_aria: "Вибрати випадкове слово",
   action_bar_custom_title: "Власне слово",
@@ -51,7 +140,7 @@ export const uk: Record<MessageKey, string> = {
   custom_word_field_label: "Слово",
   custom_word_placeholder: "мрія",
   custom_word_cancel: "Скасувати",
-  custom_word_submit: "Почати",
+  custom_word_submit: "Почати полювання",
 
   // Play tab
   play_list_animals: "Тварини",
@@ -133,3 +222,62 @@ export const uk: Record<MessageKey, string> = {
   celebration_next_label: "Наступне",
   celebration_remove_word: "Прибрати слово",
 };
+```
+
+- [ ] **Step 2: Run tests to confirm they pass**
+
+```bash
+pnpm test -- --testPathPattern="i18n"
+```
+
+Expected: All tests in `tests/i18n/` pass.
+
+- [ ] **Step 3: Run full test suite**
+
+```bash
+pnpm test
+```
+
+Expected: All tests pass.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add tests/i18n/uk.test.ts tests/i18n/t.test.ts src/i18n/messages/uk.ts
+git commit -m "feat(i18n): complete Ukrainian translation — all 98 keys covered (#54)"
+```
+
+---
+
+### Task 3: Create `_locales/uk/messages.json`
+
+**Files:**
+- Create: `_locales/uk/messages.json`
+
+- [ ] **Step 1: Create the file**
+
+```json
+{
+  "name": {
+    "message": "Word Hunter"
+  },
+  "description": {
+    "message": "Словникова гра, яка ховає слово в тексті веб-сторінки і дозволяє шукати його під час читання."
+  }
+}
+```
+
+- [ ] **Step 2: Run build to verify TypeScript is satisfied**
+
+```bash
+pnpm build
+```
+
+Expected: Build completes with no TypeScript errors.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add _locales/uk/messages.json
+git commit -m "feat(i18n): add Ukrainian CWS listing — _locales/uk/messages.json (#54)"
+```
