@@ -37,3 +37,11 @@ Default label vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `read
 ### Domain docs
 
 Single-context repo — one `CONTEXT.md` at the root, ADRs in `docs/adr/`. See `docs/agents/domain.md`.
+
+### Localization
+
+All user-visible strings must:
+1. Use `useT()` in popup components or `t(key, locale)` in content scripts — never hardcoded.
+2. Have the English string added to `src/i18n/messages/en.ts` with a descriptive key.
+
+Translations for other locales (uk, de, ja) are added per milestone, not per feature.

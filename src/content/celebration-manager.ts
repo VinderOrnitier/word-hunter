@@ -1,4 +1,5 @@
 import { h, render } from "preact";
+import type { Locale } from "../i18n";
 import { CelebrationPopup } from "./components/CelebrationPopup";
 
 export interface CelebrationProps {
@@ -9,7 +10,7 @@ export interface CelebrationProps {
   next?: { word: string; art?: string };
 }
 
-export function CelebrationManager(doc: Document) {
+export function CelebrationManager(doc: Document, getLocale: () => Locale) {
   let host: HTMLElement | null = null;
 
   function dismiss(): void {
@@ -40,6 +41,7 @@ export function CelebrationManager(doc: Document) {
       h(CelebrationPopup, {
         ...props,
         visible: true,
+        locale: getLocale(),
         onDismiss: () => {
           dismissCurrent();
           void afterDismiss?.();

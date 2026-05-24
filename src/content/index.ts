@@ -1,6 +1,8 @@
 import "../shared/styles/tokens.css";
 import "./styles/overlay.css";
 import { render } from "preact";
+import type { Locale } from "../i18n";
+import { getLocale as readLocale } from "../i18n";
 import { pickRandomWord } from "../popup/collection/pickRandomWord";
 import { resolveArt } from "../shared/art-resolver";
 import {
@@ -22,9 +24,21 @@ import { NoParagraphNotification } from "./no-paragraph-notification";
 import { ParagraphSelector } from "./paragraph-selector";
 import { WordRenderer } from "./word-renderer";
 
-const timer = HintTimer(document);
-const celebration = CelebrationManager(document);
-const autoModeToast = AutoModeToast(document);
+let currentLocale: Locale = "en";
+readLocale().then((l) => {
+  currentLocale = l;
+});
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "local" && changes.locale?.newValue) {
+    currentLocale = changes.locale.newValue as Locale;
+  }
+});
+
+const getLocaleRef = (): Locale => currentLocale;
+
+const timer = HintTimer(document, getLocaleRef);
+const celebration = CelebrationManager(document, getLocaleRef);
+const autoModeToast = AutoModeToast(document, getLocaleRef);
 ActiveWordWatcher(timer, celebration, document).start();
 
 async function inject(): Promise<void> {
@@ -36,7 +50,7 @@ async function inject(): Promise<void> {
   const groups = ParagraphSelector(document, settings.minWordThreshold);
   if (groups.length === 0) {
     if (settings.notificationsEnabled && settings.showNoParagraphToast) {
-      NoParagraphNotification(document).show();
+      NoParagraphNotification(document, getLocaleRef).show();
     }
     return;
   }

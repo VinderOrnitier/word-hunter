@@ -1,10 +1,12 @@
 import { h, render } from "preact";
+import type { Locale } from "../i18n";
+import { t } from "../i18n";
 import { HINT_USED_KEY } from "../shared/constants";
 import { InPageToast } from "./components/InPageToast";
 
 const HOST_CLASS = "hw-hint-toast-host";
 
-export function HintTimer(doc: Document) {
+export function HintTimer(doc: Document, getLocale: () => Locale) {
   let timerId: ReturnType<typeof setTimeout> | null = null;
   let toastHost: HTMLElement | null = null;
 
@@ -21,13 +23,15 @@ export function HintTimer(doc: Document) {
   }
 
   function showToast(): void {
+    const locale = getLocale();
     toastHost = doc.createElement("div");
     toastHost.className = HOST_CLASS;
     doc.body.appendChild(toastHost);
     const host = toastHost;
     render(
       h(InPageToast, {
-        message: "The word is hidden on this page.",
+        message: t("content_hint_toast", locale),
+        locale,
         variant: "hint",
         onClose: () => {
           removeToast();

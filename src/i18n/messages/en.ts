@@ -113,4 +113,20 @@ export const en = {
   settings_switch_off: "Off",
   settings_cancel: "Cancel",
   settings_save: "Save",
+
+  // InPageToast (shared aria labels)
+  toast_open_aria: "Open Word Hunter",
+  toast_dismiss_aria: "Dismiss",
+
+  // Content-script toasts
+  content_no_paragraph_message: "Not enough text to hide the word.",
+  content_auto_mode_toast: "Auto-Hunter active",
+  content_hint_toast: "The word is hidden on this page.",
+
+  // CelebrationPopup
+  celebration_found_headline: "Found!",
+  celebration_hint_used: "hint used",
+  celebration_no_hint: "no hint",
+  celebration_next_label: "Next up",
+  celebration_remove_word: "Remove word",
 } as const;
