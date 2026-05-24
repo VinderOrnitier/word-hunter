@@ -1,4 +1,5 @@
 import { HintTimer } from "../../src/content/hint-timer";
+import type { Locale } from "../../src/i18n";
 
 const HINT_USED_KEY = "hw-hint-used";
 
@@ -14,20 +15,20 @@ describe("HintTimer", () => {
   });
 
   it("hintUsed() is false before the timer fires", () => {
-    const timer = HintTimer(document);
+    const timer = HintTimer(document, () => "en");
     timer.start(1);
     expect(timer.hintUsed()).toBe(false);
   });
 
   it("hintUsed() is true after the timer fires", () => {
-    const timer = HintTimer(document);
+    const timer = HintTimer(document, () => "en");
     timer.start(1);
     jest.advanceTimersByTime(60_000);
     expect(timer.hintUsed()).toBe(true);
   });
 
   it("toast appears after the timer fires with hint message", () => {
-    const timer = HintTimer(document);
+    const timer = HintTimer(document, () => "en");
     timer.start(1);
     expect(document.querySelector(".hw-toast--hint")).toBeNull();
     jest.advanceTimersByTime(60_000);
@@ -37,8 +38,19 @@ describe("HintTimer", () => {
     );
   });
 
+  it("toast uses the locale current at fire time, not at start() time", () => {
+    let locale: Locale = "en";
+    const timer = HintTimer(document, () => locale);
+    timer.start(1);
+    locale = "uk";
+    jest.advanceTimersByTime(60_000);
+    expect(document.querySelector(".hw-toast__message")?.textContent).toBe(
+      "Слово сховане на цій сторінці."
+    );
+  });
+
   it("cancel() before firing prevents toast and keeps hintUsed false", () => {
-    const timer = HintTimer(document);
+    const timer = HintTimer(document, () => "en");
     timer.start(1);
     timer.cancel();
     jest.advanceTimersByTime(60_000);
@@ -47,7 +59,7 @@ describe("HintTimer", () => {
   });
 
   it("hintUsed state persists in sessionStorage", () => {
-    const timer = HintTimer(document);
+    const timer = HintTimer(document, () => "en");
     timer.start(1);
     jest.advanceTimersByTime(60_000);
     expect(sessionStorage.getItem(HINT_USED_KEY)).toBe("true");
@@ -55,19 +67,19 @@ describe("HintTimer", () => {
 
   it("hintUsed() reads from sessionStorage (survives re-instantiation)", () => {
     sessionStorage.setItem(HINT_USED_KEY, "true");
-    const timer = HintTimer(document);
+    const timer = HintTimer(document, () => "en");
     expect(timer.hintUsed()).toBe(true);
   });
 
   it("start() resets hintUsed to false — stale flag from previous hunt is cleared", () => {
     sessionStorage.setItem(HINT_USED_KEY, "true");
-    const timer = HintTimer(document);
+    const timer = HintTimer(document, () => "en");
     timer.start(1);
     expect(timer.hintUsed()).toBe(false);
   });
 
   it("cancel() after toast is shown removes it from DOM", () => {
-    const timer = HintTimer(document);
+    const timer = HintTimer(document, () => "en");
     timer.start(1);
     jest.advanceTimersByTime(60_000);
     expect(document.querySelector(".hw-toast--hint")).not.toBeNull();
@@ -76,7 +88,7 @@ describe("HintTimer", () => {
   });
 
   it("clicking close button removes the toast from DOM", () => {
-    const timer = HintTimer(document);
+    const timer = HintTimer(document, () => "en");
     timer.start(1);
     jest.advanceTimersByTime(60_000);
     const closeBtn = document.querySelector(".hw-toast__close") as HTMLElement;

@@ -1,15 +1,18 @@
 import type { JSX } from "preact";
+import { t } from "../../i18n";
+import type { Locale } from "../../i18n";
 import rawLogoUrl from "../../assets/logo.png";
 
 const logoUrl = chrome.runtime.getURL(rawLogoUrl.replace(/^\//, ""));
 
 interface InPageToastProps {
   message: string;
+  locale: Locale;
   variant: "hint" | "info";
   onClose: () => void;
 }
 
-export function InPageToast({ message, variant, onClose }: InPageToastProps): JSX.Element {
+export function InPageToast({ message, locale, variant, onClose }: InPageToastProps): JSX.Element {
   return (
     <div class={`hw-toast hw-toast--${variant}`}>
       <button
@@ -18,13 +21,13 @@ export function InPageToast({ message, variant, onClose }: InPageToastProps): JS
         onClick={() => {
           chrome.runtime.sendMessage({ type: "OPEN_POPUP" });
         }}
-        aria-label="Open Word Hunter"
-        title="Open Word Hunter"
+        aria-label={t("toast_open_aria", locale)}
+        title={t("toast_open_aria", locale)}
       >
         <img src={logoUrl} width="20" height="20" alt="" aria-hidden="true" />
       </button>
       <span class="hw-toast__message">{message}</span>
-      <button type="button" class="hw-toast__close" onClick={onClose} aria-label="Dismiss">
+      <button type="button" class="hw-toast__close" onClick={onClose} aria-label={t("toast_dismiss_aria", locale)}>
         <svg
           width="14"
           height="14"

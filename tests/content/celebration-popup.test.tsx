@@ -6,6 +6,7 @@ describe("CelebrationPopup", () => {
     const { container } = render(
       <CelebrationPopup
         visible={false}
+        locale="en"
         word="eagle"
         durationS={42}
         hintUsed={false}
@@ -19,6 +20,7 @@ describe("CelebrationPopup", () => {
     render(
       <CelebrationPopup
         visible={true}
+        locale="en"
         word="eagle"
         durationS={42}
         hintUsed={false}
@@ -36,6 +38,7 @@ describe("CelebrationPopup", () => {
     render(
       <CelebrationPopup
         visible={true}
+        locale="en"
         word="eagle"
         durationS={42}
         hintUsed={true}
@@ -47,10 +50,27 @@ describe("CelebrationPopup", () => {
     );
   });
 
+  it("renders localized strings when locale='uk'", () => {
+    render(
+      <CelebrationPopup
+        visible={true}
+        locale="uk"
+        word="eagle"
+        durationS={10}
+        hintUsed={true}
+        onDismiss={() => {}}
+      />
+    );
+    const text = document.querySelector(".hw-celebration")?.textContent ?? "";
+    expect(text).toContain("Знайдено!");
+    expect(text).toContain("підказка використана");
+  });
+
   it("renders the art slot when provided", () => {
     render(
       <CelebrationPopup
         visible={true}
+        locale="en"
         word="otter"
         durationS={12}
         hintUsed={false}
@@ -66,6 +86,7 @@ describe("CelebrationPopup", () => {
     render(
       <CelebrationPopup
         visible={true}
+        locale="en"
         word="eagle"
         durationS={42}
         hintUsed={false}
@@ -82,6 +103,7 @@ describe("CelebrationPopup", () => {
     render(
       <CelebrationPopup
         visible={true}
+        locale="en"
         word="bulbasaur"
         durationS={5}
         hintUsed={false}
@@ -99,6 +121,7 @@ describe("CelebrationPopup", () => {
     render(
       <CelebrationPopup
         visible={true}
+        locale="en"
         word="eagle"
         durationS={42}
         hintUsed={false}
@@ -113,6 +136,7 @@ describe("CelebrationPopup", () => {
     render(
       <CelebrationPopup
         visible={true}
+        locale="en"
         word="eagle"
         durationS={5}
         hintUsed={false}
@@ -126,6 +150,7 @@ describe("CelebrationPopup", () => {
     render(
       <CelebrationPopup
         visible={true}
+        locale="en"
         word="eagle"
         durationS={5}
         hintUsed={false}
@@ -143,6 +168,7 @@ describe("CelebrationPopup", () => {
     render(
       <CelebrationPopup
         visible={true}
+        locale="en"
         word="eagle"
         durationS={5}
         hintUsed={false}
@@ -159,6 +185,7 @@ describe("CelebrationPopup", () => {
     render(
       <CelebrationPopup
         visible={true}
+        locale="en"
         word="eagle"
         durationS={5}
         hintUsed={false}
@@ -174,6 +201,7 @@ describe("CelebrationPopup", () => {
     render(
       <CelebrationPopup
         visible={true}
+        locale="en"
         word="eagle"
         durationS={5}
         hintUsed={false}
@@ -187,6 +215,7 @@ describe("CelebrationPopup", () => {
     render(
       <CelebrationPopup
         visible={true}
+        locale="en"
         word="eagle"
         durationS={5}
         hintUsed={false}
@@ -203,6 +232,7 @@ describe("CelebrationPopup", () => {
     render(
       <CelebrationPopup
         visible={true}
+        locale="en"
         word="eagle"
         durationS={5}
         hintUsed={false}
@@ -218,6 +248,7 @@ describe("CelebrationPopup", () => {
     render(
       <CelebrationPopup
         visible={true}
+        locale="en"
         word="eagle"
         durationS={5}
         hintUsed={false}
