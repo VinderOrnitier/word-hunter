@@ -1,6 +1,6 @@
 import type { Locale } from "../i18n/types";
 import { DEFAULT_SETTINGS } from "./constants";
-import type { ActiveWord, GameSettings, HuntRecord, WordListName } from "./types";
+import type { ActiveWord, FeatureFlags, GameSettings, HuntRecord, WordListName } from "./types";
 
 export type StorageSchema = {
   finds: HuntRecord[];
@@ -8,6 +8,7 @@ export type StorageSchema = {
   activeWord: ActiveWord | null;
   selectedList: WordListName;
   locale: Locale;
+  featureFlags: FeatureFlags;
 };
 
 async function get<K extends keyof StorageSchema>(key: K): Promise<StorageSchema[K] | undefined> {

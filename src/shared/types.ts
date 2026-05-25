@@ -30,3 +30,7 @@ export interface ActiveWord {
   insertedAt: number;
   list?: WordSource;
 }
+
+export interface FeatureFlags {
+  pokemon: boolean;
+}
