@@ -1,3 +1,4 @@
+import { refreshFlags } from "../shared/feature-flags";
 import type { ActiveWord } from "../shared/types";
 
 export type ActiveWordChangedMessage = {
@@ -30,4 +31,15 @@ chrome.storage.onChanged.addListener((changes, area) => {
       }
     }
   });
+});
+
+chrome.runtime.onInstalled.addListener(() => {
+  void refreshFlags();
+  chrome.alarms.create("refresh-flags", { periodInMinutes: 60 });
+});
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === "refresh-flags") {
+    void refreshFlags();
+  }
 });
