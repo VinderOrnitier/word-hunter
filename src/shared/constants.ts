@@ -39,7 +39,7 @@ export const MIN_PARAGRAPH_WORDS = 50;
 export const HINT_USED_KEY = "hw-hint-used";
 
 export const FLAGS_URL =
-  "https://raw.githubusercontent.com/VinderOrnitier/word-hunter/main/config/features.json";
+  "https://raw.githubusercontent.com/VinderOrnitier/word-hunter/master/config/features.json";
 
 export const DEFAULT_FLAGS: FeatureFlags = {
   pokemon: true,
