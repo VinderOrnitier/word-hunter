@@ -10,9 +10,8 @@ function setupChromeMock() {
 
   (globalThis as unknown as { chrome: unknown }).chrome = {
     runtime: {
-      onMessage: {
-        addListener: jest.fn(),
-      },
+      onMessage: { addListener: jest.fn() },
+      onInstalled: { addListener: jest.fn() },
     },
     action: {
       openPopup: jest.fn().mockResolvedValue(undefined),
@@ -27,6 +26,10 @@ function setupChromeMock() {
         cb([{ id: 10 }, { id: 20 }])
       ),
       sendMessage: jest.fn(),
+    },
+    alarms: {
+      create: jest.fn(),
+      onAlarm: { addListener: jest.fn() },
     },
   };
 

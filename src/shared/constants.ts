@@ -1,4 +1,4 @@
-import type { GameSettings } from "./types";
+import type { FeatureFlags, GameSettings } from "./types";
 
 export const DEFAULT_WORDS = [
   "cat",
@@ -37,3 +37,10 @@ export const DEFAULT_SETTINGS: GameSettings = {
 export const MIN_PARAGRAPH_WORDS = 50;
 
 export const HINT_USED_KEY = "hw-hint-used";
+
+export const FLAGS_URL =
+  "https://raw.githubusercontent.com/VinderOrnitier/word-hunter/main/config/features.json";
+
+export const DEFAULT_FLAGS: FeatureFlags = {
+  pokemon: true,
+};
