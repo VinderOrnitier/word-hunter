@@ -52,9 +52,7 @@ export function HiddenWord({
       onMouseLeave={handleMouseLeave}
       style={{ ...inheritedStyle, cursor, backgroundImage }}
     >
-      {[...word].map((c, i) => (
-        <span key={i} class="hw-char" data-char={c} />
-      ))}
+      {[...word].reverse().join("")}
     </button>
   );
 }

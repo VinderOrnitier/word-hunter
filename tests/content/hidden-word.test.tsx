@@ -2,11 +2,11 @@ import { act, fireEvent, render } from "@testing-library/preact";
 import { HiddenWord } from "../../src/content/components/HiddenWord";
 
 describe("HiddenWord", () => {
-  it("renders one .hw-char per character with the matching data-char", () => {
+  it("renders the word reversed as direct text content for text-selection compatibility", () => {
     render(<HiddenWord word="fox" found={false} onFind={() => {}} />);
-    const chars = document.querySelectorAll(".hw-char");
-    expect(chars).toHaveLength(3);
-    expect([...chars].map((el) => el.getAttribute("data-char"))).toEqual(["f", "o", "x"]);
+    const word = document.querySelector(".hw-word");
+    expect(word?.textContent).toBe("xof");
+    expect(document.querySelectorAll(".hw-char")).toHaveLength(0);
   });
 
   it("emits no DOM text matching the word — Ctrl+F bypass survives", () => {

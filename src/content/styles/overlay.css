@@ -7,6 +7,8 @@
   display: inline;
 }
 
+/* Ctrl+F bypass: text is stored reversed in the DOM; direction:rtl + bidi-override
+   renders it correctly while Ctrl+F searches the raw (reversed) string. */
 .hw-word {
   display: inline;
   cursor: pointer;
@@ -16,11 +18,13 @@
   background-image: none;
   color: inherit;
   font: inherit;
+  user-select: text;
+  direction: rtl;
+  unicode-bidi: bidi-override;
   transition: background-image var(--wh-dur-base) var(--wh-ease-standard);
 }
 
 .hw-word--found {
-  padding: 0 2px;
   background-image: linear-gradient(
     180deg,
     transparent 0,
@@ -29,14 +33,6 @@
     var(--wh-found) 92%,
     transparent 92%
   );
-}
-
-/* Ctrl+F bypass: the rendered glyph lives in a pseudo-element,
-   so it is invisible to the browser's text-search index. */
-.hw-char::before {
-  content: attr(data-char);
-  font: inherit;
-  color: inherit;
 }
 
 @keyframes hw-enter {
