@@ -31,7 +31,7 @@ describe("refreshFlags", () => {
 
     await refreshFlags();
 
-    expect(store["featureFlags"]).toEqual({ pokemon: false });
+    expect(store.featureFlags).toEqual({ pokemon: false });
   });
 
   it("merges partial remote response with DEFAULT_FLAGS", async () => {
@@ -43,7 +43,7 @@ describe("refreshFlags", () => {
 
     await refreshFlags();
 
-    expect(store["featureFlags"]).toEqual(DEFAULT_FLAGS);
+    expect(store.featureFlags).toEqual(DEFAULT_FLAGS);
   });
 
   it("does not write to storage when fetch returns non-ok status", async () => {
@@ -53,7 +53,7 @@ describe("refreshFlags", () => {
     await refreshFlags();
 
     expect(chrome.storage.local.set).not.toHaveBeenCalled();
-    expect(store["featureFlags"]).toBeUndefined();
+    expect(store.featureFlags).toBeUndefined();
   });
 
   it("resolves without throwing when fetch rejects", async () => {
@@ -61,7 +61,7 @@ describe("refreshFlags", () => {
     globalThis.fetch = jest.fn().mockRejectedValue(new Error("Network error"));
 
     await expect(refreshFlags()).resolves.toBeUndefined();
-    expect(store["featureFlags"]).toBeUndefined();
+    expect(store.featureFlags).toBeUndefined();
   });
 
   it("fetches from FLAGS_URL", async () => {
