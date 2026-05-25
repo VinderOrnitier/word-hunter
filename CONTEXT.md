@@ -33,7 +33,7 @@ The minimum combined word count a `ParagraphGroup` must meet to be eligible for 
 _Avoid_: word limit, paragraph length, threshold
 
 **HiddenWord**:
-The DOM representation of an `ActiveWord` inserted into a `Paragraph` — rendered via CSS `::before` on empty `<span>` elements, making it invisible to Ctrl+F.
+The DOM representation of an `ActiveWord` inserted into a `Paragraph` — rendered as a reversed text node (`direction: rtl; unicode-bidi: bidi-override`) so Ctrl+F cannot find it (the browser searches the raw reversed string, not the visible word), while remaining visually selectable like ordinary text.
 _Avoid_: injected word, word span, word node
 
 **HintTimer**:

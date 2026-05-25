@@ -49,8 +49,8 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 **2. Word Renderer (Content Script — core of the extension)**
 - Finds all paragraphs with 50+ words on the page
 - Selects a random paragraph and a random position between words
-- Inserts the word via DOM manipulation: each letter in a `<span>` with a `data-char` attribute; CSS renders the text via `::before { content: attr(data-char) }`; the actual text node is empty or contains a zero-width character
-- This makes the word invisible to Ctrl+F (the browser searches DOM text nodes)
+- Inserts the word via DOM manipulation: the word is stored reversed in a real text node inside a `<span>` styled with `direction: rtl; unicode-bidi: bidi-override`, which renders the characters in correct visual order
+- This makes the word invisible to Ctrl+F (the browser searches the raw reversed string) while allowing natural text selection
 - Styling inherits `font-family`, `font-size`, `color`, and `line-height` from the parent element
 
 **3. Hint Timer**
@@ -95,25 +95,19 @@ Pikachu, Bulbasaur, Charmander, Squirtle, Jigglypuff, Mewtwo, Eevee, Snorlax, Ge
 ### Technical Solution for Ctrl+F Bypass
 
 ```html
-<!-- The hidden word span looks like this -->
-<span class="hidden-word" data-word="cat">
-  <span class="hw-char" data-char="c"></span>
-  <span class="hw-char" data-char="a"></span>
-  <span class="hw-char" data-char="t"></span>
-</span>
+<!-- The hidden word "cat" is stored reversed in the DOM -->
+<span class="hw-word">tac</span>
 ```
 
 ```css
-.hw-char::before {
-  content: attr(data-char);
-}
-.hw-char {
-  font: inherit;
-  color: inherit;
+.hw-word {
+  direction: rtl;
+  unicode-bidi: bidi-override;
+  user-select: text;
 }
 ```
 
-Text nodes inside `.hw-char` are empty → Ctrl+F cannot find the word.
+The browser renders the characters right-to-left, so "tac" appears as "cat" visually. Ctrl+F searches the raw DOM text ("tac") and cannot match the word ("cat"). Because the content lives in a real text node, the word is included in text selections (Ctrl+A, mouse drag) identically to surrounding text.
 
 ## Testing Decisions
 
@@ -121,7 +115,7 @@ Good tests verify behavior through public interfaces, not implementation details
 
 **What to test:**
 - `ParagraphSelector`: given an HTML document, returns only paragraphs with 50+ words
-- `WordRenderer`: after insertion, the word is visually present in the text (via `::before` CSS) but absent from DOM text nodes
+- `WordRenderer`: after insertion, the word is visually present in the text but stored reversed in the DOM text node (Ctrl+F bypass verified via `TreeWalker` with `NodeFilter.SHOW_TEXT`)
 - `StatisticsStore`: a record written on word discovery contains all required fields
 - `HintTimer`: timer fires after the configured duration; `hintUsed` flag is set correctly
 

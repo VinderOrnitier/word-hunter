@@ -17,19 +17,14 @@ describe("WordRenderer", () => {
     Element.prototype.scrollIntoView = jest.fn();
   });
 
-  it("inserts one .hw-char span per letter with correct data-char", () => {
+  it("inserts the word reversed as text content inside .hw-word", () => {
     const para = makePara(60);
     WordRenderer(eagle, [[para]]);
 
-    const chars = document.querySelectorAll(".hw-char");
-    expect(chars).toHaveLength(5);
-    expect(Array.from(chars).map((el) => el.getAttribute("data-char"))).toEqual([
-      "e",
-      "a",
-      "g",
-      "l",
-      "e",
-    ]);
+    const wordEl = document.querySelector(".hw-word");
+    expect(wordEl).not.toBeNull();
+    expect(wordEl?.textContent).toBe("elgae"); // "eagle" reversed
+    expect(document.querySelectorAll(".hw-char")).toHaveLength(0);
   });
 
   it("places no text matching the word in any text node (Ctrl+F bypass)", () => {
@@ -49,7 +44,7 @@ describe("WordRenderer", () => {
     WordRenderer({ word: "fox", insertedAt: 2000 }, [[para]]);
 
     expect(document.querySelectorAll(".hw-word")).toHaveLength(1);
-    expect(document.querySelectorAll(".hw-char")).toHaveLength(3); // "fox"
+    expect(document.querySelector(".hw-word")?.textContent).toBe("xof"); // "fox" reversed
   });
 
   it("does nothing and does not throw when groups list is empty", () => {
