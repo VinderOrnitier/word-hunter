@@ -1,5 +1,5 @@
 import type { JSX } from "preact";
-import { useMemo, useState } from "preact/hooks";
+import { useEffect, useMemo, useState } from "preact/hooks";
 import { useT } from "../../i18n";
 import type { MessageKey } from "../../i18n/types";
 import { DEFAULT_SETTINGS } from "../../shared/constants";
@@ -12,6 +12,7 @@ import { listAchievements } from "../collection/listAchievements";
 import { pickRandomWord } from "../collection/pickRandomWord";
 import type { CollectionFilter } from "../collection/types";
 import { BottomActionBar } from "../components/BottomActionBar";
+import { useFeatureFlags } from "../hooks/useFeatureFlags";
 import { useStorage } from "../hooks/useStorage";
 import { ActiveWordCard } from "../play/ActiveWordCard";
 import { CustomWordModal } from "../play/CustomWordModal";
@@ -36,6 +37,14 @@ export function PlayTab(): JSX.Element {
   const [finds] = useStorage("finds", []);
   const [list, setList] = useStorage("selectedList", "animals");
   const [settings, setSettings] = useStorage("settings", DEFAULT_SETTINGS);
+  const flags = useFeatureFlags();
+
+  useEffect(() => {
+    if (!flags.pokemon && list === "pokemon") {
+      void chrome.storage.local.set({ selectedList: "animals" });
+    }
+  }, [flags.pokemon, list]);
+
   const [filter, setFilter] = useState<CollectionFilter>("all");
   const [customOpen, setCustomOpen] = useState(false);
   const [pendingWord, setPendingWord] = useState<string | null>(null);
@@ -109,7 +118,7 @@ export function PlayTab(): JSX.Element {
           data-group="list"
           aria-label={t("play_word_list_aria")}
         >
-          {LIST_CHIPS.map((chip) => (
+          {LIST_CHIPS.filter((chip) => chip.value !== "pokemon" || flags.pokemon).map((chip) => (
             <button
               key={chip.value}
               type="button"
