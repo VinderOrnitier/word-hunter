@@ -228,7 +228,7 @@ describe("CelebrationPopup", () => {
     expect(next?.textContent).toContain("capybara");
   });
 
-  it("renders the next word art (emoji) when provided in 'next' prop", () => {
+  it("renders the · separator between label and word in the next section", () => {
     render(
       <CelebrationPopup
         visible={true}
@@ -236,14 +236,14 @@ describe("CelebrationPopup", () => {
         word="eagle"
         durationS={5}
         hintUsed={false}
-        next={{ word: "otter", art: "🦦" }}
+        next={{ word: "otter" }}
         onDismiss={() => {}}
       />
     );
-    expect(document.querySelector(".hw-celebration__next-art")?.textContent).toBe("🦦");
+    expect(document.querySelector(".hw-celebration__next-sep")?.textContent).toBe("·");
   });
 
-  it("renders the next word art as an img when art is a URL", () => {
+  it("does not render art in the next section even when art prop is provided", () => {
     const url = "https://example.com/sprite.png";
     render(
       <CelebrationPopup
@@ -256,8 +256,7 @@ describe("CelebrationPopup", () => {
         onDismiss={() => {}}
       />
     );
-    const img = document.querySelector(".hw-celebration__next-art-img") as HTMLImageElement;
-    expect(img).not.toBeNull();
-    expect(img.getAttribute("src")).toBe(url);
+    expect(document.querySelector(".hw-celebration__next-art-img")).toBeNull();
+    expect(document.querySelector(".hw-celebration__next-sep")?.textContent).toBe("·");
   });
 });

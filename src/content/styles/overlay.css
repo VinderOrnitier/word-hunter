@@ -326,21 +326,10 @@
   letter-spacing: 0.04em;
 }
 
-.hw-celebration__next-art {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  font-size: 16px;
-  line-height: 1;
-}
-
-.hw-celebration__next-art-img {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
+.hw-celebration__next-sep {
+  color: var(--wh-fg-4);
+  font-family: var(--wh-font-mono);
+  font-size: var(--wh-text-xs);
 }
 
 .hw-celebration__next-word {
