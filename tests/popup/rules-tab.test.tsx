@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/preact";
+import { render } from "@testing-library/preact";
 import { RulesTab } from "../../src/popup/tabs/RulesTab";
 
 describe("RulesTab", () => {
