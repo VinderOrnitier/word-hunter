@@ -34,7 +34,7 @@ A Chrome extension that automatically inserts a player-chosen word into a random
 17. As a player, I want one active word across all tabs simultaneously, so that I can search on any page.
 17a. As a player, I want to be able to turn off in-page toasts (individually or all at once via a master switch in Settings), so that I can reduce visual noise while hunting without changing gameplay behaviour.
 18. As a player, I want to see a notification when a page has no suitable text blocks (no paragraphs with 50+ words), so that I know why the word is not hidden on this page (suppressible via Settings).
-19. As a player, I want to view a page inside the extension that explains the rules for what qualifies as a valid text block, so that I understand where the word can be hidden.
+19. As a player, I want to view a page inside the extension that explains how to start a hunt and what to expect, so that I can get playing quickly and understand why the word might not appear on every page.
 
 ## Implementation Decisions
 

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/preact";
+import { render } from "@testing-library/preact";
 import { RulesTab } from "../../src/popup/tabs/RulesTab";
 
 describe("RulesTab", () => {
@@ -8,14 +8,19 @@ describe("RulesTab", () => {
     expect(opener?.textContent).toMatch(/quiet game/i);
   });
 
-  it("mentions the 30-word minimum rule", () => {
-    render(<RulesTab />);
-    expect(screen.getByText(/30/)).toBeInTheDocument();
+  it("renders three numbered how-to-start steps", () => {
+    const { container } = render(<RulesTab />);
+    const dots = container.querySelectorAll(".wh-rules__step-dot");
+    expect(dots).toHaveLength(3);
+    expect(dots[0].textContent).toBe("1");
+    expect(dots[1].textContent).toBe("2");
+    expect(dots[2].textContent).toBe("3");
   });
 
-  it("mentions the notification when no paragraph qualifies", () => {
+  it("disclaimer advises adjusting settings when a page does not cooperate", () => {
     const { container } = render(<RulesTab />);
-    expect(container.textContent?.toLowerCase()).toMatch(/notif/);
+    const disclaimer = container.querySelector(".wh-rules__disclaimer");
+    expect(disclaimer?.textContent?.toLowerCase()).toMatch(/settings/);
   });
 
   it("uses player-facing language without technical jargon", () => {

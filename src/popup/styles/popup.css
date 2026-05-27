@@ -1934,43 +1934,86 @@ button {
 .wh-rules {
   display: flex;
   flex-direction: column;
-  gap: var(--wh-space-3);
+  gap: var(--wh-space-4);
 }
 
 .wh-rules__body {
   color: var(--wh-fg-2);
 }
 
-.wh-rules__kbd {
-  font-family: var(--wh-font-mono);
-  font-size: var(--wh-text-xs);
-  padding: 1px var(--wh-space-1);
-  background: var(--wh-surface-2);
-  border: 1px solid var(--wh-border);
-  border-radius: var(--wh-radius-1);
-  color: var(--wh-fg);
-}
-
-.wh-rules__list {
+.wh-rules__steps {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0 0 2px;
   display: flex;
   flex-direction: column;
-  gap: var(--wh-space-2);
 }
 
-.wh-rules__item {
+.wh-rules__step {
   display: flex;
-  align-items: flex-start;
   gap: var(--wh-space-3);
+  position: relative;
 }
 
-.wh-rules__marker {
-  flex: 0 0 auto;
+.wh-rules__step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 23px;
+  bottom: -2px;
+  width: 1px;
+  background: var(--wh-border);
+}
+
+.wh-rules__step-dot {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--wh-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--wh-font-mono);
   font-size: var(--wh-text-xs);
-  font-weight: var(--wh-weight-semibold);
+  font-weight: var(--wh-weight-bold);
   color: var(--wh-primary);
-  min-width: 28px;
+  background: var(--wh-bg);
+  position: relative;
+  z-index: 1;
+  margin-top: 1px;
+}
+
+.wh-rules__step-text {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-sm);
+  color: var(--wh-fg);
+  line-height: var(--wh-leading-body);
+  padding-top: 2px;
+  padding-bottom: var(--wh-space-5);
+}
+
+.wh-rules__step:last-child .wh-rules__step-text {
+  padding-bottom: 0;
+}
+
+.wh-rules__settings {
+  display: flex;
+  align-items: center;
+  gap: var(--wh-space-2);
+  padding: var(--wh-space-3);
+  background: var(--wh-surface);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-2);
+  color: var(--wh-fg-3);
+}
+
+.wh-rules__disclaimer {
+  font-family: var(--wh-font-sans);
+  font-size: var(--wh-text-xs);
+  font-style: italic;
+  line-height: var(--wh-leading-body);
+  color: var(--wh-fg-4);
+  padding-top: var(--wh-space-2);
+  border-top: 1px solid var(--wh-border-soft);
 }

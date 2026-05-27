@@ -33,7 +33,7 @@ End-to-end manual verification. Run after `pnpm build` produces a fresh `dist/`.
   - Toggle switch **Show next word preview** (default **Off**) — reveals next word in the celebration popup when Auto-Continue is on.
   - **Notifications** header with a master toggle switch. Three sub-toggles below it (disabled when master is off): **Auto-Continue started**, **Hint reminder**, **No paragraphs**.
   - When any value is changed a **Save / Cancel** footer bar slides in at the bottom. Clicking Cancel reverts the draft; clicking Save persists it.
-- [ ] **Rules**: opens with the Fraunces italic line "a quiet game while you read." and the 3 markers (30 + / 1× / —).
+- [ ] **Rules**: opens with the Fraunces italic line "a quiet game while you read.", a body paragraph, 3 numbered timeline steps (Pick a word from the list / Press Start a hunt / Reload the page and start reading), a settings row with a gear icon, and a disclaimer paragraph about page compatibility.
 
 ### Hunt Collection — find loop
 
