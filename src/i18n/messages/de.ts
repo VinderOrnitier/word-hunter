@@ -80,12 +80,14 @@ export const de: Record<MessageKey, string> = {
 
   // Rules tab
   rules_editorial: "ein ruhiges Spiel beim Lesen.",
-  rules_body_pre_kbd:
-    "Auf jeder Seite, die du besuchst, versteckt Word Hunter das aktive Wort in einem Absatz. Es sieht wie normaler Text aus, ist aber unsichtbar für ",
-  rules_body_post_kbd: ". Finde es durch Lesen. Klicke darauf, um den Fund zu speichern.",
-  rules_item_min_words: "Wörter erforderlich, um einen Absatz zu qualifizieren",
-  rules_item_one_active: "aktives Wort gleichzeitig, in allen Tabs",
-  rules_item_no_long_text: "kein langer Text? kein Wort versteckt. du siehst eine Benachrichtigung",
+  rules_body:
+    "Word Hunter versteckt das aktive Wort irgendwo im Text jeder Seite, die du besuchst. Es fügt sich wie normaler Text ein. Finde es beim Lesen. Klicke darauf, um es zu fangen.",
+  rules_step_1: "Wähle ein Wort aus der Liste",
+  rules_step_2: "Drücke «Jagd starten»",
+  rules_step_3: "Lade die Seite neu und fang an zu lesen",
+  rules_settings: "Passe die Schwierigkeit an und verfeinere dein Erlebnis im Einstellungen-Tab.",
+  rules_disclaimer:
+    "Nicht jede Seite kooperiert — das Layout oder die Skripte mancher Websites können das korrekte Einfügen des Wortes verhindern, oder es ganz verhindern. Falls das passiert, versuche die Einstellungen anzupassen.",
 
   // Settings tab
   settings_language_label: "Sprache",

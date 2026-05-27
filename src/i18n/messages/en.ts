@@ -78,12 +78,14 @@ export const en = {
 
   // Rules tab
   rules_editorial: "a quiet game while you read.",
-  rules_body_pre_kbd:
-    "On every page you visit, Word Hunter hides the active word inside a paragraph. It looks like normal text but is invisible to ",
-  rules_body_post_kbd: ". Find it by reading. Click it to log the find.",
-  rules_item_min_words: "words required to qualify a paragraph",
-  rules_item_one_active: "active word at a time, across all your tabs",
-  rules_item_no_long_text: "no long text? no word hidden. you'll see a notification",
+  rules_body:
+    "Word Hunter hides the active word somewhere inside the text of every page you visit. It blends in like normal text. Find it by reading. Click it to catch it.",
+  rules_step_1: "Pick a word from the list",
+  rules_step_2: "Press Start a hunt",
+  rules_step_3: "Reload the page and start reading",
+  rules_settings: "Adjust the difficulty and fine-tune your experience in the Settings tab.",
+  rules_disclaimer:
+    "Not every page cooperates — some sites' markup or scripts may prevent the word from inserting correctly, or at all. If that happens, try adjusting the settings.",
 
   // Settings tab
   settings_language_label: "Language",

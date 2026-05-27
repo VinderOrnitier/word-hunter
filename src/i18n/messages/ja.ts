@@ -79,12 +79,14 @@ export const ja: Record<MessageKey, string> = {
 
   // Rules tab
   rules_editorial: "読書中の静かなゲーム。",
-  rules_body_pre_kbd:
-    "訪問するすべてのページで、Word Hunterはアクティブな単語を段落の中に隠します。普通のテキストのように見えますが、",
-  rules_body_post_kbd: "には見えません。読みながら探してください。クリックして発見を記録します。",
-  rules_item_min_words: "段落として認定されるために必要な単語数",
-  rules_item_one_active: "すべてのタブで同時に1つのアクティブな単語",
-  rules_item_no_long_text: "長いテキストがない？単語は隠されません。通知が表示されます",
+  rules_body:
+    "Word Hunterは、訪問したすべてのページのテキストのどこかにアクティブワードを隠します。普通のテキストのように見えます。読みながら探してください。クリックして捕まえましょう。",
+  rules_step_1: "リストから単語を選ぶ",
+  rules_step_2: "「ハントを開始」を押す",
+  rules_step_3: "ページを更新して読み始める",
+  rules_settings: "設定タブで難易度を調整して体験をカスタマイズできます。",
+  rules_disclaimer:
+    "すべてのページが対応しているわけではありません。サイトのマークアップやスクリプトによっては、単語が正しく挿入されない場合があります。その場合は設定を調整してみてください。",
 
   // Settings tab
   settings_language_label: "言語",
