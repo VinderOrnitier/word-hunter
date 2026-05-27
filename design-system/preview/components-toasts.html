@@ -1,0 +1,174 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { width: 700px; padding: 0; }
+
+.scene {
+  position: relative;
+  padding: 32px 28px 28px;
+  background: linear-gradient(180deg, #1a1f2c 0, #0e1320 100%);
+  border-bottom: 1px solid var(--wh-border);
+}
+.fakepage {
+  font-family: Georgia, serif; font-size: 13px;
+  color: rgba(255, 255, 255, 0.42); line-height: 1.7;
+  max-width: 600px;
+  margin-top: 70px;
+}
+
+.label-row { display: flex; flex-direction: column; gap: 18px; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+.label .pill {
+  display: inline-block; margin-left: 8px; padding: 1px 6px;
+  font-size: 9px; letter-spacing: 0.04em;
+  border-radius: 3px;
+}
+.label .pill.shipped { background: var(--wh-surface-2); color: var(--wh-fg-3); border: 1px solid var(--wh-border-soft); }
+.label .pill.proposed { background: var(--wh-primary-soft); color: var(--wh-primary); border: 1px solid rgba(255, 210, 63, 0.25); }
+.label .pill.deprecated { background: var(--wh-danger-soft); color: var(--wh-danger); border: 1px solid rgba(255, 107, 107, 0.3); }
+
+.toast {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--wh-radius-2);
+  background: rgba(11, 15, 25, 0.92);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--wh-shadow-3);
+  font-family: var(--wh-font-sans); font-size: 12px; font-weight: 500;
+  color: var(--wh-fg);
+}
+.toast--hint { border: 1px solid var(--wh-info); }
+.toast--info { border: 1px solid var(--wh-border); }
+.toast--auto { border: 1px solid rgba(255, 210, 63, 0.5); }
+
+.glyph-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px;
+  background: transparent; border: none;
+  border-radius: var(--wh-radius-1);
+  cursor: pointer; padding: 0;
+  color: var(--wh-primary);
+}
+.glyph-btn img { display: block; border-radius: var(--wh-radius-1); }
+.glyph-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.word { font-family: var(--wh-font-mono); font-weight: 600; color: var(--wh-primary); }
+
+.close {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; margin-left: 4px;
+  background: transparent; border: none; border-radius: var(--wh-radius-1);
+  color: var(--wh-fg-3); cursor: pointer;
+}
+.close svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.body { padding: 24px 28px; background: var(--wh-bg); }
+
+.section-h {
+  font-family: var(--wh-font-sans); font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--wh-fg-2);
+  margin-bottom: 12px;
+}
+
+table.spec { border-collapse: collapse; width: 100%; }
+table.spec th, table.spec td { text-align: left; padding: 8px 10px; font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-2); border-bottom: 1px solid var(--wh-border-soft); }
+table.spec th { font-weight: 600; color: var(--wh-fg-3); text-transform: uppercase; font-size: 10px; letter-spacing: 0.08em; }
+table.spec td code, table.spec th code { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); }
+table.spec tr.highlight td { background: rgba(255, 210, 63, 0.05); }
+
+.legend { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-2); margin-top: 16px; line-height: 1.55; }
+.legend b { color: var(--wh-fg); }
+.legend code { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); background: var(--wh-surface); padding: 1px 5px; border-radius: 3px; border: 1px solid var(--wh-border-soft); }
+</style></head><body>
+  <div class="scene">
+    <div class="label-row">
+
+      <div>
+        <div class="label" style="margin-bottom: 8px"><code style="font-family: var(--wh-font-mono); font-size: 10px">hint</code> · top-right · cool-blue border <span class="pill shipped">shipped</span></div>
+        <div class="toast toast--hint">
+          <button class="glyph-btn" aria-label="Open Word Hunter" title="Open Word Hunter"><img src="../assets/logo.png" width="20" height="20" alt=""></button>
+          <span>The word is hidden on this page.</span>
+          <button class="close" aria-label="Dismiss"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        </div>
+      </div>
+
+      <div>
+        <div class="label" style="margin-bottom: 8px"><code style="font-family: var(--wh-font-mono); font-size: 10px">info</code> · top-center · neutral border <span class="pill shipped">shipped</span></div>
+        <div class="toast toast--info">
+          <button class="glyph-btn" aria-label="Open Word Hunter" title="Open Word Hunter"><img src="../assets/logo.png" width="20" height="20" alt=""></button>
+          <span>Not enough text to hide the word.</span>
+          <button class="close" aria-label="Dismiss"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        </div>
+      </div>
+
+      <div>
+        <div class="label" style="margin-bottom: 8px"><code style="font-family: var(--wh-font-mono); font-size: 10px">auto</code> · top-center · soft primary border + active-word name <span class="pill proposed">proposed</span></div>
+        <div class="toast toast--auto">
+          <button class="glyph-btn" aria-label="Open Word Hunter" title="Open Word Hunter"><img src="../assets/logo.png" width="20" height="20" alt=""></button>
+          <span>Auto-Hunter active · <span class="word">Pikachu</span></span>
+          <button class="close" aria-label="Dismiss"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        </div>
+      </div>
+
+      <div>
+        <div class="label" style="margin-bottom: 8px"><code style="font-family: var(--wh-font-mono); font-size: 10px">info</code> for auto-mode (current) — visually indistinguishable from no-paragraph, no active-word in the message <span class="pill deprecated">deprecated</span></div>
+        <div class="toast toast--info" style="opacity: 0.6">
+          <button class="glyph-btn" aria-label="Open Word Hunter" title="Open Word Hunter"><img src="../assets/logo.png" width="20" height="20" alt=""></button>
+          <span>Auto-Hunter active</span>
+          <button class="close" aria-label="Dismiss"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="fakepage">Host-page text behind the overlays. Backdrop-blur 12&nbsp;px keeps the page legible — toasts read as floating chrome layered above the page.</div>
+  </div>
+
+  <div class="body">
+    <div class="section-h">Spec</div>
+    <table class="spec">
+      <thead>
+        <tr><th>Variant</th><th>Border</th><th>Position</th><th>Leading glyph</th><th>Semantic</th><th>Used by</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>hint</code></td>
+          <td><code>1px solid var(--wh-info)</code></td>
+          <td>top-right</td>
+          <td>logo (clickable → opens popup)</td>
+          <td>game is helping the player</td>
+          <td>HintTimer</td>
+        </tr>
+        <tr>
+          <td><code>info</code></td>
+          <td><code>1px solid var(--wh-border)</code></td>
+          <td>top-center</td>
+          <td>logo (clickable → opens popup)</td>
+          <td>here's why · soft failure</td>
+          <td>NoParagraphNotification</td>
+        </tr>
+        <tr class="highlight">
+          <td><code>auto</code></td>
+          <td><code>1px solid rgba(255, 210, 63, 0.5)</code></td>
+          <td>top-center</td>
+          <td>logo (clickable — same as the others)</td>
+          <td>mode is active</td>
+          <td>AutoModeToast (proposed)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="legend">
+      <b>Shared chrome.</b> All three variants share the same chrome: <code>rgba(11, 15, 25, 0.92)</code> fill, 12&nbsp;px backdrop-blur, <code>--wh-shadow-3</code>, the 20&nbsp;×&nbsp;20 <em>logo</em> button on the left (clickable across all variants — sends <code>OPEN_POPUP</code> to the service worker), sans-medium-12 message, dismiss × on the right. Only the border tint, the position, and the message content differ.
+      <br><br>
+      <b>Why split <code>info</code> into <code>info</code> + <code>auto</code>.</b> AutoModeToast and NoParagraphNotification currently render identically; the only differentiator is the message string. They carry opposite intents — <em>"the mode is doing work for you"</em> vs <em>"this page can't run a hunt"</em> — and giving them separate visual identity lets the player parse them in a glance instead of reading. The soft primary tint on <code>auto</code> ties back to the brand metaphor: the highlighter is at work, even when the popup is closed. We deliberately keep the same logo glyph across all variants so the "tap to open" affordance stays consistent — the border tint and the in-message active-word do the differentiation.
+      <br><br>
+      <b>No new token.</b> The <code>auto</code> border uses an inline <code>rgba(…)</code> derived from <code>--wh-primary</code>; if we end up reusing the same tint in more places (a subtle "mode active" ring on the BottomActionBar toggle, for example) we should promote it to <code>--wh-primary-faint</code> at that point — premature now.
+      <br><br>
+      <b>Copy update.</b> AutoModeToast message becomes <code>"Auto-Hunter active · &lt;Word&gt;"</code> so the player can verify the current target without opening the popup. The active word is rendered in mono + <code>--wh-primary</code> (it <em>is</em> a word, and it's the live one). Highlighting the word is optional polish — the toast reads fine without it — but it lifts the active-word out of the sentence and makes the toast feel like a status line, not a sentence.
+      <br><br>
+      <b>Mutual exclusion still holds.</b> <code>info</code> (no-paragraph) wins over <code>auto</code> on the same page load — no point announcing the mode when no hunt is going to start.
+      <br><br>
+      <b>Implementation order:</b> design system now (this card + README). Code-side rollout in <code>src/content/styles/overlay.css</code> + <code>InPageToast.tsx</code> + <code>auto-mode-toast.ts</code> in the next pass — three places to touch, no schema migrations needed.
+    </div>
+  </div>
+</body></html>

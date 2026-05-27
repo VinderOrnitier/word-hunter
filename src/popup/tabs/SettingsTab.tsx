@@ -7,7 +7,7 @@ import type { GameSettings } from "../../shared/types";
 import { Button } from "../components/Button";
 import { Eyebrow } from "../components/Eyebrow";
 import { Field } from "../components/Field";
-import { Input } from "../components/Input";
+import { NumberInput } from "../components/NumberInput";
 import { useStorage } from "../hooks/useStorage";
 
 const LANGUAGE_OPTIONS: Array<{ value: Locale; label: string }> = [
@@ -107,16 +107,13 @@ export function SettingsTab(): JSX.Element {
           helper={t("settings_hint_delay_helper")}
         >
           <div class="wh-settings__input-row">
-            <div class="wh-settings__input-cell">
-              <Input
-                id="setting-hint-delay"
-                type="number"
-                min={1}
-                step={1}
-                value={String(draft.hintDelayMinutes)}
-                onInput={(v) => update({ hintDelayMinutes: Number(v) })}
-              />
-            </div>
+            <NumberInput
+              id="setting-hint-delay"
+              min={1}
+              step={1}
+              value={String(draft.hintDelayMinutes)}
+              onInput={(v) => update({ hintDelayMinutes: Number(v) })}
+            />
             <span class="wh-settings__unit">{t("settings_hint_delay_unit")}</span>
           </div>
         </Field>
@@ -127,16 +124,13 @@ export function SettingsTab(): JSX.Element {
           helper={t("settings_cursor_delay_helper")}
         >
           <div class="wh-settings__input-row">
-            <div class="wh-settings__input-cell">
-              <Input
-                id="setting-cursor-delay"
-                type="number"
-                min={0.1}
-                step={0.1}
-                value={String(draft.celebrationHoverSeconds)}
-                onInput={(v) => update({ celebrationHoverSeconds: Number(v) })}
-              />
-            </div>
+            <NumberInput
+              id="setting-cursor-delay"
+              min={0.1}
+              step={0.1}
+              value={String(draft.celebrationHoverSeconds)}
+              onInput={(v) => update({ celebrationHoverSeconds: Number(v) })}
+            />
             <span class="wh-settings__unit">{t("settings_cursor_delay_unit")}</span>
           </div>
         </Field>

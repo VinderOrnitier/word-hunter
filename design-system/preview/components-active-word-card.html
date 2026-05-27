@@ -1,0 +1,107 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { width: 700px; padding: 24px 28px; }
+.stack { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+.card {
+  width: 328px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  background: var(--wh-surface);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-3);
+  box-shadow: var(--wh-shadow-1);
+}
+.card--empty { box-shadow: none; }
+
+.art {
+  flex: 0 0 40px; width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-primary);
+  border-radius: var(--wh-radius-2);
+  box-shadow: var(--wh-shadow-glow);
+  overflow: hidden;
+  color: var(--wh-fg-4);
+}
+.card--empty .art {
+  border-color: var(--wh-border);
+  box-shadow: none;
+}
+
+.emoji { font-size: 26px; line-height: 1; }
+.sprite { width: 36px; height: 36px; object-fit: contain; image-rendering: pixelated; }
+
+.body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.eyebrow { font-family: var(--wh-font-sans); font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--wh-fg-3); }
+.word { font-family: var(--wh-font-mono); font-size: 18px; font-weight: 700; letter-spacing: -0.01em; color: var(--wh-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hint-line { font-family: var(--wh-font-serif); font-style: italic; font-size: 14px; color: var(--wh-fg-2); }
+
+.stop {
+  flex: 0 0 28px; width: 28px; height: 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; color: var(--wh-fg-3);
+  border: 1px solid var(--wh-border-soft);
+  border-radius: var(--wh-radius-1);
+  cursor: pointer;
+}
+.stop svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.icon-art svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.caption { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); max-width: 660px; }
+</style></head><body>
+  <div class="label-eyebrow" style="margin-bottom: 14px">ActiveWordCard — sits at the top of the Play tab</div>
+  <div class="stack">
+    <div>
+      <div class="label" style="margin-bottom: 8px">Animals · emoji art</div>
+      <div class="card">
+        <div class="art" aria-hidden="true"><span class="emoji">🦊</span></div>
+        <div class="body">
+          <span class="eyebrow">Active word</span>
+          <span class="word">Fox</span>
+        </div>
+        <button class="stop" aria-label="Clear active word" title="Stop hunt"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+    </div>
+
+    <div>
+      <div class="label" style="margin-bottom: 8px">Pokémon · sprite art</div>
+      <div class="card">
+        <div class="art" aria-hidden="true"><img class="sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" alt=""></div>
+        <div class="body">
+          <span class="eyebrow">Active word</span>
+          <span class="word">Pikachu</span>
+        </div>
+        <button class="stop" aria-label="Clear active word" title="Stop hunt"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+    </div>
+
+    <div>
+      <div class="label" style="margin-bottom: 8px">Custom · pencil glyph art</div>
+      <div class="card">
+        <div class="art icon-art" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></div>
+        <div class="body">
+          <span class="eyebrow">Active word</span>
+          <span class="word">serendipity</span>
+        </div>
+        <button class="stop" aria-label="Clear active word" title="Stop hunt"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+    </div>
+
+    <div>
+      <div class="label" style="margin-bottom: 8px">Empty state · no shadow, no glow</div>
+      <div class="card card--empty">
+        <div class="art icon-art" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg></div>
+        <div class="body">
+          <span class="eyebrow">No active word</span>
+          <span class="hint-line">pick a word below to start the hunt.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="caption">
+      40&nbsp;×&nbsp;40 art square frames the word with a primary border + 4&nbsp;px glow — the only place outside the highlighter where the brand yellow is used as a steady ring (it's the player's "active" anchor across all tabs). The art square inherits the same border-radius 8&nbsp;px and stays the same size across all WordSource variants. Empty state removes the glow + drops shadow to push it visually back. Stop button uses 4&nbsp;px square radius (smaller than buttons) so it reads as a chrome action, not a primary control.
+    </div>
+  </div>
+</body></html>

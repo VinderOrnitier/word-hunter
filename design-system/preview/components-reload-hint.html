@@ -1,0 +1,58 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { width: 700px; padding: 24px 28px; }
+.stack { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+.hint {
+  width: 328px;
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 10px;
+  background: var(--wh-info-soft);
+  border: 1px solid rgba(138, 180, 255, 0.2);
+  border-radius: var(--wh-radius-2);
+}
+.info-glyph { color: var(--wh-fg-4); display: inline-flex; flex: 0 0 auto; cursor: default; }
+.info-glyph svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.text { flex: 1; font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-info); line-height: 1.3; white-space: nowrap; }
+.reload-btn {
+  padding: 2px 8px;
+  font-family: var(--wh-font-sans); font-size: 12px; font-weight: 500;
+  color: var(--wh-info);
+  background: rgba(138, 180, 255, 0.12);
+  border: 1px solid rgba(138, 180, 255, 0.25);
+  border-radius: var(--wh-radius-1);
+  cursor: pointer;
+}
+.dismiss {
+  width: 20px; height: 20px; flex: 0 0 auto;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; color: var(--wh-fg-4);
+  border: none;
+  cursor: pointer;
+}
+.dismiss svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.caption { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); max-width: 660px; }
+.note { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-2); max-width: 660px; line-height: 1.5; }
+.note b { color: var(--wh-fg); }
+</style></head><body>
+  <div class="label-eyebrow" style="margin-bottom: 14px">ReloadHint — appears in Play after starting a hunt</div>
+  <div class="stack">
+    <div class="hint">
+      <span class="info-glyph" title="Can be disabled in Settings."><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>
+      <span class="text">Reload the page to begin hunting.</span>
+      <button class="reload-btn">Reload</button>
+      <button class="dismiss" aria-label="Dismiss"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+
+    <div class="caption">
+      Translucent info-blue card (<code>--wh-info-soft</code> fill + 1&nbsp;px <code>rgba(138, 180, 255, 0.2)</code> border) so it reads as a soft inline notice, not a hard alert. Slides in with a 4&nbsp;px translateY fade · trailing <code>Reload</code> CTA + <code>×</code> dismiss · leading info glyph carries a <code>title</code> nudge ("Can be disabled in Settings.").
+    </div>
+    <div class="note">
+      Gated by the <b>Reload hint</b> switch in Settings (default on, disabled on the Settings tab). Calls <code>chrome.scripting.executeScript</code> on the active tab to <code>window.location.reload()</code> so the player doesn't need to leave the popup.
+      <br><br>
+      Uses <code>--wh-info</code> (the system's informational blue) — same token that powers the hint toast and the stats hint-dot. The hex is identical to the old <code>--wh-hint</code> alias; the rename clarifies that this surface speaks to the player, it doesn't carry the in-game "hint" semantic.
+    </div>
+  </div>
+</body></html>

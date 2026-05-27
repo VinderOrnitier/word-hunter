@@ -1,0 +1,89 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+  body { width: 700px; padding: 24px 28px; }
+  .panes { display: grid; grid-template-columns: 320px 320px; gap: 24px; }
+  .pane { display: flex; flex-direction: column; gap: 8px; }
+  .label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+  .grid { display: grid; gap: 8px; padding: 4px 0; }
+  .grid--animals { grid-template-columns: repeat(4, 1fr); }
+  .grid--pokemon { grid-template-columns: repeat(5, 1fr); }
+
+  .slot {
+    position: relative; aspect-ratio: 1 / 1;
+    display: flex; align-items: center; justify-content: center;
+    padding: 4px;
+    background: var(--wh-surface-2);
+    border: 1px solid var(--wh-border-soft);
+    border-radius: var(--wh-radius-2);
+    overflow: hidden;
+  }
+  .slot.is-active { border-color: var(--wh-primary); box-shadow: var(--wh-shadow-glow); }
+
+  .emoji { font-size: 22px; line-height: 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4)); }
+  .ph    { font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-4); letter-spacing: -0.05em; }
+
+  .sprite {
+    width: 100%; height: 100%; max-width: 48px; max-height: 48px;
+    object-fit: contain;
+    image-rendering: pixelated;
+  }
+  .sprite.is-silhouette { filter: brightness(0) opacity(0.35); }
+
+  .count {
+    position: absolute; bottom: 2px; right: 3px;
+    font-family: var(--wh-font-mono); font-size: 10px; font-weight: 600; color: var(--wh-fg-2);
+    padding: 0 3px; background: rgba(11,15,25,0.78); border-radius: var(--wh-radius-1);
+  }
+
+  .caption { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); margin-top: 18px; max-width: 660px; }
+</style></head><body>
+  <div class="label-eyebrow" style="margin-bottom: 14px">CollectionGrid — Animals (4-col) &amp; Pokémon (5-col)</div>
+
+  <div class="panes">
+    <div class="pane">
+      <div class="label">Animals · 4-col grid · all filter</div>
+      <div class="grid grid--animals">
+        <div class="slot"><span class="emoji">🦊</span><span class="count">×3</span></div>
+        <div class="slot"><span class="emoji">🐻</span><span class="count">×1</span></div>
+        <div class="slot is-active"><span class="emoji">🦩</span><span class="count">×2</span></div>
+        <div class="slot"><span class="ph">???</span></div>
+        <div class="slot"><span class="emoji">🐺</span><span class="count">×4</span></div>
+        <div class="slot"><span class="ph">???</span></div>
+        <div class="slot"><span class="emoji">🦅</span><span class="count">×1</span></div>
+        <div class="slot"><span class="ph">???</span></div>
+        <div class="slot"><span class="ph">???</span></div>
+        <div class="slot"><span class="emoji">🐢</span><span class="count">×1</span></div>
+        <div class="slot"><span class="ph">???</span></div>
+        <div class="slot"><span class="ph">???</span></div>
+      </div>
+    </div>
+
+    <div class="pane">
+      <div class="label">Pokémon · 5-col grid · real Showdown sprites</div>
+      <div class="grid grid--pokemon">
+        <!-- caught -->
+        <div class="slot"><img class="sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" alt=""/><span class="count">×2</span></div>
+        <div class="slot"><img class="sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" alt=""/><span class="count">×1</span></div>
+        <div class="slot"><img class="sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif" alt=""/></div>
+        <div class="slot"><img class="sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif" alt=""/><span class="count">×1</span></div>
+        <div class="slot"><img class="sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/39.gif" alt=""/></div>
+        <div class="slot"><img class="sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/150.gif" alt=""/></div>
+        <div class="slot is-active"><img class="sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" alt=""/><span class="count">×1</span></div>
+        <div class="slot"><img class="sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/143.gif" alt=""/></div>
+        <div class="slot"><img class="sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/94.gif" alt=""/><span class="count">×1</span></div>
+        <div class="slot"><img class="sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/54.gif" alt=""/></div>
+        <div class="slot"><img class="sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/66.gif" alt=""/></div>
+        <div class="slot"><img class="sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/65.gif" alt=""/></div>
+        <div class="slot"><img class="sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/129.gif" alt=""/></div>
+        <div class="slot"><img class="sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/130.gif" alt=""/></div>
+        <div class="slot"><img class="sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/131.gif" alt=""/></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="caption">
+    Sprites loaded from <code>raw.githubusercontent.com/PokeAPI/sprites</code> (Showdown set — animated <code>.gif</code>).
+    Same URL is used in production by <code>src/shared/pokemon-sprites.ts → getSpriteUrl()</code>.
+    Uncaught state applies <code>filter: brightness(0) opacity(.35)</code> so the silhouette is exactly the same shape as the eventual reveal.
+  </div>
+</body></html>

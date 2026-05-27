@@ -1,46 +1,270 @@
 <!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
-body { height: 280px; padding: 24px 28px; }
-.field { display: flex; flex-direction: column; gap: 6px; flex: 1; }
-.field label { font-family: var(--wh-font-sans); font-size: 11px; font-weight: 600; color: var(--wh-fg-2); text-transform: uppercase; letter-spacing: 0.06em; }
-.input, .select { font-family: var(--wh-font-sans); font-size: 13px; color: var(--wh-fg); background: var(--wh-surface-2); border: 1px solid var(--wh-border); border-radius: var(--wh-radius-2); padding: 9px 12px; outline: none; }
+body { width: 700px; padding: 24px 28px; }
+.stack { display: flex; flex-direction: column; gap: 24px; }
+.section { display: flex; flex-direction: column; gap: 10px; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+.row { display: flex; gap: 12px; align-items: stretch; flex-wrap: wrap; }
+
+/* === wh-input — base === */
+.input {
+  width: 220px; box-sizing: border-box;
+  padding: 9px 12px;
+  font-family: var(--wh-font-sans); font-size: 12px; color: var(--wh-fg);
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-border); border-radius: var(--wh-radius-2);
+  outline: none;
+  transition: border-color var(--wh-dur-base) var(--wh-ease-standard),
+              box-shadow var(--wh-dur-base) var(--wh-ease-standard);
+}
 .input::placeholder { color: var(--wh-fg-4); }
-.input:focus, .select:focus { border-color: var(--wh-primary); box-shadow: var(--wh-shadow-glow); }
 .input.mono { font-family: var(--wh-font-mono); }
-.row { gap: 14px; }
-.helper { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-3); }
-.error { color: var(--wh-danger); }
+.input.is-focused, .input:focus { border-color: var(--wh-primary); box-shadow: var(--wh-shadow-glow); }
+.input.is-error { border-color: var(--wh-danger); }
+.input.is-error.is-focused { box-shadow: 0 0 0 4px var(--wh-danger-soft); }
+
+.input--narrow { width: 90px; }
+
+/* === Number row (input + custom stacked stepper + unit) === */
+.num-row { display: inline-flex; align-items: center; gap: 8px; }
+.unit { font-family: var(--wh-font-sans); font-size: 12px; color: var(--wh-fg-3); }
+
+.numfield {
+  position: relative;
+  display: inline-flex; align-items: stretch;
+  width: 90px;
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-2);
+  overflow: hidden;
+  transition: border-color var(--wh-dur-base) var(--wh-ease-standard),
+              box-shadow var(--wh-dur-base) var(--wh-ease-standard);
+}
+.numfield:focus-within { border-color: var(--wh-primary); box-shadow: var(--wh-shadow-glow); }
+.numfield.is-error { border-color: var(--wh-danger); }
+.numfield.is-error:focus-within { box-shadow: 0 0 0 4px var(--wh-danger-soft); }
+.numfield input {
+  flex: 1; min-width: 0;
+  padding: 9px 4px 9px 12px;
+  font-family: var(--wh-font-sans); font-size: 12px; color: var(--wh-fg);
+  background: transparent;
+  border: none;
+  outline: none;
+  -moz-appearance: textfield;
+}
+.numfield input::-webkit-outer-spin-button,
+.numfield input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.numfield__steppers {
+  display: flex; flex-direction: column;
+  flex: 0 0 22px;
+  border-left: 1px solid var(--wh-border-soft);
+}
+.numfield__step {
+  flex: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0;
+  background: transparent;
+  color: var(--wh-fg-3);
+  border: none;
+  cursor: pointer;
+  transition: background var(--wh-dur-fast) var(--wh-ease-standard),
+              color var(--wh-dur-fast) var(--wh-ease-standard);
+}
+.numfield__step:hover { background: var(--wh-surface-3); color: var(--wh-fg); }
+.numfield__step:active { background: var(--wh-surface-3); color: var(--wh-primary); }
+.numfield__step + .numfield__step { border-top: 1px solid var(--wh-border-soft); }
+.numfield__step svg { width: 8px; height: 5px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.numfield--shipped { /* the look the browser ships by default — for contrast */ }
+.numfield--shipped input { padding-right: 12px; -moz-appearance: auto; }
+.numfield--shipped input::-webkit-outer-spin-button,
+.numfield--shipped input::-webkit-inner-spin-button { -webkit-appearance: auto; margin: 0; }
+.numfield--shipped .numfield__steppers { display: none; }
+
+/* === Search input — inline variant (as inside SearchableSelect dropdown) === */
+.dropdown-shell {
+  width: 220px;
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-primary); border-radius: 0 0 var(--wh-radius-2) var(--wh-radius-2);
+  box-shadow: var(--wh-shadow-2);
+  overflow: hidden;
+}
+.search-inline {
+  display: block; width: 100%; box-sizing: border-box;
+  padding: 7px 10px 7px 32px;
+  font-family: var(--wh-font-mono); font-size: 12px;
+  color: var(--wh-fg);
+  background: transparent url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%238C95B0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='7'/><path d='m20 20-3-3'/></svg>") no-repeat 10px center;
+  border: none;
+  border-bottom: 1px solid var(--wh-border-soft);
+  outline: none;
+}
+.search-inline::placeholder { color: var(--wh-fg-4); }
+.dropdown-shell .stub { padding: 7px 12px; font-family: var(--wh-font-mono); font-size: 12px; color: var(--wh-fg-4); }
+.dropdown-shell .stub.is-selected { background: var(--wh-primary-soft); color: var(--wh-primary); }
+
+/* === Search input — standalone variant === */
+.search-standalone {
+  width: 220px; box-sizing: border-box;
+  padding: 9px 12px 9px 34px;
+  font-family: var(--wh-font-sans); font-size: 12px; color: var(--wh-fg);
+  background: var(--wh-surface-2) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%238C95B0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='7'/><path d='m20 20-3-3'/></svg>") no-repeat 12px center;
+  border: 1px solid var(--wh-border); border-radius: var(--wh-radius-2);
+  outline: none;
+}
+.search-standalone::placeholder { color: var(--wh-fg-4); }
+.search-standalone:focus { border-color: var(--wh-primary); box-shadow: var(--wh-shadow-glow); }
+
+/* === Native select === */
+.select {
+  width: 220px; box-sizing: border-box;
+  padding: 9px 30px 9px 12px;
+  font-family: var(--wh-font-sans); font-size: 12px; color: var(--wh-fg);
+  background-color: var(--wh-surface-2);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%238C95B0' stroke-width='1.5' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  border: 1px solid var(--wh-border); border-radius: var(--wh-radius-2);
+  outline: none; appearance: none; -webkit-appearance: none;
+}
+.select:focus { border-color: var(--wh-primary); box-shadow: var(--wh-shadow-glow); }
+
+/* === Field meta === */
+.helper { font-family: var(--wh-font-sans); font-size: 11px; line-height: 1.4; color: var(--wh-fg-3); }
+.helper.error { color: var(--wh-danger); }
+.legend { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); line-height: 1.6; }
 </style></head><body>
-  <div class="label-eyebrow">Inputs & selects</div>
-  <div class="row">
-    <div class="field">
-      <label>Word list</label>
-      <select class="select"><option>Animals</option><option>Pokémon</option></select>
+  <div class="label-eyebrow" style="margin-bottom: 16px">Inputs · selects · search</div>
+
+  <div class="stack">
+
+    <div class="section">
+      <div class="label"><code style="font-family: var(--wh-font-mono); font-size: 10px">.wh-input</code> · base · default / focused / error</div>
+      <div class="row">
+        <input class="input" placeholder="placeholder">
+        <input class="input is-focused" value="elephant">
+        <input class="input is-error" value="a">
+      </div>
+      <div class="legend">9&nbsp;×&nbsp;12 padding · <code>--wh-surface-2</code> bg · <code>--wh-border</code> hairline · radius&nbsp;2 (8&nbsp;px) · focus paints primary border + 4&nbsp;px glow · error swaps to <code>--wh-danger</code> border, focus glow becomes <code>--wh-danger-soft</code>.</div>
     </div>
-    <div class="field">
-      <label>Word</label>
-      <select class="select"><option>flamingo</option></select>
+
+    <div class="section">
+      <div class="label"><code style="font-family: var(--wh-font-mono); font-size: 10px">.wh-input--mono</code> · for the hunted glyph (used in CustomWordModal)</div>
+      <div class="row">
+        <input class="input mono" placeholder="type a word…">
+        <input class="input mono" value="serendipity">
+      </div>
+      <div class="legend">JetBrains Mono so the typed word reads like the thing being hunted. Same chrome as base input — only the font swaps.</div>
     </div>
-  </div>
-  <div class="row" style="margin-top: 14px">
-    <div class="field">
-      <label>Custom word</label>
-      <input class="input mono" placeholder="type a word…">
-      <span class="helper">used as the next active word</span>
+
+    <div class="section">
+      <div class="label">Number input + unit · Settings (Hint delay / Cursor reveal delay) <span style="display: inline-block; margin-left: 4px; padding: 1px 5px; font-size: 9px; background: var(--wh-primary-soft); color: var(--wh-primary); border: 1px solid rgba(255, 210, 63, 0.25); border-radius: 3px;">proposed</span></div>
+      <div class="row">
+        <div class="num-row">
+          <div class="numfield">
+            <input type="number" value="3" min="1" step="1">
+            <div class="numfield__steppers">
+              <button class="numfield__step" tabindex="-1" aria-label="Increment"><svg viewBox="0 0 10 6"><path d="M1 5l4-4 4 4"/></svg></button>
+              <button class="numfield__step" tabindex="-1" aria-label="Decrement"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+            </div>
+          </div>
+          <span class="unit">min</span>
+        </div>
+        <div class="num-row">
+          <div class="numfield">
+            <input type="number" value="1.5" min="0.1" step="0.1">
+            <div class="numfield__steppers">
+              <button class="numfield__step" tabindex="-1" aria-label="Increment"><svg viewBox="0 0 10 6"><path d="M1 5l4-4 4 4"/></svg></button>
+              <button class="numfield__step" tabindex="-1" aria-label="Decrement"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+            </div>
+          </div>
+          <span class="unit">s</span>
+        </div>
+      </div>
+      <div class="legend">
+        Native <code>::-webkit-inner-spin-button</code> is hidden (and Firefox's via <code>-moz-appearance: textfield</code>); a 22&nbsp;px column of two chevron buttons takes its place, divided by a 1&nbsp;px <code>--wh-border-soft</code> hairline. <code>:focus-within</code> draws the primary glow around the whole field so the steppers are visually part of the input, not stuck onto it. Steppers carry <code>tabindex="-1"</code> — keyboard users step with ↑/↓ on the input itself, the mouse uses the chevrons.
+      </div>
     </div>
-    <div class="field">
-      <label>Hint delay (min)</label>
-      <input class="input" type="number" value="5" style="width: 80px">
+
+    <div class="section">
+      <div class="label">Number input — native spinners <span class="pill-deprecated" style="display: inline-block; margin-left: 4px; padding: 1px 5px; font-size: 9px; background: var(--wh-danger-soft); color: var(--wh-danger); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: 3px;">deprecated</span></div>
+      <div class="row">
+        <div class="num-row">
+          <div class="numfield numfield--shipped">
+            <input type="number" value="3" min="1" step="1">
+          </div>
+          <span class="unit">min</span>
+        </div>
+        <div class="num-row">
+          <div class="numfield numfield--shipped">
+            <input type="number" value="1.5" min="0.1" step="0.1">
+          </div>
+          <span class="unit">s</span>
+        </div>
+      </div>
+      <div class="legend">
+        Browser-default chrome leaks platform UI (Chromium's tiny spinner, Firefox's tall double-arrow). It breaks the system's quiet visual language and is impossible to skin reliably. Replaced by the custom stacked stepper above.
+      </div>
     </div>
-  </div>
-  <div class="row" style="margin-top: 14px">
-    <div class="field">
-      <label>Focused</label>
-      <input class="input" value="elephant" style="border-color: var(--wh-primary); box-shadow: var(--wh-shadow-glow)">
+
+    <div class="section">
+      <div class="label">Native select · <code style="font-family: var(--wh-font-mono); font-size: 10px">.wh-select</code> · custom chevron via background-image</div>
+      <div class="row">
+        <select class="select"><option>Animals</option><option>Pokémon</option></select>
+      </div>
+      <div class="legend">Native <code>&lt;select&gt;</code> with <code>appearance: none</code> + an inline SVG caret on the right. 30&nbsp;px right-padding reserves the caret's track.</div>
     </div>
-    <div class="field">
-      <label>Error</label>
-      <input class="input" value="" placeholder="empty word" style="border-color: var(--wh-danger)">
-      <span class="helper error">enter at least one character</span>
+
+    <div class="section">
+      <div class="label">Search input — <span style="color: var(--wh-fg-2)">inline</span> · <code style="font-family: var(--wh-font-mono); font-size: 10px">.wh-ss__search</code> · used inside SearchableSelect dropdown</div>
+      <div class="row">
+        <div class="dropdown-shell">
+          <input class="search-inline" placeholder="Search…">
+          <div class="stub is-selected">Pikachu</div>
+          <div class="stub">Eevee</div>
+          <div class="stub">Bulbasaur</div>
+        </div>
+        <div class="dropdown-shell">
+          <input class="search-inline" value="pi">
+          <div class="stub is-selected">Pikachu</div>
+        </div>
+      </div>
+      <div class="legend">Transparent fill — the dropdown's own <code>--wh-surface-2</code> surface provides the background. 32&nbsp;px left padding holds the inline magnifier glyph (inline SVG via <code>background-image</code>, <code>--wh-fg-3</code> stroke). 1&nbsp;px <code>--wh-border-soft</code> bottom edge separates the field from the options list; no top / side borders because the dropdown's own border already frames it. Mono font — players are typing the start of a hunted word.</div>
     </div>
+
+    <div class="section">
+      <div class="label">Search input — <span style="color: var(--wh-fg-2)">standalone</span> <span style="display: inline-block; margin-left: 4px; padding: 1px 5px; font-size: 9px; background: var(--wh-primary-soft); color: var(--wh-primary); border: 1px solid rgba(255, 210, 63, 0.25); border-radius: 3px;">proposed</span></div>
+      <div class="row">
+        <input class="search-standalone" placeholder="Search hunts…">
+        <input class="search-standalone" value="flam">
+      </div>
+      <div class="legend">A reusable filter-input variant for surfaces outside a dropdown — same magnifier glyph and left-padding rhythm as the inline version, but wears the full <code>--wh-surface-2</code> + border + radius chrome of <code>.wh-input</code>. Sans-12 (not mono) because it acts as a filter / find-as-you-type, not as the place where the player commits a hunted word. <em>Not in code yet</em>; reserved for an eventual Stats filter or a future word-library surface.</div>
+    </div>
+
+    <div class="section">
+      <div class="label">Field — label + control + helper / error</div>
+      <div class="row" style="align-items: flex-start">
+        <div style="display: flex; flex-direction: column; gap: 6px; flex: 0 0 220px">
+          <span class="label">Hint delay</span>
+          <div class="num-row">
+            <div class="numfield">
+              <input type="number" value="3" min="1" step="1">
+              <div class="numfield__steppers">
+                <button class="numfield__step" tabindex="-1" aria-label="Increment"><svg viewBox="0 0 10 6"><path d="M1 5l4-4 4 4"/></svg></button>
+                <button class="numfield__step" tabindex="-1" aria-label="Decrement"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+              </div>
+            </div>
+            <span class="unit">min</span>
+          </div>
+          <span class="helper">minutes the page is open before the hint tooltip shows</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; flex: 0 0 220px">
+          <span class="label">Word</span>
+          <input class="input mono is-error" value="a">
+          <span class="helper error">Use at least 2 letters.</span>
+        </div>
+      </div>
+      <div class="legend"><code>.wh-field</code> stacks label · control · helper (or error). Label is 11&nbsp;px sans-semibold-uppercase. Helper / error are 11&nbsp;px with a fixed <code>min-height</code> so the layout doesn't jump between states.</div>
+    </div>
+
   </div>
 </body></html>

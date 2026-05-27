@@ -13,12 +13,12 @@ describe("AutoModeToast", () => {
 
   it("does not render anything before show() is called", () => {
     AutoModeToast(document, () => "en");
-    expect(document.querySelector(".hw-toast--info")).toBeNull();
+    expect(document.querySelector(".hw-toast--auto")).toBeNull();
   });
 
   it("show() appends an info toast with the localized message", () => {
     AutoModeToast(document, () => "en").show();
-    const toast = document.querySelector(".hw-toast--info");
+    const toast = document.querySelector(".hw-toast--auto");
     expect(toast).not.toBeNull();
     expect(toast?.textContent).toContain("Auto-Hunter active");
   });
@@ -37,29 +37,29 @@ describe("AutoModeToast", () => {
     const toast = AutoModeToast(document, () => "en");
     toast.show();
     toast.show();
-    expect(document.querySelectorAll(".hw-toast--info").length).toBe(1);
+    expect(document.querySelectorAll(".hw-toast--auto").length).toBe(1);
   });
 
   it("auto-dismisses after 4 seconds", () => {
     AutoModeToast(document, () => "en").show();
-    expect(document.querySelector(".hw-toast--info")).not.toBeNull();
+    expect(document.querySelector(".hw-toast--auto")).not.toBeNull();
     jest.advanceTimersByTime(4000);
-    expect(document.querySelector(".hw-toast--info")).toBeNull();
+    expect(document.querySelector(".hw-toast--auto")).toBeNull();
   });
 
   it("clicking the × button dismisses the toast immediately", () => {
     AutoModeToast(document, () => "en").show();
     const btn = document.querySelector(".hw-toast__close") as HTMLElement;
     btn.click();
-    expect(document.querySelector(".hw-toast--info")).toBeNull();
+    expect(document.querySelector(".hw-toast--auto")).toBeNull();
   });
 
   it("dismiss() removes the toast and cancels the auto-dismiss timer", () => {
     const toast = AutoModeToast(document, () => "en");
     toast.show();
     toast.dismiss();
-    expect(document.querySelector(".hw-toast--info")).toBeNull();
+    expect(document.querySelector(".hw-toast--auto")).toBeNull();
     jest.advanceTimersByTime(5000);
-    expect(document.querySelector(".hw-toast--info")).toBeNull();
+    expect(document.querySelector(".hw-toast--auto")).toBeNull();
   });
 });

@@ -29,15 +29,34 @@
   --wh-found:        #5EE3A1;   /* celebration / success */
   --wh-found-soft:   rgba(94, 227, 161, 0.15);
 
-  --wh-hint:         #8AB4FF;   /* hint tooltip accent */
-  --wh-hint-soft:    rgba(138, 180, 255, 0.16);
+  /* Informational blue — the system's quiet communication tone.
+     Used by: hint toast, ReloadHint, stats hint-dot, link icon. */
+  --wh-info:         #8AB4FF;
+  --wh-info-soft:    rgba(138, 180, 255, 0.16);
+
+  /* Selection / pending blue — a state, not a message.
+     Used by: is-pending slot ring, current-streak value. Same hex as --wh-info for now;
+     promote to a distinct hue if the two ever need to coexist on one surface. */
+  --wh-selected:      #8AB4FF;
+  --wh-selected-soft: rgba(138, 180, 255, 0.16);
+
+  /* Soft amber — reserved for future "heads-up" states between primary CTA and danger.
+     Not used by any surface today; pre-allocated so we don't reach for --wh-primary or
+     --wh-danger when a milder warning is actually what's needed. */
+  --wh-warning:      #FFA862;
+  --wh-warning-soft: rgba(255, 168, 98, 0.18);
 
   --wh-danger:       #FF6B6B;
   --wh-danger-soft:  rgba(255, 107, 107, 0.15);
 
+  /* Legacy aliases — kept so codebase css that still references --wh-hint keeps working.
+     New surfaces should reach for --wh-info or --wh-selected directly. */
+  --wh-hint:         var(--wh-info);
+  --wh-hint-soft:    var(--wh-info-soft);
+
   /* ---------- WordList theming ---------- */
-  --wh-list-animals: #5EE3A1;   /* mint — natural */
-  --wh-list-pokemon: #FF8AC2;   /* pink — playful */
+  --wh-list-animals: var(--wh-found);  /* alias: Animals share the success-mint hex */
+  --wh-list-pokemon: #FF8AC2;          /* pink — playful */
 
   /* ---------- Spacing scale (4px base) ---------- */
   --wh-space-0: 0;
@@ -107,8 +126,8 @@
   --wh-dur-slow:      360ms;
 
   /* ---------- Layout ---------- */
-  --wh-popup-width: 360px;     /* recommended popup width (the existing 320 is tight) */
-  --wh-popup-min-h: 440px;
+  --wh-popup-width: 360px;     /* shipping popup width */
+  --wh-popup-min-h: 560px;     /* shipping minimum height — fits Play tab w/ Collection grid */
 }
 
 /* ============================================================

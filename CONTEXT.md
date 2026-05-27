@@ -65,7 +65,7 @@ A `Map<word, number>` that records, for the active `WordList`, how many `HuntRec
 _Avoid_: hit count, find count, score
 
 **CollectionSlot**:
-A single grid cell representing one `Word`. Three visual states: `caught` (catch count ≥ 1) shows the word's art — emoji for Animals, PokeAPI sprite for Pokémon — plus an `×N` counter; `uncaught` shows `???` for Animals and a `brightness(0)` silhouette of the sprite for Pokémon; `active` overlays a primary-yellow glow when the slot's word equals the `ActiveWord`. Clicking a slot sets it as the `ActiveWord`.
+A single grid cell representing one `Word`. Four visual states: `caught` (catch count ≥ 1) shows the word's art — emoji for Animals, PokeAPI sprite for Pokémon — plus an `×N` counter; `uncaught` shows `???` for Animals and a `brightness(0)` silhouette of the sprite for Pokémon; `pending` shows a blue selection ring when the slot has been clicked but the hunt has not yet been started (the slot's word is held in the Play tab's local `pendingWord` state, not yet written to storage); `active` overlays a primary-yellow glow when the slot's word equals the `ActiveWord`. Clicking a slot transitions it to `pending`; pressing `Start a hunt` commits it to `active`.
 _Avoid_: cell, tile, card
 
 **CollectionFilter**:
@@ -111,7 +111,7 @@ _Avoid_: notification settings, toast settings, toast toggles
 - A **ReviewClick** on an already-found **HiddenWord** replays the **CelebrationPopup** without producing a new **HuntRecord**
 - A **HintTimer** runs per page that contains a **HiddenWord**
 - The **HuntCollection** for a given **WordList** is derived from the subset of **HuntRecord**s whose `list` field matches that **WordList** — there is no denormalised collection state
-- A **CollectionSlot** is `caught` when the **CatchCount** for its **Word** is ≥ 1, and `active` when its **Word** equals the **ActiveWord**
+- A **CollectionSlot** is `caught` when the **CatchCount** for its **Word** is ≥ 1, `pending` when its **Word** equals the Play tab's local `pendingWord` (clicked but not yet started), and `active` when its **Word** equals the **ActiveWord**
 - A **Streak** is derived from the local-calendar dates of every **HuntRecord** regardless of which **WordList** the record came from
 - An **Achievement** is derived from the **CollectionStats** of the active list and the global **Streak**
 - When **AutoContinueMode** is on, a **FindEvent** on a non-custom-list **HiddenWord** auto-selects the next **Word** from the same **WordList** as the new **ActiveWord**; otherwise the **ActiveWord** is cleared

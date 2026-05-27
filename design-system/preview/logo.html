@@ -1,27 +1,34 @@
 <!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
-body { padding: 32px; height: 220px; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
-.lockup { display: flex; align-items: center; gap: 20px; }
-.glyph { width: 72px; height: 72px; }
+body { padding: 32px; height: 280px; display: flex; flex-direction: column; justify-content: center; gap: 24px; }
+.lockup { display: flex; align-items: center; gap: 16px; }
+.glyph-lg { width: 72px; height: 72px; border-radius: 14px; }
+.glyph-md { width: 28px; height: 28px; border-radius: 6px; }
 .wordmark-box { display: flex; flex-direction: column; gap: 4px; }
-.wordmark { font-family: var(--wh-font-sans); font-weight: 700; font-size: 38px; letter-spacing: -0.01em; color: var(--wh-fg); }
-.tag { font-family: var(--wh-font-serif); font-style: italic; font-size: 14px; color: var(--wh-fg-3); letter-spacing: 0.01em; }
+.wordmark-lg { font-family: var(--wh-font-sans); font-weight: 700; font-size: 36px; letter-spacing: -0.01em; color: var(--wh-fg); }
+.wordmark-md { font-family: var(--wh-font-sans); font-weight: 700; font-size: 18px; letter-spacing: -0.01em; color: var(--wh-fg); }
+.tag { font-family: var(--wh-font-serif); font-style: italic; font-size: 14px; color: var(--wh-fg-3); }
 .divider { height: 1px; background: var(--wh-border); }
-.row { display: flex; gap: 24px; align-items: center; }
-.row .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); width: 70px; }
-.glyph-mini { width: 32px; height: 32px; border-radius: 7px; }
+.row { display: flex; gap: 20px; align-items: center; }
+.label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); width: 96px; font-weight: 600; }
+.note { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); }
 </style></head><body>
   <div class="lockup">
-    <img class="glyph" src="../assets/glyph.svg" alt="">
+    <img class="glyph-lg" src="../assets/logo.png" alt="Word Hunter">
     <div class="wordmark-box">
-      <span class="wordmark">Word Hunter</span>
+      <span class="wordmark-lg">Word Hunter</span>
       <span class="tag">— hunt the word hidden in the page —</span>
     </div>
   </div>
   <div class="divider"></div>
   <div class="row">
-    <span class="label">Glyph</span>
-    <img class="glyph-mini" src="../assets/glyph.svg" alt="">
-    <img class="glyph-mini" src="../assets/icon48.png" alt="" style="opacity:0.55">
-    <span style="font-size:11px;color:var(--wh-fg-3);font-family:var(--wh-font-mono)">designed → existing placeholder</span>
+    <span class="label">Header use</span>
+    <img class="glyph-md" src="../assets/logo.png" alt="">
+    <span class="wordmark-md">Word Hunter</span>
+    <span class="note">28&nbsp;×&nbsp;28 glyph + 18&nbsp;px wordmark · gap 12&nbsp;px</span>
+  </div>
+  <div class="row">
+    <span class="label">In-page toast</span>
+    <img class="glyph-md" src="../assets/logo.png" alt="" style="width: 20px; height: 20px; border-radius: 4px">
+    <span class="note">20&nbsp;×&nbsp;20 inside InPageToast (Open Popup affordance)</span>
   </div>
 </body></html>

@@ -23,6 +23,13 @@ describe("InPageToast", () => {
     expect(container.querySelector(".hw-toast--info")).not.toBeNull();
   });
 
+  it("applies hw-toast--auto class for auto variant", () => {
+    const { container } = render(
+      <InPageToast message="Test" locale="en" variant="auto" onClose={() => {}} />
+    );
+    expect(container.querySelector(".hw-toast--auto")).not.toBeNull();
+  });
+
   it("renders the message text", () => {
     const { container } = render(
       <InPageToast

@@ -1,0 +1,138 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { width: 700px; padding: 24px 28px; }
+.stack { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+.frame {
+  position: relative;
+  width: 320px; height: 340px;
+  background: linear-gradient(180deg, rgba(11, 15, 25, 0.5), rgba(11, 15, 25, 0.6)), var(--wh-bg);
+  border: 1px solid var(--wh-border); border-radius: var(--wh-radius-3);
+  overflow: hidden;
+}
+
+.backdrop {
+  position: absolute; inset: 0;
+  z-index: 50;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  background: rgba(11, 15, 25, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.dialog {
+  width: 100%;
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 16px;
+  background: var(--wh-surface);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-3);
+  box-shadow: var(--wh-shadow-3);
+}
+.header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.title { font-family: var(--wh-font-sans); font-size: 14px; font-weight: 600; color: var(--wh-fg); }
+.close {
+  flex: 0 0 28px; width: 28px; height: 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; color: var(--wh-fg-3);
+  border: 1px solid var(--wh-border-soft); border-radius: var(--wh-radius-1);
+  cursor: pointer;
+}
+.close svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field-row { display: flex; justify-content: space-between; align-items: center; }
+.field-label { font-family: var(--wh-font-sans); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-2); }
+.counter { font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-3); }
+.counter.is-error { color: var(--wh-danger); }
+.helper { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-3); line-height: 1.4; min-height: 15px; }
+.error-line { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-danger); line-height: 1.4; min-height: 15px; }
+
+input {
+  width: 100%; box-sizing: border-box;
+  padding: 9px 12px;
+  font-family: var(--wh-font-mono); font-size: 12px;
+  color: var(--wh-fg);
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-2);
+  outline: none;
+}
+input:focus { border-color: var(--wh-primary); box-shadow: var(--wh-shadow-glow); }
+input.is-error { border-color: var(--wh-danger); box-shadow: 0 0 0 4px var(--wh-danger-soft); }
+
+.footer { display: flex; justify-content: flex-end; gap: 8px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  font-family: var(--wh-font-sans); font-size: 12px; font-weight: 600;
+  border-radius: var(--wh-radius-2);
+  cursor: pointer; border: 1px solid transparent;
+}
+.btn--primary { background: var(--wh-primary); color: var(--wh-on-primary); }
+.btn--ghost { background: transparent; color: var(--wh-fg-2); }
+
+.caption { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); max-width: 660px; }
+</style></head><body>
+  <div class="label-eyebrow" style="margin-bottom: 14px">CustomWordModal — opened from the BottomActionBar pencil button</div>
+  <div class="stack" style="flex-direction: row; gap: 20px; align-items: flex-start; flex-wrap: wrap">
+    <div>
+      <div class="label" style="margin-bottom: 8px">default · valid input</div>
+      <div class="frame">
+        <div class="backdrop">
+          <div class="dialog">
+            <div class="header">
+              <span class="title">Custom word</span>
+              <button class="close" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+            </div>
+            <div class="field">
+              <div class="field-row">
+                <span class="field-label">Word</span>
+                <span class="counter">11 / 25</span>
+              </div>
+              <input type="text" value="serendipity">
+              <span class="helper">&nbsp;</span>
+            </div>
+            <div class="footer">
+              <button class="btn btn--ghost">Cancel</button>
+              <button class="btn btn--primary">Start hunt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="label" style="margin-bottom: 8px">error · post-submit validation</div>
+      <div class="frame">
+        <div class="backdrop">
+          <div class="dialog">
+            <div class="header">
+              <span class="title">Custom word</span>
+              <button class="close" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+            </div>
+            <div class="field">
+              <div class="field-row">
+                <span class="field-label">Word</span>
+                <span class="counter is-error">1 / 25</span>
+              </div>
+              <input type="text" class="is-error" value="a">
+              <span class="error-line">Use at least 2 letters.</span>
+            </div>
+            <div class="footer">
+              <button class="btn btn--ghost">Cancel</button>
+              <button class="btn btn--primary">Start hunt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="caption" style="margin-top: 16px">
+    Absolute-positioned within the popup (<code>position: absolute; inset: 0</code>) — only covers the popup itself, not the host page. Backdrop is <code>rgba(11, 15, 25, 0.7)</code> + 6&nbsp;px <code>backdrop-filter: blur</code>. Dialog sits on <code>--wh-surface</code> with the largest shadow level (<code>--wh-shadow-3</code>).
+    Focus traps inside the dialog (Tab cycles between input ↔ Cancel ↔ Start hunt); Esc and backdrop click close it; mono input for the word itself (the actual hunted glyph).
+    Validation: error only shown <em>after</em> first submit attempt, then real-time. Counter goes danger-red when over limit.
+  </div>
+</body></html>

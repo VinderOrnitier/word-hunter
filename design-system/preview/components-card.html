@@ -1,29 +1,90 @@
 <!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
-body { height: 240px; padding: 24px 28px; }
-.row { gap: 14px; align-items: stretch; }
-.card { background: var(--wh-surface); border: 1px solid var(--wh-border); border-radius: var(--wh-radius-3); padding: 16px; box-shadow: var(--wh-shadow-2); flex: 1; display: flex; flex-direction: column; gap: 10px; }
-.eyebrow { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
-.word { font-family: var(--wh-font-mono); font-size: 22px; font-weight: 700; color: var(--wh-fg); letter-spacing: -0.01em; }
-.word .hl { background-image: linear-gradient(180deg, transparent 0, transparent 55%, var(--wh-primary) 55%, var(--wh-primary) 92%, transparent 92%); padding: 0 2px; }
-.meta { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-3); display: flex; gap: 10px; }
-.meta .dot { color: var(--wh-fg-4); }
-.divider { height: 1px; background: var(--wh-border-soft); }
-.actions { display: flex; gap: 8px; }
-.btn { font-family: var(--wh-font-sans); font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: var(--wh-radius-2); border: 1px solid transparent; cursor: pointer; }
-.btn-primary { background: var(--wh-primary); color: var(--wh-on-primary); }
-.btn-secondary { background: var(--wh-surface-2); color: var(--wh-fg); border-color: var(--wh-border); }
+body { width: 700px; padding: 24px 28px; }
+.stack { display: flex; flex-direction: column; gap: 22px; }
+.row { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); margin-bottom: 8px; }
+
+/* The base card primitive — wh-card in popup.css */
+.card {
+  width: 220px;
+  display: flex; flex-direction: column; gap: 8px;
+  background: var(--wh-surface);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-3);
+  box-shadow: var(--wh-shadow-2);
+}
+.card--compact { padding: 16px; }
+.card--comfortable { padding: 24px; }
+
+.card-body { font-family: var(--wh-font-sans); font-size: 12px; color: var(--wh-fg-2); line-height: 1.5; }
+.card-eyebrow { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+/* The "tighter sibling" — ActiveWordCard chrome */
+.card-tight {
+  width: 220px;
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 10px 12px;
+  background: var(--wh-surface);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-3);
+  box-shadow: var(--wh-shadow-1);
+}
+.card-tight-eyebrow {
+  font-family: var(--wh-font-sans); font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3);
+}
+
+.note { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-2); line-height: 1.5; max-width: 660px; }
+.note b { color: var(--wh-fg); }
+.note code { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); background: var(--wh-surface); padding: 1px 5px; border-radius: 3px; border: 1px solid var(--wh-border-soft); }
+
+.caption { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); max-width: 660px; line-height: 1.6; }
 </style></head><body>
-  <div class="label-eyebrow">Card · active hunt</div>
-  <div class="row">
-    <div class="card">
-      <span class="eyebrow">Active word</span>
-      <span class="word">flamingo</span>
-      <div class="meta"><span>From Animals</span><span class="dot">·</span><span>Hunting for 2 min 14 s</span></div>
-      <div class="divider"></div>
-      <div class="actions">
-        <button class="btn btn-primary">New word</button>
-        <button class="btn btn-secondary">Change list</button>
+  <div class="label-eyebrow" style="margin-bottom: 16px">Card — the base container primitive</div>
+
+  <div class="stack">
+    <div>
+      <div class="label">compact · 16&nbsp;px padding · default</div>
+      <div class="row">
+        <div class="card card--compact">
+          <span class="card-eyebrow">Today</span>
+          <div class="card-body">A generic card surface — used wherever you need a panel with a hairline border and a sit-on-page shadow.</div>
+        </div>
+        <div class="card card--compact">
+          <span class="card-eyebrow">Settings</span>
+          <div class="card-body">Inputs and toggles can nest inside; the card supplies the frame, the contents bring the form.</div>
+        </div>
       </div>
+    </div>
+
+    <div>
+      <div class="label">comfortable · 24&nbsp;px padding · used in roomier surfaces</div>
+      <div class="row">
+        <div class="card card--comfortable">
+          <span class="card-eyebrow">About</span>
+          <div class="card-body">When the card is the only thing in its column and there's air around it, prefer the comfortable padding.</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="label">tight · ActiveWordCard chrome · 10&nbsp;×&nbsp;12 padding · shadow-1</div>
+      <div class="row">
+        <div class="card-tight">
+          <span class="card-tight-eyebrow">Variant</span>
+          <div class="card-body">A denser sibling — same border + radius, smaller padding, softer <code style="font-family: var(--wh-font-mono); font-size: 10px">--wh-shadow-1</code> instead of shadow-2. Used where the card has a strong internal visual anchor (e.g. the 40&nbsp;×&nbsp;40 art square in ActiveWordCard).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>Card</b> is a primitive — a rectangle with consistent treatment. It does not carry content semantics itself; the components built on top of it (<code>ActiveWordCard</code>, <code>CustomWordModal</code> dialog, the expanded <code>ProgressRow</code> panel, the empty Stats state's container) compose on this base.
+      <br><br>
+      Recipe: <code>background: var(--wh-surface)</code> · <code>border: 1px solid var(--wh-border)</code> · <code>border-radius: var(--wh-radius-3)</code> · <code>box-shadow: var(--wh-shadow-2)</code> · padding <code>16</code> (compact) or <code>24</code> (comfortable). Cards <b>never</b> have a coloured left-border accent — that pattern is intentionally absent from this system.
+    </div>
+
+    <div class="caption">
+      The system uses <code>wh-card</code> sparingly. Most "boxes" you see in the popup are actually one of the composed components, each tuned to its specific use. If you find yourself reaching for <code>wh-card</code> directly, ask whether the new surface should grow into its own named component instead.
     </div>
   </div>
 </body></html>

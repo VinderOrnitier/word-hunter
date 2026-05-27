@@ -1,0 +1,128 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { width: 700px; padding: 24px 28px; }
+.stack { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+.row-wrap { width: 328px; display: flex; flex-direction: column; gap: 6px; }
+
+.row {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 6px 8px;
+  background: var(--wh-surface);
+  border: 1px solid var(--wh-border-soft);
+  border-radius: var(--wh-radius-2);
+  cursor: pointer;
+  text-align: left;
+}
+.row.is-expanded { background: var(--wh-surface-2); }
+
+.count {
+  font-family: var(--wh-font-mono); font-size: 11px; font-weight: 600;
+  color: var(--wh-fg); flex: 0 0 auto;
+}
+
+.bar { flex: 1; height: 4px; background: var(--wh-surface-2); border-radius: 999px; overflow: hidden; }
+.row.is-expanded .bar { background: var(--wh-surface-3); }
+.bar > i { display: block; height: 100%; background: var(--wh-primary); border-radius: 999px; }
+
+.ach-chip {
+  display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px;
+  background: var(--wh-surface-2); color: var(--wh-fg-2);
+  border: 1px solid var(--wh-border-soft); border-radius: 999px;
+}
+.row.is-expanded .ach-chip { background: var(--wh-surface-3); }
+.ach-icon { display: inline-flex; color: var(--wh-fg-4); }
+.ach-icon.is-unlocked { color: var(--wh-primary); }
+.ach-icon svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ach-icon.is-unlocked svg { fill: currentColor; }
+.ach-count { font-family: var(--wh-font-sans); font-size: 10px; }
+
+.chevron { display: inline-flex; color: var(--wh-fg-3); }
+.chevron svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.row.is-expanded .chevron { transform: rotate(180deg); }
+
+.panel {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 10px 12px;
+  background: var(--wh-surface);
+  border: 1px solid var(--wh-border-soft);
+  border-radius: var(--wh-radius-2);
+}
+.eyebrow {
+  font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3);
+}
+
+.streak { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.streak-stats { display: flex; align-items: center; gap: 12px; }
+.stat { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+.stat-value { font-family: var(--wh-font-mono); font-size: 14px; font-weight: 700; color: var(--wh-fg-2); }
+.stat-current .stat-value { color: var(--wh-selected); }
+.stat-label { font-family: var(--wh-font-sans); font-size: 9px; text-transform: lowercase; color: var(--wh-fg-3); letter-spacing: 0.08em; }
+.sep { width: 1px; height: 16px; background: var(--wh-border); }
+
+.divider { height: 0; border-bottom: 1px dashed var(--wh-border-soft); }
+
+.ach-list { display: flex; flex-wrap: wrap; gap: 3px; }
+.ach { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; font-family: var(--wh-font-sans); font-size: 10px; color: var(--wh-fg-2); background: var(--wh-surface-2); border: 1px solid var(--wh-border-soft); border-radius: 999px; }
+.ach.is-locked { opacity: 0.45; }
+.ach .ach-icon { color: var(--wh-fg-4); }
+.ach.is-unlocked .ach-icon { color: var(--wh-primary); }
+.ach.is-unlocked .ach-icon svg { fill: currentColor; }
+.ach svg { width: 9px; height: 9px; }
+
+.caption { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); max-width: 660px; }
+</style></head><body>
+  <div class="label-eyebrow" style="margin-bottom: 14px">ProgressRow — collapsible one-liner (replaces the old ProgressHeader card)</div>
+  <div class="stack">
+    <div>
+      <div class="label" style="margin-bottom: 8px">collapsed · count + bar + ach-chip + chevron</div>
+      <div class="row-wrap">
+        <button class="row" aria-expanded="false">
+          <span class="count">23/56</span>
+          <span class="bar"><i style="width: 41%"></i></span>
+          <span class="ach-chip"><span class="ach-icon is-unlocked"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span><span class="ach-count">2/5</span></span>
+          <span class="chevron"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>
+        </button>
+      </div>
+    </div>
+
+    <div>
+      <div class="label" style="margin-bottom: 8px">expanded · streak block + achievement pills</div>
+      <div class="row-wrap">
+        <button class="row is-expanded" aria-expanded="true">
+          <span class="count">23/56</span>
+          <span class="bar"><i style="width: 41%"></i></span>
+          <span class="ach-chip"><span class="ach-icon is-unlocked"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span><span class="ach-count">2/5</span></span>
+          <span class="chevron"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>
+        </button>
+        <div class="panel">
+          <div class="streak">
+            <span class="eyebrow">Streak</span>
+            <div class="streak-stats">
+              <div class="stat stat-current"><span class="stat-value">12d</span><span class="stat-label">current</span></div>
+              <span class="sep"></span>
+              <div class="stat"><span class="stat-value">21d</span><span class="stat-label">longest</span></div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div>
+            <div class="eyebrow" style="margin-bottom: 6px">Achievements</div>
+            <div class="ach-list">
+              <span class="ach is-unlocked"><span class="ach-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>First catch</span>
+              <span class="ach is-locked" title="Catch 5 more to reach 50%"><span class="ach-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>Half-way</span>
+              <span class="ach is-locked" title="Catch them all"><span class="ach-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>Master hunter</span>
+              <span class="ach is-unlocked"><span class="ach-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>7-day streak</span>
+              <span class="ach is-locked" title="Hunt 30 days in a row"><span class="ach-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>30-day streak</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="caption">
+      Replaces ProgressHeader card with a single button row. Count is mono · 4&nbsp;px bar (primary fill, surface-2 track) · ach-chip shows <code>unlocked/total</code> with a star icon (filled when ≥&nbsp;1 unlocked) · chevron rotates 180° on expand.
+      Streak block sits inside the expanded panel — <code>current</code> uses <code>--wh-selected</code> (a state, not a message), <code>longest</code> is fg-2 (subordinate). Expansion is transient (not persisted). Achievements stay always five; locked ones drop to <code>opacity: 0.45</code> with an <code>--wh-fg-4</code> star and a <code>title</code> hint of how to unlock.
+    </div>
+  </div>
+</body></html>

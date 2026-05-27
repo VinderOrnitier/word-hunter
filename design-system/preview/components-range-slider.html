@@ -1,0 +1,80 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { width: 700px; padding: 24px 28px; }
+.stack { display: flex; flex-direction: column; gap: 20px; align-items: flex-start; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+.field { width: 328px; display: flex; flex-direction: column; gap: 8px; }
+.field-label { font-family: var(--wh-font-sans); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-2); }
+.field-helper { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-3); line-height: 1.4; }
+
+.row { display: flex; align-items: center; gap: 8px; }
+
+input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  flex: 1; height: 4px;
+  border-radius: 2px; outline: none; cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--wh-bg); border: 2px solid var(--wh-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+input[type="range"]:focus::-webkit-slider-thumb { box-shadow: var(--wh-shadow-glow); }
+
+.value-chip {
+  font-family: var(--wh-font-mono); font-size: 11px; font-weight: 500;
+  color: var(--wh-primary);
+  background: var(--wh-primary-soft);
+  border: 1px solid rgba(255, 210, 63, 0.25);
+  border-radius: var(--wh-radius-1);
+  padding: 3px 8px;
+  min-width: 36px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.caption { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); max-width: 660px; }
+</style></head><body>
+  <div class="label-eyebrow" style="margin-bottom: 14px">Range slider — settings · gradient track + value chip</div>
+  <div class="stack">
+    <div class="field">
+      <span class="field-label">Minimum paragraph length</span>
+      <div class="row">
+        <input type="range" min="30" max="150" step="10" value="30" style="background: linear-gradient(to right, var(--wh-primary) 0%, var(--wh-primary) 0%, var(--wh-surface-2) 0%, var(--wh-surface-2) 100%);">
+        <span class="value-chip">30</span>
+      </div>
+      <span class="field-helper">paragraphs below this word count are skipped</span>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Minimum paragraph length · mid</span>
+      <div class="row">
+        <input type="range" min="30" max="150" step="10" value="80" style="background: linear-gradient(to right, var(--wh-primary) 0%, var(--wh-primary) 41.67%, var(--wh-surface-2) 41.67%, var(--wh-surface-2) 100%);">
+        <span class="value-chip">80</span>
+      </div>
+      <span class="field-helper">paragraphs below this word count are skipped</span>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Minimum paragraph length · max</span>
+      <div class="row">
+        <input type="range" min="30" max="150" step="10" value="150" style="background: linear-gradient(to right, var(--wh-primary) 0%, var(--wh-primary) 100%, var(--wh-surface-2) 100%, var(--wh-surface-2) 100%);">
+        <span class="value-chip">150</span>
+      </div>
+      <span class="field-helper">paragraphs below this word count are skipped</span>
+    </div>
+
+    <div class="caption">
+      4&nbsp;px track painted as an inline <code>linear-gradient</code> (primary up to value, surface-2 after) · 18&nbsp;px thumb with 2&nbsp;px primary border on bg fill (so the thumb reads as a hole punched in the track). On hover the thumb fills with <code>--wh-primary-soft</code> and scales to 1.15; active state fills solid primary and scales to 0.96 (press feedback). Focus draws the standard <code>--wh-shadow-glow</code> ring around the thumb. Value-chip sits to the right of the track (mono, primary text on <code>--wh-primary-soft</code>).
+    </div>
+
+    <div style="width: 100%; max-width: 660px; margin-top: 4px; padding: 12px; background: var(--wh-surface); border: 1px solid var(--wh-border-soft); border-radius: var(--wh-radius-2);">
+      <div style="font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); margin-bottom: 8px">Firefox parity · to-do at code-side rollout</div>
+      <div style="font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-2); line-height: 1.55">
+        Today <code style="font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3)">::-webkit-slider-thumb</code> ships hover (<code>scale(1.15)</code> + soft-primary fill), focus (<code>--wh-shadow-glow</code>) and active (<code>scale(0.96)</code> + solid primary) states.
+        <code style="font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3)">::-moz-range-thumb</code> currently only carries the base look (size, bg, border) — no hover, no focus, no active. Mirror the three webkit pseudo-states on the moz pseudo for parity on Firefox-based browsers. Same property values, same easing.
+      </div>
+    </div>
+  </div>
+</body></html>

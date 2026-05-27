@@ -1,0 +1,140 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { width: 700px; padding: 0; }
+.scene { padding: 36px 28px 28px; background: linear-gradient(180deg, #1a1f2c 0, #0e1320 100%); }
+.fakepage { font-family: Georgia, serif; font-size: 13px; color: rgba(255, 255, 255, 0.36); line-height: 1.7; max-width: 600px; margin-top: 28px; }
+.stack { display: flex; flex-direction: column; gap: 22px; }
+.row { display: flex; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); margin-bottom: 8px; }
+.legend { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); max-width: 644px; line-height: 1.6; }
+.legend b { color: var(--wh-fg-2); }
+
+.wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+
+.modal {
+  display: flex; align-items: center; gap: 12px;
+  min-width: 240px;
+  padding: 16px 16px;
+  background: rgba(11, 15, 25, 0.92);
+  border: 1px solid var(--wh-found);
+  border-radius: var(--wh-radius-3);
+  box-shadow: var(--wh-shadow-3), var(--wh-shadow-glow-found);
+  backdrop-filter: blur(12px);
+}
+.art {
+  flex: 0 0 auto; width: 84px; height: 84px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 56px; line-height: 1;
+  border-radius: var(--wh-radius-2);
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-border);
+  overflow: hidden;
+}
+.art img { max-width: 100%; max-height: 100%; image-rendering: pixelated; }
+.body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.headline { font-family: var(--wh-font-sans); font-size: 22px; font-weight: 700; color: var(--wh-found); }
+.word { font-family: var(--wh-font-mono); font-size: 16px; font-weight: 600; color: var(--wh-fg); }
+.meta { display: flex; gap: 12px; font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-3); }
+.meta-sep { color: var(--wh-fg-4); }
+
+.next {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 4px 12px;
+  background: rgba(11, 15, 25, 0.72);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-pill);
+  color: var(--wh-fg-3);
+  font-family: var(--wh-font-mono); font-size: 11px;
+  backdrop-filter: blur(8px);
+  opacity: 0.85;
+}
+.next-label { font-family: var(--wh-font-sans); font-size: 11px; font-weight: 500; color: var(--wh-fg-4); text-transform: uppercase; letter-spacing: 0.04em; }
+.next-art { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; font-size: 16px; }
+.next-art img { max-width: 100%; max-height: 100%; image-rendering: pixelated; }
+.next-word { font-family: var(--wh-font-mono); font-size: 12px; font-weight: 500; color: var(--wh-fg-2); }
+
+.clear-btn {
+  padding: 5px 16px;
+  background: rgba(11, 15, 25, 0.72);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-pill);
+  color: var(--wh-fg-3);
+  font-family: var(--wh-font-sans); font-size: 12px; font-weight: 500;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+}
+</style></head><body>
+  <div class="scene">
+    <div class="stack">
+      <div>
+        <div class="label">default · solo find · no Auto-Continue</div>
+        <div class="row">
+          <div class="wrap">
+            <div class="modal">
+              <div class="art" aria-hidden="true">🦩</div>
+              <div class="body">
+                <span class="headline">Found!</span>
+                <span class="word">flamingo</span>
+                <div class="meta"><span>12s</span><span class="meta-sep">·</span><span>no hint</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="wrap">
+            <div class="modal">
+              <div class="art" aria-hidden="true"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" alt=""></div>
+              <div class="body">
+                <span class="headline">Found!</span>
+                <span class="word">Pikachu</span>
+                <div class="meta"><span>2m 03s</span><span class="meta-sep">·</span><span>hint used</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="label">Auto-Continue on · "Next up" preview pill below the modal</div>
+        <div class="wrap">
+          <div class="modal">
+            <div class="art" aria-hidden="true">🦊</div>
+            <div class="body">
+              <span class="headline">Found!</span>
+              <span class="word">Fox</span>
+              <div class="meta"><span>34s</span><span class="meta-sep">·</span><span>no hint</span></div>
+            </div>
+          </div>
+          <div class="next">
+            <span class="next-label">Next up</span>
+            <span class="next-art" aria-hidden="true">🐺</span>
+            <span class="next-word">Wolf</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="label">Review click · already-found word · adds a "Remove word" affordance</div>
+        <div class="wrap">
+          <div class="modal">
+            <div class="art" aria-hidden="true"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" alt=""></div>
+            <div class="body">
+              <span class="headline">Found!</span>
+              <span class="word">Eevee</span>
+              <div class="meta"><span>47s</span><span class="meta-sep">·</span><span>no hint</span></div>
+            </div>
+          </div>
+          <button class="clear-btn">Remove word</button>
+        </div>
+      </div>
+
+      <div class="legend">
+        Modal sits at viewport center over a <code>rgba(0,0,0,0.18)</code> scrim. 84&nbsp;×&nbsp;84 art square (emoji at 56&nbsp;px or PokeAPI sprite at native px) · "Found!" in sans-bold-22 <code>--wh-found</code> · the word itself in mono-semibold-16 · meta line in mono-11.
+        Modal carries both a 1&nbsp;px <code>--wh-found</code> border <em>and</em> the found-coloured 4&nbsp;px glow (<code>--wh-shadow-glow-found</code>) — the only surface in the system that wears two simultaneous found-color cues.
+        <br><br>
+        <b>Next-up pill</b> appears below the modal when Auto-Continue is on and the spoiler toggle is on (Settings → Show next word preview). Reads as a quiet whisper — translucent pill with mono mini-art.
+        <b>Remove word</b> button appears on a review-click of an already-found word (and replaces the auto-clear behaviour); it explicitly drops the ActiveWord, useful if the player wants to stop hunting mid-page.
+      </div>
+    </div>
+
+    <div class="fakepage" style="margin-top: 32px">Host-page text — the celebration pop is the only surface allowed to overlay a real page with this much fanfare, and that's deliberate: it's the single payoff moment in the whole system.</div>
+  </div>
+</body></html>

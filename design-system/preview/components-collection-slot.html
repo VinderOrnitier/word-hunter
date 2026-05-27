@@ -1,0 +1,72 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+  body { width: 700px; padding: 24px 28px; }
+  .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 18px; }
+  .cell { display: flex; flex-direction: column; gap: 8px; }
+  .label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+  .slot {
+    position: relative; aspect-ratio: 1 / 1;
+    display: flex; align-items: center; justify-content: center;
+    padding: 4px;
+    background: var(--wh-surface-2);
+    border: 1px solid var(--wh-border-soft);
+    border-radius: var(--wh-radius-2);
+    overflow: hidden;
+  }
+  .slot.is-active { border-color: var(--wh-primary); box-shadow: var(--wh-shadow-glow); }
+  .slot.is-pending { border-color: var(--wh-selected); box-shadow: 0 0 0 4px var(--wh-selected-soft); }
+
+  .emoji { font-size: 26px; line-height: 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4)); }
+  .placeholder { font-family: var(--wh-font-mono); font-size: 12px; color: var(--wh-fg-4); letter-spacing: -0.05em; }
+  .slot img.sprite { width: 100%; height: 100%; max-width: 48px; max-height: 48px; object-fit: contain; image-rendering: pixelated; }
+  .slot img.sprite.is-silhouette { filter: brightness(0) opacity(0.35); }
+
+  .count {
+    position: absolute; bottom: 2px; right: 3px;
+    font-family: var(--wh-font-mono); font-size: 10px; font-weight: 600;
+    color: var(--wh-fg-2);
+    padding: 0 3px;
+    background: rgba(11,15,25,0.78);
+    border-radius: var(--wh-radius-1);
+  }
+
+  .caption { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); margin-top: 18px; max-width: 660px; }
+  .note { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-2); margin-top: 8px; max-width: 660px; line-height: 1.5; }
+  .note b { color: var(--wh-fg); }
+</style></head><body>
+  <div class="label-eyebrow" style="margin-bottom: 16px">CollectionSlot — six visual states (active + pending are additive to caught/uncaught)</div>
+  <div class="grid">
+    <div class="cell">
+      <div class="slot"><span class="emoji">🦊</span><span class="count">×3</span></div>
+      <div class="label">caught · animal</div>
+    </div>
+    <div class="cell">
+      <div class="slot"><span class="placeholder">???</span></div>
+      <div class="label">uncaught · animal</div>
+    </div>
+    <div class="cell">
+      <div class="slot"><img class="sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" alt=""><span class="count">×1</span></div>
+      <div class="label">caught · pokémon</div>
+    </div>
+    <div class="cell">
+      <div class="slot"><img class="sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" alt=""></div>
+      <div class="label">uncaught · pokémon</div>
+    </div>
+    <div class="cell">
+      <div class="slot is-active"><span class="emoji">🦊</span><span class="count">×3</span></div>
+      <div class="label">active</div>
+    </div>
+    <div class="cell">
+      <div class="slot is-pending"><span class="emoji">🐺</span><span class="count">×4</span></div>
+      <div class="label">pending</div>
+    </div>
+  </div>
+  <div class="caption">
+    Slot states ladder: <code>caught</code> · <code>uncaught</code> (art treatment) — then additive overlays <code>is-active</code> (yellow ring) and <code>is-pending</code> (blue ring).
+  </div>
+  <div class="note">
+    <b>New: pending state.</b> When the player clicks an uncaught slot but hasn't pressed <code>Start a hunt</code> yet, the slot wears a <code>--wh-selected</code> 1&nbsp;px border + 4&nbsp;px <code>--wh-selected-soft</code> glow. This signals "selected but not yet active" — a deliberate twin to the yellow active ring so the player can see they're holding a fresh pick, distinct from the live ActiveWord.
+    <br><br>
+    Uses the dedicated <code>--wh-selected</code> token (split out of the old overloaded <code>--wh-hint</code>) so a future hue change won't touch unrelated informational-blue surfaces.
+  </div>
+</body></html>
