@@ -1,24 +1,113 @@
 <!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
-body { height: 240px; padding: 22px 28px; }
-table { width: 100%; border-collapse: collapse; font-family: var(--wh-font-sans); font-size: 12px; }
-th { text-align: left; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); padding: 0 10px 8px; border-bottom: 1px solid var(--wh-border); }
-td { padding: 10px; border-bottom: 1px solid var(--wh-border-soft); color: var(--wh-fg-2); }
-tr:hover td { background: var(--wh-surface-2); color: var(--wh-fg); }
-.word { font-family: var(--wh-font-mono); color: var(--wh-fg); font-weight: 500; }
-.dot { width: 6px; height: 6px; border-radius: 999px; display: inline-block; margin-right: 6px; }
+body { width: 700px; padding: 22px 28px; }
+.stack { display: flex; flex-direction: column; gap: 14px; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+.frame { width: 328px; }
+
+.col-header, .row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.8fr) 20px 20px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px;
+}
+.col-header {
+  font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3);
+  border-bottom: 1px solid var(--wh-border);
+  padding-bottom: 8px;
+}
+.col-header svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.col--center { text-align: center; justify-self: center; }
+
+.row { border-bottom: 1px solid var(--wh-border-soft); }
+.row:hover { background: var(--wh-surface-2); }
+
+.word {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--wh-font-mono); font-size: 12px; font-weight: 500;
+  color: var(--wh-fg);
+  min-width: 0;
+}
+.word-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dot { flex: 0 0 6px; width: 6px; height: 6px; border-radius: 999px; }
 .meta { font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-3); }
-.link { color: var(--wh-hint); text-decoration: none; }
-.hint-yes { color: var(--wh-hint); font-size: 10px; font-weight: 600; }
-.hint-no { color: var(--wh-fg-3); font-size: 10px; }
+
+.hint-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1.5px solid var(--wh-fg-4);
+  margin: auto;
+}
+.hint-dot.is-used {
+  background: var(--wh-info);
+  border-color: var(--wh-info);
+}
+
+.link {
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--wh-info);
+  text-decoration: none;
+  border-radius: var(--wh-radius-1);
+}
+.link svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.caption { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); max-width: 660px; }
+.note { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-2); max-width: 660px; line-height: 1.5; }
+.note b { color: var(--wh-fg); }
 </style></head><body>
-  <div class="label-eyebrow">Stats — table rows</div>
-  <table>
-    <thead><tr><th>Word</th><th>Found</th><th>Duration</th><th>Hint</th><th>Page</th></tr></thead>
-    <tbody>
-      <tr><td><span class="dot" style="background: var(--wh-list-animals)"></span><span class="word">flamingo</span></td><td class="meta">2 min ago</td><td class="meta">14s</td><td><span class="hint-no">—</span></td><td><a class="link">en.wikipedia.org</a></td></tr>
-      <tr><td><span class="dot" style="background: var(--wh-list-pokemon)"></span><span class="word">Pikachu</span></td><td class="meta">today, 9:14</td><td class="meta">2m 03s</td><td><span class="hint-yes">used</span></td><td><a class="link">substack.com</a></td></tr>
-      <tr><td><span class="dot" style="background: var(--wh-fg-3)"></span><span class="word">otter</span></td><td class="meta">yesterday</td><td class="meta">42s</td><td><span class="hint-no">—</span></td><td><a class="link">nytimes.com</a></td></tr>
-      <tr><td><span class="dot" style="background: var(--wh-list-animals)"></span><span class="word">wolf</span></td><td class="meta">3 days ago</td><td class="meta">8s</td><td><span class="hint-no">—</span></td><td><a class="link">arxiv.org</a></td></tr>
-    </tbody>
-  </table>
+  <div class="label-eyebrow" style="margin-bottom: 14px">Stats table — header + rows</div>
+  <div class="stack">
+    <div class="frame">
+      <div class="col-header" aria-hidden="true">
+        <span>Word</span>
+        <span>Found</span>
+        <span title="Duration"><svg viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg></span>
+        <span class="col--center">Hint</span>
+        <span class="col--center">Page</span>
+      </div>
+
+      <div class="row">
+        <span class="word"><span class="dot" style="background: var(--wh-list-animals)"></span><span class="word-text">flamingo</span></span>
+        <span class="meta">2m ago</span>
+        <span class="meta">14s</span>
+        <span><span class="hint-dot" title="No hint"></span></span>
+        <a class="link" title="en.wikipedia.org/wiki/Phoenicopterus"><svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
+      </div>
+
+      <div class="row">
+        <span class="word"><span class="dot" style="background: var(--wh-list-pokemon)"></span><span class="word-text">Pikachu</span></span>
+        <span class="meta">today, 9:14</span>
+        <span class="meta">2m 03s</span>
+        <span><span class="hint-dot is-used" title="Hint used"></span></span>
+        <a class="link" title="substack.com/post/why-mice"><svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
+      </div>
+
+      <div class="row">
+        <span class="word"><span class="dot" style="background: var(--wh-fg-3)"></span><span class="word-text">serendipity</span></span>
+        <span class="meta">yesterday</span>
+        <span class="meta">42s</span>
+        <span><span class="hint-dot" title="No hint"></span></span>
+        <a class="link" title="nytimes.com/2026/05/12/style"><svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
+      </div>
+
+      <div class="row">
+        <span class="word"><span class="dot" style="background: var(--wh-list-animals)"></span><span class="word-text">wolf</span></span>
+        <span class="meta">3 days ago</span>
+        <span class="meta">8s</span>
+        <span><span class="hint-dot" title="No hint"></span></span>
+        <a class="link" title="arxiv.org/abs/2310.00001"><svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
+      </div>
+    </div>
+
+    <div class="caption">
+      Grid <code>1.4fr · 1fr · 0.8fr · 20px · 20px</code> · headers in 10&nbsp;px uppercase caps · duration column uses a stopwatch icon header instead of text (room is tight at 12&nbsp;px popup density). Word column carries a 6&nbsp;px list-color dot — Animals mint, Pokémon pink, Custom <code>--wh-fg-3</code>.
+    </div>
+    <div class="note">
+      <b>Hint column changed.</b> Was a "used" text label · now a 7&nbsp;px dot — filled <code>--wh-info</code> when hint was used, hollow 1.5&nbsp;px <code>--wh-fg-4</code> border when not. Visually two opposite states, no negative connotation either way. Every cell that can't fit its full string (word, page URL) wears a tooltip via <code>data-tooltip</code> + <code>::after</code>; hover reveals the full value inside a <code>--wh-surface-2</code> pill — see <em>CSS-only tooltip</em> notes in the README.
+    </div>
+  </div>
 </body></html>

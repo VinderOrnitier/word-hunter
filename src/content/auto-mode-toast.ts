@@ -33,7 +33,7 @@ export function AutoModeToast(doc: Document, getLocale: () => Locale) {
         h(InPageToast, {
           message: t("content_auto_mode_toast", locale),
           locale,
-          variant: "info",
+          variant: "auto",
           onClose: remove,
         }),
         host

@@ -2,126 +2,671 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Word Hunter — Extension Popup</title>
+<title>Word Hunter — Extension Popup (composition)</title>
 <link rel="stylesheet" href="../../colors_and_type.css">
 <style>
-  html, body { margin: 0; padding: 0; background: #0a0d15; min-height: 100vh; font-family: var(--wh-font-sans); }
-  body { display: flex; align-items: center; justify-content: center; padding: 32px 16px; box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #0a0d15; min-height: 100vh; font-family: var(--wh-font-sans); color: var(--wh-fg); }
+  body { padding: 40px 24px; }
+  *, *::before, *::after { box-sizing: border-box; }
 
-  .stage { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-  .browser-hint {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 11px; color: var(--wh-fg-3); font-family: var(--wh-font-mono);
+  .stage-header { max-width: 1240px; margin: 0 auto 28px; }
+  .stage-header h1 { font-family: var(--wh-font-sans); font-size: 22px; font-weight: 700; letter-spacing: -0.01em; color: var(--wh-fg); margin: 0 0 6px; }
+  .stage-header p { font-family: var(--wh-font-sans); font-size: 13px; color: var(--wh-fg-3); margin: 0; line-height: 1.5; }
+
+  .row {
+    display: flex; gap: 32px; align-items: flex-start; justify-content: center;
+    flex-wrap: wrap; max-width: 1240px; margin: 0 auto;
   }
-  .browser-hint .arrow { width: 18px; height: 1px; background: var(--wh-border); position: relative; }
-  .browser-hint .arrow::after { content: ""; position: absolute; right: 0; top: -2px; border: 4px solid transparent; border-left-color: var(--wh-border); }
+  .frame-wrap { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+  .frame-label { font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-3); }
 
+  /* ----- popup shell ----- */
   .popup {
-    width: var(--wh-popup-width);
-    min-height: var(--wh-popup-min-h);
-    background: var(--wh-bg);
-    border: 1px solid var(--wh-border);
-    border-radius: 16px;
+    width: var(--wh-popup-width); height: var(--wh-popup-min-h);
+    background: var(--wh-bg); color: var(--wh-fg);
+    border: 1px solid var(--wh-border); border-radius: 16px;
     box-shadow: var(--wh-shadow-3);
     overflow: hidden;
     display: flex; flex-direction: column;
   }
-  .popup main { flex: 1; overflow-y: auto; }
-  .popup main::-webkit-scrollbar { width: 8px; }
-  .popup main::-webkit-scrollbar-thumb { background: var(--wh-surface-2); border-radius: 4px; }
 
-  .header {
+  /* ----- header ----- */
+  .wh-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 16px;
+    padding: var(--wh-space-4);
     border-bottom: 1px solid var(--wh-border-soft);
-    background: var(--wh-bg);
   }
-  .header .lockup { display: flex; align-items: center; gap: 10px; }
-  .header img.glyph { width: 22px; height: 22px; border-radius: 5px; }
-  .header .name { font-family: var(--wh-font-sans); font-size: 13px; font-weight: 700; color: var(--wh-fg); letter-spacing: -0.01em; }
-  .header .name .o { background: linear-gradient(180deg, transparent 0, transparent 60%, var(--wh-primary) 60%, var(--wh-primary) 92%, transparent 92%); padding: 0 1px; }
-  .header .v { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); }
+  .wh-header__lockup { display: flex; align-items: center; gap: var(--wh-space-3); }
+  .wh-header__glyph { width: 28px; height: 28px; border-radius: 6px; }
+  .wh-header__wordmark { font-size: var(--wh-text-lg); font-weight: var(--wh-weight-bold); letter-spacing: var(--wh-tracking-tight); }
+  .wh-header__rules-btn {
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; border: none; border-radius: var(--wh-radius-2);
+    color: var(--wh-fg-3); cursor: pointer;
+  }
+  .wh-header__rules-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ----- tabs ----- */
+  .wh-tabs { display: flex; background: var(--wh-bg); border-bottom: 1px solid var(--wh-border); }
+  .wh-tab {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center;
+    gap: var(--wh-space-2);
+    padding: var(--wh-space-3);
+    background: transparent; border: none; border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-family: var(--wh-font-sans); font-size: var(--wh-text-sm); font-weight: var(--wh-weight-semibold);
+    color: var(--wh-fg-3);
+  }
+  .wh-tab--active { color: var(--wh-fg); border-bottom-color: var(--wh-primary); }
+  .wh-tab svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ----- main / panels ----- */
+  .wh-main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+  .wh-play { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .wh-play__scroll {
+    flex: 1; min-height: 0; overflow-y: auto;
+    scrollbar-width: none;
+    padding: var(--wh-space-4);
+    display: flex; flex-direction: column; gap: var(--wh-space-2);
+  }
+  .wh-play__scroll::-webkit-scrollbar { display: none; }
+
+  .wh-settings { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .wh-settings__scroll {
+    flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none;
+    padding: var(--wh-space-4);
+    display: flex; flex-direction: column; gap: var(--wh-space-3);
+  }
+  .wh-settings__scroll::-webkit-scrollbar { display: none; }
+
+  /* ----- ReloadHint ----- */
+  .wh-reload-hint {
+    display: flex; align-items: center; gap: 6px;
+    padding: var(--wh-space-2) 10px;
+    background: var(--wh-info-soft);
+    border: 1px solid rgba(138, 180, 255, 0.2);
+    border-radius: var(--wh-radius-2);
+  }
+  .wh-reload-hint__info { color: var(--wh-fg-4); display: inline-flex; flex: 0 0 auto; }
+  .wh-reload-hint__info svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .wh-reload-hint__text { flex: 1; font-size: var(--wh-text-xs); color: var(--wh-info); line-height: var(--wh-leading-snug); white-space: nowrap; }
+  .wh-reload-hint__btn {
+    padding: 2px var(--wh-space-2);
+    font-size: var(--wh-text-sm); font-weight: var(--wh-weight-medium); color: var(--wh-info);
+    background: rgba(138, 180, 255, 0.12);
+    border: 1px solid rgba(138, 180, 255, 0.25); border-radius: var(--wh-radius-1);
+    cursor: pointer;
+  }
+  .wh-reload-hint__dismiss {
+    width: 20px; height: 20px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--wh-fg-4); background: transparent; border: none; cursor: pointer;
+  }
+  .wh-reload-hint__dismiss svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ----- ActiveWordCard ----- */
+  .wh-active-card {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    background: var(--wh-surface);
+    border: 1px solid var(--wh-border); border-radius: var(--wh-radius-3);
+    box-shadow: var(--wh-shadow-1);
+  }
+  .wh-active-card__art {
+    flex: 0 0 40px; width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--wh-surface-2);
+    border: 1px solid var(--wh-primary); border-radius: var(--wh-radius-2);
+    box-shadow: var(--wh-shadow-glow);
+    overflow: hidden;
+  }
+  .wh-active-card__emoji { font-size: 26px; line-height: 1; }
+  .wh-active-card__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .wh-active-card__eyebrow { font-size: 9px; font-weight: var(--wh-weight-semibold); letter-spacing: 0.08em; text-transform: uppercase; color: var(--wh-fg-3); }
+  .wh-active-card__word { font-family: var(--wh-font-mono); font-size: 18px; font-weight: var(--wh-weight-bold); letter-spacing: var(--wh-tracking-tight); color: var(--wh-fg); }
+  .wh-active-card__stop {
+    flex: 0 0 28px; width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: transparent; color: var(--wh-fg-3);
+    border: 1px solid var(--wh-border-soft); border-radius: var(--wh-radius-1);
+    cursor: pointer;
+  }
+  .wh-active-card__stop svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ----- chip-group ----- */
+  .wh-chip-group {
+    display: flex; gap: 2px; padding: 2px;
+    background: var(--wh-surface); border: 1px solid var(--wh-border-soft);
+    border-radius: var(--wh-radius-pill);
+  }
+  .wh-chip {
+    flex: 1; padding: 4px 10px;
+    font-size: var(--wh-text-xs); font-weight: var(--wh-weight-medium);
+    color: var(--wh-fg-3);
+    background: transparent; border: none; border-radius: var(--wh-radius-pill);
+    cursor: pointer;
+  }
+  .wh-chip.is-selected { background: var(--wh-surface-2); color: var(--wh-fg); box-shadow: var(--wh-shadow-1); }
+
+  /* ----- ProgressRow ----- */
+  .wh-progress-row { display: flex; flex-direction: column; gap: 6px; }
+  .wh-progress-row__button {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    padding: 6px 8px;
+    background: var(--wh-surface-2);
+    border: 1px solid var(--wh-border-soft); border-radius: var(--wh-radius-2);
+    cursor: pointer; text-align: left;
+  }
+  .wh-progress-row__count { font-family: var(--wh-font-mono); font-size: 11px; font-weight: var(--wh-weight-semibold); color: var(--wh-fg); }
+  .wh-progress-row__bar { flex: 1; height: 4px; background: var(--wh-surface-3); border-radius: 999px; overflow: hidden; }
+  .wh-progress-row__fill { display: block; height: 100%; background: var(--wh-primary); border-radius: 999px; }
+  .wh-progress-row__ach-chip {
+    display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px;
+    background: var(--wh-surface-3); color: var(--wh-fg-2);
+    border: 1px solid var(--wh-border-soft); border-radius: var(--wh-radius-pill);
+  }
+  .wh-progress-row__ach-icon { display: inline-flex; color: var(--wh-primary); }
+  .wh-progress-row__ach-icon svg { width: 10px; height: 10px; stroke: currentColor; fill: currentColor; stroke-width: 2; }
+  .wh-progress-row__ach-count { font-size: 10px; }
+  .wh-progress-row__chevron { display: inline-flex; color: var(--wh-fg-3); transform: rotate(180deg); }
+  .wh-progress-row__chevron svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+  .wh-progress-row__panel {
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 10px 12px;
+    background: var(--wh-surface);
+    border: 1px solid var(--wh-border-soft); border-radius: var(--wh-radius-2);
+  }
+  .wh-progress-row__eyebrow { font-size: 10px; font-weight: var(--wh-weight-semibold); text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+  .wh-progress-row__streak { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .wh-progress-row__streak-stats { display: flex; align-items: center; gap: 12px; }
+  .wh-progress-row__stat { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+  .wh-progress-row__stat-value { font-family: var(--wh-font-mono); font-size: 14px; font-weight: var(--wh-weight-bold); color: var(--wh-fg-2); }
+  .wh-progress-row__stat--current .wh-progress-row__stat-value { color: var(--wh-selected); }
+  .wh-progress-row__stat-label { font-size: 9px; text-transform: lowercase; color: var(--wh-fg-3); letter-spacing: 0.08em; }
+  .wh-progress-row__stat-sep { width: 1px; height: 16px; background: var(--wh-border); }
+  .wh-progress-row__divider { height: 0; border-bottom: 1px dashed var(--wh-border-soft); }
+  .wh-progress-row__ach-list { display: flex; flex-wrap: wrap; gap: 3px; }
+  .wh-progress-row__ach {
+    display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px;
+    font-size: 10px; color: var(--wh-fg-2);
+    background: var(--wh-surface-2);
+    border: 1px solid var(--wh-border-soft); border-radius: var(--wh-radius-pill);
+  }
+  .wh-progress-row__ach.is-locked { opacity: 0.45; }
+  .wh-progress-row__ach .wh-progress-row__ach-icon { color: var(--wh-fg-4); }
+  .wh-progress-row__ach.is-unlocked .wh-progress-row__ach-icon { color: var(--wh-primary); }
+  .wh-progress-row__ach svg { width: 9px; height: 9px; }
+
+  /* ----- Collection slot/grid ----- */
+  .wh-grid { display: grid; gap: var(--wh-space-2); padding: var(--wh-space-1) 0; }
+  .wh-grid--animals { grid-template-columns: repeat(4, 1fr); }
+  .wh-slot {
+    position: relative; aspect-ratio: 1 / 1;
+    display: flex; align-items: center; justify-content: center;
+    padding: var(--wh-space-1);
+    background: var(--wh-surface-2);
+    border: 1px solid var(--wh-border-soft); border-radius: var(--wh-radius-2);
+    cursor: pointer; overflow: hidden;
+  }
+  .wh-slot.is-active { border-color: var(--wh-primary); box-shadow: var(--wh-shadow-glow); }
+  .wh-slot.is-pending { border-color: var(--wh-selected); box-shadow: 0 0 0 4px var(--wh-selected-soft); }
+  .wh-slot__emoji { font-size: 26px; line-height: 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4)); }
+  .wh-slot__placeholder { font-family: var(--wh-font-mono); font-size: 12px; color: var(--wh-fg-4); letter-spacing: -0.05em; }
+  .wh-slot__count {
+    position: absolute; bottom: 2px; right: 3px;
+    font-family: var(--wh-font-mono); font-size: 10px; font-weight: var(--wh-weight-semibold);
+    color: var(--wh-fg-2);
+    padding: 0 3px;
+    background: rgba(11,15,25,0.78); border-radius: var(--wh-radius-1);
+    pointer-events: none;
+  }
+
+  /* ----- BottomActionBar ----- */
+  .wh-action-bar {
+    flex: 0 0 auto;
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px;
+    background: var(--wh-bg);
+    border-top: 1px solid var(--wh-border);
+    box-shadow: 0 -6px 14px rgba(0, 0, 0, 0.25);
+  }
+  .wh-action-bar__primary {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 12px 16px;
+    font-size: 14px; font-weight: var(--wh-weight-bold); letter-spacing: var(--wh-tracking-tight);
+    color: var(--wh-on-primary);
+    background: var(--wh-primary);
+    border: none; border-radius: var(--wh-radius-2);
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255, 210, 63, 0.25);
+  }
+  .wh-action-bar__primary svg { width: 14px; height: 14px; stroke: currentColor; fill: currentColor; stroke-width: 2; }
+  .wh-action-bar__icon {
+    flex: 0 0 42px; width: 42px; height: 42px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--wh-surface-2); color: var(--wh-fg);
+    border: 1px solid var(--wh-border); border-radius: var(--wh-radius-2);
+    cursor: pointer;
+  }
+  .wh-action-bar__icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .wh-action-bar__icon.is-on { color: var(--wh-primary); border-color: var(--wh-primary); box-shadow: 0 0 0 2px var(--wh-primary-soft); }
+
+  /* ----- Stats ----- */
+  .wh-stats { display: flex; flex-direction: column; gap: var(--wh-space-3); padding: var(--wh-space-4); flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; }
+  .wh-stats::-webkit-scrollbar { display: none; }
+  .wh-stats__header { display: flex; justify-content: space-between; align-items: center; padding: 0 var(--wh-space-1); }
+  .wh-eyebrow { font-size: var(--wh-text-xs); font-weight: var(--wh-weight-semibold); text-transform: uppercase; letter-spacing: var(--wh-tracking-caps); color: var(--wh-fg-3); }
+  .wh-btn-ghost {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 10px;
+    background: transparent; color: var(--wh-fg-2);
+    border: 1px solid transparent; border-radius: var(--wh-radius-2);
+    font-size: var(--wh-text-xs); font-weight: var(--wh-weight-semibold);
+    cursor: pointer;
+  }
+  .wh-btn-ghost svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .wh-stats__table { display: flex; flex-direction: column; }
+  .wh-stats__col-header, .wh-stats__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 0.8fr) 20px 20px;
+    align-items: center; gap: var(--wh-space-2);
+    padding: var(--wh-space-2);
+  }
+  .wh-stats__col-header { font-size: 10px; font-weight: var(--wh-weight-semibold); text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); border-bottom: 1px solid var(--wh-border); padding-bottom: var(--wh-space-2); }
+  .wh-stats__col-header svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .wh-stats__col-header--center { text-align: center; justify-self: center; }
+  .wh-stats__row { border-bottom: 1px solid var(--wh-border-soft); }
+  .wh-stats__word { display: flex; align-items: center; gap: 6px; font-family: var(--wh-font-mono); font-size: var(--wh-text-sm); font-weight: var(--wh-weight-medium); color: var(--wh-fg); min-width: 0; }
+  .wh-stats__word-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .wh-stats__dot { flex: 0 0 6px; width: 6px; height: 6px; border-radius: 999px; }
+  .wh-stats__meta { font-family: var(--wh-font-mono); font-size: var(--wh-text-xs); color: var(--wh-fg-3); }
+  .wh-stats__hint { display: inline-block; width: 7px; height: 7px; border-radius: 999px; background: transparent; border: 1.5px solid var(--wh-fg-4); margin: auto; }
+  .wh-stats__hint--used { background: var(--wh-info); border-color: var(--wh-info); }
+  .wh-stats__link { display: inline-flex; align-items: center; justify-content: center; color: var(--wh-info); text-decoration: none; border-radius: var(--wh-radius-1); }
+  .wh-stats__link svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ----- Action footer ----- */
+  .wh-action-footer {
+    flex: 0 0 auto;
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px;
+    background: var(--wh-bg);
+    border-top: 1px solid var(--wh-border);
+    box-shadow: 0 -6px 14px rgba(0, 0, 0, 0.25);
+  }
+  .wh-action-footer.has-prompt { justify-content: flex-start; }
+  .wh-action-footer:not(.has-prompt) { justify-content: flex-end; }
+  .wh-action-footer__prompt { flex: 1; font-size: var(--wh-text-sm); color: var(--wh-fg-2); }
+  .wh-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px;
+    font-size: var(--wh-text-sm); font-weight: var(--wh-weight-semibold);
+    border-radius: var(--wh-radius-2);
+    cursor: pointer; border: 1px solid transparent;
+  }
+  .wh-btn--sm { font-size: var(--wh-text-xs); padding: 6px 10px; }
+  .wh-btn--primary { background: var(--wh-primary); color: var(--wh-on-primary); }
+  .wh-btn--ghost { background: transparent; color: var(--wh-fg-2); }
+  .wh-btn--danger { background: var(--wh-danger-soft); color: var(--wh-danger); border-color: var(--wh-danger); }
+
+  /* ----- Settings field + controls ----- */
+  .wh-field { display: flex; flex-direction: column; gap: var(--wh-space-2); }
+  .wh-field__label { font-size: var(--wh-text-xs); font-weight: var(--wh-weight-semibold); text-transform: uppercase; letter-spacing: var(--wh-tracking-caps); color: var(--wh-fg-2); }
+  .wh-field__helper { font-size: var(--wh-text-xs); color: var(--wh-fg-3); line-height: 1.4; }
+  .wh-settings__input-row { display: flex; align-items: center; gap: var(--wh-space-2); }
+  .wh-settings__unit { font-size: var(--wh-text-sm); color: var(--wh-fg-3); }
+
+  /* numfield (custom stepper) */
+  .numfield {
+    position: relative; display: inline-flex; align-items: stretch;
+    width: 90px;
+    background: var(--wh-surface-2);
+    border: 1px solid var(--wh-border); border-radius: var(--wh-radius-2);
+    overflow: hidden;
+  }
+  .numfield input {
+    flex: 1; min-width: 0;
+    padding: 9px 4px 9px 12px;
+    font-family: var(--wh-font-sans); font-size: 12px; color: var(--wh-fg);
+    background: transparent; border: none; outline: none;
+    -moz-appearance: textfield;
+  }
+  .numfield input::-webkit-outer-spin-button,
+  .numfield input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .numfield__steppers { display: flex; flex-direction: column; flex: 0 0 22px; border-left: 1px solid var(--wh-border-soft); }
+  .numfield__step {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center;
+    padding: 0; background: transparent; color: var(--wh-fg-3);
+    border: none; cursor: pointer;
+  }
+  .numfield__step + .numfield__step { border-top: 1px solid var(--wh-border-soft); }
+  .numfield__step svg { width: 8px; height: 5px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* range slider */
+  .wh-settings__range {
+    -webkit-appearance: none; appearance: none;
+    flex: 1; height: 4px;
+    border-radius: 2px; outline: none; cursor: pointer;
+  }
+  .wh-settings__range::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--wh-bg); border: 2px solid var(--wh-primary);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  }
+  .wh-settings__range-value {
+    font-family: var(--wh-font-mono); font-size: var(--wh-text-xs); font-weight: var(--wh-weight-medium);
+    color: var(--wh-primary);
+    background: var(--wh-primary-soft);
+    border: 1px solid rgba(255, 210, 63, 0.25); border-radius: var(--wh-radius-1);
+    padding: 3px 8px;
+    min-width: 36px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  /* switch */
+  .wh-settings__switch {
+    display: inline-flex; align-items: center; gap: var(--wh-space-2);
+    padding: var(--wh-space-1) var(--wh-space-2);
+    background: transparent; border: none; border-radius: var(--wh-radius-2);
+    cursor: pointer;
+  }
+  .wh-settings__switch-track {
+    position: relative; width: 32px; height: 18px; flex: 0 0 auto;
+    background: var(--wh-surface-3); border-radius: var(--wh-radius-pill);
+  }
+  .wh-settings__switch.is-on .wh-settings__switch-track { background: var(--wh-primary); }
+  .wh-settings__switch-thumb {
+    position: absolute; top: 2px; left: 2px;
+    width: 14px; height: 14px;
+    background: var(--wh-fg); border-radius: 50%;
+  }
+  .wh-settings__switch.is-on .wh-settings__switch-thumb { transform: translateX(14px); background: var(--wh-on-primary); }
+  .wh-settings__switch-state { font-size: var(--wh-text-sm); font-weight: var(--wh-weight-medium); color: var(--wh-fg-3); }
+  .wh-settings__switch.is-on .wh-settings__switch-state { color: var(--wh-primary); }
 </style>
 </head>
 <body>
 
-<div class="stage">
-  <div class="popup" id="root"></div>
-  <div class="browser-hint"><span>chrome toolbar popup · 360 × 480</span></div>
+<div class="stage-header">
+  <h1>Word Hunter — popup composition</h1>
+  <p>The three real tabs at production size (360 × 560). Every state is shown inline. Loads tokens from <code style="font-family: var(--wh-font-mono); font-size: 12px; color: var(--wh-fg-2)">../../colors_and_type.css</code>.</p>
 </div>
 
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<div class="row">
 
-<script type="text/babel" src="ui.jsx"></script>
-<script type="text/babel" src="data.jsx"></script>
-<script type="text/babel" src="Tabs.jsx"></script>
-<script type="text/babel" src="PlayTab.jsx"></script>
-<script type="text/babel" src="StatsTab.jsx"></script>
-<script type="text/babel" src="SettingsTab.jsx"></script>
-<script type="text/babel" src="RulesTab.jsx"></script>
+  <!-- ============================================ PLAY TAB ============================================ -->
+  <div class="frame-wrap">
+    <div class="popup">
+      <header class="wh-header">
+        <div class="wh-header__lockup">
+          <img class="wh-header__glyph" src="../../assets/logo.png" alt="" aria-hidden="true">
+          <span class="wh-header__wordmark">Word Hunter</span>
+        </div>
+        <button class="wh-header__rules-btn" aria-label="Rules"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></button>
+      </header>
 
-<script type="text/babel">
-const { useState } = React;
+      <nav class="wh-tabs">
+        <button class="wh-tab wh-tab--active"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>Play</button>
+        <button class="wh-tab"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14v4M12 9v9M17 4v14"/></svg>Statistics</button>
+        <button class="wh-tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button>
+      </nav>
 
-function RulesButton({ onClick, isActive }) {
-  const [hover, setHover] = React.useState(false);
-  return (
-    <button
-      onClick={onClick}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      aria-label="Rules"
-      title="Rules"
-      style={{
-        display: "flex", alignItems: "center", justifyContent: "center",
-        width: 30, height: 30, borderRadius: 6,
-        border: "none", cursor: "pointer",
-        background: isActive ? "var(--wh-surface-2)" : hover ? "var(--wh-surface-2)" : "transparent",
-        color: isActive ? "var(--wh-primary)" : hover ? "var(--wh-fg)" : "var(--wh-fg-3)",
-        transition: "background 0.15s, color 0.15s",
-        flexShrink: 0,
-      }}
-    >
-      <Icon name="info" size={16} />
-    </button>
-  );
-}
+      <main class="wh-main">
+        <div class="wh-play">
+          <div class="wh-play__scroll">
+            <div class="wh-reload-hint">
+              <span class="wh-reload-hint__info" title="Can be disabled in Settings."><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>
+              <span class="wh-reload-hint__text">Reload the page to begin hunting.</span>
+              <button class="wh-reload-hint__btn">Reload</button>
+              <button class="wh-reload-hint__dismiss" aria-label="Dismiss"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+            </div>
 
-function PopupHeader({ onRules, rulesActive }) {
-  return (
-    <header className="header">
-      <div class="lockup">
-        <img className="glyph" src="../../assets/glyph.svg" alt=""/>
-        <span className="name">Word Hunter</span>
-      </div>
-      <RulesButton onClick={onRules} isActive={rulesActive} />
-    </header>
-  );
-}
+            <div class="wh-active-card">
+              <div class="wh-active-card__art"><span class="wh-active-card__emoji">🦊</span></div>
+              <div class="wh-active-card__body">
+                <span class="wh-active-card__eyebrow">Active word</span>
+                <span class="wh-active-card__word">Fox</span>
+              </div>
+              <button class="wh-active-card__stop"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+            </div>
 
-function App() {
-  const [tab, setTab] = useState("play");
-  const [activeWord, setActiveWord] = useState({ word: "flamingo", list: "animals", insertedAt: Date.now() });
-  const [records, setRecords] = useState(MOCK_RECORDS);
+            <div class="wh-chip-group">
+              <button class="wh-chip is-selected">Animals</button>
+              <button class="wh-chip">Pokémon</button>
+            </div>
 
-  return (
-    <>
-      <PopupHeader onRules={() => setTab(tab === "rules" ? "play" : "rules")} rulesActive={tab === "rules"} />
-      <Tabs active={tab} onChange={setTab}/>
-      <main>
-        {tab === "play"     && <PlayTab activeWord={activeWord} setActiveWord={setActiveWord}/>}
-        {tab === "stats"    && <StatsTab records={records} setRecords={setRecords}/>}
-        {tab === "settings" && <SettingsTab/>}
-        {tab === "rules"    && <RulesTab/>}
+            <div class="wh-progress-row">
+              <button class="wh-progress-row__button">
+                <span class="wh-progress-row__count">23/54</span>
+                <span class="wh-progress-row__bar"><span class="wh-progress-row__fill" style="width: 42%"></span></span>
+                <span class="wh-progress-row__ach-chip">
+                  <span class="wh-progress-row__ach-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  <span class="wh-progress-row__ach-count">2/5</span>
+                </span>
+                <span class="wh-progress-row__chevron"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>
+              </button>
+              <div class="wh-progress-row__panel">
+                <div class="wh-progress-row__streak">
+                  <span class="wh-progress-row__eyebrow">Streak</span>
+                  <div class="wh-progress-row__streak-stats">
+                    <div class="wh-progress-row__stat wh-progress-row__stat--current"><span class="wh-progress-row__stat-value">12d</span><span class="wh-progress-row__stat-label">current</span></div>
+                    <span class="wh-progress-row__stat-sep"></span>
+                    <div class="wh-progress-row__stat"><span class="wh-progress-row__stat-value">21d</span><span class="wh-progress-row__stat-label">longest</span></div>
+                  </div>
+                </div>
+                <div class="wh-progress-row__divider"></div>
+                <div>
+                  <div class="wh-progress-row__eyebrow" style="margin-bottom: 6px">Achievements</div>
+                  <div class="wh-progress-row__ach-list">
+                    <span class="wh-progress-row__ach is-unlocked"><span class="wh-progress-row__ach-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg></span>First catch</span>
+                    <span class="wh-progress-row__ach is-locked"><span class="wh-progress-row__ach-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>Half-way</span>
+                    <span class="wh-progress-row__ach is-locked"><span class="wh-progress-row__ach-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>Master hunter</span>
+                    <span class="wh-progress-row__ach is-unlocked"><span class="wh-progress-row__ach-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor"/></svg></span>7-day streak</span>
+                    <span class="wh-progress-row__ach is-locked"><span class="wh-progress-row__ach-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>30-day streak</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="wh-chip-group">
+              <button class="wh-chip is-selected">All</button>
+              <button class="wh-chip">Caught</button>
+              <button class="wh-chip">Uncaught</button>
+            </div>
+
+            <div class="wh-grid wh-grid--animals">
+              <div class="wh-slot is-active"><span class="wh-slot__emoji">🦊</span><span class="wh-slot__count">×3</span></div>
+              <div class="wh-slot"><span class="wh-slot__emoji">🐻</span><span class="wh-slot__count">×1</span></div>
+              <div class="wh-slot is-pending"><span class="wh-slot__emoji">🐺</span><span class="wh-slot__count">×4</span></div>
+              <div class="wh-slot"><span class="wh-slot__placeholder">???</span></div>
+              <div class="wh-slot"><span class="wh-slot__emoji">🦩</span><span class="wh-slot__count">×2</span></div>
+              <div class="wh-slot"><span class="wh-slot__placeholder">???</span></div>
+              <div class="wh-slot"><span class="wh-slot__emoji">🦅</span><span class="wh-slot__count">×1</span></div>
+              <div class="wh-slot"><span class="wh-slot__placeholder">???</span></div>
+              <div class="wh-slot"><span class="wh-slot__placeholder">???</span></div>
+              <div class="wh-slot"><span class="wh-slot__emoji">🐢</span><span class="wh-slot__count">×1</span></div>
+              <div class="wh-slot"><span class="wh-slot__placeholder">???</span></div>
+              <div class="wh-slot"><span class="wh-slot__placeholder">???</span></div>
+            </div>
+          </div>
+
+          <div class="wh-action-bar">
+            <button class="wh-action-bar__icon is-on" role="switch" aria-checked="true" title="Auto-continue — pick next word after each find"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>
+            <button class="wh-action-bar__primary"><svg viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>Start a hunt</span></button>
+            <button class="wh-action-bar__icon" title="Pick a random word"><svg viewBox="0 0 24 24"><path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="m15 15 6 6"/><path d="M4 4l5 5"/></svg></button>
+            <button class="wh-action-bar__icon" title="Custom word"><svg viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button>
+          </div>
+        </div>
       </main>
-    </>
-  );
-}
+    </div>
+    <span class="frame-label">Play tab · Auto-Continue ON · ProgressRow expanded · slot states: active · pending · caught · uncaught</span>
+  </div>
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
-</script>
+  <!-- ============================================ STATS TAB ============================================ -->
+  <div class="frame-wrap">
+    <div class="popup">
+      <header class="wh-header">
+        <div class="wh-header__lockup">
+          <img class="wh-header__glyph" src="../../assets/logo.png" alt="" aria-hidden="true">
+          <span class="wh-header__wordmark">Word Hunter</span>
+        </div>
+        <button class="wh-header__rules-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></button>
+      </header>
+
+      <nav class="wh-tabs">
+        <button class="wh-tab"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>Play</button>
+        <button class="wh-tab wh-tab--active"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14v4M12 9v9M17 4v14"/></svg>Statistics</button>
+        <button class="wh-tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button>
+      </nav>
+
+      <main class="wh-main">
+        <div class="wh-stats">
+          <div class="wh-stats__header">
+            <span class="wh-eyebrow">7 hunts</span>
+            <button class="wh-btn-ghost"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="m19 6-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Clear</button>
+          </div>
+
+          <div class="wh-stats__table">
+            <div class="wh-stats__col-header">
+              <span>Word</span>
+              <span>Found</span>
+              <span><svg viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg></span>
+              <span class="wh-stats__col-header--center">Hint</span>
+              <span class="wh-stats__col-header--center">Page</span>
+            </div>
+            <div class="wh-stats__row">
+              <span class="wh-stats__word"><span class="wh-stats__dot" style="background: var(--wh-list-pokemon)"></span><span class="wh-stats__word-text">Pikachu</span></span>
+              <span class="wh-stats__meta">today, 9:14</span>
+              <span class="wh-stats__meta">2m 03s</span>
+              <span><span class="wh-stats__hint wh-stats__hint--used"></span></span>
+              <a class="wh-stats__link"><svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
+            </div>
+            <div class="wh-stats__row">
+              <span class="wh-stats__word"><span class="wh-stats__dot" style="background: var(--wh-list-animals)"></span><span class="wh-stats__word-text">flamingo</span></span>
+              <span class="wh-stats__meta">2m ago</span>
+              <span class="wh-stats__meta">14s</span>
+              <span><span class="wh-stats__hint"></span></span>
+              <a class="wh-stats__link"><svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
+            </div>
+            <div class="wh-stats__row">
+              <span class="wh-stats__word"><span class="wh-stats__dot" style="background: var(--wh-fg-3)"></span><span class="wh-stats__word-text">serendipity</span></span>
+              <span class="wh-stats__meta">yesterday</span>
+              <span class="wh-stats__meta">42s</span>
+              <span><span class="wh-stats__hint"></span></span>
+              <a class="wh-stats__link"><svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
+            </div>
+            <div class="wh-stats__row">
+              <span class="wh-stats__word"><span class="wh-stats__dot" style="background: var(--wh-list-animals)"></span><span class="wh-stats__word-text">wolf</span></span>
+              <span class="wh-stats__meta">3 days ago</span>
+              <span class="wh-stats__meta">8s</span>
+              <span><span class="wh-stats__hint"></span></span>
+              <a class="wh-stats__link"><svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="wh-action-footer has-prompt">
+          <span class="wh-action-footer__prompt">Clear all hunts?</span>
+          <button class="wh-btn wh-btn--sm wh-btn--ghost">Cancel</button>
+          <button class="wh-btn wh-btn--sm wh-btn--danger">Yes, clear</button>
+        </div>
+      </main>
+    </div>
+    <span class="frame-label">Stats tab · Action footer in confirm mode · word dots show list theming</span>
+  </div>
+
+  <!-- ============================================ SETTINGS TAB ============================================ -->
+  <div class="frame-wrap">
+    <div class="popup">
+      <header class="wh-header">
+        <div class="wh-header__lockup">
+          <img class="wh-header__glyph" src="../../assets/logo.png" alt="" aria-hidden="true">
+          <span class="wh-header__wordmark">Word Hunter</span>
+        </div>
+        <button class="wh-header__rules-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></button>
+      </header>
+
+      <nav class="wh-tabs">
+        <button class="wh-tab"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>Play</button>
+        <button class="wh-tab"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14v4M12 9v9M17 4v14"/></svg>Statistics</button>
+        <button class="wh-tab wh-tab--active"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button>
+      </nav>
+
+      <main class="wh-main">
+        <div class="wh-settings">
+          <div class="wh-settings__scroll">
+            <div class="wh-field">
+              <span class="wh-field__label">Minimum paragraph length</span>
+              <div class="wh-settings__input-row">
+                <input type="range" class="wh-settings__range" min="30" max="150" step="10" value="50" style="background: linear-gradient(to right, var(--wh-primary) 0%, var(--wh-primary) 16.67%, var(--wh-surface-2) 16.67%, var(--wh-surface-2) 100%);">
+                <span class="wh-settings__range-value">50</span>
+              </div>
+              <span class="wh-field__helper">paragraphs below this word count are skipped</span>
+            </div>
+
+            <div class="wh-field">
+              <span class="wh-field__label">Hint delay</span>
+              <div class="wh-settings__input-row">
+                <div class="numfield">
+                  <input type="number" value="3" min="1" step="1">
+                  <div class="numfield__steppers">
+                    <button class="numfield__step" tabindex="-1"><svg viewBox="0 0 10 6"><path d="M1 5l4-4 4 4"/></svg></button>
+                    <button class="numfield__step" tabindex="-1"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+                  </div>
+                </div>
+                <span class="wh-settings__unit">min</span>
+              </div>
+              <span class="wh-field__helper">minutes the page is open before the hint tooltip shows</span>
+            </div>
+
+            <div class="wh-field">
+              <span class="wh-field__label">Cursor reveal delay</span>
+              <div class="wh-settings__input-row">
+                <div class="numfield">
+                  <input type="number" value="1.5" min="0.1" step="0.1">
+                  <div class="numfield__steppers">
+                    <button class="numfield__step" tabindex="-1"><svg viewBox="0 0 10 6"><path d="M1 5l4-4 4 4"/></svg></button>
+                    <button class="numfield__step" tabindex="-1"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+                  </div>
+                </div>
+                <span class="wh-settings__unit">s</span>
+              </div>
+              <span class="wh-field__helper">seconds of hovering before the cursor reveals the word</span>
+            </div>
+
+            <div class="wh-field">
+              <span class="wh-field__label">Reload hint</span>
+              <button class="wh-settings__switch is-on" role="switch" aria-checked="true">
+                <span class="wh-settings__switch-track"><span class="wh-settings__switch-thumb"></span></span>
+                <span class="wh-settings__switch-state">On</span>
+              </button>
+              <span class="wh-field__helper">prompt to reload the page after starting a hunt</span>
+            </div>
+
+            <div class="wh-field">
+              <span class="wh-field__label">Show next word preview</span>
+              <button class="wh-settings__switch" role="switch" aria-checked="false">
+                <span class="wh-settings__switch-track"><span class="wh-settings__switch-thumb"></span></span>
+                <span class="wh-settings__switch-state">Off</span>
+              </button>
+              <span class="wh-field__helper">reveal the upcoming word in the celebration popup when Auto-Continue is on</span>
+            </div>
+          </div>
+
+          <div class="wh-action-footer">
+            <button class="wh-btn wh-btn--sm wh-btn--ghost">Cancel</button>
+            <button class="wh-btn wh-btn--sm wh-btn--primary">Save</button>
+          </div>
+        </div>
+      </main>
+    </div>
+    <span class="frame-label">Settings tab · range slider + custom number steppers + switches · Action footer in save mode (draft dirty)</span>
+  </div>
+
+</div>
 
 </body>
 </html>

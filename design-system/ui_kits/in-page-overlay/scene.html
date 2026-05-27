@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Word Hunter — In-page overlay scene</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: #0a0d15; min-height: 100vh; font-family: var(--wh-font-sans); color: var(--wh-fg); }
+  *, *::before, *::after { box-sizing: border-box; }
+
+  .stage-header { padding: 32px 32px 8px; }
+  .stage-header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 6px; }
+  .stage-header p { font-size: 13px; color: var(--wh-fg-3); margin: 0; line-height: 1.5; max-width: 800px; }
+
+  .scenes { padding: 24px 32px 48px; display: flex; flex-direction: column; gap: 32px; }
+
+  .scene-block { display: flex; flex-direction: column; gap: 10px; }
+  .scene-label { font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-3); }
+
+  /* host-page mock — looks like a real article */
+  .host {
+    position: relative;
+    background: linear-gradient(180deg, #f7f3ec 0%, #f0eadf 100%);
+    color: #2a2620;
+    border-radius: 14px;
+    padding: 56px 64px 64px;
+    min-height: 380px;
+    overflow: hidden;
+    box-shadow: var(--wh-shadow-2);
+    font-family: Georgia, "Times New Roman", serif;
+  }
+  .host h2 { font-family: Georgia, "Times New Roman", serif; font-size: 28px; font-weight: 600; margin: 0 0 16px; letter-spacing: -0.01em; color: #1a1612; }
+  .host p { font-size: 17px; line-height: 1.65; margin: 0 0 16px; color: #4a4239; }
+  .host .hl { background-image: linear-gradient(180deg, transparent 0%, transparent 55%, var(--wh-primary) 55%, var(--wh-primary) 92%, transparent 92%); padding: 0 2px; }
+  .host .hl--found { background-image: linear-gradient(180deg, transparent 0%, transparent 55%, var(--wh-found) 55%, var(--wh-found) 92%, transparent 92%); padding: 0 2px; }
+  .host__crumb { font-family: var(--wh-font-sans); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8a7e6e; margin-bottom: 12px; font-style: normal; }
+
+  /* ----- InPageToast (shared chrome + 3 variants) ----- */
+  .hw-toast {
+    position: absolute;
+    z-index: 100;
+    display: inline-flex; align-items: center; gap: var(--wh-space-3);
+    padding: var(--wh-space-3) var(--wh-space-4);
+    border-radius: var(--wh-radius-2);
+    background: rgba(11, 15, 25, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--wh-shadow-3);
+    font-family: var(--wh-font-sans); font-size: var(--wh-text-sm); font-weight: var(--wh-weight-medium);
+    color: var(--wh-fg);
+  }
+  .hw-toast--hint { border: 1px solid var(--wh-info); top: var(--wh-space-4); right: var(--wh-space-4); }
+  .hw-toast--info { border: 1px solid var(--wh-border); top: var(--wh-space-4); left: 50%; transform: translateX(-50%); }
+  .hw-toast--auto { border: 1px solid rgba(255, 210, 63, 0.5); top: var(--wh-space-4); left: 50%; transform: translateX(-50%); }
+  .hw-toast__glyph {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px;
+    background: transparent; border: none; border-radius: var(--wh-radius-1);
+    cursor: pointer; padding: 0;
+  }
+  .hw-toast__glyph img { display: block; border-radius: var(--wh-radius-1); }
+  .hw-toast__close {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; margin-left: var(--wh-space-1);
+    background: transparent; border: none; border-radius: var(--wh-radius-1);
+    color: var(--wh-fg-3); cursor: pointer;
+  }
+  .hw-toast__close svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .hw-toast__word { font-family: var(--wh-font-mono); font-weight: var(--wh-weight-semibold); color: var(--wh-primary); }
+
+  /* ----- HiddenWord found state — inline highlight ----- */
+  .hw-word--found { background-image: linear-gradient(180deg, transparent 0%, transparent 55%, var(--wh-found) 55%, var(--wh-found) 92%, transparent 92%); padding: 0 2px; cursor: pointer; }
+
+  /* ----- Celebration popup ----- */
+  .celebrate-scene { position: relative; background: linear-gradient(180deg, #1a1f2c 0%, #0e1320 100%); border-radius: 14px; padding: 56px 64px; min-height: 400px; overflow: hidden; box-shadow: var(--wh-shadow-2); }
+  .celebrate-scene .fake { font-family: Georgia, "Times New Roman", serif; font-size: 14px; line-height: 1.7; color: rgba(255, 255, 255, 0.4); max-width: 600px; }
+
+  .hw-celebration {
+    position: absolute; inset: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0, 0, 0, 0.18);
+  }
+  .hw-celebration__wrap { display: flex; flex-direction: column; align-items: center; gap: var(--wh-space-2); }
+  .hw-celebration__modal {
+    display: flex; align-items: center; gap: var(--wh-space-3);
+    min-width: 240px;
+    padding: var(--wh-space-4);
+    background: rgba(11, 15, 25, 0.92);
+    border: 1px solid var(--wh-found);
+    border-radius: var(--wh-radius-3);
+    box-shadow: var(--wh-shadow-3), var(--wh-shadow-glow-found);
+    backdrop-filter: blur(12px);
+  }
+  .hw-celebration__art {
+    flex: 0 0 auto; width: 84px; height: 84px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 56px; line-height: 1;
+    border-radius: var(--wh-radius-2);
+    background: var(--wh-surface-2);
+    border: 1px solid var(--wh-border);
+    overflow: hidden;
+  }
+  .hw-celebration__body { display: flex; flex-direction: column; gap: var(--wh-space-1); min-width: 0; }
+  .hw-celebration__headline { font-size: var(--wh-text-xl); font-weight: var(--wh-weight-bold); color: var(--wh-found); }
+  .hw-celebration__word { font-family: var(--wh-font-mono); font-size: var(--wh-text-md); font-weight: var(--wh-weight-semibold); color: var(--wh-fg); }
+  .hw-celebration__meta { display: flex; gap: var(--wh-space-3); font-family: var(--wh-font-mono); font-size: var(--wh-text-xs); color: var(--wh-fg-3); }
+  .hw-celebration__meta-sep { color: var(--wh-fg-4); }
+
+  .hw-celebration__next {
+    display: inline-flex; align-items: center; gap: var(--wh-space-2);
+    padding: 4px var(--wh-space-3);
+    background: rgba(11, 15, 25, 0.72);
+    border: 1px solid var(--wh-border); border-radius: var(--wh-radius-pill);
+    color: var(--wh-fg-3);
+    font-family: var(--wh-font-mono); font-size: var(--wh-text-xs);
+    backdrop-filter: blur(8px);
+    opacity: 0.85;
+  }
+  .hw-celebration__next-label { font-family: var(--wh-font-sans); font-size: var(--wh-text-xs); font-weight: var(--wh-weight-medium); color: var(--wh-fg-4); text-transform: uppercase; letter-spacing: 0.04em; }
+  .hw-celebration__next-art { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; font-size: 16px; line-height: 1; }
+  .hw-celebration__next-word { font-family: var(--wh-font-mono); font-size: var(--wh-text-sm); font-weight: var(--wh-weight-medium); color: var(--wh-fg-2); }
+</style>
+</head>
+<body>
+
+<div class="stage-header">
+  <h1>Word Hunter — in-page overlays</h1>
+  <p>The host-page surfaces. Three toast variants and the celebration popup, drawn over realistic background contexts so you can see how the chrome holds against actual reading material.</p>
+</div>
+
+<div class="scenes">
+
+  <!-- HINT TOAST · top-right -->
+  <div class="scene-block">
+    <span class="scene-label">hint variant · top-right · cool-blue border · fires after the configured HintTimer delay</span>
+    <div class="host">
+      <div class="host__crumb">New York Times · Magazine</div>
+      <h2>How the long-form essay survived the algorithm</h2>
+      <p>For a decade the case against the long essay seemed open and shut. Attention spans were collapsing. Scrolling habits were calcifying. The kind of patient, paragraphs-deep argument that defined a New Yorker piece or a Sunday Times feature was, the conventional wisdom went, headed for extinction. And yet the long-form essay has not died. It has, against the run of play, quietly come back into season — partly because the algorithm started rewarding dwell time, partly because the readers who never left finally felt visible again, and partly because the form itself adapted faster than its critics gave it credit for.</p>
+      <p>It happened slowly, the way these things do. A magazine that should have folded went and hired a new editor. A newsletter that had been all takes turned into a place where ideas could breathe for two thousand words at a stretch. The <span class="hl">flamingo</span>-pink banners that used to scream for clicks shrank to a polite afterthought. And the readers, the ones who had been told they were extinct, came back — quietly, patiently, in numbers nobody quite expected.</p>
+
+      <div class="hw-toast hw-toast--hint">
+        <button class="hw-toast__glyph"><img src="../../assets/logo.png" width="20" height="20" alt=""></button>
+        <span>The word is hidden on this page.</span>
+        <button class="hw-toast__close"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO TOAST · no paragraph -->
+  <div class="scene-block">
+    <span class="scene-label">info variant · top-center · neutral border · NoParagraphNotification (this page has nothing long enough to host a hunt)</span>
+    <div class="host" style="padding-bottom: 48px">
+      <div class="host__crumb">x.com · home</div>
+      <h2 style="font-size: 22px; margin-bottom: 8px">trending</h2>
+      <p style="font-size: 14px; line-height: 1.4; margin-bottom: 8px">— Manchester City win 2-1</p>
+      <p style="font-size: 14px; line-height: 1.4; margin-bottom: 8px">— New iPad announced</p>
+      <p style="font-size: 14px; line-height: 1.4; margin-bottom: 8px">— SpaceX launch scheduled for Friday</p>
+      <p style="font-size: 14px; line-height: 1.4; margin-bottom: 8px">— Word Hunter trends after viral tweet</p>
+      <p style="font-size: 14px; line-height: 1.4; margin-bottom: 0; color: #8a7e6e">No paragraphs here meet the 30-word threshold — the page is a list of one-liners.</p>
+
+      <div class="hw-toast hw-toast--info">
+        <button class="hw-toast__glyph"><img src="../../assets/logo.png" width="20" height="20" alt=""></button>
+        <span>Not enough text to hide the word.</span>
+        <button class="hw-toast__close"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTO TOAST · auto-continue -->
+  <div class="scene-block">
+    <span class="scene-label">auto variant · top-center · soft primary border + active-word name · fires on each page load while Auto-Continue is on · auto-dismisses after 4 s</span>
+    <div class="host">
+      <div class="host__crumb">Wikipedia · Cetacea</div>
+      <h2>Whales as cultural creatures</h2>
+      <p>Whales are among a small handful of non-human species in which cultural transmission has been rigorously documented. Songs propagate across populations in patterns that bear little resemblance to genetics; feeding strategies pass from mother to calf in ways that more closely resemble apprenticeship than instinct. Among <span class="hl">cetaceans</span> the most striking case is the humpback. A new song variant introduced by one population in the eastern Pacific can, over a span of four to six years, sweep across hundreds of kilometres of ocean and reorganise the repertoire of every adult male in its path.</p>
+
+      <div class="hw-toast hw-toast--auto">
+        <button class="hw-toast__glyph"><img src="../../assets/logo.png" width="20" height="20" alt=""></button>
+        <span>Auto-Hunter active · <span class="hw-toast__word">Pikachu</span></span>
+        <button class="hw-toast__close"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CELEBRATION · solo find -->
+  <div class="scene-block">
+    <span class="scene-label">CelebrationPopup · solo find · default mode (no Auto-Continue)</span>
+    <div class="celebrate-scene">
+      <p class="fake">A faint preview of the host page sitting behind the celebration overlay. The 12 px backdrop-blur keeps the page legible, the ratio of dark fill against the modal's mint border earns the celebration the one loud moment the rest of the system pays for…</p>
+      <div class="hw-celebration">
+        <div class="hw-celebration__wrap">
+          <div class="hw-celebration__modal">
+            <div class="hw-celebration__art" aria-hidden="true">🦩</div>
+            <div class="hw-celebration__body">
+              <span class="hw-celebration__headline">Found!</span>
+              <span class="hw-celebration__word">flamingo</span>
+              <div class="hw-celebration__meta"><span>12s</span><span class="hw-celebration__meta-sep">·</span><span>no hint</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CELEBRATION · Next up (auto-continue) -->
+  <div class="scene-block">
+    <span class="scene-label">CelebrationPopup · Auto-Continue on with spoiler toggle on · "Next up" pill below the modal</span>
+    <div class="celebrate-scene">
+      <p class="fake">Same backdrop conditions as above. The Next-up pill is deliberately quieter — opacity 0.85, translucent slate fill, mono mini-art at 20 × 20 — so it whispers "here's what's coming" without competing with the find moment.</p>
+      <div class="hw-celebration">
+        <div class="hw-celebration__wrap">
+          <div class="hw-celebration__modal">
+            <div class="hw-celebration__art" aria-hidden="true">🦊</div>
+            <div class="hw-celebration__body">
+              <span class="hw-celebration__headline">Found!</span>
+              <span class="hw-celebration__word">Fox</span>
+              <div class="hw-celebration__meta"><span>34s</span><span class="hw-celebration__meta-sep">·</span><span>no hint</span></div>
+            </div>
+          </div>
+          <div class="hw-celebration__next">
+            <span class="hw-celebration__next-label">Next up</span>
+            <span class="hw-celebration__next-art" aria-hidden="true">🐺</span>
+            <span class="hw-celebration__next-word">Wolf</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

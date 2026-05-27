@@ -29,14 +29,30 @@
   --wh-found: #5ee3a1;
   --wh-found-soft: rgba(94, 227, 161, 0.15);
 
-  --wh-hint: #8ab4ff;
-  --wh-hint-soft: rgba(138, 180, 255, 0.16);
+  /* Informational blue — the system's quiet communication tone.
+     Used by: hint toast, ReloadHint, stats hint-dot, link icon. */
+  --wh-info: #8ab4ff;
+  --wh-info-soft: rgba(138, 180, 255, 0.16);
+
+  /* Selection / pending blue — a state, not a message.
+     Used by: is-pending slot ring, current-streak value. Same hex as --wh-info for now. */
+  --wh-selected: #8ab4ff;
+  --wh-selected-soft: rgba(138, 180, 255, 0.16);
+
+  /* Soft amber — reserved for future "heads-up" states between primary CTA and danger. */
+  --wh-warning: #ffa862;
+  --wh-warning-soft: rgba(255, 168, 98, 0.18);
 
   --wh-danger: #ff6b6b;
   --wh-danger-soft: rgba(255, 107, 107, 0.15);
 
+  /* Legacy aliases — kept so existing CSS that references --wh-hint keeps working.
+     New surfaces should reach for --wh-info or --wh-selected directly. */
+  --wh-hint: var(--wh-info);
+  --wh-hint-soft: var(--wh-info-soft);
+
   /* ---------- WordList theming ---------- */
-  --wh-list-animals: #5ee3a1;
+  --wh-list-animals: var(--wh-found); /* alias: Animals share the success-mint hex */
   --wh-list-pokemon: #ff8ac2;
 
   /* ---------- Spacing (4px base) ---------- */

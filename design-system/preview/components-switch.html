@@ -1,0 +1,61 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { width: 700px; padding: 24px 28px; }
+.stack { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+.field { width: 328px; display: flex; flex-direction: column; gap: 8px; }
+.field-label { font-family: var(--wh-font-sans); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-2); }
+.field-helper { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-3); line-height: 1.4; min-height: 15px; }
+
+.switch {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 4px 8px;
+  background: transparent; border: none; border-radius: var(--wh-radius-2);
+  cursor: pointer;
+}
+.track {
+  position: relative; width: 32px; height: 18px; flex: 0 0 auto;
+  background: var(--wh-surface-3); border-radius: 999px;
+}
+.switch.is-on .track { background: var(--wh-primary); }
+.thumb {
+  position: absolute; top: 2px; left: 2px;
+  width: 14px; height: 14px;
+  background: var(--wh-fg); border-radius: 50%;
+}
+.switch.is-on .thumb { transform: translateX(14px); background: var(--wh-on-primary); }
+.state { font-family: var(--wh-font-sans); font-size: 12px; font-weight: 500; color: var(--wh-fg-3); }
+.switch.is-on .state { color: var(--wh-primary); }
+
+.caption { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); max-width: 660px; }
+.note { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-2); max-width: 660px; line-height: 1.5; }
+.note b { color: var(--wh-fg); }
+</style></head><body>
+  <div class="label-eyebrow" style="margin-bottom: 14px">Switch — settings toggle</div>
+  <div class="stack">
+    <div class="field">
+      <span class="field-label">Reload hint</span>
+      <button class="switch is-on" role="switch" aria-checked="true">
+        <span class="track"><span class="thumb"></span></span>
+        <span class="state">On</span>
+      </button>
+      <span class="field-helper">prompt to reload the page after starting a hunt</span>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Show next word preview</span>
+      <button class="switch" role="switch" aria-checked="false">
+        <span class="track"><span class="thumb"></span></span>
+        <span class="state">Off</span>
+      </button>
+      <span class="field-helper">reveal the upcoming word in the celebration popup when Auto-Continue is on</span>
+    </div>
+
+    <div class="caption">
+      32&nbsp;×&nbsp;18 track · 14&nbsp;px thumb · pill radius. Off → <code>--wh-surface-3</code> track, <code>--wh-fg</code> thumb. On → <code>--wh-primary</code> track, <code>--wh-on-primary</code> (almost-black) thumb so the contrast doubles as a "lit" affordance. <code>role="switch"</code> + <code>aria-checked</code>; the explicit "On"/"Off" label is included for readability at 12&nbsp;px popup density (a bare track would be too small to scan).
+    </div>
+    <div class="note">
+      Used in Settings for <b>Reload hint</b> and <b>Show next word preview</b>. The Auto-Continue toggle on the BottomActionBar is the same semantic switch but renders as an icon button instead of this control — pattern-equivalent, treatment-different on purpose (the action bar is icon-dense, Settings is form-dense).
+    </div>
+  </div>
+</body></html>

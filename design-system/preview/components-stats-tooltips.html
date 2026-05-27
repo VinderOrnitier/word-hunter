@@ -1,0 +1,173 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { width: 700px; padding: 24px 28px; }
+.stack { display: flex; flex-direction: column; gap: 22px; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+.scene { background: var(--wh-bg); border: 1px solid var(--wh-border-soft); border-radius: var(--wh-radius-3); padding: 24px; display: flex; gap: 40px; flex-wrap: wrap; }
+.demo { position: relative; }
+
+/* Triggering elements */
+.word-cell {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 10px;
+  font-family: var(--wh-font-mono); font-size: 12px; color: var(--wh-fg);
+  background: var(--wh-surface); border: 1px solid var(--wh-border-soft);
+  border-radius: var(--wh-radius-2);
+  cursor: default;
+}
+.word-cell .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--wh-list-animals); }
+
+.hint-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 999px;
+  background: var(--wh-info);
+  border: 1.5px solid var(--wh-info);
+  cursor: default;
+}
+
+.link-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--wh-info); cursor: default;
+}
+.link-icon svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Tooltip — always-on rendition (for the preview card) */
+.tooltip-above, .tooltip-above-right {
+  position: absolute;
+  padding: 4px 8px;
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-2);
+  box-shadow: var(--wh-shadow-2);
+  font-family: var(--wh-font-sans); font-size: 10px;
+  color: var(--wh-fg);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}
+.tooltip-above {
+  bottom: calc(100% + 6px);
+  left: 50%; transform: translateX(-50%);
+}
+.tooltip-above-right {
+  bottom: calc(100% + 6px); right: 0;
+}
+.tooltip-mono { font-family: var(--wh-font-mono); }
+
+.legend { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); max-width: 644px; line-height: 1.6; }
+.legend b { color: var(--wh-fg-2); }
+
+pre { font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-2); background: var(--wh-surface); border: 1px solid var(--wh-border-soft); padding: 12px; border-radius: var(--wh-radius-2); overflow-x: auto; white-space: pre; }
+</style></head><body>
+  <div class="label-eyebrow" style="margin-bottom: 14px">CSS-only tooltips — used across the Stats table & icon-header cells</div>
+
+  <div class="stack">
+    <div class="scene">
+      <div class="demo">
+        <span class="tooltip-above tooltip-mono">paraskevidekatriaphobia</span>
+        <span class="word-cell"><span class="dot"></span>paraskevid…</span>
+      </div>
+
+      <div class="demo">
+        <span class="tooltip-above">Hint used</span>
+        <span class="hint-dot"></span>
+      </div>
+
+      <div class="demo">
+        <span class="tooltip-above-right">en.wikipedia.org/wiki/friday_the_13th</span>
+        <span class="link-icon"><svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span>
+      </div>
+    </div>
+
+    <div class="legend">
+      Pattern: every trigger carries a <code>data-tooltip="…"</code> attribute and renders the tooltip with a <code>::after</code> pseudo-element. Default state is <code>opacity: 0; transform: translateY(4px)</code>; hover transitions to <code>opacity: 1; translateY(0)</code> over <code>--wh-dur-fast</code>. No JS, no aria-describedby plumbing, no portal — the tooltip lives in the same stacking context as its trigger.
+    </div>
+
+    <div>
+      <div class="label" style="margin-bottom: 8px">Reference CSS</div>
+      <pre><code>.thing { position: relative; cursor: default; }
+.thing::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 4px 8px;
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-2);
+  box-shadow: var(--wh-shadow-2);
+  font-size: 10px;
+  color: var(--wh-fg);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--wh-dur-fast),
+              transform var(--wh-dur-fast);
+}
+.thing:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}</code></pre>
+    </div>
+
+    <div class="legend">
+      <b>Anchoring.</b> Above-center is the default (used by the hint dot and the duration icon-header). Above-left for cells that hug the left edge (the truncated word column — mono font). Above-right when the trigger sits flush right (the link cell — sans font, page URL clipped with <code>text-overflow: ellipsis</code> on the tooltip itself so very long URLs don't blow out the popup).
+      <em>Proposed:</em> consolidate the four <code>::after</code> blocks under a single utility class:
+      <code>.wh-tooltip[data-tip-anchor="left|right|center"][data-tooltip]</code>. One block, three anchors via attribute selector, zero per-component CSS to add the 5th tooltipped cell.
+    </div>
+
+    <div>
+      <div class="label" style="margin-bottom: 8px">Proposed utility · single class for all tooltipped cells</div>
+      <pre><code>.wh-tooltip {
+  position: relative;
+  cursor: default;
+}
+.wh-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  padding: 4px 8px;
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-2);
+  box-shadow: var(--wh-shadow-2);
+  font-family: var(--wh-font-sans);
+  font-size: 10px;
+  color: var(--wh-fg);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--wh-dur-fast),
+              transform var(--wh-dur-fast);
+  z-index: 10;
+}
+.wh-tooltip[data-tip-anchor="center"]::after {
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+}
+.wh-tooltip[data-tip-anchor="center"]:hover::after {
+  transform: translateX(-50%) translateY(0);
+}
+.wh-tooltip[data-tip-anchor="left"]::after {
+  left: 0;
+  transform: translateY(4px);
+}
+.wh-tooltip[data-tip-anchor="right"]::after {
+  right: 0;
+  transform: translateY(4px);
+}
+.wh-tooltip[data-tip-anchor="left"]:hover::after,
+.wh-tooltip[data-tip-anchor="right"]:hover::after {
+  transform: translateY(0);
+}
+.wh-tooltip:hover::after {
+  opacity: 1;
+}
+
+/* mono tooltips for word values */
+.wh-tooltip--mono::after { font-family: var(--wh-font-mono); }</code></pre>
+    </div>
+  </div>
+</body></html>

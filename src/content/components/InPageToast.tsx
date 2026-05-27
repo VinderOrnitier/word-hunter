@@ -8,7 +8,7 @@ const logoUrl = chrome.runtime.getURL(rawLogoUrl.replace(/^\//, ""));
 interface InPageToastProps {
   message: string;
   locale: Locale;
-  variant: "hint" | "info";
+  variant: "hint" | "info" | "auto";
   onClose: () => void;
   onFind?: () => void;
 }

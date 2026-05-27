@@ -1,0 +1,56 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { width: 700px; padding: 24px 28px; }
+.stack { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+.popup-frame { width: 360px; background: var(--wh-bg); border: 1px solid var(--wh-border); border-radius: 14px; overflow: hidden; box-shadow: var(--wh-shadow-2); }
+
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--wh-border-soft);
+}
+.lockup { display: flex; align-items: center; gap: 12px; }
+.glyph { width: 28px; height: 28px; border-radius: 6px; }
+.wordmark { font-family: var(--wh-font-sans); font-size: 18px; font-weight: 700; letter-spacing: -0.01em; color: var(--wh-fg); }
+
+.rules-btn {
+  width: 30px; height: 30px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; border: none; border-radius: var(--wh-radius-2);
+  color: var(--wh-fg-3); cursor: pointer;
+}
+.rules-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.rules-btn:hover { background: var(--wh-surface-2); color: var(--wh-fg); }
+.rules-btn.is-active { color: var(--wh-primary); background: var(--wh-surface-2); }
+
+.caption { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); max-width: 660px; }
+</style></head><body>
+  <div class="label-eyebrow" style="margin-bottom: 16px">PopupHeader — replaces the "Rules" tab</div>
+  <div class="stack">
+    <div>
+      <div class="label" style="margin-bottom: 8px">default</div>
+      <div class="popup-frame">
+        <header class="header">
+          <div class="lockup"><img class="glyph" src="../assets/logo.png" alt=""><span class="wordmark">Word Hunter</span></div>
+          <button class="rules-btn" aria-label="Rules"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></button>
+        </header>
+      </div>
+    </div>
+
+    <div>
+      <div class="label" style="margin-bottom: 8px">rules active — info button glows primary</div>
+      <div class="popup-frame">
+        <header class="header">
+          <div class="lockup"><img class="glyph" src="../assets/logo.png" alt=""><span class="wordmark">Word Hunter</span></div>
+          <button class="rules-btn is-active" aria-label="Rules" aria-pressed="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></button>
+        </header>
+      </div>
+    </div>
+
+    <div class="caption">
+      Rules used to be a fourth tab. It now lives behind a 30&nbsp;×&nbsp;30 <code>info</code> button at the top-right of the header that toggles the rules panel into the main pane (so the three real game tabs — Play / Statistics / Settings — keep their full width).
+      Active state colours the icon <code>--wh-primary</code> and tints the background <code>--wh-surface-2</code>.
+    </div>
+  </div>
+</body></html>

@@ -1,0 +1,132 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { width: 700px; padding: 24px 28px; }
+.stack { display: flex; flex-direction: column; gap: 22px; align-items: flex-start; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+.frame {
+  width: 360px;
+  background: var(--wh-bg);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-3);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+.body {
+  flex: 1;
+  padding: 14px 16px;
+  min-height: 140px;
+  display: flex; flex-direction: column; gap: 10px;
+  background: var(--wh-bg);
+}
+.body-eyebrow { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+.body-row { display: grid; grid-template-columns: 1.4fr 1fr 0.8fr; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--wh-border-soft); }
+.body-row .word { font-family: var(--wh-font-mono); font-size: 12px; color: var(--wh-fg); }
+.body-row .meta { font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-3); }
+
+.field-row { display: flex; flex-direction: column; gap: 6px; }
+.field-label { font-family: var(--wh-font-sans); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-2); }
+.input-shell {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px;
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-2);
+  font-family: var(--wh-font-mono); font-size: 12px; color: var(--wh-fg);
+}
+.field-helper { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-3); }
+
+/* === Action footer — the unified component === */
+.footer {
+  flex: 0 0 auto;
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px;
+  background: var(--wh-bg);
+  border-top: 1px solid var(--wh-border);
+  box-shadow: 0 -6px 14px rgba(0, 0, 0, 0.25);
+  animation: footer-in var(--wh-dur-base) var(--wh-ease-standard);
+}
+@keyframes footer-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.footer.has-prompt { justify-content: flex-start; }
+.footer:not(.has-prompt) { justify-content: flex-end; }
+.footer__prompt {
+  flex: 1;
+  font-family: var(--wh-font-sans); font-size: 12px;
+  color: var(--wh-fg-2);
+}
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px;
+  font-family: var(--wh-font-sans); font-size: 12px; font-weight: 600;
+  border-radius: var(--wh-radius-2);
+  cursor: pointer; border: 1px solid transparent;
+}
+.btn--primary { background: var(--wh-primary); color: var(--wh-on-primary); }
+.btn--danger { background: var(--wh-danger-soft); color: var(--wh-danger); border-color: var(--wh-danger); }
+.btn--ghost { background: transparent; color: var(--wh-fg-2); }
+.btn--ghost:hover { background: var(--wh-surface-2); color: var(--wh-fg); }
+
+.caption { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); max-width: 660px; line-height: 1.6; }
+.note { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-2); max-width: 660px; line-height: 1.5; }
+.note b { color: var(--wh-fg); }
+</style></head><body>
+  <div class="label-eyebrow" style="margin-bottom: 14px">Action footer — sticky-bottom · conditional · two modes</div>
+  <div class="stack">
+
+    <div>
+      <div class="label" style="margin-bottom: 8px">save mode · Settings · appears when draft ≠ saved</div>
+      <div class="frame">
+        <div class="body">
+          <div class="field-row">
+            <span class="field-label">Hint delay</span>
+            <div class="input-shell">3</div>
+            <span class="field-helper">minutes the page is open before the hint tooltip shows</span>
+          </div>
+          <div class="field-row" style="margin-top: 4px">
+            <span class="field-label">Cursor reveal delay</span>
+            <div class="input-shell">1.5</div>
+          </div>
+        </div>
+        <div class="footer">
+          <button class="btn btn--ghost">Cancel</button>
+          <button class="btn btn--primary">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="label" style="margin-bottom: 8px">confirm mode · Stats · prompt + destructive primary</div>
+      <div class="frame">
+        <div class="body">
+          <span class="body-eyebrow">7 hunts</span>
+          <div class="body-row"><span class="word">Pikachu</span><span class="meta">today, 9:14</span><span class="meta">2m 03s</span></div>
+          <div class="body-row"><span class="word">flamingo</span><span class="meta">2m ago</span><span class="meta">14s</span></div>
+          <div class="body-row"><span class="word">wolf</span><span class="meta">yesterday</span><span class="meta">8s</span></div>
+        </div>
+        <div class="footer has-prompt">
+          <span class="footer__prompt">Clear all hunts?</span>
+          <button class="btn btn--ghost">Cancel</button>
+          <button class="btn btn--danger">Yes, clear</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="caption">
+      Same chrome as the existing Settings footer: <code>--wh-bg</code> fill, 1&nbsp;px top border, <code>0 -6px 14px rgba(0,0,0,0.25)</code> upward shadow, 14&nbsp;px padding. Slides in from <code>+8&nbsp;px</code> with <code>--wh-dur-base</code>.
+    </div>
+
+    <div class="note">
+      <b>Two modes, one chrome.</b>
+      <ul style="margin: 6px 0 0; padding-left: 20px">
+        <li><b>save mode</b> — buttons right-aligned, no prompt. Cancel (ghost) reverts the draft, primary commits. Used in Settings when <code>draft !== saved</code>.</li>
+        <li><b>confirm mode</b> — adds a <code>--wh-fg-2</code> prompt text on the left ("Clear all hunts?"), Cancel + danger primary on the right. Used in Stats for the destructive Clear action (replaces the old top-anchored ConfirmOverlay).</li>
+      </ul>
+      <br>
+      <b>Why merge?</b> The old <code>ConfirmOverlay</code> lived under the sticky Stats header and felt invasive — the eye lands on the table, the overlay pops <em>above</em> it. Moving the confirm to the bottom matches where the rest of the popup's persistent actions live (BottomActionBar, Settings footer), and lets the player keep reviewing the data while deciding. One chrome to learn, one animation to maintain.
+    </div>
+  </div>
+</body></html>

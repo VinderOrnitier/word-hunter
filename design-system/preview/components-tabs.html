@@ -1,18 +1,22 @@
 <!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
-body { height: 200px; padding: 24px 28px; }
-.tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--wh-border); }
-.tab { font-family: var(--wh-font-sans); font-size: 12px; font-weight: 600; color: var(--wh-fg-3); padding: 10px 14px; cursor: pointer; border: none; background: transparent; position: relative; display: flex; align-items: center; gap: 8px; }
-.tab[data-active] { color: var(--wh-fg); }
-.tab[data-active]::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: -1px; height: 2px; background: var(--wh-primary); border-radius: 2px 2px 0 0; }
+body { height: 220px; padding: 24px 28px; }
+.tabs { display: flex; border-bottom: 1px solid var(--wh-border); width: 360px; background: var(--wh-bg); }
+.tab { flex: 1; font-family: var(--wh-font-sans); font-size: 12px; font-weight: 600; color: var(--wh-fg-3); padding: 12px 12px; cursor: pointer; border: none; background: transparent; position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-bottom: 2px solid transparent; }
+.tab[data-active] { color: var(--wh-fg); border-bottom-color: var(--wh-primary); }
 .tab svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.body { padding: 14px 0; font-family: var(--wh-font-sans); font-size: 13px; color: var(--wh-fg-2); }
+.caption { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); margin-top: 16px; max-width: 660px; }
+.note { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-4); margin-top: 4px; }
 </style></head><body>
-  <div class="label-eyebrow">Tabs · sticky-top in popup</div>
+  <div class="label-eyebrow">Tabs · 3 surfaces · sticky-top in popup</div>
   <nav class="tabs">
     <button class="tab" data-active><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>Play</button>
     <button class="tab"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14v4M12 9v9M17 4v14"/></svg>Statistics</button>
     <button class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button>
-    <button class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Rules</button>
   </nav>
-  <div class="body">Active tab gets a 2px primary underline · 8px inset on each side</div>
+  <div class="caption">
+    Active tab gets a 2&nbsp;px <code>--wh-primary</code> bottom border — replaces the inset highlighter underline that ran 8&nbsp;px from each side previously. Each tab takes <code>flex: 1</code> so the three icons share the popup width evenly.
+  </div>
+  <div class="note">
+    Changed: Rules is no longer a tab. It's accessed through the info button in PopupHeader. Tab nav stays three items even when Rules is open (Rules takes over the panel area but does not steal active-tab styling — when you close Rules you fall back to Play).
+  </div>
 </body></html>

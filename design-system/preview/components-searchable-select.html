@@ -1,0 +1,97 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
+body { width: 700px; padding: 24px 28px; }
+.stack { display: flex; flex-direction: row; gap: 24px; align-items: flex-start; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+.col { display: flex; flex-direction: column; gap: 8px; width: 200px; }
+
+.trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; box-sizing: border-box;
+  padding: 9px 10px 9px 12px;
+  font-family: var(--wh-font-sans); font-size: 12px; color: var(--wh-fg);
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-border); border-radius: var(--wh-radius-2);
+  cursor: pointer; text-align: left; gap: 6px;
+}
+.trigger::after {
+  content: ""; flex-shrink: 0; width: 10px; height: 6px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%238C95B0' stroke-width='1.5' stroke-linecap='round'/></svg>") no-repeat center;
+}
+.trigger.is-open {
+  border-color: var(--wh-primary);
+  border-bottom-left-radius: 0; border-bottom-right-radius: 0;
+  box-shadow: var(--wh-shadow-glow);
+}
+.trigger.is-open::after { transform: rotate(180deg); }
+
+.dropdown {
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-primary); border-top: none;
+  border-radius: 0 0 var(--wh-radius-2) var(--wh-radius-2);
+  box-shadow: var(--wh-shadow-2);
+  overflow: hidden;
+}
+.search {
+  display: block; width: 100%; box-sizing: border-box;
+  padding: 7px 10px 7px 32px;
+  font-family: var(--wh-font-mono); font-size: 12px;
+  color: var(--wh-fg);
+  background: transparent url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%238C95B0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='7'/><path d='m20 20-3-3'/></svg>") no-repeat 10px center;
+  border: none;
+  border-bottom: 1px solid var(--wh-border-soft);
+  outline: none;
+}
+.list { max-height: 180px; overflow-y: auto; }
+.option {
+  display: block; width: 100%; box-sizing: border-box;
+  padding: 7px 12px;
+  font-family: var(--wh-font-mono); font-size: 12px;
+  color: var(--wh-fg);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.option:hover { background: var(--wh-surface-3); }
+.option.is-selected { background: var(--wh-primary-soft); color: var(--wh-primary); }
+
+.caption { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); max-width: 660px; margin-top: 16px; }
+</style></head><body>
+  <div class="label-eyebrow" style="margin-bottom: 14px">SearchableSelect — mono dropdown with inline search</div>
+  <div class="stack">
+    <div class="col">
+      <span class="label">closed</span>
+      <button class="trigger">Pikachu</button>
+    </div>
+
+    <div class="col">
+      <span class="label">open · empty query</span>
+      <button class="trigger is-open">Pikachu</button>
+      <div class="dropdown">
+        <input class="search" type="text" value="" placeholder="Search…">
+        <div class="list">
+          <div class="option">Bulbasaur</div>
+          <div class="option">Charmander</div>
+          <div class="option">Squirtle</div>
+          <div class="option is-selected">Pikachu</div>
+          <div class="option">Eevee</div>
+          <div class="option">Mewtwo</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <span class="label">open · filtered</span>
+      <button class="trigger is-open">Pikachu</button>
+      <div class="dropdown">
+        <input class="search" type="text" value="pi" placeholder="Search…">
+        <div class="list">
+          <div class="option is-selected">Pikachu</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="caption">
+    Mono font for the trigger label and options — the values are <em>words</em>, and words in this product wear mono. Open state shares its top edge with the dropdown (matching primary border, no rounding on bottom of trigger / top of dropdown) so they read as a single panel. Search field carries an inline magnifier glyph (CSS background) and a 1&nbsp;px <code>--wh-border-soft</code> divider; list max-height 180&nbsp;px scrolls inside.
+  </div>
+</body></html>

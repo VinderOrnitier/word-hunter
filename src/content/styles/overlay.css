@@ -93,6 +93,13 @@
   border: 1px solid var(--wh-border);
 }
 
+/* auto — top-center, soft primary tint (Auto-Continue mode is active) */
+.hw-toast--auto {
+  left: 50%;
+  translate: -50% 0;
+  border: 1px solid rgba(255, 210, 63, 0.5);
+}
+
 .hw-toast__glyph {
   display: flex;
   align-items: center;

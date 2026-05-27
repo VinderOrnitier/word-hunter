@@ -1,6 +1,9 @@
 <!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
-body { height: 240px; padding: 24px 28px; }
-.row { gap: 10px; }
+body { width: 700px; padding: 24px 28px; }
+.stack { display: flex; flex-direction: column; gap: 22px; }
+.section { display: flex; flex-direction: column; gap: 10px; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
 .line { display: flex; align-items: center; gap: 14px; padding: 10px 12px; background: var(--wh-surface); border: 1px solid var(--wh-border); border-radius: var(--wh-radius-2); }
 .line .name { font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg); width: 130px; }
 .line .desc { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-3); flex: 1; }
@@ -12,12 +15,125 @@ body { height: 240px; padding: 24px 28px; }
 @keyframes pop { 0%,100% { transform: scale(1) } 50% { transform: scale(1.4) } }
 .track { height: 14px; flex: 1; position: relative; }
 .track .dot { position: absolute; top: 0; left: 0; }
+
+.rm-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 0; padding: 0; background: var(--wh-surface); border: 1px solid var(--wh-border); border-radius: var(--wh-radius-2); overflow: hidden; }
+.rm-row + .rm-row { margin-top: -1px; border-top-left-radius: 0; border-top-right-radius: 0; }
+.rm-cell { padding: 8px 12px; font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-2); border-right: 1px solid var(--wh-border-soft); }
+.rm-cell:last-child { border-right: none; }
+.rm-cell.head { background: var(--wh-bg); color: var(--wh-fg-3); font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.08em; }
+.rm-cell code { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); }
+
+.note { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-2); line-height: 1.55; max-width: 660px; }
+.note b { color: var(--wh-fg); }
+.note code { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); background: var(--wh-surface-2); padding: 1px 5px; border-radius: 3px; border: 1px solid var(--wh-border-soft); }
+
+pre { font-family: var(--wh-font-mono); font-size: 11px; color: var(--wh-fg-2); background: var(--wh-surface); border: 1px solid var(--wh-border-soft); padding: 12px; border-radius: var(--wh-radius-2); overflow-x: auto; white-space: pre; line-height: 1.5; }
 </style></head><body>
-  <div class="label-eyebrow">Motion</div>
-  <div class="col">
-    <div class="line"><span class="name">ease-standard</span><div class="track"><div class="dot dot-anim"></div></div><span class="val">200ms</span></div>
-    <div class="line"><span class="name">ease-pop</span><span class="desc">overshoot — celebration only</span><div class="dot dot-pop"></div><span class="val">360ms</span></div>
-    <div class="line"><span class="name">durations</span><span class="desc">fast 120 · base 200 · slow 360</span><span class="val">ms</span></div>
-    <div class="line"><span class="name">enter pattern</span><span class="desc">opacity 0→1 + translateY 4px → 0</span><span class="val">never fade-only</span></div>
+  <div class="label-eyebrow" style="margin-bottom: 14px">Motion · easings · durations · reduced-motion coverage</div>
+
+  <div class="stack">
+
+    <div class="section">
+      <div class="label">Easings · durations · entry pattern</div>
+      <div class="col" style="display: flex; flex-direction: column; gap: 8px">
+        <div class="line"><span class="name">ease-standard</span><div class="track"><div class="dot dot-anim"></div></div><span class="val">200ms</span></div>
+        <div class="line"><span class="name">ease-pop</span><span class="desc">overshoot — celebration only</span><div class="dot dot-pop"></div><span class="val">360ms</span></div>
+        <div class="line"><span class="name">durations</span><span class="desc">fast 120 · base 200 · slow 360</span><span class="val">ms</span></div>
+        <div class="line"><span class="name">enter pattern</span><span class="desc">opacity 0→1 + translateY 4–8px → 0</span><span class="val">never fade-only</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="label">Animated surfaces · reduced-motion behaviour</div>
+      <div>
+        <div class="rm-row">
+          <div class="rm-cell head">Surface</div>
+          <div class="rm-cell head">Default motion</div>
+          <div class="rm-cell head">Reduced motion → keep / drop</div>
+        </div>
+        <div class="rm-row">
+          <div class="rm-cell">ProgressRow · fill width</div>
+          <div class="rm-cell"><code>360ms</code> ease-standard</div>
+          <div class="rm-cell">drop transition · jump to value · <b>shipped</b></div>
+        </div>
+        <div class="rm-row">
+          <div class="rm-cell">ProgressRow · chevron rotate</div>
+          <div class="rm-cell"><code>160ms</code> ease-standard</div>
+          <div class="rm-cell">drop transition · <b>shipped</b></div>
+        </div>
+        <div class="rm-row">
+          <div class="rm-cell">InPageToast · enter</div>
+          <div class="rm-cell">opacity + translateY(4px)</div>
+          <div class="rm-cell">drop translate · keep opacity · pending</div>
+        </div>
+        <div class="rm-row">
+          <div class="rm-cell">ReloadHint · enter</div>
+          <div class="rm-cell">opacity + translateY(-4px)</div>
+          <div class="rm-cell">drop translate · keep opacity · pending</div>
+        </div>
+        <div class="rm-row">
+          <div class="rm-cell">SearchableSelect dropdown</div>
+          <div class="rm-cell">opacity + translateY(-4px)</div>
+          <div class="rm-cell">drop translate · keep opacity · pending</div>
+        </div>
+        <div class="rm-row">
+          <div class="rm-cell">Settings / Action footer</div>
+          <div class="rm-cell">opacity + translateY(8px)</div>
+          <div class="rm-cell">drop translate · keep opacity · pending</div>
+        </div>
+        <div class="rm-row">
+          <div class="rm-cell">CelebrationPopup · modal pop</div>
+          <div class="rm-cell">scale 0.92 → 1 + translateY(8px) · ease-pop</div>
+          <div class="rm-cell">drop pop · fade-only · pending</div>
+        </div>
+        <div class="rm-row">
+          <div class="rm-cell">CelebrationPopup · backdrop</div>
+          <div class="rm-cell">opacity fade</div>
+          <div class="rm-cell">keep · already minimal</div>
+        </div>
+        <div class="rm-row">
+          <div class="rm-cell">Range slider · thumb hover/active</div>
+          <div class="rm-cell">scale(1.15) · scale(0.96)</div>
+          <div class="rm-cell">drop transforms · keep bg change · pending</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="label">Recipe · drop transforms, keep opacity</div>
+      <pre><code>@media (prefers-reduced-motion: reduce) {
+  /* Drop scaling + translateY transitions everywhere, keep opacity for clarity. */
+  .wh-progress-row__fill,
+  .wh-progress-row__chevron { transition: none; }
+
+  .hw-toast,
+  .wh-reload-hint,
+  .wh-ss__dropdown,
+  .wh-settings__footer,
+  .wh-action-footer {
+    animation-name: wh-rm-fade-in;       /* opacity-only entry */
+    animation-duration: var(--wh-dur-fast);
+  }
+
+  .hw-celebration__modal {
+    animation: wh-rm-fade-in var(--wh-dur-base) var(--wh-ease-standard) both;
+  }
+
+  .wh-settings__range::-webkit-slider-thumb,
+  .wh-settings__range::-moz-range-thumb { transition: none; }
+}
+
+@keyframes wh-rm-fade-in {
+  from { opacity: 0 }
+  to   { opacity: 1 }
+}</code></pre>
+    </div>
+
+    <div class="note">
+      <b>Rule:</b> when reduced-motion is on, drop every transform (translate, scale, rotate) and keep the opacity fade. Total entry duration shortens to <code>--wh-dur-fast</code> (120&nbsp;ms) — enough to register a state change without animating motion.
+      <br><br>
+      <b>Coverage status:</b> ProgressRow ships its reduced-motion media query in <code>popup.css</code> today. The other surfaces are pending code-side adoption — listed above so a refactor can sweep them all in one pass instead of finding stragglers later.
+    </div>
+
   </div>
 </body></html>

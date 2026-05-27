@@ -1,24 +1,128 @@
 <!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_card.css"><style>
-body { height: 220px; }
-.row { gap: 10px; }
-.swatch .chip { height: 70px; display: flex; align-items: center; justify-content: center; font-family: var(--wh-font-sans); font-size: 12px; font-weight: 600; }
+body { width: 700px; padding: 24px 28px; }
+.stack { display: flex; flex-direction: column; gap: 22px; }
+.section { display: flex; flex-direction: column; gap: 10px; }
+.label { font-family: var(--wh-font-sans); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--wh-fg-3); }
+
+.swatch-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.swatch {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 0;
+}
+.chip {
+  height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--wh-font-sans); font-size: 12px; font-weight: 600;
+  border-radius: var(--wh-radius-2);
+}
+.chip-name { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-2); }
+.chip-role { font-family: var(--wh-font-sans); font-size: 10px; color: var(--wh-fg-3); line-height: 1.4; }
+.chip-tags { font-family: var(--wh-font-mono); font-size: 9px; color: var(--wh-fg-4); }
+
 .list-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--wh-surface); border: 1px solid var(--wh-border-soft); border-radius: var(--wh-radius-2); }
-.list-row .dot { width: 8px; height: 8px; border-radius: 999px; }
+.list-row .dot { width: 8px; height: 8px; border-radius: 999px; flex: 0 0 auto; }
 .list-row .name { font-family: var(--wh-font-sans); font-weight: 600; font-size: 13px; color: var(--wh-fg); }
 .list-row .word { font-family: var(--wh-font-mono); font-size: 12px; color: var(--wh-fg-3); margin-left: auto; }
+.list-row .alias { font-family: var(--wh-font-mono); font-size: 9px; color: var(--wh-fg-4); margin-left: auto; padding-left: 12px; }
+
+.note { font-family: var(--wh-font-sans); font-size: 11px; color: var(--wh-fg-2); line-height: 1.55; }
+.note b { color: var(--wh-fg); }
+.note code { font-family: var(--wh-font-mono); font-size: 10px; color: var(--wh-fg-3); background: var(--wh-surface-2); padding: 1px 5px; border-radius: 3px; border: 1px solid var(--wh-border-soft); }
+
+.alias-line { display: inline-block; padding: 1px 6px; font-family: var(--wh-font-mono); font-size: 9px; background: var(--wh-surface-2); color: var(--wh-fg-3); border-radius: 3px; border: 1px solid var(--wh-border-soft); }
+.pill-new { display: inline-block; margin-left: 6px; padding: 1px 5px; font-size: 9px; background: var(--wh-primary-soft); color: var(--wh-primary); border: 1px solid rgba(255, 210, 63, 0.25); border-radius: 3px; vertical-align: middle; }
 </style></head><body>
-  <div class="label-eyebrow">Word-list theming</div>
-  <div class="col" style="gap: 10px">
-    <div class="row" style="gap:10px">
-      <div class="list-row" style="flex:1"><span class="dot" style="background: var(--wh-list-animals)"></span><span class="name">Animals</span><span class="word">cat · fox · owl · …</span></div>
-      <div class="list-row" style="flex:1"><span class="dot" style="background: var(--wh-list-pokemon)"></span><span class="name">Pokémon</span><span class="word">Pikachu · Eevee · …</span></div>
-      <div class="list-row" style="flex:1"><span class="dot" style="background: var(--wh-fg-3)"></span><span class="name">Custom</span><span class="word">your word here</span></div>
+  <div class="label-eyebrow" style="margin-bottom: 16px">Semantic colors — accent tokens & list theming</div>
+
+  <div class="stack">
+
+    <div class="section">
+      <div class="label">Accent tokens · base + soft companion</div>
+      <div class="swatch-row">
+        <div class="swatch">
+          <div class="chip" style="background: var(--wh-found-soft); color: var(--wh-found); border: 1px solid var(--wh-found)">Found</div>
+          <span class="chip-name">--wh-found</span>
+          <span class="chip-role">celebration · success</span>
+          <span class="chip-tags">CelebrationPopup border + glow</span>
+        </div>
+
+        <div class="swatch">
+          <div class="chip" style="background: var(--wh-info-soft); color: var(--wh-info); border: 1px solid var(--wh-info)">Info</div>
+          <span class="chip-name">--wh-info <span class="pill-new">new</span></span>
+          <span class="chip-role">the system communicates quietly</span>
+          <span class="chip-tags">hint toast · ReloadHint · stats hint-dot · link</span>
+        </div>
+
+        <div class="swatch">
+          <div class="chip" style="background: var(--wh-selected-soft); color: var(--wh-selected); border: 1px solid var(--wh-selected)">Selected</div>
+          <span class="chip-name">--wh-selected <span class="pill-new">new</span></span>
+          <span class="chip-role">selection state · pending / current</span>
+          <span class="chip-tags">is-pending slot · current streak value</span>
+        </div>
+
+        <div class="swatch">
+          <div class="chip" style="background: var(--wh-primary-soft); color: var(--wh-primary); border: 1px solid var(--wh-primary)">Primary</div>
+          <span class="chip-name">--wh-primary</span>
+          <span class="chip-role">the hunt · highlighter</span>
+          <span class="chip-tags">CTA · active word · focus ring</span>
+        </div>
+
+        <div class="swatch">
+          <div class="chip" style="background: var(--wh-warning-soft); color: var(--wh-warning); border: 1px solid var(--wh-warning)">Warning</div>
+          <span class="chip-name">--wh-warning <span class="pill-new">new</span></span>
+          <span class="chip-role">soft heads-up · reserved</span>
+          <span class="chip-tags">unused today · pre-allocated</span>
+        </div>
+
+        <div class="swatch">
+          <div class="chip" style="background: var(--wh-danger-soft); color: var(--wh-danger); border: 1px solid var(--wh-danger)">Danger</div>
+          <span class="chip-name">--wh-danger</span>
+          <span class="chip-role">destructive confirm</span>
+          <span class="chip-tags">Clear hunts · ConfirmOverlay Yes</span>
+        </div>
+      </div>
     </div>
-    <div class="row" style="gap:10px; margin-top: 8px">
-      <div class="swatch"><div class="chip" style="background: var(--wh-found-soft); color: var(--wh-found); border: 1px solid var(--wh-found)">Found tint</div><span class="val">--wh-found-soft</span></div>
-      <div class="swatch"><div class="chip" style="background: var(--wh-hint-soft); color: var(--wh-hint); border: 1px solid var(--wh-hint)">Hint tint</div><span class="val">--wh-hint-soft</span></div>
-      <div class="swatch"><div class="chip" style="background: var(--wh-primary-soft); color: var(--wh-primary); border: 1px solid var(--wh-primary)">Primary tint</div><span class="val">--wh-primary-soft</span></div>
-      <div class="swatch"><div class="chip" style="background: var(--wh-danger-soft); color: var(--wh-danger); border: 1px solid var(--wh-danger)">Danger tint</div><span class="val">--wh-danger-soft</span></div>
+
+    <div class="section">
+      <div class="label">Word-list theming · dots + colors used per WordSource</div>
+      <div style="display: flex; gap: 10px">
+        <div class="list-row" style="flex:1">
+          <span class="dot" style="background: var(--wh-list-animals)"></span>
+          <span class="name">Animals</span>
+          <span class="word">cat · fox · owl · …</span>
+        </div>
+        <div class="list-row" style="flex:1">
+          <span class="dot" style="background: var(--wh-list-pokemon)"></span>
+          <span class="name">Pokémon</span>
+          <span class="word">Pikachu · Eevee · …</span>
+        </div>
+        <div class="list-row" style="flex:1">
+          <span class="dot" style="background: var(--wh-fg-3)"></span>
+          <span class="name">Custom</span>
+          <span class="word">your word here</span>
+        </div>
+      </div>
+      <div class="note" style="margin-top: 4px">
+        <code>--wh-list-animals</code> is an <b>alias</b> of <code>--wh-found</code> (`var(--wh-found)`). The Animals list shares the success-mint hex by design — Animals never appear next to a Found surface in the same view, so the reuse never collides. Codified as an alias so any future hue split is a one-line change.
+      </div>
     </div>
+
+    <div class="section">
+      <div class="label">Legacy aliases · kept so the codebase keeps compiling</div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap">
+        <div class="list-row" style="min-width: 320px">
+          <span class="alias-line">--wh-hint → var(--wh-info)</span>
+          <span class="alias" style="font-family: var(--wh-font-sans); color: var(--wh-fg-3); font-size: 11px">prefer <code style="font-family: var(--wh-font-mono); font-size: 10px">--wh-info</code> for new code</span>
+        </div>
+        <div class="list-row" style="min-width: 320px">
+          <span class="alias-line">--wh-hint-soft → var(--wh-info-soft)</span>
+          <span class="alias" style="font-family: var(--wh-font-sans); color: var(--wh-fg-3); font-size: 11px">same alias for the tinted bg</span>
+        </div>
+      </div>
+      <div class="note" style="margin-top: 4px">
+        The old <code>--wh-hint</code> token meant "informational blue" in most uses and "selection state" in a few — split into <code>--wh-info</code> + <code>--wh-selected</code>. The alias keeps the codebase running while migration happens. <code>--wh-info</code> and <code>--wh-selected</code> resolve to the same hex today; promote to distinct hues only when a surface actually needs to show both at once.
+      </div>
+    </div>
+
   </div>
 </body></html>

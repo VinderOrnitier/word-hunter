@@ -59,7 +59,11 @@ function StatsHeader(): JSX.Element {
     <div class="wh-stats__col-header" aria-hidden="true">
       <span>{t("stats_col_word")}</span>
       <span>{t("stats_col_found")}</span>
-      <span class="wh-stats__col-header--icon" data-tooltip={t("stats_col_duration_tooltip")}>
+      <span
+        class="wh-stats__col-header--icon wh-tooltip"
+        data-tip-anchor="center"
+        data-tooltip={t("stats_col_duration_tooltip")}
+      >
         <Icon name="timer" size={11} />
       </span>
       <span class="wh-stats__col-header--center">{t("stats_col_hint_header")}</span>
@@ -80,20 +84,22 @@ function StatsRow({ record }: { record: HuntRecord }): JSX.Element {
 
   return (
     <li class="wh-stats__row">
-      <span class="wh-stats__word" data-tooltip={record.word}>
+      <span class="wh-stats__word wh-tooltip" data-tip-anchor="left" data-tooltip={record.word}>
         <span class="wh-stats__dot" style={{ background: dotColor }} />
         <span class="wh-stats__word-text">{record.word}</span>
       </span>
       <span class="wh-stats__meta">{formatRelative(record.foundAt)}</span>
       <span class="wh-stats__meta">{formatDuration(record.searchDurationSeconds)}</span>
       <span
-        class={record.hintUsed ? "wh-stats__hint wh-stats__hint--used" : "wh-stats__hint"}
+        class={`${record.hintUsed ? "wh-stats__hint wh-stats__hint--used" : "wh-stats__hint"} wh-tooltip`}
+        data-tip-anchor="center"
         role="img"
         aria-label={record.hintUsed ? t("stats_hint_used_aria") : t("stats_no_hint_aria")}
         data-tooltip={record.hintUsed ? t("stats_hint_used_tooltip") : t("stats_no_hint_tooltip")}
       />
       <a
-        class="wh-stats__link"
+        class="wh-stats__link wh-tooltip"
+        data-tip-anchor="right"
         href={record.pageUrl}
         target="_blank"
         rel="noopener"
