@@ -1,47 +1,29 @@
-import { h, render } from "preact";
 import type { Locale } from "../i18n";
 import { t } from "../i18n";
 import { HINT_USED_KEY } from "../shared/constants";
-import { InPageToast } from "./components/InPageToast";
+import { mountToast } from "./mount-toast";
 
 const HOST_CLASS = "hw-hint-toast-host";
 
 export function HintTimer(doc: Document, getLocale: () => Locale) {
   let timerId: ReturnType<typeof setTimeout> | null = null;
-  let toastHost: HTMLElement | null = null;
-
-  function hintUsed(): boolean {
-    return sessionStorage.getItem(HINT_USED_KEY) === "true";
-  }
+  let dismissToast: (() => void) | null = null;
+  let pendingOnFind: (() => void) | undefined;
 
   function removeToast(): void {
-    if (toastHost !== null) {
-      render(null, toastHost);
-      toastHost.remove();
-      toastHost = null;
-    }
+    dismissToast?.();
+    dismissToast = null;
   }
-
-  let pendingOnFind: (() => void) | undefined;
 
   function showToast(): void {
     const locale = getLocale();
-    toastHost = doc.createElement("div");
-    toastHost.className = HOST_CLASS;
-    doc.body.appendChild(toastHost);
-    const host = toastHost;
-    render(
-      h(InPageToast, {
-        message: t("content_hint_toast", locale),
-        locale,
-        variant: "hint",
-        onClose: () => {
-          removeToast();
-        },
-        onFind: pendingOnFind,
-      }),
-      host
-    );
+    ({ dismiss: dismissToast } = mountToast(doc, {
+      hostClass: HOST_CLASS,
+      message: t("content_hint_toast", locale),
+      locale,
+      variant: "hint",
+      onFind: pendingOnFind,
+    }));
     sessionStorage.setItem(HINT_USED_KEY, "true");
   }
 
@@ -58,6 +40,10 @@ export function HintTimer(doc: Document, getLocale: () => Locale) {
       timerId = null;
     }
     removeToast();
+  }
+
+  function hintUsed(): boolean {
+    return sessionStorage.getItem(HINT_USED_KEY) === "true";
   }
 
   return { start, cancel, hintUsed };

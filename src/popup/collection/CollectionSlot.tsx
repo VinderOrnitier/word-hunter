@@ -1,5 +1,5 @@
 import type { JSX } from "preact";
-import { resolveArt } from "../../shared/art-resolver";
+import { resolveArtView } from "../../shared/art-resolver";
 import type { WordListName } from "../word-lists";
 
 interface CollectionSlotProps {
@@ -20,7 +20,7 @@ export function CollectionSlot({
   onClick,
 }: CollectionSlotProps): JSX.Element {
   const caught = count > 0;
-  const art = resolveArt(word, source);
+  const art = resolveArtView(word, source);
   const classes = [
     "wh-slot",
     caught ? "is-caught" : "is-uncaught",
@@ -36,22 +36,35 @@ export function CollectionSlot({
 
   return (
     <button type="button" class={classes} onClick={onClick} aria-label={ariaLabel} title={word}>
-      <span class="wh-slot__art">{renderArt(source, art, caught)}</span>
+      <span class="wh-slot__art">{renderArt(art, caught)}</span>
       {caught && <span class="wh-slot__count">×{count}</span>}
     </button>
   );
 }
 
-function renderArt(source: WordListName, art: string | undefined, caught: boolean): JSX.Element {
-  if (source === "pokemon") {
-    if (!art) return <span class="wh-slot__placeholder">???</span>;
-    const cls = caught ? "wh-slot__sprite" : "wh-slot__sprite wh-slot__silhouette";
-    return (
-      <img class={cls} src={art} alt="" width={48} height={48} loading="lazy" decoding="async" />
-    );
+function renderArt(art: ReturnType<typeof resolveArtView>, caught: boolean): JSX.Element {
+  switch (art.kind) {
+    case "sprite": {
+      const cls = caught ? "wh-slot__sprite" : "wh-slot__sprite wh-slot__silhouette";
+      return (
+        <img
+          class={cls}
+          src={art.url}
+          alt=""
+          width={48}
+          height={48}
+          loading="lazy"
+          decoding="async"
+        />
+      );
+    }
+    case "emoji":
+      return caught ? (
+        <span class="wh-slot__emoji">{art.char}</span>
+      ) : (
+        <span class="wh-slot__placeholder">???</span>
+      );
+    default:
+      return <span class="wh-slot__placeholder">???</span>;
   }
-  if (caught && art) {
-    return <span class="wh-slot__emoji">{art}</span>;
-  }
-  return <span class="wh-slot__placeholder">???</span>;
 }

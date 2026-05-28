@@ -21,6 +21,7 @@ End-to-end manual verification. Run after `pnpm build` produces a fresh `dist/`.
 - [ ] **CollectionGrid**: 4-column grid of 68 Animals slots, every slot shows `???` in mono.
 - [ ] Click the **Fox** slot. ActiveWordCard updates to "Fox" with the animal art (🦊). The Fox slot gets a primary-yellow glow (`is-active` class).
 - [ ] Switch the list chips to **Pokémon** → grid swaps to 5-column, 151 slots, all silhouettes (`brightness(0) opacity(0.35)` on the sprite `<img>`).
+- [ ] Click the **Pikachu** slot. `ActiveWordCard` updates: art area shows a sprite `<img>` (not an emoji span or pencil icon). Verify in DevTools → Elements: `.wh-active-card__sprite` is present, `src` contains `PokeAPI/sprites`. Switch back to Animals list and click Fox again to continue.
 - [ ] Scroll the grid — Pokémon sprites lazy-load (`loading="lazy"` on `<img>`).
 - [ ] **BottomActionBar** (pinned at the bottom, edge-to-edge): 4 buttons from left to right — Auto-Continue toggle (refresh icon, `role="switch"`, dim when off / yellow when on), primary `Start a hunt` button (yellow with play icon, disabled until a word is pending), shuffle icon, pencil icon. Clicking `Start a hunt` or the shuffle icon picks a random uncaught word from the active list and sets it as the ActiveWord.
 - [ ] **CustomWordModal**: click the pencil icon → modal opens over the popup body with backdrop blur. Input has placeholder "serendipity", live counter `0 / 25`, `Cancel` (ghost) and `Start hunt` (primary). Pressing `Esc`, clicking the backdrop, or the close (×) button closes the modal. Tab cycles focus inside the dialog.
@@ -32,6 +33,7 @@ End-to-end manual verification. Run after `pnpm build` produces a fresh `dist/`.
   - Toggle switch **Reload hint** (default **On**) — prompt to reload after starting a hunt.
   - Toggle switch **Show next word preview** (default **Off**) — reveals next word in the celebration popup when Auto-Continue is on.
   - **Notifications** header with a master toggle switch. Three sub-toggles below it (disabled when master is off): **Auto-Continue started**, **Hint reminder**, **No paragraphs**.
+  - Disable the **Notifications** master toggle → all three sub-toggles grey out and become non-interactive. Reload a page with an active word and Auto-Continue on — **no** auto-mode toast appears. Re-enable and reload — toast reappears.
   - When any value is changed a **Save / Cancel** footer bar slides in at the bottom. Clicking Cancel reverts the draft; clicking Save persists it.
 - [ ] **Rules**: opens with the Fraunces italic line "a quiet game while you read.", a body paragraph, 3 numbered timeline steps (Pick a word from the list / Press Start a hunt / Reload the page and start reading), a settings row with a gear icon, and a disclaimer paragraph about page compatibility.
 
@@ -46,10 +48,12 @@ After finding `Fox` on the smoke article (see "Content script — overlays" belo
 - [ ] Filter chips → **Caught**: only Fox is shown in the grid.
 - [ ] Filter chips → **Uncaught**: 67 silhouettes, no Fox.
 - [ ] Switch to **Pokémon** with the **Caught** filter still selected → empty state appears: "No caught words yet — go hunt!".
+- [ ] *(Pokémon catch — requires a real page with a Pokémon name in the text.)* Set **Pikachu** as the active word, find it on any qualifying page. Reopen the popup → Pikachu's slot changes from silhouette to full-colour sprite (no `wh-slot__silhouette` class), with `×1` counter. Filter → **Caught**: Pikachu visible; Filter → **Uncaught**: Pikachu absent.
 
 ### Auto-Continue mode
 
-- [ ] Enable Auto-Continue by clicking the refresh icon in `BottomActionBar` — it turns yellow. Set an ActiveWord and reload the smoke article. Find the word. `CelebrationPopup` auto-dismisses after the cursor-reveal delay and a new word is set automatically. Reopen the popup → new word is shown in `ActiveWordCard`.
+- [ ] Enable Auto-Continue by clicking the refresh icon in `BottomActionBar` — it turns yellow. Set an ActiveWord and reload the smoke article. On page load the **auto-mode toast** ("Auto-Hunter active") appears at the top-right: Word Hunter logo button on the left, the message, and an × button. It auto-dismisses after **4 seconds**. Clicking the × dismisses it immediately.
+- [ ] Find the word. `CelebrationPopup` auto-dismisses after the cursor-reveal delay and a new word is set automatically. Reopen the popup → new word is shown in `ActiveWordCard`.
 - [ ] With **Show next word preview** on (Settings): find the active word. `CelebrationPopup` shows a **"Next up"** row at the bottom with the upcoming word and its art (or just the word for custom). The row is absent when the setting is off.
 - [ ] Disable Auto-Continue. Find the next word — popup does not auto-dismiss; the `BottomActionBar` toggle is dim again.
 
@@ -72,7 +76,7 @@ After finding `Fox` on the smoke article (see "Content script — overlays" belo
 - [ ] Reload the smoke article. A `.hw-word` span appears somewhere inside one of the article's prose elements (use DevTools → Elements to confirm). Note: the byline `<p>` is grouped with the three long paragraphs by the ParagraphGroup algorithm, so it can occasionally be the target too.
 - [ ] In DevTools → Elements, locate the `.hw-host` span. The **text node immediately after it** must start with a space — confirm by inspecting its `nodeValue` in the console: `document.querySelector('.hw-host').nextSibling.nodeValue`. The word must not run directly into the next word (e.g. `"eagle update"` not `"eagleupdate"`).
 - [ ] Press <kbd>Ctrl</kbd>+<kbd>F</kbd> and search for `eagle`. Browser must report **0 matches** on the page — this is the `::before { content: attr(data-char) }` bypass at work.
-- [ ] Click the hidden word. `CelebrationPopup` appears with: `Found!`, the word `eagle`, the search duration in seconds, and `no hint`. The word's stripe turns green.
+- [ ] Click the hidden word. `CelebrationPopup` appears with: `Found!`, the word name, the search duration in seconds, and `no hint`. If the active word is from the **Animals** list (e.g. `Eagle`), the emoji (🦅) is visible inside the popup art area. The word's stripe turns green.
 - [ ] Click the dimmed backdrop — popup dismisses. The green-striped word **remains visible** in the text (it is not removed).
 - [ ] Click the green word again — `CelebrationPopup` reopens with the same data. A **Remove word** button is visible below the metadata row.
 - [ ] Click **Remove word** — popup closes and the green word disappears from the paragraph.
@@ -101,6 +105,7 @@ Open **two** tabs with `smoke-article.html` before setting a word, then set `eag
 ### No-paragraph toast
 
 - [ ] Open a page with **no qualifying paragraph** (use `tests/fixtures/smoke-short-page.html`) while an ActiveWord is set. The `InPageToast` (info variant) appears at top-center with "Not enough text to hide the word." Dismiss it with the × button. Note: content scripts don't run on `data:` URLs, so use a `file://` or `http://` page.
+- [ ] After dismissing, reload the same page — a **fresh** toast appears again. The dismissed state does not persist across page loads (each load creates a new notification instance).
 
 ### Hidden element exclusion
 

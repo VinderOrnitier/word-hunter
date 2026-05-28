@@ -1,6 +1,6 @@
 import type { JSX } from "preact";
 import { useT } from "../../i18n";
-import { resolveArt } from "../../shared/art-resolver";
+import { resolveArtView } from "../../shared/art-resolver";
 import type { ActiveWord, WordSource } from "../../shared/types";
 import { Icon } from "../components/Icon";
 
@@ -27,8 +27,8 @@ export function ActiveWordCard({ activeWord, onClear }: ActiveWordCardProps): JS
   }
 
   const source: WordSource = activeWord.list ?? "custom";
-  const art = resolveArt(activeWord.word, source);
-  const isIconArt = source === "custom" || !art;
+  const art = resolveArtView(activeWord.word, source);
+  const isIconArt = art.kind === "none";
 
   return (
     <div class="wh-active-card">
@@ -36,7 +36,7 @@ export function ActiveWordCard({ activeWord, onClear }: ActiveWordCardProps): JS
         class={`wh-active-card__art${isIconArt ? " wh-active-card__art--icon" : ""}`}
         aria-hidden="true"
       >
-        {renderArt(source, art)}
+        {renderArt(art)}
       </div>
       <div class="wh-active-card__body">
         <span class="wh-active-card__eyebrow">{t("active_word_eyebrow")}</span>
@@ -55,22 +55,23 @@ export function ActiveWordCard({ activeWord, onClear }: ActiveWordCardProps): JS
   );
 }
 
-function renderArt(source: WordSource, art: string | undefined): JSX.Element | null {
-  if (source === "pokemon" && art) {
-    return (
-      <img
-        class="wh-active-card__sprite"
-        src={art}
-        alt=""
-        width={36}
-        height={36}
-        loading="lazy"
-        decoding="async"
-      />
-    );
+function renderArt(art: ReturnType<typeof resolveArtView>): JSX.Element {
+  switch (art.kind) {
+    case "sprite":
+      return (
+        <img
+          class="wh-active-card__sprite"
+          src={art.url}
+          alt=""
+          width={36}
+          height={36}
+          loading="lazy"
+          decoding="async"
+        />
+      );
+    case "emoji":
+      return <span class="wh-active-card__emoji">{art.char}</span>;
+    default:
+      return <Icon name="pencil" size={18} />;
   }
-  if (source === "animals" && art) {
-    return <span class="wh-active-card__emoji">{art}</span>;
-  }
-  return <Icon name="pencil" size={18} />;
 }
