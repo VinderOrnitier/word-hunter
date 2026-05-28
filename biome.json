@@ -13,7 +13,8 @@
       "!**/node_modules",
       "!**/tests/fixtures",
       "!**/design-system",
-      "!**/pnpm-lock.yaml"
+      "!**/pnpm-lock.yaml",
+      "!.claude"
     ]
   },
   "formatter": {

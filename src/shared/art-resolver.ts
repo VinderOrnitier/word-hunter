@@ -72,13 +72,29 @@ const ANIMAL_EMOJI: Record<string, string> = {
   Zebra: "🦓",
 };
 
-export function resolveArt(word: string, source: WordSource | undefined): string | undefined {
+export type ResolvedArt =
+  | { kind: "sprite"; url: string }
+  | { kind: "emoji"; char: string }
+  | { kind: "none" };
+
+export function resolveArtView(word: string, source: WordSource | undefined): ResolvedArt {
   switch (source) {
-    case "animals":
-      return ANIMAL_EMOJI[word];
-    case "pokemon":
-      return getSpriteUrl(word.toLowerCase()) ?? undefined;
+    case "animals": {
+      const char = ANIMAL_EMOJI[word];
+      return char ? { kind: "emoji", char } : { kind: "none" };
+    }
+    case "pokemon": {
+      const url = getSpriteUrl(word.toLowerCase());
+      return url ? { kind: "sprite", url } : { kind: "none" };
+    }
     default:
-      return undefined;
+      return { kind: "none" };
   }
+}
+
+export function resolveArt(word: string, source: WordSource | undefined): string | undefined {
+  const art = resolveArtView(word, source);
+  if (art.kind === "sprite") return art.url;
+  if (art.kind === "emoji") return art.char;
+  return undefined;
 }
