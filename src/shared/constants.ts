@@ -1,4 +1,4 @@
-import type { FeatureFlags, GameSettings } from "./types";
+import type { FeatureFlags, GameSettings, Theme } from "./types";
 
 export const DEFAULT_WORDS = [
   "cat",
@@ -44,3 +44,5 @@ export const FLAGS_URL =
 export const DEFAULT_FLAGS: FeatureFlags = {
   pokemon: true,
 };
+
+export const DEFAULT_THEME: Theme = "slate";
