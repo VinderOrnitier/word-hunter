@@ -15,7 +15,7 @@ export function useTheme(): Theme {
     chrome.storage.local.get("theme").then((result) => {
       if (cancelled) return;
       const stored = result.theme as Theme | undefined;
-      if (stored) setTheme(stored);
+      if (stored !== undefined) setTheme(stored);
     });
     return () => {
       cancelled = true;
