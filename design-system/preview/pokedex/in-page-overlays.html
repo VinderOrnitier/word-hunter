@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pokedex theme - in-page overlays</title>
+<link rel="stylesheet" href="../../themes/theme-pokedex.css">
+<script src="icons.js"></script>
+<style>
+  /* ===== Page chrome (outside .pdx) ===================== */
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    background: #f0eee9;
+    color: #1a1b26;
+    padding: 32px 28px 80px;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .page-title { font-family: 'Press Start 2P', monospace; font-size: 16px; line-height: 1.4; margin: 0 0 6px; }
+  .page-sub { font-size: 14px; color: #4d4d5a; max-width: 780px; margin: 0 0 32px; }
+
+  .section { margin: 36px 0 0; max-width: 1180px; }
+  .section-label { font-family: 'Press Start 2P', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C0F31; margin: 0 0 6px; }
+  .section-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .section-desc { font-size: 13px; color: #4d4d5a; margin: 0 0 18px; max-width: 720px; }
+
+  .group-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    color: #8C0F31;
+    text-transform: uppercase;
+    margin: 14px 0 6px;
+  }
+  .caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #6e6354;
+    line-height: 1.55;
+    max-width: 700px;
+    margin: 8px 0 0;
+  }
+
+  /* ===== Fake host-page scene (the page the extension overlays) ===== */
+  .scene {
+    position: relative;
+    height: 380px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 0 #e6e1d6, 0 8px 24px rgba(15, 35, 60, 0.12);
+    border: 1px solid #e6e1d6;
+  }
+  .scene--dark {
+    background: linear-gradient(180deg, #0F1320 0%, #1a1f2c 100%);
+  }
+  .scene--light {
+    background: linear-gradient(180deg, #f7f3ec 0%, #ece6da 100%);
+  }
+  .scene--news {
+    /* "news website" look -- white card on light page */
+    background:
+      radial-gradient(circle at 80% -20%, #f3e0c8 0, transparent 60%),
+      #fefcf8;
+  }
+  .scene__page {
+    padding: 40px 48px 0;
+    font-family: Georgia, 'Source Serif Pro', serif;
+    font-size: 14px;
+    line-height: 1.75;
+    max-width: 520px;
+  }
+  .scene--dark .scene__page { color: rgba(255, 255, 255, 0.55); }
+  .scene--light .scene__page,
+  .scene--news .scene__page { color: #2b2620; }
+
+  /* Subdued page headline so the scenes look like real pages, not lorem strips */
+  .scene__page h3 {
+    font-family: 'Source Serif Pro', Georgia, serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1.25;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  .scene--dark .scene__page h3 { color: rgba(255, 255, 255, 0.78); }
+  .scene__page p { margin: 0 0 12px; }
+
+  /* Pinned positions on the scene */
+  .pin {
+    position: absolute;
+    z-index: 10;
+  }
+  .pin--top-right    { top: 20px; right: 20px; }
+  .pin--top-center   { top: 20px; left: 50%; transform: translateX(-50%); }
+  .pin--bottom-right { bottom: 20px; right: 20px; }
+  .pin--center {
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  /* the celebration scrim sits under the modal, but inside the scene */
+  .scrim {
+    position: absolute; inset: 0;
+    background: rgba(11, 15, 25, 0.32);
+    z-index: 5;
+  }
+
+  /* ===========================================================
+     POKEDEX IN-PAGE TOAST
+     A small horizontal "mini device" -- lens, message, close key.
+     Solid (not blurred) so we can lean on the brand metaphor; the
+     toast reads as a physical readout the device is showing to
+     the player on the host page.
+     =========================================================== */
+  .pdx-toast {
+    --c-shell: var(--pdx-shell);
+    --c-shell-2: var(--pdx-shell-2);
+    --c-shell-deep: var(--pdx-shell-deep);
+    display: inline-flex;
+    align-items: stretch;
+    gap: 0;
+    height: 36px;
+    background: linear-gradient(180deg, var(--c-shell) 0%, var(--c-shell-2) 100%);
+    border-radius: 5px;
+    box-shadow:
+      inset 0 1px 0 var(--pdx-shell-edge),
+      inset 0 -2px 0 var(--c-shell-deep),
+      0 6px 14px rgba(0, 0, 0, 0.32),
+      0 1px 0 rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--c-shell-deep);
+    color: var(--pdx-on-shell);
+    padding: 3px;
+    font-family: var(--pdx-font-pixel);
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1;
+    max-width: 360px;
+  }
+  /* Variant accent — a 3px LED ribbon on the LEFT inside the shell */
+  .pdx-toast::before {
+    content: "";
+    flex: 0 0 4px;
+    align-self: stretch;
+    margin-right: 6px;
+    border-radius: 2px;
+    background: currentColor;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .pdx-toast--hint { color: var(--pdx-lens-hi); }
+  .pdx-toast--info { color: rgba(244, 239, 226, 0.6); }
+  .pdx-toast--auto { color: var(--pdx-led-yellow); }
+
+  .pdx-toast__lens {
+    width: 22px; height: 22px;
+    align-self: center;
+    flex: 0 0 auto;
+    background: radial-gradient(circle at 35% 30%, var(--pdx-lens-hi) 0%, var(--pdx-lens) 55%, var(--pdx-lens-deep) 100%);
+    border-radius: 50%;
+    box-shadow:
+      inset 0 0 0 1.5px var(--pdx-lens-rim),
+      inset 0 -1px 2px rgba(0,0,0,0.3),
+      0 1px 2px rgba(0,0,0,0.4);
+    position: relative;
+    cursor: pointer;
+  }
+  .pdx-toast__lens::before {
+    content: ""; position: absolute; top: 14%; left: 16%;
+    width: 30%; height: 30%; background: rgba(255,255,255,0.55);
+    border-radius: 50%; filter: blur(0.5px);
+  }
+  .pdx-toast__msg {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 10px 0 6px;
+    color: var(--pdx-on-shell);
+    text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+    white-space: nowrap;
+  }
+  .pdx-toast__msg .word {
+    color: var(--pdx-led-yellow);
+    margin-left: 6px;
+    /* the LCD font reads way bigger than the pixel label -- so we cap it */
+    font-family: var(--pdx-font-lcd);
+    font-size: 13px;
+    text-shadow: 0 0 4px rgba(255,210,63,0.45);
+    text-transform: lowercase;
+    letter-spacing: 0;
+  }
+  .pdx-toast__close {
+    width: 22px;
+    align-self: center;
+    flex: 0 0 auto;
+    height: 22px;
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    color: var(--pdx-on-key);
+    cursor: pointer;
+    padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-right: 1px;
+  }
+  .pdx-toast__close iconify-icon,
+  .pdx-toast__close svg { font-size: 11px; }
+
+  /* ===========================================================
+     POKEDEX CELEBRATION
+     Full-screen scrim (rendered as a 380px-tall scene here) over
+     a centred LCD device modal. Two columns: LCD viewport + cream
+     key-cap CTA stack.
+     =========================================================== */
+  .pdx-celebration {
+    width: 340px;
+    background: linear-gradient(180deg, var(--pdx-shell-hi) 0%, var(--pdx-shell) 24%, var(--pdx-shell-2) 100%);
+    border-radius: 12px;
+    border: 1px solid var(--pdx-shell-deep);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.18),
+      0 18px 40px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 var(--pdx-shell-edge);
+    padding: 10px 10px 12px;
+    z-index: 10;
+    position: relative;
+  }
+  .pdx-celebration__header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 6px 8px;
+  }
+  .pdx-celebration__lens {
+    width: 18px; height: 18px; flex: 0 0 auto;
+    background: radial-gradient(circle at 35% 30%, var(--pdx-lens-hi) 0%, var(--pdx-lens) 55%, var(--pdx-lens-deep) 100%);
+    border-radius: 50%;
+    box-shadow:
+      inset 0 0 0 1px var(--pdx-lens-rim),
+      inset 0 -1px 2px rgba(0,0,0,0.3),
+      0 1px 1px rgba(0,0,0,0.4);
+  }
+  .pdx-celebration__leds {
+    display: flex; gap: 4px;
+  }
+  .pdx-celebration__leds .led {
+    width: 5px; height: 5px; border-radius: 50%;
+  }
+  .pdx-celebration__leds .led--red    { background: var(--pdx-led-red);    box-shadow: 0 0 3px var(--pdx-led-red); }
+  .pdx-celebration__leds .led--green  { background: var(--pdx-led-green);  box-shadow: 0 0 3px var(--pdx-led-green); }
+  .pdx-celebration__leds .led--yellow { background: var(--pdx-led-yellow); box-shadow: 0 0 3px var(--pdx-led-yellow); }
+  .pdx-celebration__stamp {
+    flex: 1; text-align: right;
+    font-family: var(--pdx-font-pixel);
+    font-size: 7px;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.55);
+    text-transform: uppercase;
+  }
+
+  .pdx-celebration__lcd {
+    position: relative;
+    background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 28%, var(--pdx-lcd-lo) 100%);
+    border: 1px solid var(--pdx-lcd-frame);
+    border-radius: 6px;
+    box-shadow:
+      inset 0 2px 6px rgba(15, 42, 64, 0.35),
+      inset 0 -2px 0 rgba(255, 255, 255, 0.22);
+    overflow: hidden;
+    padding: 14px 18px 16px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .pdx-celebration__lcd::after {
+    /* scan lines */
+    content: ""; position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      rgba(15, 42, 64, 0.10) 0,
+      rgba(15, 42, 64, 0.10) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .pdx-celebration__art {
+    flex: 0 0 auto;
+    width: 64px; height: 64px;
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 42px; line-height: 1;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    position: relative; z-index: 2;
+  }
+  .pdx-celebration__art img {
+    max-width: 100%; max-height: 100%;
+    image-rendering: pixelated; image-rendering: crisp-edges;
+  }
+  .pdx-celebration__body {
+    flex: 1;
+    display: flex; flex-direction: column; gap: 4px;
+    position: relative; z-index: 2;
+    color: var(--pdx-lcd-ink);
+    min-width: 0;
+  }
+  .pdx-celebration__found {
+    font-family: var(--pdx-font-pixel);
+    font-size: 12px;
+    line-height: 1.1;
+    letter-spacing: 0.08em;
+    color: #186e36;
+    text-shadow: 0 0 8px rgba(47, 212, 110, 0.6);
+  }
+  .pdx-celebration__word {
+    font-family: var(--pdx-font-lcd);
+    font-size: 28px;
+    line-height: 1;
+    color: var(--pdx-lcd-ink);
+    text-transform: lowercase;
+  }
+  .pdx-celebration__meta {
+    display: flex; gap: 10px;
+    font-family: var(--pdx-font-pixel);
+    font-size: 7px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--pdx-lcd-frame-2);
+    margin-top: 2px;
+  }
+  .pdx-celebration__sep { color: rgba(15, 42, 64, 0.35); }
+
+  /* Next-up pill below the celebration LCD (Auto-Continue) */
+  .pdx-next {
+    margin-top: 6px;
+    padding: 5px 8px 5px 6px;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(15, 35, 64, 0.5);
+    border: 1px solid var(--pdx-lcd-frame);
+    border-radius: 4px;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.18);
+  }
+  .pdx-next__label {
+    font-family: var(--pdx-font-pixel);
+    font-size: 6px;
+    letter-spacing: 0.08em;
+    color: rgba(244, 239, 226, 0.55);
+    text-transform: uppercase;
+  }
+  .pdx-next__art {
+    width: 16px; height: 16px; flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(244, 239, 226, 0.12);
+    border-radius: 2px;
+    font-size: 12px;
+  }
+  .pdx-next__art img { max-width: 100%; max-height: 100%; image-rendering: pixelated; }
+  .pdx-next__word {
+    font-family: var(--pdx-font-lcd);
+    font-size: 16px; line-height: 1;
+    color: var(--pdx-key);
+    text-transform: lowercase;
+  }
+
+  /* Cream ghost CTA below the celebration -- "Remove word" variant */
+  .pdx-celebration__cta {
+    margin-top: 8px;
+    padding: 6px 12px;
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    color: var(--pdx-on-key);
+    font-family: var(--pdx-font-pixel);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+
+  /* ===========================================================
+     POKEDEX RELOAD HINT (popup-internal)
+     Lives inside the Play tab, NOT on the host page. Rendered in
+     a 360-wide popup slice so designers see it in context.
+     =========================================================== */
+  .popup-slice {
+    width: 360px;
+    background: linear-gradient(180deg, var(--pdx-shell-hi) 0%, var(--pdx-shell) 50%, var(--pdx-shell-2) 100%);
+    border-radius: 10px 10px 0 0;
+    padding: 14px 14px 18px;
+    box-shadow: var(--pdx-shadow-popup);
+    position: relative;
+  }
+  .popup-slice::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--pdx-shell-edge); opacity: 0.55;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .pdx-reload-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 5px 4px 8px;
+    background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 50%, var(--pdx-lcd-lo) 100%);
+    border: 1px solid var(--pdx-lcd-frame);
+    border-radius: 5px;
+    box-shadow:
+      inset 0 1px 2px rgba(15, 42, 64, 0.4),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+    color: var(--pdx-lcd-ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .pdx-reload-hint::after {
+    /* scan lines */
+    content: ""; position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      rgba(15, 42, 64, 0.10) 0,
+      rgba(15, 42, 64, 0.10) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .pdx-reload-hint__info {
+    width: 18px; height: 18px; flex: 0 0 auto;
+    color: var(--pdx-lens-deep);
+    display: inline-flex; align-items: center; justify-content: center;
+    position: relative; z-index: 2;
+  }
+  .pdx-reload-hint__info iconify-icon,
+  .pdx-reload-hint__info svg { font-size: 12px; }
+  .pdx-reload-hint__msg {
+    flex: 1;
+    font-family: var(--pdx-font-pixel);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    color: var(--pdx-lcd-ink);
+    text-transform: uppercase;
+    position: relative; z-index: 2;
+    line-height: 1.4;
+  }
+  .pdx-reload-hint__btn {
+    padding: 3px 8px;
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 3px;
+    color: var(--pdx-on-key);
+    font-family: var(--pdx-font-pixel);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    flex: 0 0 auto;
+    position: relative; z-index: 2;
+  }
+  .pdx-reload-hint__close {
+    width: 18px; height: 18px; flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: transparent; border: 0; padding: 0; cursor: pointer;
+    color: var(--pdx-lcd-ink-2);
+    position: relative; z-index: 2;
+  }
+  .pdx-reload-hint__close iconify-icon,
+  .pdx-reload-hint__close svg { font-size: 10px; }
+
+  .placeholder-row {
+    height: 14px; background: rgba(0,0,0,0.18); border-radius: 3px;
+    margin-top: 12px; opacity: 0.5;
+  }
+  .placeholder-row.short { width: 60%; }
+  .placeholder-row.med   { width: 80%; }
+
+  /* ===========================================================
+     POKEDEX HIGHLIGHTER demo (already in theme-pokedex.css)
+     The page text scenes use .pdx-highlight / .pdx-highlight--found.
+     This card lets us inspect them on both light and dark host pages.
+     =========================================================== */
+  .light-text .pdx-highlight,
+  .dark-text  .pdx-highlight {
+    /* class already defined globally; just for showcasing */
+  }
+</style>
+</head>
+<body class="pdx">
+
+<nav style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px;">
+  <a href="index.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">FOUNDATIONS</a>
+  <a href="components-form-controls.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">FORM CONTROLS</a>
+  <a href="iconography.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">ICONOGRAPHY</a>
+  <a href="screens-tabs.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">SCREENS</a>
+  <a href="in-page-overlays.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#8C0F31;color:#fff;">IN-PAGE</a>
+  <a href="play-tab.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">PLAY</a>
+  <a href="searchable-select.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">SELECT</a>
+</nav>
+
+<h1 class="page-title">IN-PAGE OVERLAYS</h1>
+<p class="page-sub">
+  All Pokedex surfaces that render onto a host web page (Celebration, InPageToast, Highlighter), plus ReloadHint which lives inside the Play tab. The big design question for these was: do we lean on the device metaphor (solid raspberry chrome) or borrow slate's translucent dark glass? Pokedex commits to the device: every overlay is a solid mini-Pokedex, no blur. The brand identity carries the surface, not the host page underneath.
+</p>
+
+<!-- =====================================================
+     IN-PAGE TOAST  ·  3 variants
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">in-page toast  ·  three variants</p>
+  <h2 class="section-title">InPageToast  --  small device readout pinned to the host page</h2>
+  <p class="section-desc">
+    A horizontal raspberry mini-device: lens (clickable, opens the popup) - message - close key. A 4px LED ribbon on the left signals the variant: cyan = hint, cream = info, yellow = auto. The shell is solid (no backdrop-blur) because the brand metaphor already gives the toast its own identity; trying to blur into the host page weakens it. Same role as slate's <code>hw-toast</code>; mutual-exclusion rules unchanged (<code>info</code> beats <code>auto</code> on the same page).
+  </p>
+
+  <div class="group-label">hint  ·  top-right  ·  dark host</div>
+  <div class="scene scene--dark">
+    <div class="scene__page">
+      <h3>The river otter's afternoon</h3>
+      <p>Patient otters spend the morning grooming and the afternoon hunting at the river. Their fur is dense and water-repellent, keeping them dry through long stretches of feline-like activity along the stream banks.</p>
+      <p>A single forager, working a quiet bend, can take half its body weight in fish before dusk.</p>
+    </div>
+    <div class="pin pin--top-right">
+      <div class="pdx-toast pdx-toast--hint">
+        <span class="pdx-toast__lens" title="Open Word Hunter"></span>
+        <span class="pdx-toast__msg">THE WORD IS ON THIS PAGE</span>
+        <button class="pdx-toast__close" aria-label="Dismiss"><iconify-icon icon="pixelarticons:close"></iconify-icon></button>
+      </div>
+    </div>
+  </div>
+  <p class="caption">
+    Top-right corner  ·  cyan LED ribbon (hint = system is helping you)  ·  pixel-font ALL CAPS message  ·  lens lights up on hover  ·  same vertical position whether scrim is on or off  ·  z-index 2147483000 wins above almost any host chrome
+  </p>
+
+  <div class="group-label">info  ·  top-center  ·  light host  ·  no paragraph long enough</div>
+  <div class="scene scene--light">
+    <div class="scene__page">
+      <h3>10 quick tips, in 80 characters each</h3>
+      <p>Listicle paragraphs. Each one short. Headlines louder than the body. Punchy.</p>
+      <p>No long-form text at all. The page is mostly bullet points and short headlines.</p>
+      <p>This is exactly the page Word Hunter has nothing to do on.</p>
+    </div>
+    <div class="pin pin--top-center">
+      <div class="pdx-toast pdx-toast--info">
+        <span class="pdx-toast__lens" title="Open Word Hunter"></span>
+        <span class="pdx-toast__msg">NOT ENOUGH TEXT FOR A HUNT</span>
+        <button class="pdx-toast__close" aria-label="Dismiss"><iconify-icon icon="pixelarticons:close"></iconify-icon></button>
+      </div>
+    </div>
+  </div>
+  <p class="caption">
+    Top-center  ·  cream LED ribbon (info = neutral status)  ·  copy reframes the slate "Not enough text to hide the word" as the all-caps pixel idiom  ·  this variant beats <code>auto</code> on the same page
+  </p>
+
+  <div class="group-label">auto  ·  top-center  ·  Auto-Hunter active with the word visible</div>
+  <div class="scene scene--news">
+    <div class="scene__page">
+      <h3>A field guide to migratory ducks</h3>
+      <p>Pintails arrive in late September and stage along the brackish shallows for a week before moving south. Their long, sharp tails make them easy to identify from a kilometre off, even at speed against an overcast sky.</p>
+      <p>Northern shovelers, by contrast, prefer the dense vegetation of slower creek backwaters and pintail watchers will rarely see them while the duck calendar is still warm.</p>
+    </div>
+    <div class="pin pin--top-center">
+      <div class="pdx-toast pdx-toast--auto">
+        <span class="pdx-toast__lens" title="Open Word Hunter"></span>
+        <span class="pdx-toast__msg">AUTO-HUNTER ACTIVE<span class="word">pintail</span></span>
+        <button class="pdx-toast__close" aria-label="Dismiss"><iconify-icon icon="pixelarticons:close"></iconify-icon></button>
+      </div>
+    </div>
+  </div>
+  <p class="caption">
+    Yellow LED ribbon (auto = the mode is doing work for you)  ·  active word visible inline in VT323 with a soft glow  ·  same chrome as the other variants  ·  the player can verify the current target without opening the popup
+  </p>
+</div>
+
+<!-- =====================================================
+     CELEBRATION
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">celebration  ·  the one loud moment</p>
+  <h2 class="section-title">CelebrationPopup  --  REGISTERED!</h2>
+  <p class="section-desc">
+    The system's payoff. Fires after a successful find. Full-page scrim + centred Pokedex mini-device showing the catch on its LCD. Three variants: default solo, Auto-Continue with the Next-Up pill, and review-click with a Remove-Word ghost CTA. The Pokedex variant keeps slate's "two simultaneous found-color cues" rule -- here, the green "REGISTERED" stamp inside the LCD plus the green LED dot on the device header.
+  </p>
+
+  <div class="group-label">default  ·  solo find  ·  Auto-Continue off</div>
+  <div class="scene scene--dark">
+    <div class="scene__page">
+      <h3>The river otter's afternoon</h3>
+      <p>Patient otters spend the morning grooming and the afternoon hunting at the river. Their fur is dense and water-repellent, keeping them dry through long stretches of feline-like activity along the stream banks.</p>
+      <p>A single forager, working a quiet bend, can take half its body weight in fish before dusk.</p>
+    </div>
+    <div class="scrim"></div>
+    <div class="pin pin--center">
+      <div class="pdx-celebration">
+        <div class="pdx-celebration__header">
+          <span class="pdx-celebration__lens"></span>
+          <div class="pdx-celebration__leds">
+            <span class="led led--red"></span>
+            <span class="led led--green"></span>
+            <span class="led led--yellow"></span>
+          </div>
+          <span class="pdx-celebration__stamp">CATCH No. 042</span>
+        </div>
+        <div class="pdx-celebration__lcd">
+          <div class="pdx-celebration__art" aria-hidden="true">🦦</div>
+          <div class="pdx-celebration__body">
+            <span class="pdx-celebration__found">&gt;&gt; REGISTERED!</span>
+            <span class="pdx-celebration__word">otter</span>
+            <div class="pdx-celebration__meta">
+              <span>12s</span><span class="pdx-celebration__sep">·</span><span>NO HINT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="caption">
+    Centred mini-device  ·  CATCH No. stamp top-right (mirrors a Pokedex serial number)  ·  green LED + "&gt;&gt; REGISTERED!" both carry the found cue  ·  PokeAPI sprite OR emoji in the cream art slot  ·  meta row reads "12s · NO HINT" in pixel font
+  </p>
+
+  <div class="group-label">Auto-Continue on  ·  Next-Up pill visible (spoiler setting on)</div>
+  <div class="scene scene--news">
+    <div class="scene__page">
+      <h3>A field guide to migratory ducks</h3>
+      <p>Pintails arrive in late September and stage along the brackish shallows for a week before moving south. Their long, sharp tails make them easy to identify from a kilometre off, even at speed against an overcast sky.</p>
+    </div>
+    <div class="scrim"></div>
+    <div class="pin pin--center">
+      <div class="pdx-celebration">
+        <div class="pdx-celebration__header">
+          <span class="pdx-celebration__lens"></span>
+          <div class="pdx-celebration__leds">
+            <span class="led led--red"></span>
+            <span class="led led--green"></span>
+            <span class="led led--yellow"></span>
+          </div>
+          <span class="pdx-celebration__stamp">CATCH No. 011</span>
+        </div>
+        <div class="pdx-celebration__lcd">
+          <div class="pdx-celebration__art" aria-hidden="true"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" alt=""></div>
+          <div class="pdx-celebration__body">
+            <span class="pdx-celebration__found">&gt;&gt; REGISTERED!</span>
+            <span class="pdx-celebration__word">pikachu</span>
+            <div class="pdx-celebration__meta">
+              <span>2m 03s</span><span class="pdx-celebration__sep">·</span><span>HINT USED</span>
+            </div>
+          </div>
+        </div>
+        <div class="pdx-next" style="display: inline-flex; margin-left: 6px;">
+          <span class="pdx-next__label">NEXT UP</span>
+          <span class="pdx-next__art"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" alt=""></span>
+          <span class="pdx-next__word">eevee</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="caption">
+    Same chrome  ·  thin "NEXT UP" pill below the LCD with the upcoming catch in cream-text + mini sprite  ·  only renders when Auto-Continue setting AND Next-Word-Preview spoiler are both on
+  </p>
+
+  <div class="group-label">review click  ·  already-found word  ·  Remove Word affordance</div>
+  <div class="scene scene--light">
+    <div class="scene__page">
+      <h3>Some passage from a book, reread</h3>
+      <p>The captain of the team eased the boat alongside the dock. He'd worked these waters for thirty years and the muscle memory was complete.</p>
+      <p>His mate Eevee swung the rope to the bollard in a single motion.</p>
+    </div>
+    <div class="scrim" style="background: rgba(0,0,0,0.18);"></div>
+    <div class="pin pin--center">
+      <div class="pdx-celebration">
+        <div class="pdx-celebration__header">
+          <span class="pdx-celebration__lens"></span>
+          <div class="pdx-celebration__leds">
+            <span class="led led--red"></span>
+            <span class="led led--green"></span>
+            <span class="led led--yellow"></span>
+          </div>
+          <span class="pdx-celebration__stamp">REVIEW</span>
+        </div>
+        <div class="pdx-celebration__lcd">
+          <div class="pdx-celebration__art" aria-hidden="true"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif" alt=""></div>
+          <div class="pdx-celebration__body">
+            <span class="pdx-celebration__found">&gt;&gt; ALREADY CAUGHT</span>
+            <span class="pdx-celebration__word">eevee</span>
+            <div class="pdx-celebration__meta">
+              <span>47S</span><span class="pdx-celebration__sep">·</span><span>NO HINT</span>
+            </div>
+          </div>
+        </div>
+        <button class="pdx-celebration__cta">
+          <iconify-icon icon="pixelarticons:trash" style="color: var(--pdx-led-red);"></iconify-icon>
+          REMOVE WORD
+        </button>
+      </div>
+    </div>
+  </div>
+  <p class="caption">
+    Header stamp flips to REVIEW  ·  found-text reads "&gt;&gt; ALREADY CAUGHT" instead of REGISTERED  ·  cream key-cap CTA below with a red-LED trash glyph  ·  explicit "drop the ActiveWord" affordance for review-click flows
+  </p>
+</div>
+
+<!-- =====================================================
+     RELOAD HINT
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">reload hint  ·  popup-internal</p>
+  <h2 class="section-title">ReloadHint  --  appears in Play after starting a hunt</h2>
+  <p class="section-desc">
+    Lives inside the Play tab body, not on the host page -- shown here in a 360-wide popup slice so designers see it sitting between header and ActiveWordCard. Treated as a quiet LCD inline notice with cyan LED bezel: not a hard alert, more "the device is whispering that it would be ready, you should reload". A cream key cap on the right fires <code>chrome.scripting.executeScript</code>.
+  </p>
+  <div style="display: inline-block;">
+    <div class="popup-slice">
+      <div class="pdx-reload-hint">
+        <span class="pdx-reload-hint__info"><iconify-icon icon="pixelarticons:info-box"></iconify-icon></span>
+        <span class="pdx-reload-hint__msg">RELOAD TO HUNT</span>
+        <button class="pdx-reload-hint__btn">RELOAD</button>
+        <button class="pdx-reload-hint__close"><iconify-icon icon="pixelarticons:close"></iconify-icon></button>
+      </div>
+      <!-- placeholder rows to suggest the popup body underneath -->
+      <div class="placeholder-row"></div>
+      <div class="placeholder-row med"></div>
+      <div class="placeholder-row short"></div>
+    </div>
+  </div>
+  <p class="caption">
+    LCD field with cyan/navy gradient + scanlines  ·  navy info glyph (lens-tone, not yellow)  ·  copy "RELOAD TO HUNT" replaces slate's sentence "Reload the page to begin hunting"  ·  cream RELOAD key  ·  × close on the right  ·  gated by the Reload-Hint switch in Settings (Pokedex copy: "RELOAD HINT  ·  ON / OFF")
+  </p>
+</div>
+
+<!-- =====================================================
+     HIGHLIGHTER in context
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">highlighter  ·  brand signature</p>
+  <h2 class="section-title">HiddenWord  --  the LED rectangle behind the found word</h2>
+  <p class="section-desc">
+    The actual "lit-up cell" treatment on the page text. A yellow rectangle behind the word with a charcoal pixel-art outline and a soft LED glow; once found, the rectangle flips to green. Defined in <code>themes/theme-pokedex.css</code> as <code>.pdx-highlight</code> and <code>.pdx-highlight--found</code>. Inline flow preserved -- the highlighter wraps across line breaks the same way slate's does.
+  </p>
+
+  <div class="group-label">on a dark host page</div>
+  <div class="scene scene--dark" style="height: 220px;">
+    <div class="scene__page" style="max-width: 600px;">
+      <h3>The river otter's afternoon</h3>
+      <p>Patient otters spend the morning grooming and the afternoon <span class="pdx-highlight">hunting</span> at the river. Their fur is dense and water-repellent, keeping them dry through long stretches of feline-like activity along the stream banks. A single forager, working a quiet bend, can take half its body weight in <span class="pdx-highlight pdx-highlight--found">otter</span> before dusk.</p>
+    </div>
+  </div>
+
+  <div class="group-label">on a light host page</div>
+  <div class="scene scene--news" style="height: 220px;">
+    <div class="scene__page" style="max-width: 600px;">
+      <h3>A field guide to migratory ducks</h3>
+      <p>Pintails arrive in late September and stage along the brackish shallows for a week before moving south. Their long, sharp tails make them easy to <span class="pdx-highlight">identify</span> from a kilometre off, even at speed against an overcast sky. Northern shovelers, by contrast, prefer slow creek backwaters and the casual <span class="pdx-highlight pdx-highlight--found">pintail</span> watcher will rarely see them.</p>
+    </div>
+  </div>
+  <p class="caption">
+    Yellow LED rectangle with a 1px charcoal pixel outline (via inset shadow -- no layout shift)  ·  soft glow extends beyond the rectangle so the word reads "lit"  ·  navy ink for the text on top  ·  in <code>--found</code> state, the rectangle flips to green LED and the glow turns green
+  </p>
+</div>
+
+</body>
+</html>

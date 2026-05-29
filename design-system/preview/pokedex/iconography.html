@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pokedex theme - iconography</title>
+<link rel="stylesheet" href="../../themes/theme-pokedex.css">
+<script src="icons.js"></script>
+<style>
+  /* ===== Page chrome ===================================== */
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    background: #f0eee9;
+    color: #1a1b26;
+    padding: 32px 28px 80px;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .page-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px; line-height: 1.4; margin: 0 0 6px;
+  }
+  .page-sub { font-size: 14px; color: #4d4d5a; max-width: 720px; margin: 0 0 36px; }
+
+  .section { margin: 36px 0; max-width: 980px; }
+  .section-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: #8C0F31; margin: 0 0 6px;
+  }
+  .section-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .section-desc { font-size: 13px; color: #4d4d5a; margin: 0 0 18px; max-width: 700px; }
+  .card { background: #ffffff; border-radius: 14px; padding: 24px; border: 1px solid #e6e1d6; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+
+  /* ===== Source attribution callout ====================== */
+  .source-card {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 18px 20px;
+    background: linear-gradient(180deg, #fefbf5 0%, var(--pdx-key) 100%);
+    border: 1px solid var(--pdx-key-2);
+    border-radius: 10px;
+    margin: 0 0 28px;
+    max-width: 980px;
+  }
+  .source-card iconify-icon {
+    font-size: 40px;
+    color: var(--pdx-shell);
+    flex: 0 0 auto;
+  }
+  .source-card .source-text {
+    font-family: var(--pdx-font-ui);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--pdx-on-key);
+  }
+  .source-card .source-text strong {
+    font-family: var(--pdx-font-pixel);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--pdx-shell-deep);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .source-card a { color: var(--pdx-shell); text-decoration: underline; }
+
+  /* ===== Icon tiles ===================================== */
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+    gap: 12px;
+  }
+  .icon-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 8px 12px;
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: var(--pdx-r-key);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+  }
+  .icon-tile iconify-icon {
+    font-size: 40px;
+    color: var(--pdx-on-key);
+  }
+  .icon-tile__name {
+    font-family: var(--pdx-font-pixel);
+    font-size: 7px;
+    letter-spacing: 0.06em;
+    color: var(--pdx-on-key-2);
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .icon-tile__role {
+    font-family: var(--pdx-font-ui);
+    font-size: 10px;
+    color: var(--pdx-on-key-2);
+    margin-top: -4px;
+  }
+
+  /* ===== Stage rows ===================================== */
+  .stage-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 200px;
+    gap: 24px;
+    padding: 18px 0;
+    border-top: 1px dashed #e6e1d6;
+    align-items: center;
+  }
+  .stage-row:first-child { border-top: 0; padding-top: 0; }
+  .stage-row .meta .name { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; }
+  .stage-row .meta .desc { font-size: 12px; color: #6e6354; margin-top: 4px; line-height: 1.45; }
+  .stage-row .spec { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #6e6354; line-height: 1.55; }
+
+  .stage {
+    padding: 18px 20px;
+    background: linear-gradient(180deg, var(--pdx-shell-hi) 0%, var(--pdx-shell) 50%, var(--pdx-shell-2) 100%);
+    border-radius: 8px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    color: var(--pdx-on-shell);
+  }
+  .stage iconify-icon { color: var(--pdx-on-shell); }
+  .stage--lcd {
+    background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 50%, var(--pdx-lcd-lo) 100%);
+    position: relative;
+    overflow: hidden;
+    color: var(--pdx-lcd-ink);
+  }
+  .stage--lcd iconify-icon { color: var(--pdx-lcd-ink); position: relative; z-index: 1; }
+  .stage--cream { background: var(--pdx-key); border: 1px solid var(--pdx-key-2); color: var(--pdx-on-key); }
+  .stage--cream iconify-icon { color: var(--pdx-on-key); }
+
+  /* size variants used in the wild */
+  .ico-xl { font-size: 72px; }
+  .ico-lg { font-size: 40px; }
+  .ico-md { font-size: 24px; }
+  .ico-sm { font-size: 16px; }
+
+  /* color demos */
+  .demo-led {
+    display: inline-flex; gap: 14px; padding: 14px 18px;
+    background: var(--pdx-key); border-radius: 8px;
+    border: 1px solid var(--pdx-key-2);
+  }
+  .demo-led .led-red    iconify-icon { color: var(--pdx-led-red); }
+  .demo-led .led-green  iconify-icon { color: var(--pdx-led-green); }
+  .demo-led .led-yellow iconify-icon { color: var(--pdx-primary-deep); }
+  .demo-led .led-lens   iconify-icon { color: var(--pdx-lens); }
+
+  .note {
+    font-family: var(--pdx-font-ui);
+    font-size: 12px;
+    color: #4d4d5a;
+    line-height: 1.55;
+    margin-top: 12px;
+    max-width: 720px;
+  }
+  .note code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: #f4efe2;
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  pre.code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--pdx-on-key);
+    background: var(--pdx-key);
+    padding: 14px 18px;
+    border-radius: 6px;
+    border: 1px solid var(--pdx-key-2);
+    margin: 0;
+    overflow-x: auto;
+  }
+</style>
+</head>
+<body class="pdx">
+
+<nav style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px;">
+  <a href="index.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">FOUNDATIONS</a>
+  <a href="components-form-controls.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">FORM CONTROLS</a>
+  <a href="iconography.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#8C0F31;color:#fff;">ICONOGRAPHY</a>
+  <a href="screens-tabs.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">SCREENS</a>
+  <a href="in-page-overlays.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">IN-PAGE</a>
+  <a href="play-tab.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">PLAY</a>
+  <a href="searchable-select.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">SELECT</a>
+</nav>
+
+<h1 class="page-title">ICONOGRAPHY</h1>
+<p class="page-sub">
+  Pokedex theme uses the <strong>Pixelarticons</strong> set by Gerrit Halfmann -- hand-crafted pixel-art icons on a strict 24x24 grid, MIT licensed. The free package ships 486+ icons; we wire it via Iconify so we never bundle anything we don't render.
+</p>
+
+<!-- =====================================================
+     Source attribution
+     ===================================================== -->
+<div class="source-card">
+  <iconify-icon icon="pixelarticons:bookmark"></iconify-icon>
+  <div class="source-text">
+    <strong>SOURCE -- PIXELARTICONS</strong>
+    Open source pixel-art icon set by Gerrit Halfmann. 24x24 author grid; every edge deliberate. MIT licensed.
+    <a href="https://pixelarticons.com/" target="_blank" rel="noopener">pixelarticons.com</a> &middot;
+    <a href="https://github.com/halfmage/pixelarticons" target="_blank" rel="noopener">github.com/halfmage/pixelarticons</a>
+  </div>
+</div>
+
+<!-- =====================================================
+     Full set
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">the set  ·  16 roles</p>
+  <h2 class="section-title">The 16 roles we use</h2>
+  <p class="section-desc">
+    A 1:1 mapping of slate's Lucide subset to the Pixelarticons set. Roles are stable; only the renderer changes per theme. Hover-name shows the Pixelarticons icon slug.
+  </p>
+  <div class="card">
+    <div class="icon-grid" id="icon-grid"></div>
+  </div>
+</div>
+
+<!-- =====================================================
+     Size scale
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">scale  ·  4 sizes</p>
+  <h2 class="section-title">Size scale  --  xl / lg / md / sm</h2>
+  <p class="section-desc">
+    Pixelarticons render sharpest at multiples of 24px. We use 72 / 48 / 24 / 16 in the popup -- 16px is borderline (icons start losing pixel crispness) so it's reserved for inline usage in body copy where the surrounding text already tolerates anti-aliasing.
+  </p>
+  <div class="card">
+    <div class="stage-row">
+      <div class="meta">
+        <div class="name">XL  ·  72 x 72</div>
+        <div class="desc">header lens, hero CTA glyph, celebration</div>
+      </div>
+      <div class="stage">
+        <iconify-icon icon="pixelarticons:search" class="ico-xl"></iconify-icon>
+        <iconify-icon icon="pixelarticons:target" class="ico-xl"></iconify-icon>
+        <iconify-icon icon="pixelarticons:trophy" class="ico-xl"></iconify-icon>
+      </div>
+      <div class="spec">3x of 24 grid<br>1 author pixel = 3 px</div>
+    </div>
+    <div class="stage-row">
+      <div class="meta">
+        <div class="name">LG  ·  40 x 40</div>
+        <div class="desc">tab keys, action bar buttons</div>
+      </div>
+      <div class="stage">
+        <iconify-icon icon="pixelarticons:play" class="ico-lg"></iconify-icon>
+        <iconify-icon icon="pixelarticons:shuffle" class="ico-lg"></iconify-icon>
+        <iconify-icon icon="pixelarticons:edit" class="ico-lg"></iconify-icon>
+        <iconify-icon icon="pixelarticons:reload" class="ico-lg"></iconify-icon>
+      </div>
+      <div class="spec">~1.67x of 24 grid<br>still crisp at 40px</div>
+    </div>
+    <div class="stage-row">
+      <div class="meta">
+        <div class="name">MD  ·  24 x 24</div>
+        <div class="desc">chips, inline labels, slot meta</div>
+      </div>
+      <div class="stage stage--cream">
+        <iconify-icon icon="pixelarticons:search" class="ico-md"></iconify-icon>
+        <iconify-icon icon="pixelarticons:info-box" class="ico-md"></iconify-icon>
+        <iconify-icon icon="pixelarticons:chevron-down" class="ico-md"></iconify-icon>
+        <iconify-icon icon="pixelarticons:check" class="ico-md"></iconify-icon>
+        <iconify-icon icon="pixelarticons:close" class="ico-md"></iconify-icon>
+        <iconify-icon icon="pixelarticons:external-link" class="ico-md"></iconify-icon>
+      </div>
+      <div class="spec">native 1x size<br>pixel-perfect</div>
+    </div>
+    <div class="stage-row">
+      <div class="meta">
+        <div class="name">SM  ·  16 x 16</div>
+        <div class="desc">inline within body copy</div>
+      </div>
+      <div class="stage stage--cream">
+        <span style="font-family: var(--pdx-font-ui); font-size: 13px; color: var(--pdx-on-key); display: inline-flex; align-items: center; gap: 6px;">
+          press <iconify-icon icon="pixelarticons:play" class="ico-sm"></iconify-icon> to start the next hunt
+        </span>
+      </div>
+      <div class="spec">0.67x of 24 grid<br>only use inline w/ text</div>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
+     Color
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">color  ·  currentColor</p>
+  <h2 class="section-title">Recoloring via currentColor</h2>
+  <p class="section-desc">
+    All Pixelarticons fill with <code>currentColor</code>. Set the parent <code>color</code> to retone the entire glyph. The four semantic states the popup typically uses:
+  </p>
+  <div class="card">
+    <div class="demo-led">
+      <div class="led-red"><iconify-icon icon="pixelarticons:trash" class="ico-lg"></iconify-icon></div>
+      <div class="led-green"><iconify-icon icon="pixelarticons:check" class="ico-lg"></iconify-icon></div>
+      <div class="led-yellow"><iconify-icon icon="pixelarticons:star" class="ico-lg"></iconify-icon></div>
+      <div class="led-lens"><iconify-icon icon="pixelarticons:info-box" class="ico-lg"></iconify-icon></div>
+    </div>
+    <p class="note">
+      Red on trash / destructive  &middot;  green on confirmed catch  &middot;  yellow-deep on a lit star  &middot;  lens-blue on info. Against a raspberry shell, icons flip to white via the surrounding <code>color: var(--pdx-on-shell)</code>:
+    </p>
+    <div class="stage" style="margin-top: 14px;">
+      <iconify-icon icon="pixelarticons:search" class="ico-lg"></iconify-icon>
+      <iconify-icon icon="pixelarticons:chart" class="ico-lg"></iconify-icon>
+      <iconify-icon icon="pixelarticons:sliders" class="ico-lg"></iconify-icon>
+      <iconify-icon icon="pixelarticons:info-box" class="ico-lg"></iconify-icon>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
+     On LCD
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">on LCD  ·  navy on cyan</p>
+  <h2 class="section-title">On an LCD surface</h2>
+  <p class="section-desc">
+    Inside an LCD well, icons read as the dark navy <code>--pdx-lcd-ink</code>. Scan lines + glare layer above the icon but stay subtle because both icons and scan-line spacing are grid-aligned.
+  </p>
+  <div class="card">
+    <div class="stage stage--lcd">
+      <iconify-icon icon="pixelarticons:target" class="ico-lg"></iconify-icon>
+      <iconify-icon icon="pixelarticons:check" class="ico-lg"></iconify-icon>
+      <iconify-icon icon="pixelarticons:star" class="ico-lg"></iconify-icon>
+      <iconify-icon icon="pixelarticons:clock" class="ico-lg"></iconify-icon>
+      <div class="pdx-lcd-scanlines"></div>
+      <div class="pdx-lcd-glare"></div>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
+     Usage
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">usage  ·  iconify-icon web component</p>
+  <h2 class="section-title">How to use in the popup</h2>
+  <p class="section-desc">
+    One script include, one custom element, no per-icon import. The framework lazy-fetches icons on first render and caches them locally.
+  </p>
+  <div class="card">
+    <pre class="code">
+&lt;!-- once in the document head --&gt;
+&lt;script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- anywhere in the markup --&gt;
+&lt;iconify-icon icon="pixelarticons:search" style="font-size: 24px;"&gt;&lt;/iconify-icon&gt;
+
+&lt;!-- recolor via parent --&gt;
+&lt;span style="color: var(--pdx-led-yellow); font-size: 40px;"&gt;
+  &lt;iconify-icon icon="pixelarticons:star"&gt;&lt;/iconify-icon&gt;
+&lt;/span&gt;</pre>
+    <p class="note">
+      In the production extension we ship the Iconify offline plugin so icons load from a local bundle instead of the CDN, keeping the popup zero-dependency at runtime. The icon names below stay identical.
+    </p>
+  </div>
+</div>
+
+<script>
+/* The 16-role roster, mapped to Pixelarticons slugs. */
+const ROLES = [
+  ['search',       'search',       'find a word'],
+  ['chart',        'bar-chart',    'stats'],
+  ['sliders',      'settings',     'settings tab'],
+  ['info-box',     'info',         'system message'],
+  ['play',         'play',         'start a hunt'],
+  ['shuffle',      'shuffle',      'random word'],
+  ['edit',         'pencil',       'custom word'],
+  ['reload',       'refresh',      'reload page'],
+  ['star',         'star',         'achievement'],
+  ['chevron-down', 'chevron-down', 'expand'],
+  ['target',       'target',       'active hunt'],
+  ['clock',        'timer',        'duration'],
+  ['check',        'check',        'caught'],
+  ['close',        'x',            'dismiss'],
+  ['trash',        'trash',        'destructive'],
+  ['external-link','external',     'open page'],
+];
+
+const grid = document.getElementById('icon-grid');
+ROLES.forEach(([slug, role, label]) => {
+  const tile = document.createElement('div');
+  tile.className = 'icon-tile';
+  tile.innerHTML = `
+    <iconify-icon icon="pixelarticons:${slug}"></iconify-icon>
+    <span class="icon-tile__name">${role.replace(/-/g, ' ')}</span>
+    <span class="icon-tile__role">${label}</span>
+  `;
+  grid.appendChild(tile);
+});
+</script>
+
+</body>
+</html>

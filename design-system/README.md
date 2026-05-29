@@ -46,7 +46,12 @@ The brand mark on the logo doubles as a manifesto: a slab "W" sits on the slate,
 ```
 README.md                  ← you are here
 SKILL.md                   ← cross-compatible Agent Skills entry
-colors_and_type.css        ← all design tokens (mirror of src/shared/styles/tokens.css)
+colors_and_type.css        ← all design tokens for the default (slate) theme
+                              — mirror of src/shared/styles/tokens.css
+
+themes/
+  theme-pokedex.css        ← Pokédex theme — parallel skin, all --pdx-* tokens
+                              + theme primitives (key cap, LCD, lens, slot, etc.)
 
 assets/
   logo.png                 ← the brand mark (used everywhere — popup header, in-page toast)
@@ -164,6 +169,124 @@ The codebase has little user-facing copy — what exists is sober, mechanical, a
 ### Vibe in one line
 
 > Marginalia, not megaphone. The product whispers. The found-word moment is the only time it allows itself a flourish — and even then, it's a single highlighter stroke, not a confetti cannon.
+
+---
+
+## THEMES
+
+Word Hunter ships with **two themes** the player can choose between in Settings. The two themes are deliberately built as **parallel skins**, not as token overrides of each other.
+
+| Theme | Slug | Tokens prefix | Vibe |
+|---|---|---|---|
+| **Slate** (default) | `slate` | `--wh-*` | "Highlighter on slate" — dark, quiet, marginalia |
+| **Pokédex** | `pokedex` | `--pdx-*` | "Game-device" — raspberry shell, cyan LCD, key caps, LED accents |
+
+### Why parallel, not override?
+
+We considered the simpler approach — keep one set of `--wh-*` tokens and have each theme redefine their *values* via `[data-theme="…"]` scopes — and rejected it. The two themes diverge on more than colour:
+
+- **Different DOM structure.** Pokédex LCD wells need scan-line + glare overlay siblings, key caps need the border-bottom-width 3D trick. The slate theme has neither, and shouldn't carry tombstone elements "just in case".
+- **Different font families and scales.** Press Start 2P at 12px ≈ Space Grotesk at 18px in horizontal advance. A shared `--font-size-md` token would have to be themed too, defeating the point.
+- **Different on-foreground rules.** Pokédex's correct text colour depends on which surface (`--pdx-on-shell` / `--pdx-on-lcd` / `--pdx-on-key` / `--pdx-on-primary`) — slate has one foreground family.
+- **Different voice in copy.** Slate uses sentence case ("Caught", "Settings"); Pokédex uses ALL CAPS PIXEL labels and abbreviations ("CGHT", "SETS"). The copy fork is real.
+
+The two themes share what's genuinely portable (spacing scale, popup dimensions, data computations, domain vocabulary) and fork everything else cleanly.
+
+### Architecture
+
+```
+design-system/
+├── colors_and_type.css           ← slate tokens (kept at root for back-compat)
+├── themes/
+│   ├── theme-pokedex.css         ← pokedex tokens + theme primitives
+│   └── POKEDEX-IMPLEMENTATION.md ← production build map (codebase mapping + traps)
+├── preview/                      ← slate preview cards
+├── preview/pokedex/              ← pokedex preview cards (7 pages + icons.js)
+└── ui_kits/
+    ├── extension-popup/          ← slate-skinned popup recreations
+    ├── extension-popup-pokedex/  ← pokedex popup (index.html + popup.css + icons.js)
+    ├── in-page-overlay/          ← slate-skinned in-page recreations
+    └── in-page-overlay-pokedex/  ← pokedex in-page (scene.html + icons.js)
+```
+
+**In the live extension**, the skin fork lives at the React-tree level. Each top-level surface (PlayTab, StatsTab, SettingsTab, Rules, CelebrationPopup, InPageToast, ReloadHint) gets two implementations — a slate one and a pokedex one — sharing the same data hooks and the same domain logic underneath. The setting is read once on mount; switching themes prompts a popup re-open (acceptable trade-off — re-renders that span font family and DOM shape are not free).
+
+> **Implementing this in the live code?** Read **`themes/POKEDEX-IMPLEMENTATION.md`** — it maps every design-system artifact to its codebase destination, gives a build order, and documents the five traps we already hit (missing `.pdx` scope class, font metric reflow, the iconify-icon race, grid column/child mismatch, switch-cap `box-sizing`).
+
+### Coverage contract
+
+The Pokédex theme covers **every player-facing surface** the slate theme covers. Specifically:
+
+- **Popup chrome** — header, tabs, all four tab bodies (Play / Stats / Settings / Rules), action bars, the custom-word modal, the clear-hunts confirm overlay
+- **In-page overlays** — the celebration popup, the three InPageToast variants (hint / info / auto-mode), the no-paragraph toast
+- **The hidden-word treatment itself** — the highlighter that appears under the word once it's found. Pokédex variant: a yellow LED rectangle with a pixel-art outline behind the word, dark-navy text on top. See `.pdx-highlight` in `themes/theme-pokedex.css`.
+- **Iconography** -- slate uses Lucide stroke icons; Pokedex uses the **Pixelarticons** set by Gerrit Halfmann (open source, MIT, ~486 icons on a strict 24x24 pixel grid) loaded via Iconify. The roles are identical (search / bar-chart / settings / info / play / shuffle / pencil / refresh / star / chevron / target / timer / check / x / trash / external) -- the icon mapping lives in `preview/pokedex/iconography.html` next to the live preview.
+
+### Semantic token mapping — how the six roles cross over
+
+Slate's semantic accents map to Pokédex's physical-device equivalents:
+
+| Role | Slate (`--wh-*`) | Pokédex (`--pdx-*`) | Metaphor |
+|---|---|---|---|
+| primary | highlighter yellow `#FFD23F` | yellow LED `#FFD23F` | the hunt cue (same hex, different vehicle — stripe vs LED dot) |
+| found | mint `#5EE3A1` | green LED `#2FD46E` | a registered catch — Pokédex green is more saturated, reads as LED-on |
+| info | sky blue `#8AB4FF` | blue lens `#2A85D6` | system communicating quietly — Pokédex re-uses the camera-lens hue |
+| selected | sky blue `#8AB4FF` | blue lens `#2A85D6` | a slot picked but not yet started |
+| warning | soft amber `#FFA862` | soft amber `#FFA862` | reserved for both themes — same hex |
+| danger | red `#FF6B6B` | red LED `#FF3B3B` | destructive confirm — Pokédex red is fully saturated |
+
+The slate `--wh-primary` highlighter-yellow and the Pokédex `--pdx-led-yellow` use the same hex (`#FFD23F`) on purpose — it's the one piece of brand DNA the two themes share. In Slate it's a stripe; in Pokédex it's a dot.
+
+### Copy contract — voice differs between themes
+
+Both themes use the same **vocabulary** (the canonical domain table — Active word, Hunt, Streak, Caught — stays). They diverge on **voice**:
+
+| Aspect | Slate | Pokédex |
+|---|---|---|
+| Casing | Sentence case ("Caught", "Settings") | ALL CAPS for labels & buttons ("CAUGHT", "SETS") |
+| Length | Plain English, breathable | Abbreviated where space tight ("CGHT" / "MISS" / "ANIM" / "POKE") |
+| Punctuation | Periods on sentences; em-dashes welcome | Periods rare; "!" on action verbs ("GO HUNT!", "FOUND!") |
+| Tone | Observational, marginalia | Imperative, game-device prompt |
+| Editorial italic | Reserved Fraunces moments ("pick a word below to start the hunt.") | None — italic doesn't read on a pixel grid |
+
+Example translation:
+
+| Slate | Pokédex |
+|---|---|
+| "No caught words yet — go hunt!" | "NO CATCHES — GO HUNT!" |
+| "Active word" | "NOW HUNTING" |
+| "Hint delay" | "HINT DELAY" (same string, all-caps) |
+| "Reload the page to begin hunting." | "RELOAD TO HUNT" |
+| "Found! 12s · no hint" | "FOUND!" + LCD line `12s · no hint` |
+
+### What's shared regardless of theme
+
+- **Popup dimensions** — `360 × 560`. Product constraint, not a theme decision.
+- **Tab structure** — Play / Statistics / Settings, with Rules as a header-info toggle.
+- **Spacing scale** — `4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48`. Both themes import the same base.
+- **Domain vocabulary** — Active word, Hunt, Catch, Streak, Collection. Identical across themes.
+- **Data computations** — `computeCatchCounts`, `computeCollectionStats`, `computeStreak`, `listAchievements`, `pickRandomWord`. Theme-agnostic.
+- **Storage keys** — `huntRecord`, `autoContinue`, `minWordThreshold`, etc. Adding the new `theme` key for the user's choice.
+
+### Theme storage and switching
+
+- New `theme: "slate" | "pokedex"` setting persisted via `chrome.storage.sync` (same store as the rest of settings).
+- Default is `"slate"` for both new installs and any record that pre-dates this change.
+- The Settings tab gains a theme picker — two preview-tile radio cards, each a tiny mock of the popup in that theme.
+- Switching themes prompts a popup re-open via a small inline notice ("reopen the popup to apply") — accepted trade-off, see Architecture above.
+- The content script reads the theme on injection; in-page overlays match the popup. If the player switches mid-page, already-injected overlays keep their original theme until the page reloads (cheap and consistent with how other settings behave today).
+
+### Brand contract for the Pokédex theme
+
+The slate theme's brand position ("marginalia, not megaphone") is **explicitly suspended** inside `.pdx`. The Pokédex theme is allowed to be loud — that's its whole point. Its own contract:
+
+- **One device, one screen.** Every surface should read as if it's stamped on or displayed through the same physical handheld. No mixing skeumorphisms (no skeuomorphic LCD on slate, no flat surfaces inside Pokédex).
+- **Yellow LED is still the brand moment.** Used for active state, found celebration, primary CTA. Not for incidental decoration.
+- **All caps is the voice, not the volume.** Loud casing, quiet copy. Don't add exclamation marks to compensate for losing italic.
+- **Pixel art is the icon language.** No stroke icons; no emoji. Lucide is forbidden inside `.pdx`. We use Pixelarticons by Gerrit Halfmann (MIT) via Iconify; the role mapping lives in `preview/pokedex/iconography.html`.
+- **Three fonts, no more.** Press Start 2P (labels stamped on the device), VT323 (LCD output), Space Grotesk (body / helper copy where pixel hurts legibility).
+
+The Pokédex theme has the same **"one bright moment per surface"** rule as slate. The brand-yellow LED earns its brightness by being the only saturated element on its surface; the cream key caps and raspberry shell stay quiet around it.
 
 ---
 

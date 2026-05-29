@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Word Hunter — Pokedex Extension Popup (composition)</title>
+<link rel="stylesheet" href="../../themes/theme-pokedex.css">
+<link rel="stylesheet" href="popup.css">
+<script src="icons.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: #1a0a12; min-height: 100vh; font-family: var(--pdx-font-ui); color: var(--pdx-on-shell); }
+  body { padding: 40px 24px; }
+  .stage-header { max-width: 1240px; margin: 0 auto 28px; }
+  .stage-header h1 { font-family: var(--pdx-font-pixel); font-size: 16px; line-height: 1.4; color: #fff; margin: 0 0 10px; }
+  .stage-header p { font-family: var(--pdx-font-ui); font-size: 13px; color: rgba(255,255,255,0.6); margin: 0; line-height: 1.5; max-width: 760px; }
+  .stage-header code { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #FFD23F; }
+  .row { display: flex; gap: 32px; align-items: flex-start; justify-content: center; flex-wrap: wrap; max-width: 1240px; margin: 0 auto; }
+  .frame-wrap { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+  .frame-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.5); max-width: 360px; text-align: center; line-height: 1.5; }
+</style>
+</head>
+<body class="pdx">
+
+<div class="stage-header">
+  <h1>WORD HUNTER — POKEDEX POPUP</h1>
+  <p>The three real tabs at production size (360 × 560) in the Pokedex theme. Every state shown inline. Loads tokens from <code>../../themes/theme-pokedex.css</code> and component CSS from <code>popup.css</code>. Icons via Pixelarticons (<code>icons.js</code>).</p>
+</div>
+
+<div class="row">
+
+  <!-- ===================== PLAY TAB ===================== -->
+  <div class="frame-wrap">
+    <div class="pdx-popup">
+      <div class="pdx-popup__header">
+        <span class="pdx-popup__lens"></span>
+        <div class="pdx-popup__leds"><span class="led led--red"></span><span class="led led--green"></span><span class="led led--yellow"></span></div>
+        <span class="pdx-popup__wordmark">WORD HUNTER</span>
+        <button class="pdx-popup__info"><iconify-icon icon="pixelarticons:info-box"></iconify-icon></button>
+      </div>
+      <div class="pdx-popup__tabs">
+        <button class="pdx-popup__tab is-active"><iconify-icon icon="pixelarticons:play"></iconify-icon><span class="pdx-popup__tab-label">PLAY</span></button>
+        <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:chart"></iconify-icon><span class="pdx-popup__tab-label">STATS</span></button>
+        <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:sliders"></iconify-icon><span class="pdx-popup__tab-label">SETS</span></button>
+      </div>
+      <div class="pdx-popup__ridge"></div>
+      <div class="pdx-popup__body">
+        <div class="pdx-popup__body-inner">
+          <div class="pdx-active">
+            <div class="pdx-active__art"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" alt=""></div>
+            <div class="pdx-active__body">
+              <span class="pdx-active__eyebrow">NOW HUNTING</span>
+              <span class="pdx-active__word">pikachu</span>
+            </div>
+            <button class="pdx-active__stop"><iconify-icon icon="pixelarticons:close"></iconify-icon></button>
+          </div>
+          <div class="pdx-list-selector">
+            <button class="pdx-list-key"><iconify-icon icon="pixelarticons:bookmark"></iconify-icon> ANIMALS <span class="pdx-list-key__count">12</span></button>
+            <button class="pdx-list-key is-active"><iconify-icon icon="pixelarticons:bookmark"></iconify-icon> POKEMON <span class="pdx-list-key__count">31</span></button>
+          </div>
+          <div class="pdx-progress">
+            <span class="pdx-progress__label">CGHT</span>
+            <div class="pdx-progress__bar">
+              <span class="pdx-progress__cell is-filled"></span><span class="pdx-progress__cell is-filled"></span><span class="pdx-progress__cell is-head"></span><span class="pdx-progress__cell"></span><span class="pdx-progress__cell"></span><span class="pdx-progress__cell"></span><span class="pdx-progress__cell"></span><span class="pdx-progress__cell"></span><span class="pdx-progress__cell"></span><span class="pdx-progress__cell"></span>
+            </div>
+            <span class="pdx-progress__count">31 / 151</span>
+            <button class="pdx-progress__chev"><iconify-icon icon="pixelarticons:chevron-down"></iconify-icon></button>
+          </div>
+          <div class="pdx-filter">
+            <span class="pdx-filter__label">SHOW</span>
+            <button class="pdx-filter__key is-active">ALL</button>
+            <button class="pdx-filter__key">CGHT</button>
+            <button class="pdx-filter__key">MISS</button>
+          </div>
+          <div class="pdx-grid">
+            <div class="pdx-slot-v2 is-active"><img class="pdx-slot-v2__sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif"><span class="pdx-slot-v2__count">x2</span></div>
+            <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif"><span class="pdx-slot-v2__count">x1</span></div>
+            <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif"></div>
+            <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif"><span class="pdx-slot-v2__count">x1</span></div>
+            <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/39.gif"></div>
+            <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/150.gif"></div>
+            <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif"><span class="pdx-slot-v2__count">x1</span></div>
+            <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/143.gif"></div>
+            <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/94.gif"><span class="pdx-slot-v2__count">x1</span></div>
+            <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/54.gif"></div>
+            <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/66.gif"></div>
+            <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/65.gif"></div>
+            <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/129.gif"></div>
+            <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/130.gif"></div>
+            <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/131.gif"></div>
+          </div>
+        </div>
+      </div>
+      <div class="pdx-popup__action-bar">
+        <button class="pdx-action-icon" title="Auto-Continue"><iconify-icon icon="pixelarticons:reload"></iconify-icon></button>
+        <button class="pdx-action-primary" disabled><iconify-icon icon="pixelarticons:play"></iconify-icon> START HUNT</button>
+        <button class="pdx-action-icon" title="Shuffle"><iconify-icon icon="pixelarticons:shuffle"></iconify-icon></button>
+        <button class="pdx-action-icon" title="Custom word"><iconify-icon icon="pixelarticons:edit"></iconify-icon></button>
+      </div>
+    </div>
+    <span class="frame-label">Play tab · hunt running · Pokemon list · collection grid with caught + silhouette slots</span>
+  </div>
+
+  <!-- ===================== STATS TAB ===================== -->
+  <div class="frame-wrap">
+    <div class="pdx-popup">
+      <div class="pdx-popup__header">
+        <span class="pdx-popup__lens"></span>
+        <div class="pdx-popup__leds"><span class="led led--red"></span><span class="led led--green"></span><span class="led led--yellow"></span></div>
+        <span class="pdx-popup__wordmark">WORD HUNTER</span>
+        <button class="pdx-popup__info"><iconify-icon icon="pixelarticons:info-box"></iconify-icon></button>
+      </div>
+      <div class="pdx-popup__tabs">
+        <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:play"></iconify-icon><span class="pdx-popup__tab-label">PLAY</span></button>
+        <button class="pdx-popup__tab is-active"><iconify-icon icon="pixelarticons:chart"></iconify-icon><span class="pdx-popup__tab-label">STATS</span></button>
+        <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:sliders"></iconify-icon><span class="pdx-popup__tab-label">SETS</span></button>
+      </div>
+      <div class="pdx-popup__ridge"></div>
+      <div class="pdx-popup__body">
+        <div class="pdx-popup__body-inner">
+          <div class="pdx-section-eyebrow">
+            <span class="pdx-section-eyebrow__title">STATISTICS <span class="count">7 HUNTS</span></span>
+            <button class="pdx-keycap-action pdx-keycap-action--danger"><iconify-icon icon="pixelarticons:trash"></iconify-icon> CLEAR</button>
+          </div>
+          <div class="stats-list">
+            <div class="stats-row stats-row--header">
+              <span class="col">WORD</span><span class="col">FOUND</span><span class="col">DUR</span>
+              <span class="col" style="text-align:center;"><iconify-icon icon="pixelarticons:info-box" style="font-size:9px;color:var(--pdx-lcd-frame-2);"></iconify-icon></span>
+              <span class="col" style="text-align:center;"><iconify-icon icon="pixelarticons:external-link" style="font-size:9px;color:var(--pdx-lcd-frame-2);"></iconify-icon></span>
+            </div>
+            <div class="stats-row"><span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-green);"></span>otter</span><span class="stats-row__time">2 min</span><span class="stats-row__dur">12s</span><span class="stats-row__hint stats-row__hint--empty"></span><a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a></div>
+            <div class="stats-row"><span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-red);"></span>pikachu</span><span class="stats-row__time">14 min</span><span class="stats-row__dur">42s</span><span class="stats-row__hint"></span><a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a></div>
+            <div class="stats-row"><span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-green);"></span>flamingo</span><span class="stats-row__time">1 hr</span><span class="stats-row__dur">1m 4s</span><span class="stats-row__hint stats-row__hint--empty"></span><a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a></div>
+            <div class="stats-row"><span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-red);"></span>charizard</span><span class="stats-row__time">3 hr</span><span class="stats-row__dur">28s</span><span class="stats-row__hint"></span><a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a></div>
+            <div class="stats-row"><span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-green);"></span>narwhal</span><span class="stats-row__time">yest.</span><span class="stats-row__dur">9s</span><span class="stats-row__hint stats-row__hint--empty"></span><a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a></div>
+            <div class="stats-row"><span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-red);"></span>squirtle</span><span class="stats-row__time">2 d</span><span class="stats-row__dur">36s</span><span class="stats-row__hint stats-row__hint--empty"></span><a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a></div>
+          </div>
+        </div>
+      </div>
+      <div class="pdx-popup__footer">
+        <span class="pdx-popup__footer-msg">CLEAR ALL HUNTS?</span>
+        <button class="pdx-btn-ghost">CANCEL</button>
+        <button class="pdx-btn-danger">YES, CLEAR</button>
+      </div>
+    </div>
+    <span class="frame-label">Stats tab · footer in confirm mode · list-color dots · cyan hint cell = hint used</span>
+  </div>
+
+  <!-- ===================== SETTINGS TAB ===================== -->
+  <div class="frame-wrap">
+    <div class="pdx-popup">
+      <div class="pdx-popup__header">
+        <span class="pdx-popup__lens"></span>
+        <div class="pdx-popup__leds"><span class="led led--red"></span><span class="led led--green"></span><span class="led led--yellow"></span></div>
+        <span class="pdx-popup__wordmark">WORD HUNTER</span>
+        <button class="pdx-popup__info"><iconify-icon icon="pixelarticons:info-box"></iconify-icon></button>
+      </div>
+      <div class="pdx-popup__tabs">
+        <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:play"></iconify-icon><span class="pdx-popup__tab-label">PLAY</span></button>
+        <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:chart"></iconify-icon><span class="pdx-popup__tab-label">STATS</span></button>
+        <button class="pdx-popup__tab is-active"><iconify-icon icon="pixelarticons:sliders"></iconify-icon><span class="pdx-popup__tab-label">SETS</span></button>
+      </div>
+      <div class="pdx-popup__ridge"></div>
+      <div class="pdx-popup__body">
+        <div class="pdx-popup__body-inner">
+          <div class="pdx-section-eyebrow"><span class="pdx-section-eyebrow__title">SETTINGS</span></div>
+          <div class="settings-field">
+            <span class="settings-field__label">THEME</span>
+            <div class="theme-tiles">
+              <button class="theme-tile theme-tile--slate"><span class="theme-tile__preview"><span class="theme-tile__bar"></span></span><span class="theme-tile__name">SLATE</span></button>
+              <button class="theme-tile theme-tile--pokedex"><span class="theme-tile__preview"><span class="theme-tile__bar"></span></span><span class="theme-tile__name">POKEDEX</span></button>
+            </div>
+            <span class="settings-field__helper">switching reopens the popup</span>
+          </div>
+          <div class="settings-field">
+            <span class="settings-field__label">MIN PARAGRAPH</span>
+            <div class="settings-field__row">
+              <div class="pdx-range-mini">
+                <div class="pdx-range-mini__strip">
+                  <div class="pdx-range-mini__cell is-filled"></div><div class="pdx-range-mini__cell is-filled"></div><div class="pdx-range-mini__cell is-filled"></div><div class="pdx-range-mini__cell is-head"></div><div class="pdx-range-mini__cell"></div><div class="pdx-range-mini__cell"></div><div class="pdx-range-mini__cell"></div><div class="pdx-range-mini__cell"></div><div class="pdx-range-mini__cell"></div><div class="pdx-range-mini__cell"></div><div class="pdx-range-mini__cell"></div><div class="pdx-range-mini__cell"></div>
+                </div>
+                <span class="pdx-range-mini__chip">60</span>
+              </div>
+            </div>
+            <span class="settings-field__helper">paragraphs below this word count are skipped</span>
+          </div>
+          <div class="settings-field">
+            <span class="settings-field__label">HINT DELAY</span>
+            <div class="settings-field__row">
+              <div class="pdx-stepper-mini">
+                <button class="pdx-stepper-mini__key"><iconify-icon icon="pixelarticons:minus"></iconify-icon></button>
+                <div class="pdx-stepper-mini__lcd"><span class="pdx-stepper-mini__value">3</span><span class="pdx-stepper-mini__unit">MIN</span></div>
+                <button class="pdx-stepper-mini__key"><iconify-icon icon="pixelarticons:plus"></iconify-icon></button>
+              </div>
+            </div>
+            <span class="settings-field__helper">minutes the page is open before the hint tooltip shows</span>
+          </div>
+          <div class="settings-field">
+            <span class="settings-field__label">RELOAD HINT</span>
+            <div class="settings-field__row">
+              <button class="pdx-switch-mini is-on"><span class="pdx-switch-mini__labels"><span>OFF</span><span>ON</span></span><span class="pdx-switch-mini__cap"></span></button>
+              <span class="switch-state-label is-on">ON</span>
+            </div>
+            <span class="settings-field__helper">prompt to reload the page after starting a hunt</span>
+          </div>
+          <div class="settings-field">
+            <span class="settings-field__label">NEXT WORD PREVIEW</span>
+            <div class="settings-field__row">
+              <button class="pdx-switch-mini"><span class="pdx-switch-mini__labels"><span>OFF</span><span>ON</span></span><span class="pdx-switch-mini__cap"></span></button>
+              <span class="switch-state-label">OFF</span>
+            </div>
+            <span class="settings-field__helper">reveal the upcoming word in the celebration popup when Auto-Hunter is on</span>
+          </div>
+        </div>
+      </div>
+      <div class="pdx-popup__footer">
+        <span class="pdx-popup__footer-msg">UNSAVED EDITS</span>
+        <button class="pdx-btn-ghost">CANCEL</button>
+        <button class="pdx-btn-primary">SAVE</button>
+      </div>
+    </div>
+    <span class="frame-label">Settings tab · theme picker first · range + stepper + switches · footer in save mode</span>
+  </div>
+
+</div>
+
+</body>
+</html>

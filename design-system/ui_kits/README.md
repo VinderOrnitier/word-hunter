@@ -10,16 +10,25 @@ For component-by-component documentation, use the cards under `preview/`. For th
 extension-popup/
   index.html              ← all three tabs side-by-side · 360 × 560 each · every state visible inline
 
+extension-popup-pokedex/
+  index.html              ← the three tabs in the Pokedex theme · 360 × 560 each
+  popup.css               ← shared component CSS for the Pokedex popup parts
+  icons.js                ← Pixelarticons inline-SVG loader
+
 in-page-overlay/
   scene.html              ← host-page mock with the three InPageToast variants and the CelebrationPopup
+
+in-page-overlay-pokedex/
+  scene.html              ← the same host-page mock in the Pokedex theme (highlighter + toast + celebration)
+  icons.js                ← Pixelarticons inline-SVG loader
 ```
 
-Two files. Two screens. Open them in a wide window and you have the whole product in front of you.
+Four folders. The `-pokedex` pair mirrors the default (slate) pair surface-for-surface — the two themes are parallel skins, so each kit has a sibling in the other theme. Open them in a wide window and you have the whole product, in both themes, in front of you.
 
 ## Style of these kits
 
-- **Static HTML + inline CSS.** No JSX framework, no build step. Open the file, see the result. The prior JSX kits forced a fork-and-rewrite cycle every time the system moved; static compositions can be edited directly when the code changes.
-- **Loads `../../colors_and_type.css`.** Every surface pulls from the same token system as production.
+- **Static HTML + inline CSS.** No JSX framework, no build step. Open the file, see the result. The prior JSX kits forced a fork-and-rewrite cycle every time the system moved; static compositions can be edited directly when the code changes. (The Pokedex popup kit factors its shared component CSS into `popup.css` since two surfaces would otherwise duplicate it; the principle is unchanged.)
+- **Loads the matching theme tokens.** Slate kits pull `../../colors_and_type.css`; Pokedex kits pull `../../themes/theme-pokedex.css`. Every surface pulls from the same token system as production.
 - **All visible state.** Where a component has multiple states (toggles on/off, slots active/pending, error vs focused inputs), the composition shows them inline rather than gating behind interaction.
 
 ## When to use

@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pokedex theme - form controls</title>
+<link rel="stylesheet" href="../../themes/theme-pokedex.css">
+<script src="icons.js"></script>
+<style>
+  /* ===== Page chrome (outside .pdx) ====================== */
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    background: #f0eee9;
+    color: #1a1b26;
+    padding: 32px 28px 80px;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .page-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px; line-height: 1.4; margin: 0 0 6px;
+  }
+  .page-sub { font-size: 14px; color: #4d4d5a; max-width: 720px; margin: 0 0 36px; }
+
+  .section { margin: 36px 0; max-width: 980px; }
+  .section-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: #8C0F31; margin: 0 0 6px;
+  }
+  .section-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .section-desc { font-size: 13px; color: #4d4d5a; margin: 0 0 18px; max-width: 700px; }
+
+  .card { background: #ffffff; border-radius: 14px; padding: 24px; border: 1px solid #e6e1d6; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+
+  /* ===== Stage rows ====================================== */
+  .stage-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 200px;
+    gap: 24px;
+    padding: 18px 0;
+    border-top: 1px dashed #e6e1d6;
+    align-items: center;
+  }
+  .stage-row:first-child { border-top: 0; padding-top: 0; }
+  .stage-row .meta .name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; font-weight: 700; color: #1a1b26;
+  }
+  .stage-row .meta .desc {
+    font-size: 12px; color: #6e6354; margin-top: 4px; line-height: 1.45;
+  }
+  .stage-row .spec {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: #6e6354; line-height: 1.55;
+  }
+
+  /* The shell stage — raspberry plastic, mimics popup surface */
+  .stage {
+    background: linear-gradient(180deg, var(--pdx-shell-hi) 0%, var(--pdx-shell) 50%, var(--pdx-shell-2) 100%);
+    border-radius: 8px;
+    padding: 20px 18px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .stage--cream {
+    background: linear-gradient(180deg, #fbf7eb 0%, var(--pdx-key) 100%);
+    border: 1px solid var(--pdx-key-2);
+  }
+
+  .field {
+    display: flex; flex-direction: column; gap: 8px; min-width: 0;
+  }
+
+  /* =========================================================
+     POKEDEX SWITCH  ·  physical slide-key
+     ---------------------------------------------------------
+     A small navy "track housing" with a cream key cap that
+     slides between two positions. The LED light above the cap
+     lights yellow when the switch is ON.
+     ========================================================= */
+  .pdx-switch {
+    --w: 56px;
+    --h: 26px;
+    --pad: 3px;
+    --cap-w: 24px;
+    position: relative;
+    width: var(--w); height: var(--h);
+    flex: 0 0 auto;
+    background: linear-gradient(180deg, var(--pdx-lcd-frame) 0%, #0a1426 100%);
+    border-radius: 4px;
+    box-shadow:
+      inset 0 2px 3px rgba(0,0,0,0.5),
+      inset 0 -1px 0 rgba(255,255,255,0.15),
+      0 1px 0 rgba(255,255,255,0.4);
+    cursor: pointer;
+    transition: background var(--pdx-dur-base) var(--pdx-ease-standard);
+    border: 0;
+    padding: 0;
+  }
+
+  /* OFF and ON labels stamped on the navy track */
+  .pdx-switch__label {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--pdx-font-pixel);
+    font-size: 6px;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.45);
+    pointer-events: none;
+  }
+  .pdx-switch__label--off { left: 6px; }
+  .pdx-switch__label--on  { right: 6px; }
+
+  /* The sliding cream cap.
+     box-sizing: border-box is critical here -- without it, the 1px L/R + 2px
+     bottom borders push the cap outside its declared width/height, breaking
+     symmetry between OFF and ON positions (cap floats higher than it sits low). */
+  .pdx-switch__cap {
+    box-sizing: border-box;
+    position: absolute;
+    top: var(--pad);
+    left: var(--pad);
+    width: var(--cap-w);
+    height: calc(var(--h) - var(--pad) * 2);
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 3px;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.7);
+    transition: transform var(--pdx-dur-base) var(--pdx-ease-pop);
+  }
+  /* The cream cap carries 3 horizontal grooves -- the "thumb-rest"
+     texture you find on real slide switches. Communicates "slidable". */
+  .pdx-switch__cap::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 8px;
+    background-image: repeating-linear-gradient(
+      0deg,
+      var(--pdx-key-2) 0,
+      var(--pdx-key-2) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  }
+
+  /* ON state -- cap slides right, track lights up cyan */
+  .pdx-switch.is-on { background: linear-gradient(180deg, #1F5C9E 0%, #0E3A66 100%); }
+  .pdx-switch.is-on .pdx-switch__cap {
+    transform: translateX(calc(var(--w) - var(--cap-w) - var(--pad) * 2));
+  }
+
+  /* The state caption next to the switch, like slate's */
+  .switch-row { display: inline-flex; align-items: center; gap: 10px; }
+  .switch-state {
+    font-family: var(--pdx-font-pixel);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--pdx-on-shell-2);
+    text-transform: uppercase;
+  }
+  .pdx-switch.is-on + .switch-state { color: var(--pdx-led-yellow); }
+
+  /* Field label / helper -- on raspberry stage */
+  .pdx-field-label {
+    font-family: var(--pdx-font-pixel);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--pdx-on-shell);
+    text-transform: uppercase;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+  }
+  .pdx-field-helper {
+    font-family: var(--pdx-font-ui);
+    font-size: 11px;
+    color: var(--pdx-on-shell-2);
+    line-height: 1.45;
+    max-width: 260px;
+  }
+
+  /* =========================================================
+     POKEDEX NUMBER STEPPER  ·  LCD digit + chevron keys
+     ---------------------------------------------------------
+     The display reads as a tiny LCD window with VT323 digits.
+     The unit (MIN, S, etc.) sits in the same window, smaller.
+     Two chevron key caps flank it for +/- input.
+     ========================================================= */
+  .pdx-stepper {
+    display: inline-flex;
+    align-items: stretch;
+    gap: 0;
+    background: var(--pdx-lcd-frame);
+    border-radius: 6px;
+    padding: 3px;
+    box-shadow:
+      inset 0 1px 2px rgba(0,0,0,0.4),
+      0 1px 0 rgba(255,255,255,0.3);
+  }
+
+  .pdx-stepper__key {
+    flex: 0 0 24px;
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 3px;
+    color: var(--pdx-on-key);
+    cursor: pointer;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--pdx-dur-fast) var(--pdx-ease-standard);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+  }
+  .pdx-stepper__key:hover { background: #FBF7EB; }
+  .pdx-stepper__key:active { transform: translateY(1px); border-bottom-width: 1px; }
+  /* The icon inside the key cap -- pixelarticons via iconify-icon */
+  .pdx-stepper__key iconify-icon {
+    font-size: 14px;
+    color: var(--pdx-on-key);
+    display: block;
+  }
+
+  .pdx-stepper__lcd {
+    position: relative;
+    flex: 1;
+    min-width: 64px;
+    margin: 0 3px;
+    padding: 3px 8px 4px;
+    background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 50%, var(--pdx-lcd-lo) 100%);
+    border-radius: 2px;
+    box-shadow:
+      inset 0 2px 4px rgba(15, 42, 64, 0.4),
+      inset 0 -1px 0 rgba(255,255,255,0.25);
+    overflow: hidden;
+    text-align: center;
+  }
+  .pdx-stepper__lcd::after {
+    /* scan lines */
+    content: "";
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      rgba(15, 42, 64, 0.10) 0,
+      rgba(15, 42, 64, 0.10) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .pdx-stepper__value {
+    display: block;
+    font-family: var(--pdx-font-lcd);
+    font-size: 22px;
+    line-height: 1;
+    color: var(--pdx-lcd-ink);
+    letter-spacing: 0.04em;
+  }
+  .pdx-stepper__unit {
+    display: block;
+    font-family: var(--pdx-font-pixel);
+    font-size: 6px;
+    letter-spacing: 0.08em;
+    color: var(--pdx-lcd-frame-2);
+    text-transform: uppercase;
+    margin-top: -2px;
+  }
+
+  /* =========================================================
+     POKEDEX RANGE SLIDER  ·  segmented LCD bar + value chip
+     ---------------------------------------------------------
+     12 cells in an LCD strip; filled cells show progress,
+     the active cell glows yellow as the "LED indicator".
+     Value chip on the right reads the current number.
+     ========================================================= */
+  .pdx-range {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: 280px;
+    max-width: 100%;
+  }
+  .pdx-range__strip {
+    position: relative;
+    flex: 1;
+    height: 22px;
+    padding: 3px;
+    background: var(--pdx-lcd-frame);
+    border-radius: 4px;
+    box-shadow:
+      inset 0 1px 2px rgba(0,0,0,0.4),
+      0 1px 0 rgba(255,255,255,0.3);
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1px;
+    cursor: pointer;
+  }
+  .pdx-range__cell {
+    background: rgba(58, 138, 166, 0.35);
+    border-radius: 1px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    transition: background var(--pdx-dur-fast) var(--pdx-ease-standard);
+  }
+  .pdx-range__cell.is-filled {
+    background: linear-gradient(180deg, #94DDEC 0%, #6FC8DC 100%);
+  }
+  .pdx-range__cell.is-head {
+    background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.6),
+      0 0 6px rgba(255, 210, 63, 0.65);
+  }
+  .pdx-range__chip {
+    flex: 0 0 auto;
+    min-width: 44px;
+    padding: 3px 8px 4px;
+    background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 100%);
+    border: 1px solid var(--pdx-lcd-frame);
+    border-radius: 3px;
+    text-align: center;
+    box-shadow: inset 0 1px 1px rgba(15,42,64,0.25);
+    font-family: var(--pdx-font-lcd);
+    font-size: 18px;
+    line-height: 1;
+    color: var(--pdx-lcd-ink);
+  }
+
+  /* tiny print under the stage */
+  .undernote {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #6e6354;
+    line-height: 1.5;
+    margin-top: 8px;
+    max-width: 700px;
+  }
+
+</style>
+</head>
+<body class="pdx">
+
+<nav style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px;">
+  <a href="index.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">FOUNDATIONS</a>
+  <a href="components-form-controls.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#8C0F31;color:#fff;">FORM CONTROLS</a>
+  <a href="iconography.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">ICONOGRAPHY</a>
+  <a href="screens-tabs.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">SCREENS</a>
+  <a href="in-page-overlays.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">IN-PAGE</a>
+  <a href="play-tab.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">PLAY</a>
+  <a href="searchable-select.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">SELECT</a>
+</nav>
+
+<h1 class="page-title">FORM CONTROLS</h1>
+<p class="page-sub">
+  Switch, NumberStepper, RangeSlider -- the atomic Settings controls in the Pokedex theme. All three are visually anchored in the LCD/key-cap metaphor: the displayed value lives in an LCD window, the inputs are cream key caps.
+</p>
+
+<!-- =====================================================
+     SWITCH
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">switch  ·  physical slide key</p>
+  <h2 class="section-title">Switch</h2>
+  <p class="section-desc">
+    Two-position slide switch: a cream key cap slides on a recessed navy track between OFF and ON. The small LED above the cap dies in OFF and lights yellow in ON, giving a second redundant cue for state on top of the physical position. Replaces slate's pill-track switch; same semantic role, same Settings fields.
+  </p>
+  <div class="card">
+    <div class="stage-row">
+      <div class="meta">
+        <div class="name">RELOAD HINT</div>
+        <div class="desc">prompt to reload the page after starting a hunt</div>
+      </div>
+      <div class="stage">
+        <div class="field">
+          <span class="pdx-field-label">RELOAD HINT</span>
+          <div class="switch-row">
+            <button class="pdx-switch is-on" role="switch" aria-checked="true">
+              <span class="pdx-switch__label pdx-switch__label--off">OFF</span>
+              <span class="pdx-switch__label pdx-switch__label--on">ON</span>
+              <span class="pdx-switch__cap"></span>
+            </button>
+            <span class="switch-state">ON</span>
+          </div>
+          <span class="pdx-field-helper">prompt to reload the page after starting a hunt</span>
+        </div>
+      </div>
+      <div class="spec">
+        56 x 26  ·  cap 24 x 20<br>
+        navy track + cream cap<br>
+        cap slides 26px L->R<br>
+        track lights cyan on ON<br>
+        labels redundant cue
+      </div>
+    </div>
+
+    <div class="stage-row">
+      <div class="meta">
+        <div class="name">NEXT WORD PREVIEW</div>
+        <div class="desc">reveal upcoming word in the celebration popup when Auto-Hunter is on</div>
+      </div>
+      <div class="stage">
+        <div class="field">
+          <span class="pdx-field-label">NEXT WORD PREVIEW</span>
+          <div class="switch-row">
+            <button class="pdx-switch" role="switch" aria-checked="false">
+              <span class="pdx-switch__label pdx-switch__label--off">OFF</span>
+              <span class="pdx-switch__label pdx-switch__label--on">ON</span>
+              <span class="pdx-switch__cap"></span>
+            </button>
+            <span class="switch-state">OFF</span>
+          </div>
+          <span class="pdx-field-helper">reveal the upcoming word in the celebration popup when Auto-Hunter is on</span>
+        </div>
+      </div>
+      <div class="spec">
+        OFF state<br>
+        cap at left rest<br>
+        track dark navy<br>
+        no cyan glow
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
+     NUMBER STEPPER
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">number stepper  ·  LCD digit + chevron keys</p>
+  <h2 class="section-title">NumberStepper</h2>
+  <p class="section-desc">
+    Two cream chevron key caps (- on the left, + on the right) flanking a small LCD window. The window shows the value in VT323 plus the unit stamped underneath in pixel font. Replaces slate's input + stacked stepper -- the typed-number affordance disappears (pixel-grid LCDs aren't typable in real life either); on keyboard, focus on the field and use up/down arrows.
+  </p>
+  <div class="card">
+    <div class="stage-row">
+      <div class="meta">
+        <div class="name">HINT DELAY</div>
+        <div class="desc">minutes the page is open before the hint tooltip shows</div>
+      </div>
+      <div class="stage">
+        <div class="field">
+          <span class="pdx-field-label">HINT DELAY</span>
+          <div class="pdx-stepper">
+            <button class="pdx-stepper__key" aria-label="Decrement">
+              <iconify-icon icon="pixelarticons:minus"></iconify-icon>
+            </button>
+            <div class="pdx-stepper__lcd">
+              <span class="pdx-stepper__value">3</span>
+              <span class="pdx-stepper__unit">MIN</span>
+            </div>
+            <button class="pdx-stepper__key" aria-label="Increment">
+              <iconify-icon icon="pixelarticons:plus"></iconify-icon>
+            </button>
+          </div>
+          <span class="pdx-field-helper">minutes before the hint tooltip shows</span>
+        </div>
+      </div>
+      <div class="spec">
+        24 x 28 key caps<br>
+        VT323 22px value<br>
+        Press Start 2P 6px unit<br>
+        navy housing + scanlines<br>
+        focus glows yellow ring
+      </div>
+    </div>
+
+    <div class="stage-row">
+      <div class="meta">
+        <div class="name">CURSOR REVEAL</div>
+        <div class="desc">delay between cursor stop and revealing the hint glyph</div>
+      </div>
+      <div class="stage">
+        <div class="field">
+          <span class="pdx-field-label">CURSOR REVEAL</span>
+          <div class="pdx-stepper">
+            <button class="pdx-stepper__key" aria-label="Decrement">
+              <iconify-icon icon="pixelarticons:minus"></iconify-icon>
+            </button>
+            <div class="pdx-stepper__lcd">
+              <span class="pdx-stepper__value">1.5</span>
+              <span class="pdx-stepper__unit">SEC</span>
+            </div>
+            <button class="pdx-stepper__key" aria-label="Increment">
+              <iconify-icon icon="pixelarticons:plus"></iconify-icon>
+            </button>
+          </div>
+          <span class="pdx-field-helper">decimals welcome (0.1s steps)</span>
+        </div>
+      </div>
+      <div class="spec">
+        decimal values OK<br>
+        leading zero suppressed<br>
+        SEC abbreviation<br>
+        same chrome
+      </div>
+    </div>
+    <p class="undernote">
+      Step keys carry tabindex="-1"  ·  keyboard input via up/down arrows on the LCD itself (the LCD is the focusable element)  ·  long-press on a key auto-repeats at 8 steps/sec after a 400ms hold  ·  the LCD value glow intensifies briefly on each step (160ms) to confirm the increment landed
+    </p>
+  </div>
+</div>
+
+<!-- =====================================================
+     RANGE SLIDER
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">range slider  ·  segmented LCD bar + value chip</p>
+  <h2 class="section-title">RangeSlider</h2>
+  <p class="section-desc">
+    12 LCD cells in a navy housing. Filled cells show progress; the head cell glows yellow as the LED indicator. Replaces slate's gradient-painted native range -- the segmented look is honest to the LCD metaphor (real LCDs render bars as discrete cells, not smooth fills) and stays crisp at any zoom.
+  </p>
+  <div class="card">
+    <div class="stage-row">
+      <div class="meta">
+        <div class="name">MIN PARAGRAPH</div>
+        <div class="desc">paragraphs below this word count are skipped</div>
+      </div>
+      <div class="stage">
+        <div class="field">
+          <span class="pdx-field-label">MIN PARAGRAPH</span>
+          <div class="pdx-range">
+            <div class="pdx-range__strip" role="slider" aria-valuemin="30" aria-valuemax="150" aria-valuenow="30">
+              <div class="pdx-range__cell is-head"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+            </div>
+            <span class="pdx-range__chip">30</span>
+          </div>
+          <span class="pdx-field-helper">paragraphs shorter than this are skipped</span>
+        </div>
+      </div>
+      <div class="spec">
+        min value (head only)<br>
+        1 cell lit yellow<br>
+        no cyan trail<br>
+        chip reads `30`
+      </div>
+    </div>
+
+    <div class="stage-row">
+      <div class="meta">
+        <div class="name">MIN PARAGRAPH  ·  mid</div>
+        <div class="desc">5/12 filled  ·  head leads</div>
+      </div>
+      <div class="stage">
+        <div class="field">
+          <span class="pdx-field-label">MIN PARAGRAPH</span>
+          <div class="pdx-range">
+            <div class="pdx-range__strip">
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-head"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+              <div class="pdx-range__cell"></div>
+            </div>
+            <span class="pdx-range__chip">80</span>
+          </div>
+          <span class="pdx-field-helper">paragraphs shorter than this are skipped</span>
+        </div>
+      </div>
+      <div class="spec">
+        4 cyan filled +<br>
+        1 yellow head<br>
+        chip reads `80`<br>
+        snap step = 10
+      </div>
+    </div>
+
+    <div class="stage-row">
+      <div class="meta">
+        <div class="name">MIN PARAGRAPH  ·  max</div>
+        <div class="desc">all cells filled, head at the last</div>
+      </div>
+      <div class="stage">
+        <div class="field">
+          <span class="pdx-field-label">MIN PARAGRAPH</span>
+          <div class="pdx-range">
+            <div class="pdx-range__strip">
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-filled"></div>
+              <div class="pdx-range__cell is-head"></div>
+            </div>
+            <span class="pdx-range__chip">150</span>
+          </div>
+          <span class="pdx-field-helper">paragraphs shorter than this are skipped</span>
+        </div>
+      </div>
+      <div class="spec">
+        11 cyan filled +<br>
+        1 yellow head<br>
+        chip reads `150`<br>
+        head at index 11
+      </div>
+    </div>
+    <p class="undernote">
+      12 discrete cells regardless of min/max range  ·  values map to the nearest cell on drag, snap to the step on release  ·  click the strip to jump  ·  keyboard left/right moves by one step, home/end jumps to min/max  ·  ARIA: role="slider", aria-valuemin / aria-valuemax / aria-valuenow on the strip element  ·  the cyan fill + yellow head pairing also reads as "progress + cursor" which is how players intuit it
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pokedex theme - Stats / Settings / Rules</title>
+<link rel="stylesheet" href="../../themes/theme-pokedex.css">
+<script src="icons.js"></script>
+<style>
+  /* ===== Page chrome (outside .pdx) ====================== */
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    background: #f0eee9;
+    color: #1a1b26;
+    padding: 32px 28px 80px;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .page-title { font-family: 'Press Start 2P', monospace; font-size: 16px; line-height: 1.4; margin: 0 0 6px; }
+  .page-sub { font-size: 14px; color: #4d4d5a; max-width: 780px; margin: 0 0 32px; }
+  .section { margin: 32px 0 0; max-width: 1280px; }
+  .section-label { font-family: 'Press Start 2P', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C0F31; margin: 0 0 6px; }
+  .section-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .section-desc { font-size: 13px; color: #4d4d5a; margin: 0 0 18px; max-width: 720px; }
+
+  .popup-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 360px));
+    gap: 32px;
+    justify-content: start;
+    align-items: start;
+  }
+  .popup-frame { display: flex; flex-direction: column; gap: 10px; align-items: stretch; width: 360px; }
+  .popup-frame__label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    color: #8C0F31;
+    text-transform: uppercase;
+  }
+  .popup-frame__caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #6e6354;
+    line-height: 1.5;
+  }
+
+  /* ===== Popup shell (360 x 560) ========================= */
+  .pdx-popup {
+    width: 360px;
+    min-height: 560px;
+    max-height: 560px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, var(--pdx-shell-hi) 0%, var(--pdx-shell) 22%, var(--pdx-shell-2) 100%);
+    border-radius: 10px 10px 14px 14px;
+    overflow: hidden;
+    box-shadow: var(--pdx-shadow-popup);
+    position: relative;
+    color: var(--pdx-on-shell);
+  }
+  /* the very top of the shell -- a thin highlight edge like real plastic */
+  .pdx-popup::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--pdx-shell-edge);
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* ===== Header ========================================= */
+  .pdx-popup__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px 10px;
+    flex: 0 0 auto;
+  }
+  .pdx-popup__lens {
+    width: 28px; height: 28px;
+    flex: 0 0 auto;
+    background: radial-gradient(circle at 35% 30%, var(--pdx-lens-hi) 0%, var(--pdx-lens) 55%, var(--pdx-lens-deep) 100%);
+    border-radius: 50%;
+    box-shadow:
+      inset 0 0 0 1.5px var(--pdx-lens-rim),
+      inset 0 -2px 4px rgba(0,0,0,0.3),
+      0 1px 2px rgba(0,0,0,0.4);
+    position: relative;
+  }
+  .pdx-popup__lens::before {
+    content: ""; position: absolute; top: 14%; left: 16%;
+    width: 30%; height: 30%; background: rgba(255,255,255,0.55);
+    border-radius: 50%; filter: blur(1px);
+  }
+  .pdx-popup__leds {
+    display: flex; gap: 5px; flex: 0 0 auto;
+  }
+  .pdx-popup__leds .led {
+    width: 7px; height: 7px; border-radius: 50%;
+    box-shadow: inset 0 -1px 1px rgba(0,0,0,0.3);
+  }
+  .pdx-popup__leds .led--red    { background: var(--pdx-led-red);    box-shadow: 0 0 4px var(--pdx-led-red),    inset 0 -1px 1px rgba(0,0,0,0.3); }
+  .pdx-popup__leds .led--green  { background: var(--pdx-led-green);  box-shadow: 0 0 4px var(--pdx-led-green),  inset 0 -1px 1px rgba(0,0,0,0.3); }
+  .pdx-popup__leds .led--yellow { background: var(--pdx-led-yellow); box-shadow: 0 0 4px var(--pdx-led-yellow), inset 0 -1px 1px rgba(0,0,0,0.3); }
+
+  .pdx-popup__wordmark {
+    font-family: var(--pdx-font-pixel);
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: var(--pdx-on-shell);
+    text-transform: uppercase;
+    flex: 1;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+  }
+  .pdx-popup__info {
+    width: 28px; height: 28px; flex: 0 0 auto;
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .pdx-popup__info iconify-icon { font-size: 16px; color: var(--pdx-on-key); }
+  .pdx-popup__info.is-active {
+    background: linear-gradient(180deg, #3F8BD6 0%, #1F5C9E 100%);
+    border-color: #0E3A66;
+  }
+  .pdx-popup__info.is-active iconify-icon { color: #fff; }
+
+  /* ===== Tabs ========================================== */
+  .pdx-popup__tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    padding: 0 14px 10px;
+    flex: 0 0 auto;
+  }
+  .pdx-popup__tab {
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: var(--pdx-r-key);
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    color: var(--pdx-on-key);
+  }
+  .pdx-popup__tab iconify-icon,
+  .pdx-popup__tab svg { font-size: 14px; color: var(--pdx-on-key); flex: 0 0 auto; }
+  .pdx-popup__tab-label {
+    font-family: var(--pdx-font-pixel);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .pdx-popup__tab.is-active {
+    background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%);
+    border-color: #B89E50;
+    color: #4A3A0E;
+  }
+  .pdx-popup__tab.is-active iconify-icon { color: #4A3A0E; }
+
+  /* ===== Ridge between header zone and body =============== */
+  .pdx-popup__ridge {
+    height: 4px;
+    background: linear-gradient(180deg, var(--pdx-shell-deep) 0%, var(--pdx-shell-2) 50%, var(--pdx-shell-hi) 100%);
+    position: relative;
+    flex: 0 0 auto;
+  }
+  .pdx-popup__ridge::after {
+    content: ""; position: absolute; top: 50%; left: 0; right: 0;
+    height: 1px; background: rgba(0,0,0,0.3);
+  }
+
+  /* ===== Body LCD ======================================= */
+  .pdx-popup__body {
+    flex: 1;
+    margin: 10px 12px 10px;
+    background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 18%, var(--pdx-lcd) 80%, var(--pdx-lcd-lo) 100%);
+    border-radius: 6px;
+    border: 1px solid var(--pdx-lcd-frame);
+    box-shadow:
+      inset 0 2px 6px rgba(15, 42, 64, 0.35),
+      inset 0 -2px 0 rgba(255, 255, 255, 0.18);
+    position: relative;
+    overflow: hidden;
+    color: var(--pdx-lcd-ink);
+  }
+  .pdx-popup__body::after {
+    /* scan lines */
+    content: ""; position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      rgba(15, 42, 64, 0.10) 0,
+      rgba(15, 42, 64, 0.10) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .pdx-popup__body-inner {
+    position: relative;
+    z-index: 2;
+    padding: 14px 14px 16px;
+    height: 100%;
+    overflow-y: auto;
+  }
+  /* hide scrollbars inside the LCD -- we want pure cyan */
+  .pdx-popup__body-inner::-webkit-scrollbar { display: none; }
+  .pdx-popup__body-inner { scrollbar-width: none; }
+
+  /* ===== Body section header ============================ */
+  .pdx-section-eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 12px;
+    gap: 8px;
+  }
+  .pdx-section-eyebrow__title {
+    font-family: var(--pdx-font-pixel);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--pdx-lcd-ink);
+    text-transform: uppercase;
+  }
+  .pdx-section-eyebrow__title .count {
+    color: var(--pdx-lcd-frame-2);
+    margin-left: 6px;
+  }
+
+  /* Cream key cap inside LCD -- used for `CLEAR` ghost action */
+  .pdx-keycap-action {
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-family: var(--pdx-font-pixel);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    color: var(--pdx-on-key);
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .pdx-keycap-action iconify-icon { font-size: 10px; color: var(--pdx-led-red); }
+  .pdx-keycap-action--danger { color: #8C0F31; }
+  .pdx-keycap-action--danger iconify-icon { color: var(--pdx-led-red); }
+
+  /* =========================================================
+     STATS TAB content
+     ========================================================= */
+  .stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: rgba(15, 42, 64, 0.18);
+    border: 1px solid rgba(15, 42, 64, 0.25);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 0.9fr 14px 14px;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    background: rgba(148, 221, 236, 0.32);
+  }
+  .stats-row--header {
+    background: rgba(15, 42, 64, 0.18);
+    padding: 4px 8px 3px;
+  }
+  .stats-row--header .col {
+    font-family: var(--pdx-font-pixel);
+    font-size: 6px;
+    letter-spacing: 0.08em;
+    color: var(--pdx-lcd-frame-2);
+    text-transform: uppercase;
+  }
+  .stats-row__word {
+    display: flex; align-items: center; gap: 6px;
+    font-family: var(--pdx-font-lcd);
+    font-size: 16px;
+    color: var(--pdx-lcd-ink);
+    line-height: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .stats-row__dot {
+    width: 6px; height: 6px;
+    background: currentColor;
+    border-radius: 1px;   /* squared, not round, for the pixel feel */
+    flex: 0 0 auto;
+  }
+  .stats-row__time, .stats-row__dur {
+    font-family: var(--pdx-font-lcd);
+    font-size: 14px;
+    line-height: 1;
+    color: var(--pdx-lcd-ink-2);
+  }
+  .stats-row__hint {
+    width: 7px; height: 7px;
+    border-radius: 1px;
+    background: var(--pdx-lens);
+    box-shadow: 0 0 3px var(--pdx-lens);
+    margin: 0 auto;
+  }
+  .stats-row__hint--empty {
+    background: transparent;
+    border: 1px solid var(--pdx-lcd-frame-2);
+    box-shadow: none;
+  }
+  .stats-row__link {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--pdx-lens-deep);
+  }
+  .stats-row__link iconify-icon { font-size: 12px; }
+
+  /* Empty state in the stats tab */
+  .stats-empty {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 10px;
+    padding: 48px 24px 32px;
+    text-align: center;
+  }
+  .stats-empty iconify-icon { font-size: 36px; color: var(--pdx-lcd-frame-2); }
+  .stats-empty__line {
+    font-family: var(--pdx-font-pixel);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--pdx-lcd-ink);
+    text-transform: uppercase;
+  }
+  .stats-empty__flavor {
+    font-family: var(--pdx-font-lcd);
+    font-size: 17px;
+    color: var(--pdx-lcd-ink-2);
+    line-height: 1;
+    margin-top: -2px;
+  }
+
+  /* =========================================================
+     SETTINGS TAB content
+     ========================================================= */
+  .settings-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 8px;
+    border-bottom: 1px dashed rgba(15, 42, 64, 0.28);
+  }
+  .settings-field:last-of-type { border-bottom: 0; }
+  .settings-field__label {
+    font-family: var(--pdx-font-pixel);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--pdx-lcd-ink);
+    text-transform: uppercase;
+  }
+  .settings-field__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .settings-field__helper {
+    font-family: var(--pdx-font-ui);
+    font-size: 10.5px;
+    color: var(--pdx-lcd-ink-2);
+    line-height: 1.4;
+  }
+
+  /* --- Switch (compact form, dark navy track on LCD context) --- */
+  .pdx-switch-mini {
+    --w: 48px; --h: 22px; --pad: 2px; --cap-w: 20px;
+    position: relative;
+    width: var(--w); height: var(--h);
+    flex: 0 0 auto;
+    background: linear-gradient(180deg, var(--pdx-lcd-frame) 0%, #0a1426 100%);
+    border-radius: 3px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+    cursor: pointer; border: 0; padding: 0;
+  }
+  .pdx-switch-mini.is-on { background: linear-gradient(180deg, #1F5C9E 0%, #0E3A66 100%); }
+  .pdx-switch-mini__cap {
+    box-sizing: border-box;
+    position: absolute; top: var(--pad); left: var(--pad);
+    width: var(--cap-w); height: calc(var(--h) - var(--pad) * 2);
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    transition: transform var(--pdx-dur-base) var(--pdx-ease-pop);
+  }
+  .pdx-switch-mini__cap::before {
+    content: ""; position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%); width: 10px; height: 6px;
+    background-image: repeating-linear-gradient(0deg, var(--pdx-key-2) 0, var(--pdx-key-2) 1px, transparent 1px, transparent 3px);
+  }
+  .pdx-switch-mini.is-on .pdx-switch-mini__cap {
+    transform: translateX(calc(var(--w) - var(--cap-w) - var(--pad) * 2));
+  }
+  .pdx-switch-mini__labels {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 4px;
+    pointer-events: none;
+  }
+  .pdx-switch-mini__labels span {
+    font-family: var(--pdx-font-pixel);
+    font-size: 5px;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.45);
+  }
+  .switch-state-label {
+    font-family: var(--pdx-font-pixel);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    color: var(--pdx-lcd-ink-2);
+    text-transform: uppercase;
+  }
+  .switch-state-label.is-on { color: var(--pdx-shell-deep); }
+
+  /* --- Mini stepper for settings (compact) ---
+     Container drives the height; keys and LCD both stretch to fill so
+     they read as one continuous control. */
+  .pdx-stepper-mini {
+    display: inline-flex; align-items: stretch; gap: 0;
+    height: 28px;
+    background: var(--pdx-lcd-frame);
+    border-radius: 4px; padding: 2px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.35);
+  }
+  .pdx-stepper-mini__key {
+    flex: 0 0 24px;
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 2px;
+    color: var(--pdx-on-key);
+    cursor: pointer; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+  }
+  .pdx-stepper-mini__key iconify-icon,
+  .pdx-stepper-mini__key svg { font-size: 11px; }
+  .pdx-stepper-mini__lcd {
+    flex: 0 0 72px; margin: 0 2px;
+    background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 100%);
+    border-radius: 2px;
+    padding: 0 6px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+  }
+  .pdx-stepper-mini__value {
+    display: block;
+    font-family: var(--pdx-font-lcd);
+    font-size: 18px; line-height: 1;
+    color: var(--pdx-lcd-ink);
+  }
+  .pdx-stepper-mini__unit {
+    display: block;
+    font-family: var(--pdx-font-pixel);
+    font-size: 5px;
+    letter-spacing: 0.08em;
+    color: var(--pdx-lcd-frame-2);
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  /* --- Mini range slider for settings --- */
+  .pdx-range-mini {
+    display: inline-flex; align-items: center; gap: 6px; width: 100%;
+  }
+  .pdx-range-mini__strip {
+    flex: 1; height: 18px; padding: 2px;
+    background: var(--pdx-lcd-frame);
+    border-radius: 3px;
+    display: grid; grid-template-columns: repeat(12, 1fr); gap: 1px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+  }
+  .pdx-range-mini__cell { background: rgba(58, 138, 166, 0.35); border-radius: 1px; }
+  .pdx-range-mini__cell.is-filled { background: linear-gradient(180deg, #94DDEC 0%, #6FC8DC 100%); }
+  .pdx-range-mini__cell.is-head {
+    background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%);
+    box-shadow: 0 0 5px rgba(255, 210, 63, 0.65);
+  }
+  .pdx-range-mini__chip {
+    flex: 0 0 auto; min-width: 40px;
+    padding: 2px 6px 3px;
+    background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 100%);
+    border: 1px solid var(--pdx-lcd-frame);
+    border-radius: 2px;
+    text-align: center;
+    font-family: var(--pdx-font-lcd);
+    font-size: 16px; line-height: 1;
+    color: var(--pdx-lcd-ink);
+  }
+
+  /* ===== Settings footer (only when there are unsaved edits) ===== */
+  .pdx-popup__footer {
+    flex: 0 0 auto;
+    padding: 10px 14px 12px;
+    display: flex;
+    gap: 8px;
+    background: linear-gradient(180deg, var(--pdx-shell-2) 0%, var(--pdx-shell-deep) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.35),
+      inset 0 2px 0 var(--pdx-shell-deep),
+      0 -2px 6px rgba(0, 0, 0, 0.18);
+    border-top: 1px solid rgba(0,0,0,0.35);
+  }
+  .pdx-popup__footer-msg {
+    flex: 1;
+    align-self: center;
+    font-family: var(--pdx-font-pixel);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.85);
+    text-transform: uppercase;
+  }
+  .pdx-btn-ghost {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.45);
+    color: var(--pdx-on-shell);
+    font-family: var(--pdx-font-pixel);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .pdx-btn-primary {
+    background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%);
+    border: 1px solid #B89E50;
+    border-bottom-width: 2px;
+    color: #3A1208;
+    font-family: var(--pdx-font-pixel);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.55),
+      0 0 8px rgba(255,210,63,0.35);
+  }
+  .pdx-btn-danger {
+    background: linear-gradient(180deg, #FF7A7A 0%, var(--pdx-led-red) 100%);
+    border: 1px solid #B22020;
+    border-bottom-width: 2px;
+    color: #fff;
+    font-family: var(--pdx-font-pixel);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.4),
+      0 0 8px rgba(255,59,59,0.35);
+    text-shadow: 0 1px 0 rgba(0,0,0,0.3);
+  }
+
+  /* =========================================================
+     RULES content
+     ========================================================= */
+  .rules-content {
+    display: flex; flex-direction: column; gap: 16px;
+    padding: 4px 4px 0;
+  }
+  .rules-content__intro {
+    font-family: var(--pdx-font-lcd);
+    font-size: 20px;
+    line-height: 1.15;
+    color: var(--pdx-lcd-ink);
+  }
+  .rules-content__body {
+    font-family: var(--pdx-font-ui);
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--pdx-lcd-ink);
+  }
+  .rules-list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .rules-list li {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 8px;
+    font-family: var(--pdx-font-ui);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--pdx-lcd-ink);
+  }
+  .rules-list__marker {
+    font-family: var(--pdx-font-pixel);
+    font-size: 10px;
+    color: var(--pdx-shell-deep);
+    line-height: 1.5;
+  }
+  .rules-kbd {
+    display: inline-flex; align-items: center;
+    font-family: var(--pdx-font-pixel);
+    font-size: 8px;
+    letter-spacing: 0.04em;
+    color: var(--pdx-lcd-ink);
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 3px;
+    padding: 3px 6px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    text-transform: uppercase;
+  }
+
+  /* =========================================================
+     Stats CONFIRM-FOOTER variant (over the body, sticky)
+     ========================================================= */
+  .pdx-popup--with-confirm .pdx-popup__body { margin-bottom: 60px; }
+  .pdx-popup__confirm {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    flex: 0 0 auto;
+    padding: 10px 14px 12px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: linear-gradient(180deg, var(--pdx-shell-2) 0%, var(--pdx-shell-deep) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.35),
+      0 -2px 6px rgba(0, 0, 0, 0.18);
+    border-top: 1px solid rgba(0,0,0,0.35);
+    z-index: 6;
+  }
+</style>
+</head>
+<body class="pdx">
+
+<nav style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px;">
+  <a href="index.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">FOUNDATIONS</a>
+  <a href="components-form-controls.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">FORM CONTROLS</a>
+  <a href="iconography.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">ICONOGRAPHY</a>
+  <a href="screens-tabs.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#8C0F31;color:#fff;">SCREENS</a>
+  <a href="in-page-overlays.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">IN-PAGE</a>
+  <a href="play-tab.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">PLAY</a>
+  <a href="searchable-select.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">SELECT</a>
+</nav>
+
+<h1 class="page-title">STATS · SETTINGS · RULES</h1>
+<p class="page-sub">
+  Three popup tabs rendered end-to-end in the Pokedex theme. Each is a 360 x 560 popup mock with the canonical shell -- header + tabs + LCD body + (optional) raspberry footer. Stats and Rules are scroll-only; Settings shows the unsaved-edits footer slid up.
+</p>
+
+<!-- =====================================================
+     STATS
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">screen 1 of 3  ·  Stats tab</p>
+  <h2 class="section-title">STATS  --  table of past hunts</h2>
+  <p class="section-desc">
+    Each row is one hunt rendered as an LCD list item. List-color dot leads the word (squared pixels, not round circles -- everything in the LCD respects the grid). Hint indicator is a tiny lit cell on the right; the page-link glyph closes the row. The empty state replaces the list when there are no hunts yet -- a single magnifying-glass icon + the LCD flavor line.
+  </p>
+
+  <div class="popup-row">
+
+    <div class="popup-frame">
+      <span class="popup-frame__label">Default  ·  rows present</span>
+      <div class="pdx-popup">
+        <!-- Header -->
+        <div class="pdx-popup__header">
+          <span class="pdx-popup__lens"></span>
+          <div class="pdx-popup__leds">
+            <span class="led led--red"></span>
+            <span class="led led--green"></span>
+            <span class="led led--yellow"></span>
+          </div>
+          <span class="pdx-popup__wordmark">WORD HUNTER</span>
+          <button class="pdx-popup__info" aria-label="Rules">
+            <iconify-icon icon="pixelarticons:info-box"></iconify-icon>
+          </button>
+        </div>
+        <!-- Tabs -->
+        <div class="pdx-popup__tabs">
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:play"></iconify-icon><span class="pdx-popup__tab-label">PLAY</span></button>
+          <button class="pdx-popup__tab is-active"><iconify-icon icon="pixelarticons:chart"></iconify-icon><span class="pdx-popup__tab-label">STATS</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:sliders"></iconify-icon><span class="pdx-popup__tab-label">SETS</span></button>
+        </div>
+        <div class="pdx-popup__ridge"></div>
+        <!-- Body LCD -->
+        <div class="pdx-popup__body">
+          <div class="pdx-popup__body-inner">
+            <div class="pdx-section-eyebrow">
+              <span class="pdx-section-eyebrow__title">STATISTICS <span class="count">7 HUNTS</span></span>
+              <button class="pdx-keycap-action pdx-keycap-action--danger">
+                <iconify-icon icon="pixelarticons:trash"></iconify-icon> CLEAR
+              </button>
+            </div>
+            <div class="stats-list">
+              <div class="stats-row stats-row--header">
+                <span class="col">WORD</span>
+                <span class="col">FOUND</span>
+                <span class="col">DUR</span>
+                <span class="col" style="text-align:center;"><iconify-icon icon="pixelarticons:info-box" style="font-size:9px;color:var(--pdx-lcd-frame-2);"></iconify-icon></span>
+                <span class="col" style="text-align:center;"><iconify-icon icon="pixelarticons:external-link" style="font-size:9px;color:var(--pdx-lcd-frame-2);"></iconify-icon></span>
+              </div>
+              <div class="stats-row">
+                <span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-green);"></span>otter</span>
+                <span class="stats-row__time">2 min</span>
+                <span class="stats-row__dur">12s</span>
+                <span class="stats-row__hint stats-row__hint--empty" title="no hint"></span>
+                <a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a>
+              </div>
+              <div class="stats-row">
+                <span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-red);"></span>pikachu</span>
+                <span class="stats-row__time">14 min</span>
+                <span class="stats-row__dur">42s</span>
+                <span class="stats-row__hint" title="hint used"></span>
+                <a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a>
+              </div>
+              <div class="stats-row">
+                <span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-green);"></span>flamingo</span>
+                <span class="stats-row__time">1 hr</span>
+                <span class="stats-row__dur">1m 4s</span>
+                <span class="stats-row__hint stats-row__hint--empty"></span>
+                <a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a>
+              </div>
+              <div class="stats-row">
+                <span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-red);"></span>charizard</span>
+                <span class="stats-row__time">3 hr</span>
+                <span class="stats-row__dur">28s</span>
+                <span class="stats-row__hint" title="hint used"></span>
+                <a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a>
+              </div>
+              <div class="stats-row">
+                <span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-green);"></span>narwhal</span>
+                <span class="stats-row__time">yest.</span>
+                <span class="stats-row__dur">9s</span>
+                <span class="stats-row__hint stats-row__hint--empty"></span>
+                <a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a>
+              </div>
+              <div class="stats-row">
+                <span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-red);"></span>squirtle</span>
+                <span class="stats-row__time">2 d</span>
+                <span class="stats-row__dur">36s</span>
+                <span class="stats-row__hint stats-row__hint--empty"></span>
+                <a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a>
+              </div>
+              <div class="stats-row">
+                <span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-green);"></span>aardvark</span>
+                <span class="stats-row__time">3 d</span>
+                <span class="stats-row__dur">2m 1s</span>
+                <span class="stats-row__hint" title="hint used"></span>
+                <a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="popup-frame__caption">
+        Header eyebrow STATISTICS + count chip  ·  CLEAR key cap on the right arms confirm mode  ·  list-color dot leads each row  ·  list-Pokemon = red dot, Animals = green dot
+      </p>
+    </div>
+
+    <div class="popup-frame">
+      <span class="popup-frame__label">Confirm  ·  CLEAR pressed</span>
+      <div class="pdx-popup pdx-popup--with-confirm">
+        <div class="pdx-popup__header">
+          <span class="pdx-popup__lens"></span>
+          <div class="pdx-popup__leds">
+            <span class="led led--red"></span>
+            <span class="led led--green"></span>
+            <span class="led led--yellow"></span>
+          </div>
+          <span class="pdx-popup__wordmark">WORD HUNTER</span>
+          <button class="pdx-popup__info" aria-label="Rules"><iconify-icon icon="pixelarticons:info-box"></iconify-icon></button>
+        </div>
+        <div class="pdx-popup__tabs">
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:play"></iconify-icon><span class="pdx-popup__tab-label">PLAY</span></button>
+          <button class="pdx-popup__tab is-active"><iconify-icon icon="pixelarticons:chart"></iconify-icon><span class="pdx-popup__tab-label">STATS</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:sliders"></iconify-icon><span class="pdx-popup__tab-label">SETS</span></button>
+        </div>
+        <div class="pdx-popup__ridge"></div>
+        <div class="pdx-popup__body">
+          <div class="pdx-popup__body-inner">
+            <div class="pdx-section-eyebrow">
+              <span class="pdx-section-eyebrow__title">STATISTICS <span class="count">7 HUNTS</span></span>
+            </div>
+            <div class="stats-list">
+              <div class="stats-row stats-row--header">
+                <span class="col">WORD</span>
+                <span class="col">FOUND</span>
+                <span class="col">DUR</span>
+                <span class="col" style="text-align:center;"></span>
+                <span class="col" style="text-align:center;"></span>
+              </div>
+              <div class="stats-row">
+                <span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-green);"></span>otter</span>
+                <span class="stats-row__time">2 min</span>
+                <span class="stats-row__dur">12s</span>
+                <span class="stats-row__hint stats-row__hint--empty"></span>
+                <a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a>
+              </div>
+              <div class="stats-row">
+                <span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-red);"></span>pikachu</span>
+                <span class="stats-row__time">14 min</span>
+                <span class="stats-row__dur">42s</span>
+                <span class="stats-row__hint"></span>
+                <a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a>
+              </div>
+              <div class="stats-row">
+                <span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-green);"></span>flamingo</span>
+                <span class="stats-row__time">1 hr</span>
+                <span class="stats-row__dur">1m 4s</span>
+                <span class="stats-row__hint stats-row__hint--empty"></span>
+                <a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a>
+              </div>
+              <div class="stats-row">
+                <span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-red);"></span>charizard</span>
+                <span class="stats-row__time">3 hr</span>
+                <span class="stats-row__dur">28s</span>
+                <span class="stats-row__hint"></span>
+                <a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a>
+              </div>
+              <div class="stats-row">
+                <span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-green);"></span>narwhal</span>
+                <span class="stats-row__time">yest.</span>
+                <span class="stats-row__dur">9s</span>
+                <span class="stats-row__hint stats-row__hint--empty"></span>
+                <a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a>
+              </div>
+              <div class="stats-row">
+                <span class="stats-row__word"><span class="stats-row__dot" style="color: var(--pdx-led-red);"></span>squirtle</span>
+                <span class="stats-row__time">2 d</span>
+                <span class="stats-row__dur">36s</span>
+                <span class="stats-row__hint stats-row__hint--empty"></span>
+                <a class="stats-row__link" href="#"><iconify-icon icon="pixelarticons:external-link"></iconify-icon></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pdx-popup__confirm">
+          <span class="pdx-popup__footer-msg">CLEAR ALL HUNTS?</span>
+          <button class="pdx-btn-ghost">CANCEL</button>
+          <button class="pdx-btn-danger">YES, CLEAR</button>
+        </div>
+      </div>
+      <p class="popup-frame__caption">
+        Confirm mode of the action footer  ·  slides up over the LCD  ·  raspberry surface mirrors the popup shell  ·  red key cap on the destructive action
+      </p>
+    </div>
+
+    <div class="popup-frame">
+      <span class="popup-frame__label">Empty  ·  no hunts yet</span>
+      <div class="pdx-popup">
+        <div class="pdx-popup__header">
+          <span class="pdx-popup__lens"></span>
+          <div class="pdx-popup__leds">
+            <span class="led led--red"></span>
+            <span class="led led--green"></span>
+            <span class="led led--yellow"></span>
+          </div>
+          <span class="pdx-popup__wordmark">WORD HUNTER</span>
+          <button class="pdx-popup__info" aria-label="Rules"><iconify-icon icon="pixelarticons:info-box"></iconify-icon></button>
+        </div>
+        <div class="pdx-popup__tabs">
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:play"></iconify-icon><span class="pdx-popup__tab-label">PLAY</span></button>
+          <button class="pdx-popup__tab is-active"><iconify-icon icon="pixelarticons:chart"></iconify-icon><span class="pdx-popup__tab-label">STATS</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:sliders"></iconify-icon><span class="pdx-popup__tab-label">SETS</span></button>
+        </div>
+        <div class="pdx-popup__ridge"></div>
+        <div class="pdx-popup__body">
+          <div class="pdx-popup__body-inner">
+            <div class="pdx-section-eyebrow">
+              <span class="pdx-section-eyebrow__title">STATISTICS <span class="count">0 HUNTS</span></span>
+            </div>
+            <div class="stats-empty">
+              <iconify-icon icon="pixelarticons:search"></iconify-icon>
+              <span class="stats-empty__line">NO WORDS FOUND YET</span>
+              <span class="stats-empty__flavor">your hunts will appear here</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="popup-frame__caption">
+        Centered column  ·  36px search glyph  ·  ALL CAPS line above  ·  VT323 flavor line below (replaces slate's Fraunces italic)  ·  CLEAR key cap hidden (nothing to clear)
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- =====================================================
+     SETTINGS
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">screen 2 of 3  ·  Settings tab</p>
+  <h2 class="section-title">SETTINGS  --  fields stack + theme switcher</h2>
+  <p class="section-desc">
+    Vertical stack of fields, each: pixel label  --  control row (helper line, where helpful)  --  dashed separator. The new <strong>Theme</strong> field sits at the top of the panel (it's the most discoverable place for a setting whose effect spans the rest of the surface). Two preview tiles in a single row -- only one of which can be active at a time. The unsaved-edits footer slides up from the bottom whenever draft != saved.
+  </p>
+
+  <div class="popup-row">
+
+    <div class="popup-frame">
+      <span class="popup-frame__label">Settings  ·  clean (no edits)</span>
+      <div class="pdx-popup">
+        <div class="pdx-popup__header">
+          <span class="pdx-popup__lens"></span>
+          <div class="pdx-popup__leds">
+            <span class="led led--red"></span>
+            <span class="led led--green"></span>
+            <span class="led led--yellow"></span>
+          </div>
+          <span class="pdx-popup__wordmark">WORD HUNTER</span>
+          <button class="pdx-popup__info" aria-label="Rules"><iconify-icon icon="pixelarticons:info-box"></iconify-icon></button>
+        </div>
+        <div class="pdx-popup__tabs">
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:play"></iconify-icon><span class="pdx-popup__tab-label">PLAY</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:chart"></iconify-icon><span class="pdx-popup__tab-label">STATS</span></button>
+          <button class="pdx-popup__tab is-active"><iconify-icon icon="pixelarticons:sliders"></iconify-icon><span class="pdx-popup__tab-label">SETS</span></button>
+        </div>
+        <div class="pdx-popup__ridge"></div>
+        <div class="pdx-popup__body">
+          <div class="pdx-popup__body-inner">
+            <div class="pdx-section-eyebrow">
+              <span class="pdx-section-eyebrow__title">SETTINGS</span>
+            </div>
+
+            <!-- Theme picker (new) -->
+            <div class="settings-field">
+              <span class="settings-field__label">THEME</span>
+              <div class="settings-field__row" style="gap: 8px; display: grid; grid-template-columns: 1fr 1fr;">
+                <button style="position: relative; padding: 8px; background: linear-gradient(180deg,#0B0F19,#0F1422); border: 1px solid #2A3142; border-radius: 4px; cursor: pointer; text-align: left;">
+                  <span style="display:block; height: 36px; border-radius: 2px; background: linear-gradient(180deg, #1c2030 0%, #0f1422 100%); margin-bottom: 6px; position: relative;">
+                    <span style="position: absolute; bottom: 4px; left: 4px; right: 4px; height: 4px; background: #FFD23F; border-radius: 1px;"></span>
+                  </span>
+                  <span style="font-family: var(--pdx-font-pixel); font-size: 7px; letter-spacing: 0.06em; color: #fff; text-transform: uppercase;">SLATE</span>
+                </button>
+                <button style="position: relative; padding: 8px; background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%); border: 1px solid #B89E50; border-radius: 4px; cursor: pointer; text-align: left; box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 0 6px rgba(255,210,63,0.45);">
+                  <span style="display:block; height: 36px; border-radius: 2px; background: linear-gradient(180deg,#D32B5C,#8C0F31); margin-bottom: 6px; position: relative;">
+                    <span style="position: absolute; bottom: 4px; left: 4px; right: 4px; height: 4px; background: #6FC8DC; border-radius: 1px;"></span>
+                  </span>
+                  <span style="font-family: var(--pdx-font-pixel); font-size: 7px; letter-spacing: 0.06em; color: #4A3A0E; text-transform: uppercase;">POKEDEX</span>
+                </button>
+              </div>
+              <span class="settings-field__helper">switching reopens the popup</span>
+            </div>
+
+            <!-- Min paragraph length -->
+            <div class="settings-field">
+              <span class="settings-field__label">MIN PARAGRAPH</span>
+              <div class="settings-field__row">
+                <div class="pdx-range-mini">
+                  <div class="pdx-range-mini__strip">
+                    <div class="pdx-range-mini__cell is-filled"></div>
+                    <div class="pdx-range-mini__cell is-filled"></div>
+                    <div class="pdx-range-mini__cell is-filled"></div>
+                    <div class="pdx-range-mini__cell is-head"></div>
+                    <div class="pdx-range-mini__cell"></div>
+                    <div class="pdx-range-mini__cell"></div>
+                    <div class="pdx-range-mini__cell"></div>
+                    <div class="pdx-range-mini__cell"></div>
+                    <div class="pdx-range-mini__cell"></div>
+                    <div class="pdx-range-mini__cell"></div>
+                    <div class="pdx-range-mini__cell"></div>
+                    <div class="pdx-range-mini__cell"></div>
+                  </div>
+                  <span class="pdx-range-mini__chip">60</span>
+                </div>
+              </div>
+              <span class="settings-field__helper">paragraphs below this word count are skipped</span>
+            </div>
+
+            <!-- Hint delay -->
+            <div class="settings-field">
+              <span class="settings-field__label">HINT DELAY</span>
+              <div class="settings-field__row">
+                <div class="pdx-stepper-mini">
+                  <button class="pdx-stepper-mini__key"><iconify-icon icon="pixelarticons:minus"></iconify-icon></button>
+                  <div class="pdx-stepper-mini__lcd">
+                    <span class="pdx-stepper-mini__value">3</span>
+                    <span class="pdx-stepper-mini__unit">MIN</span>
+                  </div>
+                  <button class="pdx-stepper-mini__key"><iconify-icon icon="pixelarticons:plus"></iconify-icon></button>
+                </div>
+              </div>
+              <span class="settings-field__helper">minutes the page is open before the hint tooltip shows</span>
+            </div>
+
+            <!-- Cursor reveal -->
+            <div class="settings-field">
+              <span class="settings-field__label">CURSOR REVEAL</span>
+              <div class="settings-field__row">
+                <div class="pdx-stepper-mini">
+                  <button class="pdx-stepper-mini__key"><iconify-icon icon="pixelarticons:minus"></iconify-icon></button>
+                  <div class="pdx-stepper-mini__lcd">
+                    <span class="pdx-stepper-mini__value">1.5</span>
+                    <span class="pdx-stepper-mini__unit">SEC</span>
+                  </div>
+                  <button class="pdx-stepper-mini__key"><iconify-icon icon="pixelarticons:plus"></iconify-icon></button>
+                </div>
+              </div>
+              <span class="settings-field__helper">seconds of hovering before the cursor reveals the word</span>
+            </div>
+
+            <!-- Reload hint -->
+            <div class="settings-field">
+              <span class="settings-field__label">RELOAD HINT</span>
+              <div class="settings-field__row">
+                <button class="pdx-switch-mini is-on">
+                  <span class="pdx-switch-mini__labels"><span>OFF</span><span>ON</span></span>
+                  <span class="pdx-switch-mini__cap"></span>
+                </button>
+                <span class="switch-state-label is-on">ON</span>
+              </div>
+              <span class="settings-field__helper">prompt to reload the page after starting a hunt</span>
+            </div>
+
+            <!-- Next word preview -->
+            <div class="settings-field">
+              <span class="settings-field__label">NEXT WORD PREVIEW</span>
+              <div class="settings-field__row">
+                <button class="pdx-switch-mini">
+                  <span class="pdx-switch-mini__labels"><span>OFF</span><span>ON</span></span>
+                  <span class="pdx-switch-mini__cap"></span>
+                </button>
+                <span class="switch-state-label">OFF</span>
+              </div>
+              <span class="settings-field__helper">reveal the upcoming word in the celebration popup when Auto-Hunter is on</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="popup-frame__caption">
+        Clean state  ·  draft == saved  ·  no footer  ·  scrollable LCD body  ·  fields ordered: theme  ·  paragraph  ·  hint delay  ·  cursor reveal  ·  reload hint  ·  next word
+      </p>
+    </div>
+
+    <div class="popup-frame">
+      <span class="popup-frame__label">Settings  ·  unsaved edits</span>
+      <div class="pdx-popup pdx-popup--with-confirm">
+        <div class="pdx-popup__header">
+          <span class="pdx-popup__lens"></span>
+          <div class="pdx-popup__leds">
+            <span class="led led--red"></span>
+            <span class="led led--green"></span>
+            <span class="led led--yellow"></span>
+          </div>
+          <span class="pdx-popup__wordmark">WORD HUNTER</span>
+          <button class="pdx-popup__info" aria-label="Rules"><iconify-icon icon="pixelarticons:info-box"></iconify-icon></button>
+        </div>
+        <div class="pdx-popup__tabs">
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:play"></iconify-icon><span class="pdx-popup__tab-label">PLAY</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:chart"></iconify-icon><span class="pdx-popup__tab-label">STATS</span></button>
+          <button class="pdx-popup__tab is-active"><iconify-icon icon="pixelarticons:sliders"></iconify-icon><span class="pdx-popup__tab-label">SETS</span></button>
+        </div>
+        <div class="pdx-popup__ridge"></div>
+        <div class="pdx-popup__body">
+          <div class="pdx-popup__body-inner">
+            <div class="pdx-section-eyebrow">
+              <span class="pdx-section-eyebrow__title">SETTINGS</span>
+            </div>
+
+            <div class="settings-field">
+              <span class="settings-field__label">THEME</span>
+              <div class="settings-field__row" style="gap: 8px; display: grid; grid-template-columns: 1fr 1fr;">
+                <button style="position: relative; padding: 8px; background: linear-gradient(180deg,#0B0F19,#0F1422); border: 1px solid #2A3142; border-radius: 4px; cursor: pointer; text-align: left;">
+                  <span style="display:block; height: 36px; border-radius: 2px; background: linear-gradient(180deg, #1c2030 0%, #0f1422 100%); margin-bottom: 6px; position: relative;">
+                    <span style="position: absolute; bottom: 4px; left: 4px; right: 4px; height: 4px; background: #FFD23F; border-radius: 1px;"></span>
+                  </span>
+                  <span style="font-family: var(--pdx-font-pixel); font-size: 7px; letter-spacing: 0.06em; color: #fff; text-transform: uppercase;">SLATE</span>
+                </button>
+                <button style="position: relative; padding: 8px; background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%); border: 1px solid #B89E50; border-radius: 4px; cursor: pointer; text-align: left; box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 0 6px rgba(255,210,63,0.45);">
+                  <span style="display:block; height: 36px; border-radius: 2px; background: linear-gradient(180deg,#D32B5C,#8C0F31); margin-bottom: 6px; position: relative;">
+                    <span style="position: absolute; bottom: 4px; left: 4px; right: 4px; height: 4px; background: #6FC8DC; border-radius: 1px;"></span>
+                  </span>
+                  <span style="font-family: var(--pdx-font-pixel); font-size: 7px; letter-spacing: 0.06em; color: #4A3A0E; text-transform: uppercase;">POKEDEX</span>
+                </button>
+              </div>
+              <span class="settings-field__helper">switching reopens the popup</span>
+            </div>
+
+            <div class="settings-field">
+              <span class="settings-field__label">MIN PARAGRAPH</span>
+              <div class="settings-field__row">
+                <div class="pdx-range-mini">
+                  <div class="pdx-range-mini__strip">
+                    <div class="pdx-range-mini__cell is-filled"></div>
+                    <div class="pdx-range-mini__cell is-filled"></div>
+                    <div class="pdx-range-mini__cell is-filled"></div>
+                    <div class="pdx-range-mini__cell is-filled"></div>
+                    <div class="pdx-range-mini__cell is-filled"></div>
+                    <div class="pdx-range-mini__cell is-filled"></div>
+                    <div class="pdx-range-mini__cell is-head"></div>
+                    <div class="pdx-range-mini__cell"></div>
+                    <div class="pdx-range-mini__cell"></div>
+                    <div class="pdx-range-mini__cell"></div>
+                    <div class="pdx-range-mini__cell"></div>
+                    <div class="pdx-range-mini__cell"></div>
+                  </div>
+                  <span class="pdx-range-mini__chip">100</span>
+                </div>
+              </div>
+              <span class="settings-field__helper">paragraphs below this word count are skipped</span>
+            </div>
+
+            <div class="settings-field">
+              <span class="settings-field__label">HINT DELAY</span>
+              <div class="settings-field__row">
+                <div class="pdx-stepper-mini">
+                  <button class="pdx-stepper-mini__key"><iconify-icon icon="pixelarticons:minus"></iconify-icon></button>
+                  <div class="pdx-stepper-mini__lcd">
+                    <span class="pdx-stepper-mini__value">5</span>
+                    <span class="pdx-stepper-mini__unit">MIN</span>
+                  </div>
+                  <button class="pdx-stepper-mini__key"><iconify-icon icon="pixelarticons:plus"></iconify-icon></button>
+                </div>
+              </div>
+              <span class="settings-field__helper">minutes the page is open before the hint tooltip shows</span>
+            </div>
+
+            <div class="settings-field">
+              <span class="settings-field__label">CURSOR REVEAL</span>
+              <div class="settings-field__row">
+                <div class="pdx-stepper-mini">
+                  <button class="pdx-stepper-mini__key"><iconify-icon icon="pixelarticons:minus"></iconify-icon></button>
+                  <div class="pdx-stepper-mini__lcd">
+                    <span class="pdx-stepper-mini__value">1.5</span>
+                    <span class="pdx-stepper-mini__unit">SEC</span>
+                  </div>
+                  <button class="pdx-stepper-mini__key"><iconify-icon icon="pixelarticons:plus"></iconify-icon></button>
+                </div>
+              </div>
+              <span class="settings-field__helper">seconds of hovering before the cursor reveals the word</span>
+            </div>
+
+            <div class="settings-field">
+              <span class="settings-field__label">RELOAD HINT</span>
+              <div class="settings-field__row">
+                <button class="pdx-switch-mini is-on">
+                  <span class="pdx-switch-mini__labels"><span>OFF</span><span>ON</span></span>
+                  <span class="pdx-switch-mini__cap"></span>
+                </button>
+                <span class="switch-state-label is-on">ON</span>
+              </div>
+              <span class="settings-field__helper">prompt to reload the page after starting a hunt</span>
+            </div>
+          </div>
+        </div>
+        <div class="pdx-popup__confirm">
+          <span class="pdx-popup__footer-msg">UNSAVED EDITS</span>
+          <button class="pdx-btn-ghost">CANCEL</button>
+          <button class="pdx-btn-primary">SAVE</button>
+        </div>
+      </div>
+      <p class="popup-frame__caption">
+        Save mode of the unified action footer  ·  raspberry surface  ·  ghost CANCEL + yellow SAVE primary  ·  slides in from +8px when draft diverges from saved
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- =====================================================
+     RULES
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">screen 3 of 3  ·  Rules view</p>
+  <h2 class="section-title">RULES  --  triggered by the header info key</h2>
+  <p class="section-desc">
+    Header info key flips lens-tone active (cyan); the LCD body replaces the tab's normal content with the rules screen. The opening flavor line keeps slate's "a quiet game while you read" copy -- translated to VT323. A 3-row pixel-marker list summarises the game rules; the keyboard hint at the bottom uses the dedicated kbd treatment (cream key cap on the LCD).
+  </p>
+
+  <div class="popup-row">
+    <div class="popup-frame">
+      <span class="popup-frame__label">Rules  ·  info key active</span>
+      <div class="pdx-popup">
+        <div class="pdx-popup__header">
+          <span class="pdx-popup__lens"></span>
+          <div class="pdx-popup__leds">
+            <span class="led led--red"></span>
+            <span class="led led--green"></span>
+            <span class="led led--yellow"></span>
+          </div>
+          <span class="pdx-popup__wordmark">WORD HUNTER</span>
+          <button class="pdx-popup__info is-active" aria-label="Rules"><iconify-icon icon="pixelarticons:info-box"></iconify-icon></button>
+        </div>
+        <div class="pdx-popup__tabs">
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:play"></iconify-icon><span class="pdx-popup__tab-label">PLAY</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:chart"></iconify-icon><span class="pdx-popup__tab-label">STATS</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:sliders"></iconify-icon><span class="pdx-popup__tab-label">SETS</span></button>
+        </div>
+        <div class="pdx-popup__ridge"></div>
+        <div class="pdx-popup__body">
+          <div class="pdx-popup__body-inner">
+            <div class="pdx-section-eyebrow">
+              <span class="pdx-section-eyebrow__title">RULES</span>
+            </div>
+            <div class="rules-content">
+              <span class="rules-content__intro">a quiet game while you read.</span>
+              <p class="rules-content__body">
+                Word Hunter hides one word on every page you visit. Find it to catch a creature for your collection. Hunt at your own pace -- the word waits.
+              </p>
+              <ol class="rules-list">
+                <li><span class="rules-list__marker">01</span><span>The word is hidden only in paragraphs of 30 words or more.</span></li>
+                <li><span class="rules-list__marker">02</span><span>One active word per session. Finish one before picking the next.</span></li>
+                <li><span class="rules-list__marker">03</span><span>No paragraph long enough? The page is skipped quietly.</span></li>
+              </ol>
+              <p class="rules-content__body" style="margin-top: 4px;">
+                Press <span class="rules-kbd">CTRL</span> <span class="rules-kbd">F</span> on any page to scan for the hidden word.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="popup-frame__caption">
+        Info key flipped to lens-blue active  ·  no tab carries the active state (rules is orthogonal)  ·  VT323 flavor line, sans body  ·  pixel "01/02/03" markers in shell-deep  ·  CTRL F as cream key caps
+      </p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
