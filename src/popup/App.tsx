@@ -2,12 +2,14 @@ import type { JSX } from "preact";
 import { useState } from "preact/hooks";
 import { PopupHeader } from "./components/PopupHeader";
 import { type TabId, Tabs } from "./components/Tabs";
+import { useTheme } from "./hooks/useTheme";
 import { PlayTab } from "./tabs/PlayTab";
 import { RulesTab } from "./tabs/RulesTab";
 import { SettingsTab } from "./tabs/SettingsTab";
 import { StatsTab } from "./tabs/StatsTab";
 
 export function App(): JSX.Element {
+  const theme = useTheme();
   const [active, setActive] = useState<TabId>("play");
 
   function handleTabNavigate(next: TabId): void {
@@ -19,7 +21,7 @@ export function App(): JSX.Element {
   }
 
   return (
-    <div class="wh-popup">
+    <div class={`wh-popup ${theme === "pokedex" ? "pdx" : "wh"}`}>
       <PopupHeader onRules={handleRules} rulesActive={active === "rules"} />
       <Tabs active={active} onNavigate={handleTabNavigate} />
       <main class="wh-popup__main">
