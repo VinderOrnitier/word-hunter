@@ -18,7 +18,8 @@ export type IconName =
   | "shuffle"
   | "pencil"
   | "star"
-  | "chevron-down";
+  | "chevron-down"
+  | "bookmark";
 
 /** IconName role → Pixelarticons slug. The 16-role contract (see iconography.html). */
 export const PIXELARTICONS_SLUG: Record<IconName, PixelarticonSlug> = {
@@ -38,6 +39,7 @@ export const PIXELARTICONS_SLUG: Record<IconName, PixelarticonSlug> = {
   pencil: "edit",
   star: "star",
   "chevron-down": "chevron-down",
+  bookmark: "bookmark",
 };
 
 interface IconProps {
@@ -191,6 +193,12 @@ export function Icon({ name, size = 16, filled = false }: IconProps): JSX.Elemen
       return (
         <svg {...props} aria-hidden="true">
           <path d="m6 9 6 6 6-6" />
+        </svg>
+      );
+    case "bookmark":
+      return (
+        <svg {...props} aria-hidden="true">
+          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
         </svg>
       );
     default:
