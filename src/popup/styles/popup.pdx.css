@@ -1,0 +1,263 @@
+/* =========================================================
+   Word Hunter — Pokédex popup shell (component classes).
+   Loaded by the popup bundle alongside popup.css; every class
+   is self-namespaced .pdx-* and only resolves under the .pdx
+   token scope, so it is inert when theme = slate.
+   Markup source of truth: design-system/preview/pokedex/play-tab.html
+   ========================================================= */
+
+.pdx-popup *,
+.pdx-popup *::before,
+.pdx-popup *::after {
+  box-sizing: border-box;
+}
+
+/* ===== Popup shell (360 x 560) ===== */
+.pdx-popup {
+  width: var(--pdx-popup-width);
+  height: var(--pdx-popup-min-h);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    var(--pdx-shell-hi) 0%,
+    var(--pdx-shell) 22%,
+    var(--pdx-shell-2) 100%
+  );
+  border-radius: 10px 10px 14px 14px;
+  overflow: hidden;
+  box-shadow: var(--pdx-shadow-popup);
+  position: relative;
+  color: var(--pdx-on-shell);
+}
+.pdx-popup::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--pdx-shell-edge);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ===== Header ===== */
+.pdx-popup__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 10px;
+  flex: 0 0 auto;
+}
+.pdx-popup__lens {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  background: radial-gradient(
+    circle at 35% 30%,
+    var(--pdx-lens-hi) 0%,
+    var(--pdx-lens) 55%,
+    var(--pdx-lens-deep) 100%
+  );
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 1.5px var(--pdx-lens-rim),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+.pdx-popup__lens::before {
+  content: "";
+  position: absolute;
+  top: 14%;
+  left: 16%;
+  width: 30%;
+  height: 30%;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  filter: blur(1px);
+}
+.pdx-popup__leds {
+  display: flex;
+  gap: 5px;
+  flex: 0 0 auto;
+}
+.pdx-popup__leds .led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.3);
+}
+.pdx-popup__leds .led--red {
+  background: var(--pdx-led-red);
+  box-shadow:
+    0 0 4px var(--pdx-led-red),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.3);
+}
+.pdx-popup__leds .led--green {
+  background: var(--pdx-led-green);
+  box-shadow:
+    0 0 4px var(--pdx-led-green),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.3);
+}
+.pdx-popup__leds .led--yellow {
+  background: var(--pdx-led-yellow);
+  box-shadow:
+    0 0 4px var(--pdx-led-yellow),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.3);
+}
+.pdx-popup__wordmark {
+  font-family: var(--pdx-font-pixel);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--pdx-on-shell);
+  text-transform: uppercase;
+  flex: 1;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+.pdx-popup__info {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  background: var(--pdx-key);
+  border: 1px solid var(--pdx-key-2);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.pdx-popup__info iconify-icon,
+.pdx-popup__info svg {
+  font-size: 16px;
+  color: var(--pdx-on-key);
+}
+.pdx-popup__info.is-active {
+  background: linear-gradient(180deg, #3f8bd6 0%, #1f5c9e 100%);
+  border-color: #0e3a66;
+}
+.pdx-popup__info.is-active iconify-icon,
+.pdx-popup__info.is-active svg {
+  color: #fff;
+}
+
+/* ===== Tabs ===== */
+.pdx-popup__tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  padding: 0 14px 10px;
+  flex: 0 0 auto;
+}
+.pdx-popup__tab {
+  background: var(--pdx-key);
+  border: 1px solid var(--pdx-key-2);
+  border-bottom-width: 2px;
+  border-radius: var(--pdx-r-key);
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  color: var(--pdx-on-key);
+}
+.pdx-popup__tab iconify-icon,
+.pdx-popup__tab svg {
+  font-size: 14px;
+  color: var(--pdx-on-key);
+  flex: 0 0 auto;
+}
+.pdx-popup__tab-label {
+  font-family: var(--pdx-font-pixel);
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.pdx-popup__tab.is-active {
+  background: linear-gradient(180deg, #ffe9b0 0%, var(--pdx-led-yellow) 100%);
+  border-color: #b89e50;
+  color: #4a3a0e;
+}
+.pdx-popup__tab.is-active iconify-icon,
+.pdx-popup__tab.is-active svg {
+  color: #4a3a0e;
+}
+
+/* ===== Ridge (between tabs and body) ===== */
+.pdx-popup__ridge {
+  height: 4px;
+  background: linear-gradient(
+    180deg,
+    var(--pdx-shell-deep) 0%,
+    var(--pdx-shell-2) 50%,
+    var(--pdx-shell-hi) 100%
+  );
+  position: relative;
+  flex: 0 0 auto;
+}
+.pdx-popup__ridge::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* ===== Body LCD well ===== */
+.pdx-popup__body {
+  flex: 1;
+  margin: 10px 12px;
+  background: linear-gradient(
+    180deg,
+    var(--pdx-lcd-hi) 0%,
+    var(--pdx-lcd) 18%,
+    var(--pdx-lcd) 80%,
+    var(--pdx-lcd-lo) 100%
+  );
+  border-radius: 6px;
+  border: 1px solid var(--pdx-lcd-frame);
+  box-shadow:
+    inset 0 2px 6px rgba(15, 42, 64, 0.35),
+    inset 0 -2px 0 rgba(255, 255, 255, 0.18);
+  position: relative;
+  overflow: hidden;
+  color: var(--pdx-lcd-ink);
+}
+.pdx-popup__body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(15, 42, 64, 0.1) 0,
+    rgba(15, 42, 64, 0.1) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.pdx-popup__body-inner {
+  position: relative;
+  z-index: 2;
+  padding: 10px 12px 12px;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-width: none;
+}
+.pdx-popup__body-inner::-webkit-scrollbar {
+  display: none;
+}
