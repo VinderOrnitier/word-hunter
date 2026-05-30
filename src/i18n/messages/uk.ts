@@ -62,6 +62,18 @@ export const uk: Record<MessageKey, string> = {
   play_word_list_aria: "Список слів",
   play_filter_aria: "Фільтр",
 
+  // Pokédex Play surface (theme-specific voice — EN fallback)
+  pdx_active_now_hunting: "Now hunting",
+  pdx_active_no_hunt: "No hunt",
+  pdx_active_empty_hint: "pick a slot below to start.",
+  pdx_progress_caught_label: "CGHT",
+  pdx_filter_label: "Show",
+  pdx_filter_all: "All",
+  pdx_filter_caught: "CGHT",
+  pdx_filter_uncaught: "MISS",
+  pdx_collection_empty_caught: "No catches — go hunt!",
+  pdx_collection_empty_uncaught: "All caught!",
+
   // Stats tab
   stats_empty_body: "Слів ще не знайдено.",
   stats_empty_editorial: "ваші полювання з'являться тут.",
