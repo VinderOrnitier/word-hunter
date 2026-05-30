@@ -1,6 +1,6 @@
 import type { JSX } from "preact";
 import { useThemeContext } from "../theme/ThemeContext";
-import { PIXELARTICONS_BODIES } from "./pixelarticons";
+import { PIXELARTICONS_BODIES, type PixelarticonSlug } from "./pixelarticons";
 
 export type IconName =
   | "search"
@@ -21,7 +21,7 @@ export type IconName =
   | "chevron-down";
 
 /** IconName role → Pixelarticons slug. The 16-role contract (see iconography.html). */
-export const PIXELARTICONS_SLUG: Record<IconName, string> = {
+export const PIXELARTICONS_SLUG: Record<IconName, PixelarticonSlug> = {
   search: "search",
   "bar-chart": "chart",
   settings: "sliders",

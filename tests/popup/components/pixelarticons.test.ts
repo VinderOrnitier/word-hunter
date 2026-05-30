@@ -1,6 +1,9 @@
-import { PIXELARTICONS_BODIES } from "../../../src/popup/components/pixelarticons";
+import {
+  PIXELARTICONS_BODIES,
+  type PixelarticonSlug,
+} from "../../../src/popup/components/pixelarticons";
 
-const EXPECTED_SLUGS = [
+const EXPECTED_SLUGS: PixelarticonSlug[] = [
   "search",
   "chart",
   "sliders",

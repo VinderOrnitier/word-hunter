@@ -5,7 +5,7 @@
 // <iconify-icon> web component is intentionally NOT shipped).
 // Keys are Pixelarticons slugs; the IconName → slug mapping lives in Icon.tsx
 // (PIXELARTICONS_SLUG). To add a role, fetch the new slug body from the source above.
-export const PIXELARTICONS_BODIES: Record<string, string> = {
+export const PIXELARTICONS_BODIES = {
   search:
     '<path fill="currentColor" d="M22 22h-2v-2h2zm-2-2h-2v-2h2zm-6-2H6v-2h8zm4 0h-2v-2h2zM6 16H4v-2h2zm10 0h-2v-2h2zM4 14H2V6h2zm14 0h-2V6h2zM6 6H4V4h2zm10 0h-2V4h2zm-2-2H6V2h8z"/>',
   chart:
@@ -35,4 +35,7 @@ export const PIXELARTICONS_BODIES: Record<string, string> = {
   star: '<path fill="currentColor" d="M5 20h3v2H3v-6h2zm16 2h-5v-2h3v-4h2zm-11-2H8v-2h2zm6 0h-2v-2h2zm-2-2h-4v-2h4zm-7-2H5v-3h2zm12 0h-2v-3h2zM5 13H3v-2h2zm16 0h-2v-2h2zM9 9H3v2H1V7h8zm14 2h-2V9h-6V7h8zM11 7H9V3h2zm4 0h-2V3h2zm-2-4h-2V1h2z"/>',
   "chevron-down":
     '<path fill="currentColor" d="M13 16h-2v-2h2zm-2-2H9v-2h2zm4 0h-2v-2h2zm-6-2H7v-2h2zm8 0h-2v-2h2zM7 10H5V8h2zm12 0h-2V8h2z"/>',
-};
+} satisfies Record<string, string>;
+
+/** Union of the committed Pixelarticons slugs — the single source of truth for slug names. */
+export type PixelarticonSlug = keyof typeof PIXELARTICONS_BODIES;
