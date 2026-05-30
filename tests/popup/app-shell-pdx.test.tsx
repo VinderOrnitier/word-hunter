@@ -19,25 +19,24 @@ function setupChromeMock(initial: Record<string, unknown> = {}): void {
   };
 }
 
-describe("App theme scope class", () => {
+describe("App Pokédex shell", () => {
   beforeEach(() => jest.clearAllMocks());
 
-  it("uses the Slate shell (.wh-popup.wh) by default", async () => {
-    setupChromeMock();
-    const { container } = render(<App />);
-    await act(async () => {});
-    const root = container.querySelector(".wh-popup");
-    expect(root).toHaveClass("wh");
-    expect(root).not.toHaveClass("pdx");
-    expect(container.querySelector(".pdx-popup")).toBeNull();
-  });
-
-  it("uses the Pokédex device shell (.pdx > .pdx-popup) when theme is 'pokedex'", async () => {
+  it("renders the device chrome (header, tabs, ridge, LCD body) under pokedex", async () => {
     setupChromeMock({ theme: "pokedex" });
     const { container } = render(<App />);
     await waitFor(() => expect(container.querySelector(".pdx-popup")).not.toBeNull());
-    const scope = container.querySelector(".pdx");
-    expect(scope).not.toBeNull();
-    expect(container.querySelector(".wh-popup")).toBeNull();
+    expect(container.querySelector(".pdx-popup__header")).not.toBeNull();
+    expect(container.querySelector(".pdx-popup__tabs")).not.toBeNull();
+    expect(container.querySelector(".pdx-popup__ridge")).not.toBeNull();
+    expect(container.querySelector(".pdx-popup__body-inner")).not.toBeNull();
+  });
+
+  it("keeps Slate chrome (.wh-header) by default", async () => {
+    setupChromeMock();
+    const { container } = render(<App />);
+    await act(async () => {});
+    expect(container.querySelector(".wh-header")).not.toBeNull();
+    expect(container.querySelector(".pdx-popup")).toBeNull();
   });
 });

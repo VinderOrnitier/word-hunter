@@ -1,7 +1,9 @@
 import type { JSX } from "preact";
 import { useState } from "preact/hooks";
 import { PopupHeader } from "./components/PopupHeader";
+import { PopupHeaderPdx } from "./components/PopupHeader.pdx";
 import { type TabId, Tabs } from "./components/Tabs";
+import { TabsPdx } from "./components/Tabs.pdx";
 import { useTheme } from "./hooks/useTheme";
 import { PlayTab } from "./tabs/PlayTab";
 import { RulesTab } from "./tabs/RulesTab";
@@ -21,33 +23,54 @@ export function App(): JSX.Element {
     setActive((prev) => (prev === "rules" ? "play" : "rules"));
   }
 
+  const panels = (
+    <>
+      {active === "play" && (
+        <div class="wh-tab-panel wh-tab-panel--play" data-testid="tab-panel-play">
+          <PlayTab />
+        </div>
+      )}
+      {active === "stats" && (
+        <div class="wh-tab-panel" data-testid="tab-panel-stats">
+          <StatsTab />
+        </div>
+      )}
+      {active === "settings" && (
+        <div class="wh-tab-panel wh-tab-panel--settings" data-testid="tab-panel-settings">
+          <SettingsTab />
+        </div>
+      )}
+      {active === "rules" && (
+        <div class="wh-tab-panel" data-testid="tab-panel-rules">
+          <RulesTab />
+        </div>
+      )}
+    </>
+  );
+
+  if (theme === "pokedex") {
+    return (
+      <ThemeContext.Provider value={theme}>
+        <div class="pdx">
+          <div class="pdx-popup">
+            <PopupHeaderPdx onRules={handleRules} rulesActive={active === "rules"} />
+            <TabsPdx active={active} onNavigate={handleTabNavigate} />
+            <div class="pdx-popup__ridge" />
+            <div class="pdx-popup__body">
+              <div class="pdx-popup__body-inner">{panels}</div>
+            </div>
+          </div>
+        </div>
+      </ThemeContext.Provider>
+    );
+  }
+
   return (
     <ThemeContext.Provider value={theme}>
-      <div class={`wh-popup ${theme === "pokedex" ? "pdx" : "wh"}`}>
+      <div class="wh-popup wh">
         <PopupHeader onRules={handleRules} rulesActive={active === "rules"} />
         <Tabs active={active} onNavigate={handleTabNavigate} />
-        <main class="wh-popup__main">
-          {active === "play" && (
-            <div class="wh-tab-panel wh-tab-panel--play" data-testid="tab-panel-play">
-              <PlayTab />
-            </div>
-          )}
-          {active === "stats" && (
-            <div class="wh-tab-panel" data-testid="tab-panel-stats">
-              <StatsTab />
-            </div>
-          )}
-          {active === "settings" && (
-            <div class="wh-tab-panel wh-tab-panel--settings" data-testid="tab-panel-settings">
-              <SettingsTab />
-            </div>
-          )}
-          {active === "rules" && (
-            <div class="wh-tab-panel" data-testid="tab-panel-rules">
-              <RulesTab />
-            </div>
-          )}
-        </main>
+        <main class="wh-popup__main">{panels}</main>
       </div>
     </ThemeContext.Provider>
   );
