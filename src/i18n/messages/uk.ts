@@ -73,6 +73,10 @@ export const uk: Record<MessageKey, string> = {
   pdx_filter_uncaught: "MISS",
   pdx_collection_empty_caught: "No catches — go hunt!",
   pdx_collection_empty_uncaught: "All caught!",
+  pdx_reload_hint_text: "Reload to hunt",
+  pdx_custom_word_prompt: "Enter your own word to hunt",
+  pdx_custom_word_helper: "no spaces · 2-25 letters · won't appear in your collection",
+  pdx_custom_word_submit: "Start",
 
   // Stats tab
   stats_empty_body: "Слів ще не знайдено.",
