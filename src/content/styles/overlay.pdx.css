@@ -140,6 +140,24 @@
   background: rgba(11, 15, 25, 0.55);
   border: 0;
 }
+.pdx-celebration__dismiss {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.pdx-celebration-stack {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .pdx-celebration {
   width: 340px;
   padding: 10px 10px 12px;

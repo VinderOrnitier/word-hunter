@@ -54,7 +54,7 @@ const getLocaleRef = (): Locale => currentLocale;
 const getThemeRef = (): Theme => currentTheme;
 
 const timer = HintTimer(document, getLocaleRef, getThemeRef);
-const celebration = CelebrationManager(document, getLocaleRef);
+const celebration = CelebrationManager(document, getLocaleRef, getThemeRef);
 const autoModeToast = AutoModeToast(document, getLocaleRef, getThemeRef);
 ActiveWordWatcher(timer, celebration, document).start();
 
