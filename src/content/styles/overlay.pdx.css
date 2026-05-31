@@ -1,0 +1,360 @@
+/* =========================================================
+   Pokédex in-page overlays (Phase 4)
+   Global .pdx-* selectors; --pdx-* tokens resolve via the
+   `pdx` class placed on each overlay host element.
+   ========================================================= */
+
+/* ---------- InPageToast ---------- */
+.pdx-toast {
+  position: fixed;
+  top: 20px;
+  z-index: 2147483000;
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0;
+  height: 36px;
+  max-width: 360px;
+  padding: 3px;
+  background: linear-gradient(180deg, var(--pdx-shell) 0%, var(--pdx-shell-2) 100%);
+  border: 1px solid var(--pdx-shell-deep);
+  border-radius: 5px;
+  box-shadow:
+    inset 0 1px 0 var(--pdx-shell-edge),
+    inset 0 -2px 0 var(--pdx-shell-deep),
+    0 6px 14px rgba(0, 0, 0, 0.32),
+    0 1px 0 rgba(0, 0, 0, 0.4);
+  color: var(--pdx-on-shell);
+  font-family: var(--pdx-font-pixel);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.pdx-toast--hint {
+  color: var(--pdx-lens-hi);
+  right: 16px;
+}
+.pdx-toast--info {
+  color: rgba(244, 239, 226, 0.6);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.pdx-toast--auto {
+  color: var(--pdx-led-yellow);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.pdx-toast::before {
+  content: "";
+  flex: 0 0 4px;
+  align-self: stretch;
+  margin-right: 6px;
+  border-radius: 2px;
+  background: currentColor;
+  box-shadow: 0 0 6px currentColor;
+}
+.pdx-toast__lens {
+  width: 22px;
+  height: 22px;
+  align-self: center;
+  flex: 0 0 auto;
+  background: radial-gradient(
+    circle at 35% 30%,
+    var(--pdx-lens-hi) 0%,
+    var(--pdx-lens) 55%,
+    var(--pdx-lens-deep) 100%
+  );
+  border: 0;
+  padding: 0;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 1.5px var(--pdx-lens-rim),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.4);
+  position: relative;
+  cursor: pointer;
+}
+.pdx-toast__lens::before {
+  content: "";
+  position: absolute;
+  top: 14%;
+  left: 16%;
+  width: 30%;
+  height: 30%;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  filter: blur(0.5px);
+}
+.pdx-toast__msg {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px 0 6px;
+  color: var(--pdx-on-shell);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+}
+.pdx-toast__msg .word {
+  color: var(--pdx-led-yellow);
+  margin-left: 6px;
+  font-family: var(--pdx-font-lcd);
+  font-size: 13px;
+  text-shadow: 0 0 4px rgba(255, 210, 63, 0.45);
+  text-transform: lowercase;
+  letter-spacing: 0;
+}
+.pdx-toast__find,
+.pdx-toast__close {
+  width: 22px;
+  height: 22px;
+  align-self: center;
+  flex: 0 0 auto;
+  background: var(--pdx-key);
+  border: 1px solid var(--pdx-key-2);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  color: var(--pdx-on-key);
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1px;
+}
+.pdx-toast__find svg,
+.pdx-toast__close svg {
+  font-size: 11px;
+}
+
+/* ---------- CelebrationPopup ---------- */
+.pdx-celebration-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  background: rgba(11, 15, 25, 0.55);
+  border: 0;
+}
+.pdx-celebration {
+  width: 340px;
+  padding: 10px 10px 12px;
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    var(--pdx-shell-hi) 0%,
+    var(--pdx-shell) 24%,
+    var(--pdx-shell-2) 100%
+  );
+  border: 1px solid var(--pdx-shell-deep);
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.18),
+    0 18px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 var(--pdx-shell-edge);
+}
+.pdx-celebration__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px 8px;
+}
+.pdx-celebration__lens {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  background: radial-gradient(
+    circle at 35% 30%,
+    var(--pdx-lens-hi) 0%,
+    var(--pdx-lens) 55%,
+    var(--pdx-lens-deep) 100%
+  );
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 1px var(--pdx-lens-rim),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.3),
+    0 1px 1px rgba(0, 0, 0, 0.4);
+}
+.pdx-celebration__leds {
+  display: flex;
+  gap: 4px;
+}
+.pdx-celebration__leds .led {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+.pdx-celebration__leds .led--red {
+  background: var(--pdx-led-red);
+  box-shadow: 0 0 3px var(--pdx-led-red);
+}
+.pdx-celebration__leds .led--green {
+  background: var(--pdx-led-green);
+  box-shadow: 0 0 3px var(--pdx-led-green);
+}
+.pdx-celebration__leds .led--yellow {
+  background: var(--pdx-led-yellow);
+  box-shadow: 0 0 3px var(--pdx-led-yellow);
+}
+.pdx-celebration__stamp {
+  flex: 1;
+  text-align: right;
+  font-family: var(--pdx-font-pixel);
+  font-size: 7px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+}
+.pdx-celebration__lcd {
+  position: relative;
+  overflow: hidden;
+  padding: 14px 18px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(
+    180deg,
+    var(--pdx-lcd-hi) 0%,
+    var(--pdx-lcd) 28%,
+    var(--pdx-lcd-lo) 100%
+  );
+  border: 1px solid var(--pdx-lcd-frame);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 2px 6px rgba(15, 42, 64, 0.35),
+    inset 0 -2px 0 rgba(255, 255, 255, 0.22);
+}
+.pdx-celebration__lcd::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(15, 42, 64, 0.1) 0,
+    rgba(15, 42, 64, 0.1) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.pdx-celebration__art {
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  line-height: 1;
+  position: relative;
+  z-index: 2;
+  background: var(--pdx-key);
+  border: 1px solid var(--pdx-key-2);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+.pdx-celebration__art-img {
+  max-width: 100%;
+  max-height: 100%;
+  image-rendering: pixelated;
+}
+.pdx-celebration__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+  z-index: 2;
+  color: var(--pdx-lcd-ink);
+}
+.pdx-celebration__found {
+  font-family: var(--pdx-font-pixel);
+  font-size: 12px;
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+  color: #186e36;
+  text-shadow: 0 0 8px rgba(47, 212, 110, 0.6);
+}
+.pdx-celebration__word {
+  font-family: var(--pdx-font-lcd);
+  font-size: 28px;
+  line-height: 1;
+  color: var(--pdx-lcd-ink);
+  text-transform: lowercase;
+}
+.pdx-celebration__meta {
+  display: flex;
+  gap: 10px;
+  margin-top: 2px;
+  font-family: var(--pdx-font-pixel);
+  font-size: 7px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pdx-lcd-frame-2);
+}
+.pdx-celebration__sep {
+  color: rgba(15, 42, 64, 0.35);
+}
+.pdx-next {
+  margin-top: 6px;
+  padding: 5px 8px 5px 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 35, 64, 0.5);
+  border: 1px solid var(--pdx-lcd-frame);
+  border-radius: 4px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.pdx-next__label {
+  font-family: var(--pdx-font-pixel);
+  font-size: 6px;
+  letter-spacing: 0.08em;
+  color: rgba(244, 239, 226, 0.55);
+  text-transform: uppercase;
+}
+.pdx-next__art {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(244, 239, 226, 0.12);
+  border-radius: 2px;
+  font-size: 12px;
+}
+.pdx-next__art img {
+  max-width: 100%;
+  max-height: 100%;
+  image-rendering: pixelated;
+}
+.pdx-next__word {
+  font-family: var(--pdx-font-lcd);
+  font-size: 16px;
+  line-height: 1;
+  color: var(--pdx-key);
+  text-transform: lowercase;
+}
+.pdx-celebration__cta {
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: var(--pdx-key);
+  border: 1px solid var(--pdx-key-2);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  color: var(--pdx-on-key);
+  font-family: var(--pdx-font-pixel);
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}

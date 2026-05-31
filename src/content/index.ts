@@ -1,5 +1,9 @@
 import "../shared/styles/tokens.css";
+import "../shared/styles/theme-pokedex.css";
 import "./styles/overlay.css";
+import "./styles/overlay.pdx.css";
+import "@fontsource/press-start-2p/400.css";
+import "@fontsource/vt323/400.css";
 import { render } from "preact";
 import type { Locale } from "../i18n";
 import { getLocale as readLocale } from "../i18n";
