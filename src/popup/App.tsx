@@ -6,6 +6,7 @@ import { type TabId, Tabs } from "./components/Tabs";
 import { TabsPdx } from "./components/Tabs.pdx";
 import { useTheme } from "./hooks/useTheme";
 import { PlayTab } from "./tabs/PlayTab";
+import { PlayTabPdx } from "./tabs/PlayTab.pdx";
 import { RulesTab } from "./tabs/RulesTab";
 import { SettingsTab } from "./tabs/SettingsTab";
 import { StatsTab } from "./tabs/StatsTab";
@@ -56,9 +57,13 @@ export function App(): JSX.Element {
             <PopupHeaderPdx onRules={handleRules} rulesActive={active === "rules"} />
             <TabsPdx active={active} onNavigate={handleTabNavigate} />
             <div class="pdx-popup__ridge" />
-            <div class="pdx-popup__body">
-              <div class="pdx-popup__body-inner">{panels}</div>
-            </div>
+            {active === "play" ? (
+              <PlayTabPdx />
+            ) : (
+              <div class="pdx-popup__body">
+                <div class="pdx-popup__body-inner">{panels}</div>
+              </div>
+            )}
           </div>
         </div>
       </ThemeContext.Provider>
