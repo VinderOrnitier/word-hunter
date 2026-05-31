@@ -1645,3 +1645,12 @@
 .pdx-theme-tile.is-active .pdx-theme-tile__name {
   color: #4a3a0e;
 }
+
+/* ---------- Reduced motion (Phase 6) ----------
+   theme-pokedex.css already resets .pdx-key/.pdx-slot transforms; this
+   covers the one motion transition local to the forked popup surface. */
+@media (prefers-reduced-motion: reduce) {
+  .pdx-switch-mini__cap {
+    transition: none;
+  }
+}
