@@ -2,8 +2,8 @@ import type { JSX } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { useT } from "../../i18n";
 import type { Locale } from "../../i18n/types";
-import { DEFAULT_SETTINGS } from "../../shared/constants";
-import type { GameSettings } from "../../shared/types";
+import { DEFAULT_SETTINGS, DEFAULT_THEME } from "../../shared/constants";
+import type { GameSettings, Theme } from "../../shared/types";
 import { NumberStepperPdx } from "../components/NumberStepper.pdx";
 import { RangeSliderPdx } from "../components/RangeSlider.pdx";
 import { SwitchPdx } from "../components/Switch.pdx";
@@ -22,6 +22,15 @@ export function SettingsTabPdx(): JSX.Element {
   const [draft, setDraft] = useState<GameSettings>(saved);
   const [savedLocale, setSavedLocale] = useStorage("locale", "en");
   const [draftLocale, setDraftLocale] = useState<Locale>(savedLocale);
+  const [theme, setTheme] = useStorage("theme", DEFAULT_THEME);
+
+  const themeTiles: Array<{
+    value: Theme;
+    labelKey: "settings_theme_slate" | "settings_theme_pokedex";
+  }> = [
+    { value: "slate", labelKey: "settings_theme_slate" },
+    { value: "pokedex", labelKey: "settings_theme_pokedex" },
+  ];
 
   useEffect(() => {
     setDraft(saved);
@@ -63,6 +72,30 @@ export function SettingsTabPdx(): JSX.Element {
         <div class="pdx-popup__body-inner">
           <div class="pdx-section-eyebrow">
             <span class="pdx-section-eyebrow__title">{t("tab_settings")}</span>
+          </div>
+
+          {/* THEME */}
+          <div class="settings-field">
+            <span class="settings-field__label">{t("settings_theme_label")}</span>
+            <div class="settings-field__row">
+              <div class="pdx-theme-tiles">
+                {themeTiles.map(({ value, labelKey }) => (
+                  <button
+                    key={value}
+                    type="button"
+                    class={`pdx-theme-tile pdx-theme-tile--${value}${theme === value ? " is-active" : ""}`}
+                    aria-pressed={theme === value}
+                    onClick={() => setTheme(value)}
+                  >
+                    <span class="pdx-theme-tile__swatch">
+                      <span class="pdx-theme-tile__accent" />
+                    </span>
+                    <span class="pdx-theme-tile__name">{t(labelKey)}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <span class="settings-field__helper">{t("settings_theme_reopen_hint")}</span>
           </div>
 
           {/* LANGUAGE — pdx-styled select arrives in Phase 3c; native select keeps it functional */}

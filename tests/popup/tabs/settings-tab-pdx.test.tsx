@@ -59,10 +59,33 @@ describe("SettingsTabPdx", () => {
     expect(container.querySelector(".pdx-popup__footer")).toBeNull();
   });
 
-  it("does NOT render a THEME field (that is Phase 5)", () => {
-    setupChromeMock();
-    render(<SettingsTabPdx />);
-    expect(screen.queryByText(/^THEME$/i)).toBeNull();
+  it("renders the THEME field as the first settings field with two tiles", () => {
+    setupChromeMock({ theme: "slate" });
+    const { container } = render(<SettingsTabPdx />);
+    const tiles = container.querySelectorAll(".pdx-theme-tile");
+    expect(tiles.length).toBe(2);
+    // THEME field is first in the body
+    const firstField = container.querySelector(".settings-field");
+    expect(firstField?.querySelector(".pdx-theme-tiles")).toBeTruthy();
+  });
+
+  it("marks the stored theme's tile active", async () => {
+    setupChromeMock({ theme: "pokedex" });
+    const { container } = render(<SettingsTabPdx />);
+    await waitFor(() => {
+      const active = container.querySelector(".pdx-theme-tile.is-active");
+      expect(active?.classList.contains("pdx-theme-tile--pokedex")).toBe(true);
+    });
+  });
+
+  it("writes the theme key when a tile is clicked", async () => {
+    const { setMock } = setupChromeMock({ theme: "slate" });
+    const { container } = render(<SettingsTabPdx />);
+    const pokedexTile = container.querySelector(".pdx-theme-tile--pokedex") as HTMLElement;
+    fireEvent.click(pokedexTile);
+    await waitFor(() => {
+      expect(setMock).toHaveBeenCalledWith({ theme: "pokedex" });
+    });
   });
 
   it("reflects stored minWordThreshold on the slider and chip", async () => {
