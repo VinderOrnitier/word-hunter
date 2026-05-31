@@ -1499,3 +1499,85 @@
   line-height: 1;
   color: var(--pdx-lcd-ink);
 }
+
+/* =========================================================
+   RULES VIEW (Phase 3c)
+   ========================================================= */
+.rules-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 4px 0;
+}
+.rules-content__intro {
+  font-family: var(--pdx-font-lcd);
+  font-size: 20px;
+  line-height: 1.15;
+  color: var(--pdx-lcd-ink);
+}
+.rules-content__body {
+  font-family: var(--pdx-font-ui);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--pdx-lcd-ink);
+}
+.rules-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rules-list li {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 8px;
+  font-family: var(--pdx-font-ui);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--pdx-lcd-ink);
+}
+.rules-list__marker {
+  font-family: var(--pdx-font-pixel);
+  font-size: 10px;
+  color: var(--pdx-shell-deep);
+  line-height: 1.5;
+}
+.rules-settings {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--pdx-font-ui);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--pdx-lcd-ink-2);
+}
+.rules-settings svg {
+  flex: 0 0 auto;
+}
+.rules-disclaimer {
+  font-family: var(--pdx-font-ui);
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: var(--pdx-lcd-ink-2);
+  margin: 0;
+}
+
+/* --- LCD-styled native select (language picker) --- */
+.pdx-select {
+  width: 100%;
+  font-family: var(--pdx-font-ui);
+  font-size: 12px;
+  color: var(--pdx-lcd-ink);
+  background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 100%);
+  border: 1px solid var(--pdx-lcd-frame);
+  border-radius: 3px;
+  padding: 6px 8px;
+  cursor: pointer;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+.pdx-select:focus-visible {
+  outline: 2px solid var(--pdx-led-yellow);
+  outline-offset: 1px;
+}
