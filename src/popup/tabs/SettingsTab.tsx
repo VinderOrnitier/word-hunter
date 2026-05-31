@@ -2,8 +2,8 @@ import type { JSX } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { useT } from "../../i18n";
 import type { Locale } from "../../i18n/types";
-import { DEFAULT_SETTINGS } from "../../shared/constants";
-import type { GameSettings } from "../../shared/types";
+import { DEFAULT_SETTINGS, DEFAULT_THEME } from "../../shared/constants";
+import type { GameSettings, Theme } from "../../shared/types";
 import { Button } from "../components/Button";
 import { Eyebrow } from "../components/Eyebrow";
 import { Field } from "../components/Field";
@@ -23,6 +23,15 @@ export function SettingsTab(): JSX.Element {
   const [draft, setDraft] = useState<GameSettings>(saved);
   const [savedLocale, setSavedLocale] = useStorage("locale", "en");
   const [draftLocale, setDraftLocale] = useState<Locale>(savedLocale);
+  const [theme, setTheme] = useStorage("theme", DEFAULT_THEME);
+
+  const themeTiles: Array<{
+    value: Theme;
+    labelKey: "settings_theme_slate" | "settings_theme_pokedex";
+  }> = [
+    { value: "slate", labelKey: "settings_theme_slate" },
+    { value: "pokedex", labelKey: "settings_theme_pokedex" },
+  ];
 
   useEffect(() => {
     setDraft(saved);
@@ -61,6 +70,25 @@ export function SettingsTab(): JSX.Element {
   return (
     <div class="wh-settings">
       <div class="wh-settings__scroll">
+        <Field label={t("settings_theme_label")} helper={t("settings_theme_reopen_hint")}>
+          <div class="wh-settings__theme-tiles">
+            {themeTiles.map(({ value, labelKey }) => (
+              <button
+                key={value}
+                type="button"
+                class={`wh-settings__theme-tile wh-settings__theme-tile--${value}${theme === value ? " is-active" : ""}`}
+                aria-pressed={theme === value}
+                onClick={() => setTheme(value)}
+              >
+                <span class="wh-settings__theme-swatch">
+                  <span class="wh-settings__theme-accent" />
+                </span>
+                <span class="wh-settings__theme-name">{t(labelKey)}</span>
+              </button>
+            ))}
+          </div>
+        </Field>
+
         <Field label={t("settings_language_label")} htmlFor="setting-language">
           <select
             id="setting-language"

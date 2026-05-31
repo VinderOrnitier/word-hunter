@@ -397,4 +397,32 @@ describe("SettingsTab", () => {
     expect(screen.getByRole("option", { name: "Deutsch" })).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "日本語" })).toBeInTheDocument();
   });
+
+  it("renders the THEME field as the first field with two tiles", () => {
+    setupChromeMock({ theme: "slate" });
+    const { container } = render(<SettingsTab />);
+    const tiles = container.querySelectorAll(".wh-settings__theme-tile");
+    expect(tiles.length).toBe(2);
+    const firstField = container.querySelector(".wh-field");
+    expect(firstField?.querySelector(".wh-settings__theme-tiles")).toBeTruthy();
+  });
+
+  it("marks the stored theme's tile active", async () => {
+    setupChromeMock({ theme: "pokedex" });
+    const { container } = render(<SettingsTab />);
+    await waitFor(() => {
+      const active = container.querySelector(".wh-settings__theme-tile.is-active");
+      expect(active?.classList.contains("wh-settings__theme-tile--pokedex")).toBe(true);
+    });
+  });
+
+  it("writes the theme key when a tile is clicked", async () => {
+    const { setMock } = setupChromeMock({ theme: "slate" });
+    const { container } = render(<SettingsTab />);
+    const pokedexTile = container.querySelector(".wh-settings__theme-tile--pokedex") as HTMLElement;
+    fireEvent.click(pokedexTile);
+    await waitFor(() => {
+      expect(setMock).toHaveBeenCalledWith({ theme: "pokedex" });
+    });
+  });
 });
