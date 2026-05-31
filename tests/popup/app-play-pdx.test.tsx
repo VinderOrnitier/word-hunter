@@ -43,4 +43,16 @@ describe("App Pokédex Play routing", () => {
     // Pokédex settings surface, not the Slate one
     expect(container.querySelector(".wh-settings")).toBeNull();
   });
+
+  it("routes the Rules view to the Pokédex rules surface via the header info key", async () => {
+    setupChromeMock({ theme: "pokedex" });
+    const { container } = render(<App />);
+    await waitFor(() => expect(container.querySelector(".pdx-popup")).not.toBeNull());
+
+    fireEvent.click(screen.getByRole("button", { name: /rules/i }));
+
+    await waitFor(() => expect(container.querySelector(".rules-content")).not.toBeNull());
+    // Slate rules surface must NOT be present
+    expect(container.querySelector(".wh-rules")).toBeNull();
+  });
 });

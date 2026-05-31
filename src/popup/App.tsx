@@ -8,6 +8,7 @@ import { useTheme } from "./hooks/useTheme";
 import { PlayTab } from "./tabs/PlayTab";
 import { PlayTabPdx } from "./tabs/PlayTab.pdx";
 import { RulesTab } from "./tabs/RulesTab";
+import { RulesTabPdx } from "./tabs/RulesTab.pdx";
 import { SettingsTab } from "./tabs/SettingsTab";
 import { SettingsTabPdx } from "./tabs/SettingsTab.pdx";
 import { StatsTab } from "./tabs/StatsTab";
@@ -66,9 +67,7 @@ export function App(): JSX.Element {
             ) : active === "settings" ? (
               <SettingsTabPdx />
             ) : (
-              <div class="pdx-popup__body">
-                <div class="pdx-popup__body-inner">{panels}</div>
-              </div>
+              <RulesTabPdx />
             )}
           </div>
         </div>
