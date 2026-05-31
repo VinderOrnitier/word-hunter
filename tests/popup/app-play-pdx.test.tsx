@@ -1,4 +1,4 @@
-import { render, waitFor } from "@testing-library/preact";
+import { fireEvent, render, screen, waitFor } from "@testing-library/preact";
 import { App } from "../../src/popup/App";
 
 function setupChromeMock(initial: Record<string, unknown> = {}): void {
@@ -30,5 +30,17 @@ describe("App Pokédex Play routing", () => {
     await waitFor(() => expect(container.querySelector(".pdx-popup")).not.toBeNull());
     expect(container.querySelector(".pdx-active")).not.toBeNull();
     expect(container.querySelector(".pdx-popup__action-bar")).not.toBeNull();
+  });
+
+  it("routes the Settings tab to the Pokédex settings surface", async () => {
+    setupChromeMock({ theme: "pokedex" });
+    const { container } = render(<App />);
+    await waitFor(() => expect(container.querySelector(".pdx-popup")).not.toBeNull());
+
+    fireEvent.click(screen.getByRole("tab", { name: /settings/i }));
+
+    await waitFor(() => expect(container.querySelector(".pdx-range-mini")).not.toBeNull());
+    // Pokédex settings surface, not the Slate one
+    expect(container.querySelector(".wh-settings")).toBeNull();
   });
 });

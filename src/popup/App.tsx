@@ -9,6 +9,7 @@ import { PlayTab } from "./tabs/PlayTab";
 import { PlayTabPdx } from "./tabs/PlayTab.pdx";
 import { RulesTab } from "./tabs/RulesTab";
 import { SettingsTab } from "./tabs/SettingsTab";
+import { SettingsTabPdx } from "./tabs/SettingsTab.pdx";
 import { StatsTab } from "./tabs/StatsTab";
 import { StatsTabPdx } from "./tabs/StatsTab.pdx";
 import { ThemeContext } from "./theme/ThemeContext";
@@ -62,6 +63,8 @@ export function App(): JSX.Element {
               <PlayTabPdx />
             ) : active === "stats" ? (
               <StatsTabPdx />
+            ) : active === "settings" ? (
+              <SettingsTabPdx />
             ) : (
               <div class="pdx-popup__body">
                 <div class="pdx-popup__body-inner">{panels}</div>
