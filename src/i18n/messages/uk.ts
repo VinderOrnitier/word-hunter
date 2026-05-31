@@ -135,6 +135,10 @@ export const uk: Record<MessageKey, string> = {
   settings_switch_off: "Вимк.",
   settings_cancel: "Скасувати",
   settings_save: "Зберегти",
+  settings_theme_label: "Theme",
+  settings_theme_slate: "Slate",
+  settings_theme_pokedex: "Pokédex",
+  settings_theme_reopen_hint: "switching reopens the popup",
 
   // InPageToast (shared aria labels)
   toast_open_aria: "Відкрити Word Hunter",

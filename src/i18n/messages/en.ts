@@ -132,6 +132,10 @@ export const en = {
   settings_switch_off: "Off",
   settings_cancel: "Cancel",
   settings_save: "Save",
+  settings_theme_label: "Theme",
+  settings_theme_slate: "Slate",
+  settings_theme_pokedex: "Pokédex",
+  settings_theme_reopen_hint: "switching reopens the popup",
 
   // InPageToast (shared aria labels)
   toast_open_aria: "Open Word Hunter",

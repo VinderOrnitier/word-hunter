@@ -132,6 +132,10 @@ export const ja: Record<MessageKey, string> = {
   settings_switch_off: "オフ",
   settings_cancel: "キャンセル",
   settings_save: "保存",
+  settings_theme_label: "Theme",
+  settings_theme_slate: "Slate",
+  settings_theme_pokedex: "Pokédex",
+  settings_theme_reopen_hint: "switching reopens the popup",
 
   // InPageToast (shared aria labels)
   toast_open_aria: "Word Hunterを開く",
