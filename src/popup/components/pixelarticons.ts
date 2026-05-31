@@ -36,7 +36,7 @@ export const PIXELARTICONS_BODIES = {
   "chevron-down":
     '<path fill="currentColor" d="M13 16h-2v-2h2zm-2-2H9v-2h2zm4 0h-2v-2h2zm-6-2H7v-2h2zm8 0h-2v-2h2zM7 10H5V8h2zm12 0h-2V8h2z"/>',
   bookmark:
-    '<path d="M6 2h12v2H6zM4 4h2v18H4zm14 0h2v18h-2zm-2 16h2v2h-2zm-2-2h2v2h-2zm-8 2h2v2H6zm2-2h2v2H8zm2-2h4v2h-4z"/>',
+    '<path fill="currentColor" d="M6 2h12v2H6zM4 4h2v18H4zm14 0h2v18h-2zm-2 16h2v2h-2zm-2-2h2v2h-2zm-8 2h2v2H6zm2-2h2v2H8zm2-2h4v2h-4z"/>',
 } satisfies Record<string, string>;
 
 /** Union of the committed Pixelarticons slugs — the single source of truth for slug names. */

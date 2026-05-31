@@ -29,9 +29,9 @@ describe("Icon theme branch", () => {
     expect(svg).toHaveAttribute("height", "40");
   });
 
-  it("maps all 16 roles to a slug that has a body", () => {
+  it("maps all 17 roles to a slug that has a body", () => {
     const roles = Object.keys(PIXELARTICONS_SLUG) as IconName[];
-    expect(roles).toHaveLength(16);
+    expect(roles).toHaveLength(17);
     for (const role of roles) {
       expect(PIXELARTICONS_BODIES[PIXELARTICONS_SLUG[role]]).toBeTruthy();
     }

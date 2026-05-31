@@ -20,10 +20,11 @@ const EXPECTED_SLUGS: PixelarticonSlug[] = [
   "edit",
   "star",
   "chevron-down",
+  "bookmark",
 ];
 
 describe("PIXELARTICONS_BODIES", () => {
-  it("contains exactly the 16 Pokédex icon slugs", () => {
+  it("contains exactly the 17 Pokédex icon slugs", () => {
     expect(Object.keys(PIXELARTICONS_BODIES).sort()).toEqual([...EXPECTED_SLUGS].sort());
   });
 
