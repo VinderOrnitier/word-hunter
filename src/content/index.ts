@@ -14,6 +14,7 @@ import {
   getActiveWord,
   getFinds,
   getSettings,
+  getTheme,
   saveFind,
   setActiveWord,
 } from "../shared/storage";
@@ -74,6 +75,8 @@ async function inject(): Promise<void> {
     });
   }
 
+  const theme = await getTheme();
+
   timer.cancel();
   const renderer = WordRenderer(activeWord, groups, {
     onFind: async (record) => {
@@ -116,6 +119,7 @@ async function inject(): Promise<void> {
     },
     resolveArt,
     hoverRevealSeconds: settings.celebrationHoverSeconds,
+    theme,
   });
   if (settings.notificationsEnabled && settings.showHintToast) {
     timer.start(settings.hintDelayMinutes, renderer.setHinted);

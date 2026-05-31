@@ -1,8 +1,9 @@
 import type { JSX } from "preact";
 import { useRef, useState } from "preact/hooks";
 import { HINT_USED_KEY } from "../../shared/constants";
-import type { ActiveWord, HuntRecord } from "../../shared/types";
+import type { ActiveWord, HuntRecord, Theme } from "../../shared/types";
 import { HiddenWord } from "./HiddenWord";
+import { HiddenWordPdx } from "./HiddenWord.pdx";
 
 interface HiddenWordHostProps {
   activeWord: ActiveWord;
@@ -11,6 +12,7 @@ interface HiddenWordHostProps {
   onReview?: (record: HuntRecord) => void;
   hoverRevealSeconds?: number;
   hinted?: boolean;
+  theme?: Theme;
 }
 
 export function HiddenWordHost({
@@ -20,6 +22,7 @@ export function HiddenWordHost({
   onReview,
   hoverRevealSeconds,
   hinted,
+  theme,
 }: HiddenWordHostProps): JSX.Element {
   const [found, setFound] = useState(false);
   const lastRecord = useRef<HuntRecord | null>(null);
@@ -52,8 +55,9 @@ export function HiddenWordHost({
     void onFind(record);
   };
 
+  const Word = theme === "pokedex" ? HiddenWordPdx : HiddenWord;
   return (
-    <HiddenWord
+    <Word
       word={activeWord.word}
       found={found}
       hinted={hinted}
