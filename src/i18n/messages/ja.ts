@@ -76,6 +76,7 @@ export const ja: Record<MessageKey, string> = {
   pdx_custom_word_prompt: "Enter your own word to hunt",
   pdx_custom_word_helper: "no spaces · 2-25 letters · won't appear in your collection",
   pdx_custom_word_submit: "Start",
+  pdx_unsaved_edits: "Unsaved edits",
 
   // Stats tab
   stats_empty_body: "まだ単語が見つかっていません。",
