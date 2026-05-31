@@ -1,11 +1,12 @@
 import type { Locale } from "../i18n";
 import { t } from "../i18n";
+import type { Theme } from "../shared/types";
 import { mountToast } from "./mount-toast";
 
 const HOST_CLASS = "hw-auto-mode-host";
 const AUTO_DISMISS_MS = 4000;
 
-export function AutoModeToast(doc: Document, getLocale: () => Locale) {
+export function AutoModeToast(doc: Document, getLocale: () => Locale, getTheme: () => Theme) {
   let dismiss: (() => void) | null = null;
   let dismissTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -27,6 +28,7 @@ export function AutoModeToast(doc: Document, getLocale: () => Locale) {
         message: t("content_auto_mode_toast", locale),
         locale,
         variant: "auto",
+        theme: getTheme(),
         onFind: undefined,
       }));
       dismissTimer = setTimeout(remove, AUTO_DISMISS_MS);

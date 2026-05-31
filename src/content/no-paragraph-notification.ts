@@ -1,10 +1,15 @@
 import type { Locale } from "../i18n";
 import { t } from "../i18n";
+import type { Theme } from "../shared/types";
 import { mountToast } from "./mount-toast";
 
 const HOST_CLASS = "hw-no-paragraph-host";
 
-export function NoParagraphNotification(doc: Document, getLocale: () => Locale) {
+export function NoParagraphNotification(
+  doc: Document,
+  getLocale: () => Locale,
+  getTheme: () => Theme
+) {
   let dismiss: (() => void) | null = null;
 
   return {
@@ -16,6 +21,7 @@ export function NoParagraphNotification(doc: Document, getLocale: () => Locale) 
         message: t("content_no_paragraph_message", locale),
         locale,
         variant: "info",
+        theme: getTheme(),
       }));
     },
   };

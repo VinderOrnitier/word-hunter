@@ -12,12 +12,20 @@ describe("AutoModeToast", () => {
   });
 
   it("does not render anything before show() is called", () => {
-    AutoModeToast(document, () => "en");
+    AutoModeToast(
+      document,
+      () => "en",
+      () => "slate"
+    );
     expect(document.querySelector(".hw-toast--auto")).toBeNull();
   });
 
   it("show() appends an info toast with the localized message", () => {
-    AutoModeToast(document, () => "en").show();
+    AutoModeToast(
+      document,
+      () => "en",
+      () => "slate"
+    ).show();
     const toast = document.querySelector(".hw-toast--auto");
     expect(toast).not.toBeNull();
     expect(toast?.textContent).toContain("Auto-Hunter active");
@@ -25,7 +33,11 @@ describe("AutoModeToast", () => {
 
   it("show() uses the locale returned by the getter at call time", () => {
     let locale: Locale = "en";
-    const toast = AutoModeToast(document, () => locale);
+    const toast = AutoModeToast(
+      document,
+      () => locale,
+      () => "slate"
+    );
     locale = "uk";
     toast.show();
     expect(document.querySelector(".hw-toast__message")?.textContent).toBe(
@@ -34,28 +46,44 @@ describe("AutoModeToast", () => {
   });
 
   it("calling show() twice replaces the previous toast (no duplicates)", () => {
-    const toast = AutoModeToast(document, () => "en");
+    const toast = AutoModeToast(
+      document,
+      () => "en",
+      () => "slate"
+    );
     toast.show();
     toast.show();
     expect(document.querySelectorAll(".hw-toast--auto").length).toBe(1);
   });
 
   it("auto-dismisses after 4 seconds", () => {
-    AutoModeToast(document, () => "en").show();
+    AutoModeToast(
+      document,
+      () => "en",
+      () => "slate"
+    ).show();
     expect(document.querySelector(".hw-toast--auto")).not.toBeNull();
     jest.advanceTimersByTime(4000);
     expect(document.querySelector(".hw-toast--auto")).toBeNull();
   });
 
   it("clicking the × button dismisses the toast immediately", () => {
-    AutoModeToast(document, () => "en").show();
+    AutoModeToast(
+      document,
+      () => "en",
+      () => "slate"
+    ).show();
     const btn = document.querySelector(".hw-toast__close") as HTMLElement;
     btn.click();
     expect(document.querySelector(".hw-toast--auto")).toBeNull();
   });
 
   it("dismiss() removes the toast and cancels the auto-dismiss timer", () => {
-    const toast = AutoModeToast(document, () => "en");
+    const toast = AutoModeToast(
+      document,
+      () => "en",
+      () => "slate"
+    );
     toast.show();
     toast.dismiss();
     expect(document.querySelector(".hw-toast--auto")).toBeNull();

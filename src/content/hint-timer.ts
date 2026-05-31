@@ -1,11 +1,12 @@
 import type { Locale } from "../i18n";
 import { t } from "../i18n";
 import { HINT_USED_KEY } from "../shared/constants";
+import type { Theme } from "../shared/types";
 import { mountToast } from "./mount-toast";
 
 const HOST_CLASS = "hw-hint-toast-host";
 
-export function HintTimer(doc: Document, getLocale: () => Locale) {
+export function HintTimer(doc: Document, getLocale: () => Locale, getTheme: () => Theme) {
   let timerId: ReturnType<typeof setTimeout> | null = null;
   let dismissToast: (() => void) | null = null;
   let pendingOnFind: (() => void) | undefined;
@@ -22,6 +23,7 @@ export function HintTimer(doc: Document, getLocale: () => Locale) {
       message: t("content_hint_toast", locale),
       locale,
       variant: "hint",
+      theme: getTheme(),
       onFind: pendingOnFind,
     }));
     sessionStorage.setItem(HINT_USED_KEY, "true");
