@@ -44,4 +44,18 @@ describe("PlayTabPdx", () => {
     expect(body?.querySelector(".pdx-popup__action-bar")).toBeNull();
     expect(container.querySelector(".pdx-popup__action-bar")).not.toBeNull();
   });
+
+  it("uses the Pokédex modal + reload-hint siblings, not the .wh Slate bridge", async () => {
+    setupChromeMock();
+    const { container } = render(
+      <ThemeContext.Provider value="pokedex">
+        <PlayTabPdx />
+      </ThemeContext.Provider>
+    );
+    await act(async () => {});
+    // the temporary Slate bridge is gone
+    expect(container.querySelector(".wh")).toBeNull();
+    // modal is closed by default → not in the DOM
+    expect(container.querySelector(".pdx-modal")).toBeNull();
+  });
 });

@@ -16,9 +16,9 @@ import { Icon } from "../components/Icon";
 import { useFeatureFlags } from "../hooks/useFeatureFlags";
 import { useStorage } from "../hooks/useStorage";
 import { ActiveWordCardPdx } from "../play/ActiveWordCard.pdx";
-import { CustomWordModal } from "../play/CustomWordModal";
+import { CustomWordModalPdx } from "../play/CustomWordModal.pdx";
 import { ProgressRowPdx } from "../play/ProgressRow.pdx";
-import { ReloadHint } from "../play/ReloadHint";
+import { ReloadHintPdx } from "../play/ReloadHint.pdx";
 import { WORD_LISTS, type WordListName } from "../word-lists";
 
 const LIST_CHIPS: Array<{ value: WordListName; labelKey: MessageKey }> = [
@@ -118,6 +118,9 @@ export function PlayTabPdx(): JSX.Element {
     <>
       <div class="pdx-popup__body">
         <div class="pdx-popup__body-inner">
+          {showReloadBanner && activeWord && (
+            <ReloadHintPdx onReload={handleReload} onDismiss={() => setShowReloadBanner(false)} />
+          )}
           <ActiveWordCardPdx activeWord={activeWord} onClear={clear} />
 
           <div class="pdx-list-selector" role="tablist" aria-label={t("play_word_list_aria")}>
@@ -175,18 +178,11 @@ export function PlayTabPdx(): JSX.Element {
         onAutoContinue={toggleAutoContinue}
       />
 
-      {/* TODO(phase-2c): replace with ReloadHint.pdx / CustomWordModal.pdx.
-          Slate fallbacks wrapped in `.wh` so they stay styled + functional until 2c. */}
-      <div class="wh">
-        {showReloadBanner && activeWord && (
-          <ReloadHint onReload={handleReload} onDismiss={() => setShowReloadBanner(false)} />
-        )}
-        <CustomWordModal
-          open={customOpen}
-          onClose={() => setCustomOpen(false)}
-          onSubmit={submitCustom}
-        />
-      </div>
+      <CustomWordModalPdx
+        open={customOpen}
+        onClose={() => setCustomOpen(false)}
+        onSubmit={submitCustom}
+      />
     </>
   );
 }
