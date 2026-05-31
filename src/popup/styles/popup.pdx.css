@@ -1654,3 +1654,15 @@
     transition: none;
   }
 }
+
+/* ---------- Keyboard focus indicator (Phase 6) ----------
+   Unified pixel-yellow focus ring for every interactive control inside the
+   Pokédex popup (the modal renders inside .pdx-popup too). Matches the
+   existing .pdx-select:focus-visible treatment. */
+.pdx-popup button:focus-visible,
+.pdx-popup a:focus-visible,
+.pdx-popup [tabindex]:focus-visible {
+  outline: 2px solid var(--pdx-led-yellow);
+  outline-offset: 1px;
+  border-radius: 2px;
+}
