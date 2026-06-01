@@ -27,10 +27,15 @@ export function HiddenWordPdx({
   };
 
   const cursor = found || pointerReady ? "pointer" : "text";
-  // `hinted` keeps the same lit-cell as the unfound state under Pokédex
-  // (the LED highlight already reads as "the system is helping you").
-  void hinted;
-  const cls = found ? "pdx-highlight pdx-highlight--found" : "pdx-highlight";
+  // Unfound: invisible (inherits page text — same hiding behaviour as Slate).
+  // Hinted:  same gradient underline as Slate — subtle, doesn't reveal the word.
+  // Found:   green LED cell — registered catch.
+  const cls = found ? "hw-word hw-word--found" : "hw-word";
+
+  const underlineColor = found ? "var(--wh-found)" : hinted ? "var(--wh-primary)" : null;
+  const backgroundImage = underlineColor
+    ? `linear-gradient(180deg, transparent 0, transparent 73%, ${underlineColor} 73%, ${underlineColor} 92%, transparent 92%)`
+    : undefined;
 
   return (
     <button
@@ -40,7 +45,7 @@ export function HiddenWordPdx({
       onClick={onFind}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{ ...inheritedStyle, cursor }}
+      style={{ ...inheritedStyle, cursor, backgroundImage }}
     >
       {[...word].reverse().join("")}
     </button>

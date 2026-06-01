@@ -19,13 +19,13 @@ function roundToStep(value: number, step: number): string {
 }
 
 const MINUS = (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
     <path d="M4 11h16v2H4z" />
   </svg>
 );
 
 const PLUS = (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
     <path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7z" />
   </svg>
 );
@@ -53,23 +53,23 @@ export function NumberStepperPdx({
   };
 
   return (
-    <div class="pdx-stepper-mini">
+    <div class="pdx-stepper">
       <button
         type="button"
-        class="pdx-stepper-mini__key"
+        class="pdx-stepper__key"
         aria-label="Decrement"
         tabIndex={-1}
         onClick={handleDecrement}
       >
         {MINUS}
       </button>
-      <div class="pdx-stepper-mini__lcd" aria-live="polite">
-        <span class="pdx-stepper-mini__value">{value}</span>
-        <span class="pdx-stepper-mini__unit">{unit}</span>
+      <div class="pdx-stepper__lcd" aria-live="polite">
+        <span class="pdx-stepper__value">{value}</span>
+        <span class="pdx-stepper__unit">{unit}</span>
       </div>
       <button
         type="button"
-        class="pdx-stepper-mini__key"
+        class="pdx-stepper__key"
         aria-label="Increment"
         tabIndex={-1}
         onClick={handleIncrement}

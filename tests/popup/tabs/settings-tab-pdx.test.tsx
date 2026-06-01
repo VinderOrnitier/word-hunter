@@ -53,7 +53,7 @@ describe("SettingsTabPdx", () => {
 
     expect(container.querySelector(".pdx-popup__body")).toBeTruthy();
     expect(container.querySelector(".pdx-range-mini")).toBeTruthy();
-    expect(container.querySelectorAll(".pdx-stepper-mini").length).toBeGreaterThanOrEqual(2);
+    expect(container.querySelectorAll(".pdx-stepper").length).toBeGreaterThanOrEqual(2);
     expect(container.querySelectorAll(".pdx-switch-mini").length).toBeGreaterThanOrEqual(2);
     // clean -> no footer
     expect(container.querySelector(".pdx-popup__footer")).toBeNull();

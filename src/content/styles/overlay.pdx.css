@@ -222,9 +222,9 @@
   flex: 1;
   text-align: right;
   font-family: var(--pdx-font-pixel);
-  font-size: 7px;
+  font-size: 12px;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--pdx-led-yellow);
   text-transform: uppercase;
 }
 .pdx-celebration__lcd {
@@ -312,7 +312,7 @@
   gap: 10px;
   margin-top: 2px;
   font-family: var(--pdx-font-pixel);
-  font-size: 7px;
+  font-size: 9px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--pdx-lcd-frame-2);
@@ -321,10 +321,10 @@
   color: rgba(15, 42, 64, 0.35);
 }
 .pdx-next {
-  margin-top: 6px;
+  margin-bottom: 6px;
   padding: 5px 8px 5px 6px;
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
   background: rgba(15, 35, 64, 0.5);
   border: 1px solid var(--pdx-lcd-frame);
@@ -333,7 +333,7 @@
 }
 .pdx-next__label {
   font-family: var(--pdx-font-pixel);
-  font-size: 6px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   color: rgba(244, 239, 226, 0.55);
   text-transform: uppercase;
@@ -370,7 +370,7 @@
   border-radius: 4px;
   color: var(--pdx-on-key);
   font-family: var(--pdx-font-pixel);
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;

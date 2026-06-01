@@ -2,17 +2,28 @@ import { fireEvent, render } from "@testing-library/preact";
 import { HiddenWordPdx } from "../../src/content/components/HiddenWord.pdx";
 
 describe("HiddenWordPdx", () => {
-  it("renders the reversed word with the highlight class", () => {
+  it("renders invisibly (hw-word, no pdx-highlight) when unfound", () => {
     const { container } = render(<HiddenWordPdx word="otter" found={false} />);
     const btn = container.querySelector("button");
-    expect(btn?.className).toContain("pdx-highlight");
-    expect(btn?.className).not.toContain("pdx-highlight--found");
+    expect(btn?.className).toContain("hw-word");
+    expect(btn?.className).not.toContain("pdx-highlight");
     expect(btn?.textContent).toBe("retto");
   });
 
-  it("uses the found variant class once found", () => {
+  it("shows a yellow gradient underline (same as Slate) when hinted, no pdx-highlight", () => {
+    const { container } = render(<HiddenWordPdx word="otter" found={false} hinted={true} />);
+    const btn = container.querySelector("button") as HTMLElement;
+    expect(btn?.className).toContain("hw-word");
+    expect(btn?.className).not.toContain("pdx-highlight");
+    expect(btn.style.backgroundImage).toContain("var(--wh-primary)");
+  });
+
+  it("renders the same green gradient underline as Slate (hw-word--found) when found", () => {
     const { container } = render(<HiddenWordPdx word="otter" found={true} />);
-    expect(container.querySelector("button")?.className).toContain("pdx-highlight--found");
+    const btn = container.querySelector("button") as HTMLElement;
+    expect(btn?.className).toContain("hw-word--found");
+    expect(btn?.className).not.toContain("pdx-highlight");
+    expect(btn.style.backgroundImage).toContain("var(--wh-found)");
   });
 
   it("calls onFind on click", () => {

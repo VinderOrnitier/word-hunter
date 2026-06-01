@@ -188,21 +188,15 @@ export function SettingsTabPdx(): JSX.Element {
             <span class="settings-field__helper">{t("settings_next_word_preview_helper")}</span>
           </div>
 
-          {/* NOTIFICATIONS group */}
-          <div class="pdx-section-eyebrow">
-            <span class="pdx-section-eyebrow__title">{t("settings_notifications_eyebrow")}</span>
-          </div>
-
-          <div class="settings-field">
+          {/* NOTIFICATIONS group — label + switch inline, no helper */}
+          <div class="settings-field settings-field--inline">
             <span class="settings-field__label">{t("settings_notifications_eyebrow")}</span>
-            <div class="settings-field__row">
-              <SwitchPdx
-                checked={draft.notificationsEnabled}
-                ariaLabel={t("settings_notifications_aria")}
-                title={t("settings_notifications_title")}
-                onChange={(v) => update({ notificationsEnabled: v })}
-              />
-            </div>
+            <SwitchPdx
+              checked={draft.notificationsEnabled}
+              ariaLabel={t("settings_notifications_aria")}
+              title={t("settings_notifications_title")}
+              onChange={(v) => update({ notificationsEnabled: v })}
+            />
           </div>
 
           <div class="settings-field">

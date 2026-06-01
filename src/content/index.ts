@@ -80,7 +80,7 @@ async function inject(): Promise<void> {
 
   function clearFoundWord(): void {
     document.querySelectorAll(".hw-host").forEach((el) => {
-      if (el.querySelector(".hw-word--found")) {
+      if (el.querySelector(".hw-word--found, .pdx-highlight--found")) {
         render(null, el as HTMLElement);
         (el as HTMLElement).remove();
       }

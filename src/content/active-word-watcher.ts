@@ -20,12 +20,13 @@ export function ActiveWordWatcher(
       if (area !== "local") return;
       if (!("activeWord" in changes)) return;
 
+      const FOUND_SELECTOR = ".hw-word--found, .pdx-highlight--found";
       timer.cancel();
-      if (!doc.querySelector(".hw-word--found")) {
+      if (!doc.querySelector(FOUND_SELECTOR)) {
         celebration.dismiss();
       }
       doc.querySelectorAll(`.${HW_HOST_CLASS}`).forEach((el) => {
-        if (el.querySelector(".hw-word--found")) return;
+        if (el.querySelector(FOUND_SELECTOR)) return;
         render(null, el);
         el.remove();
       });
