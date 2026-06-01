@@ -141,4 +141,56 @@ describe("ActiveWordWatcher", () => {
     fireChange({ activeWord: { oldValue: { word: "cat" } } }, "sync");
     expect(cancel).not.toHaveBeenCalled();
   });
+
+  // Pokédex theme: found word uses .pdx-highlight--found instead of .hw-word--found
+
+  it("does NOT call celebration.dismiss() when a pdx found word is on this tab", () => {
+    const foundHost = document.createElement("span");
+    foundHost.className = "hw-host";
+    const foundWord = document.createElement("span");
+    foundWord.className = "hw-word pdx-highlight--found";
+    foundHost.appendChild(foundWord);
+    document.body.appendChild(foundHost);
+
+    const dismiss = jest.fn();
+    ActiveWordWatcher({ cancel: jest.fn() }, { dismiss }, document).start();
+    fireChange({ activeWord: { oldValue: { word: "pikachu" } } }, "local");
+    expect(dismiss).not.toHaveBeenCalled();
+  });
+
+  it("does NOT remove .hw-host that contains a pdx found word (.pdx-highlight--found)", () => {
+    const foundHost = document.createElement("span");
+    foundHost.className = "hw-host";
+    const foundWord = document.createElement("span");
+    foundWord.className = "hw-word pdx-highlight--found";
+    foundHost.appendChild(foundWord);
+    document.body.appendChild(foundHost);
+
+    const otherHost = document.createElement("span");
+    otherHost.className = "hw-host";
+    document.body.appendChild(otherHost);
+
+    ActiveWordWatcher({ cancel: jest.fn() }, { dismiss: jest.fn() }, document).start();
+    fireChange({ activeWord: { oldValue: { word: "pikachu" } } }, "local");
+
+    expect(document.querySelectorAll(".hw-host").length).toBe(1);
+    expect(document.querySelector(".pdx-highlight--found")).not.toBeNull();
+  });
+
+  it("preserves pdx found word when activeWord changes to a new value", () => {
+    const foundHost = document.createElement("span");
+    foundHost.className = "hw-host";
+    const foundWord = document.createElement("span");
+    foundWord.className = "hw-word pdx-highlight--found";
+    foundHost.appendChild(foundWord);
+    document.body.appendChild(foundHost);
+
+    ActiveWordWatcher({ cancel: jest.fn() }, { dismiss: jest.fn() }, document).start();
+    fireChange(
+      { activeWord: { oldValue: { word: "pikachu" }, newValue: { word: "eevee" } } },
+      "local"
+    );
+
+    expect(document.querySelector(".pdx-highlight--found")).not.toBeNull();
+  });
 });

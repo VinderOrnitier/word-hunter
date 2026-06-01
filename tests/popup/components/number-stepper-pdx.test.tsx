@@ -6,8 +6,8 @@ describe("NumberStepperPdx", () => {
     const { container } = render(
       <NumberStepperPdx value="3" unit="min" min={1} step={1} onInput={() => {}} />
     );
-    expect(container.querySelector(".pdx-stepper-mini__value")?.textContent).toBe("3");
-    expect(container.querySelector(".pdx-stepper-mini__unit")?.textContent).toBe("min");
+    expect(container.querySelector(".pdx-stepper__value")?.textContent).toBe("3");
+    expect(container.querySelector(".pdx-stepper__unit")?.textContent).toBe("min");
   });
 
   it("increments by step on the plus key", () => {

@@ -110,6 +110,20 @@ describe("HintTimer", () => {
     expect(timer.hintUsed()).toBe(false);
   });
 
+  it("cancel() clears a stale hint-used flag — no false hintUsed when hints are disabled", () => {
+    // Scenario: previous page had hints enabled and timer fired (key = "true").
+    // User disables hint toast in settings. On new page inject(), cancel() is
+    // called but start() is never called. The stale key must not pollute the record.
+    sessionStorage.setItem(HINT_USED_KEY, "true");
+    const timer = HintTimer(
+      document,
+      () => "en",
+      () => "slate"
+    );
+    timer.cancel(); // called at inject() start; start() won't follow (hints disabled)
+    expect(timer.hintUsed()).toBe(false);
+  });
+
   it("cancel() after toast is shown removes it from DOM", () => {
     const timer = HintTimer(
       document,

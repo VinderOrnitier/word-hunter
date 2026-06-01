@@ -42,6 +42,7 @@ export function HintTimer(doc: Document, getLocale: () => Locale, getTheme: () =
       timerId = null;
     }
     removeToast();
+    sessionStorage.removeItem(HINT_USED_KEY);
   }
 
   function hintUsed(): boolean {

@@ -66,6 +66,13 @@ export function CelebrationPopupPdx({
         aria-hidden="true"
       />
       <div class="pdx-celebration-stack">
+        {next !== undefined && (
+          <div class="pdx-next">
+            <span class="pdx-next__label">{t("celebration_next_label", locale)}</span>
+            <span class="pdx-next__word">{next.word}</span>
+          </div>
+        )}
+
         <div class="pdx-celebration" role="dialog" aria-modal="true" aria-label="Word found">
           <div class="pdx-celebration__header">
             <span class="pdx-celebration__lens" aria-hidden="true" />
@@ -95,16 +102,6 @@ export function CelebrationPopupPdx({
             </div>
           </div>
         </div>
-
-        {next !== undefined && (
-          <div class="pdx-next">
-            <span class="pdx-next__label">{t("celebration_next_label", locale)}</span>
-            <span class="pdx-next__art" aria-hidden="true">
-              {artNode(next.art)}
-            </span>
-            <span class="pdx-next__word">{next.word}</span>
-          </div>
-        )}
 
         {onClear !== undefined && (
           <button type="button" class="pdx-celebration__cta" onClick={onClear}>
