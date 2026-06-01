@@ -25,6 +25,8 @@ export type WordListName = "animals" | "pokemon";
 
 export type WordSource = "animals" | "pokemon" | "custom";
 
+export type Theme = "slate" | "pokedex";
+
 export interface ActiveWord {
   word: string;
   insertedAt: number;

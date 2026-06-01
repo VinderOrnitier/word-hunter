@@ -11,6 +11,7 @@ describe("mountToast", () => {
       message: "Hello",
       locale: "en",
       variant: "info",
+      theme: "slate",
     });
     expect(document.querySelector(".hw-test-host")).not.toBeNull();
   });
@@ -21,6 +22,7 @@ describe("mountToast", () => {
       message: "Test message",
       locale: "en",
       variant: "info",
+      theme: "slate",
     });
     expect(document.querySelector(".hw-toast__message")?.textContent).toBe("Test message");
   });
@@ -31,6 +33,7 @@ describe("mountToast", () => {
       message: "msg",
       locale: "en",
       variant: "auto",
+      theme: "slate",
     });
     expect(document.querySelector(".hw-toast--auto")).not.toBeNull();
   });
@@ -41,6 +44,7 @@ describe("mountToast", () => {
       message: "msg",
       locale: "en",
       variant: "info",
+      theme: "slate",
     });
     expect(document.querySelector(".hw-test-host")).not.toBeNull();
     dismiss();
@@ -53,6 +57,7 @@ describe("mountToast", () => {
       message: "msg",
       locale: "en",
       variant: "info",
+      theme: "slate",
     });
     (document.querySelector(".hw-toast__close") as HTMLElement).click();
     expect(document.querySelector(".hw-test-host")).toBeNull();
@@ -64,6 +69,7 @@ describe("mountToast", () => {
       message: "msg",
       locale: "en",
       variant: "hint",
+      theme: "slate",
       onFind: jest.fn(),
     });
     expect(document.querySelector(".hw-toast__find")).not.toBeNull();
@@ -75,6 +81,7 @@ describe("mountToast", () => {
       message: "msg",
       locale: "en",
       variant: "hint",
+      theme: "slate",
     });
     expect(document.querySelector(".hw-toast__find")).toBeNull();
   });

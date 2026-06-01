@@ -1,5 +1,9 @@
 import "../shared/styles/tokens.css";
+import "../shared/styles/theme-pokedex.css";
 import "./styles/overlay.css";
+import "./styles/overlay.pdx.css";
+import "@fontsource/press-start-2p/400.css";
+import "@fontsource/vt323/400.css";
 import { render } from "preact";
 import type { Locale } from "../i18n";
 import { getLocale as readLocale } from "../i18n";
@@ -10,9 +14,11 @@ import {
   getActiveWord,
   getFinds,
   getSettings,
+  getTheme,
   saveFind,
   setActiveWord,
 } from "../shared/storage";
+import type { Theme } from "../shared/types";
 import { validateCustomWord } from "../shared/word-validation";
 import { ActiveWordWatcher } from "./active-word-watcher";
 import { AutoModeToast } from "./auto-mode-toast";
@@ -28,17 +34,28 @@ let currentLocale: Locale = "en";
 readLocale().then((l) => {
   currentLocale = l;
 });
+
+let currentTheme: Theme = "slate";
+getTheme().then((th) => {
+  currentTheme = th;
+});
+
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "local" && changes.locale?.newValue) {
+  if (area !== "local") return;
+  if (changes.locale?.newValue) {
     currentLocale = changes.locale.newValue as Locale;
+  }
+  if (changes.theme?.newValue) {
+    currentTheme = changes.theme.newValue as Theme;
   }
 });
 
 const getLocaleRef = (): Locale => currentLocale;
+const getThemeRef = (): Theme => currentTheme;
 
-const timer = HintTimer(document, getLocaleRef);
-const celebration = CelebrationManager(document, getLocaleRef);
-const autoModeToast = AutoModeToast(document, getLocaleRef);
+const timer = HintTimer(document, getLocaleRef, getThemeRef);
+const celebration = CelebrationManager(document, getLocaleRef, getThemeRef);
+const autoModeToast = AutoModeToast(document, getLocaleRef, getThemeRef);
 ActiveWordWatcher(timer, celebration, document).start();
 
 async function inject(): Promise<void> {
@@ -50,7 +67,7 @@ async function inject(): Promise<void> {
   const groups = ParagraphSelector(document, settings.minWordThreshold);
   if (groups.length === 0) {
     if (settings.notificationsEnabled && settings.showNoParagraphToast) {
-      NoParagraphNotification(document, getLocaleRef).show();
+      NoParagraphNotification(document, getLocaleRef, getThemeRef).show();
     }
     return;
   }
@@ -69,6 +86,8 @@ async function inject(): Promise<void> {
       }
     });
   }
+
+  const theme = await getTheme();
 
   timer.cancel();
   const renderer = WordRenderer(activeWord, groups, {
@@ -112,6 +131,7 @@ async function inject(): Promise<void> {
     },
     resolveArt,
     hoverRevealSeconds: settings.celebrationHoverSeconds,
+    theme,
   });
   if (settings.notificationsEnabled && settings.showHintToast) {
     timer.start(settings.hintDelayMinutes, renderer.setHinted);

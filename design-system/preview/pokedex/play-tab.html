@@ -1,0 +1,1007 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pokedex theme - Play tab</title>
+<link rel="stylesheet" href="../../themes/theme-pokedex.css">
+<script src="icons.js"></script>
+<style>
+  /* ===== Page chrome (outside .pdx) ===================== */
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    background: #f0eee9;
+    color: #1a1b26;
+    padding: 32px 28px 80px;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .page-title { font-family: 'Press Start 2P', monospace; font-size: 16px; line-height: 1.4; margin: 0 0 6px; }
+  .page-sub { font-size: 14px; color: #4d4d5a; max-width: 780px; margin: 0 0 32px; }
+  .section { margin: 32px 0 0; max-width: 1380px; }
+  .section-label { font-family: 'Press Start 2P', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C0F31; margin: 0 0 6px; }
+  .section-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .section-desc { font-size: 13px; color: #4d4d5a; margin: 0 0 18px; max-width: 720px; }
+
+  .popup-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 360px);
+    gap: 32px;
+    justify-content: start;
+    align-items: start;
+  }
+  .popup-frame { display: flex; flex-direction: column; gap: 10px; width: 360px; }
+  .popup-frame__label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px; letter-spacing: 0.06em;
+    color: #8C0F31; text-transform: uppercase;
+  }
+  .popup-frame__caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: #6e6354; line-height: 1.5;
+  }
+
+  /* =========================================================
+     POPUP SHELL — shared chrome (header + tabs + ridge + body + footer)
+     ========================================================= */
+  .pdx-popup {
+    width: 360px;
+    min-height: 560px;
+    max-height: 560px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, var(--pdx-shell-hi) 0%, var(--pdx-shell) 22%, var(--pdx-shell-2) 100%);
+    border-radius: 10px 10px 14px 14px;
+    overflow: hidden;
+    box-shadow: var(--pdx-shadow-popup);
+    position: relative;
+    color: var(--pdx-on-shell);
+  }
+  .pdx-popup::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--pdx-shell-edge); opacity: 0.55;
+    pointer-events: none; z-index: 5;
+  }
+  .pdx-popup__header { display: flex; align-items: center; gap: 10px; padding: 12px 14px 10px; flex: 0 0 auto; }
+  .pdx-popup__lens {
+    width: 28px; height: 28px; flex: 0 0 auto;
+    background: radial-gradient(circle at 35% 30%, var(--pdx-lens-hi) 0%, var(--pdx-lens) 55%, var(--pdx-lens-deep) 100%);
+    border-radius: 50%;
+    box-shadow:
+      inset 0 0 0 1.5px var(--pdx-lens-rim),
+      inset 0 -2px 4px rgba(0,0,0,0.3),
+      0 1px 2px rgba(0,0,0,0.4);
+    position: relative;
+  }
+  .pdx-popup__lens::before {
+    content: ""; position: absolute; top: 14%; left: 16%;
+    width: 30%; height: 30%; background: rgba(255,255,255,0.55);
+    border-radius: 50%; filter: blur(1px);
+  }
+  .pdx-popup__leds { display: flex; gap: 5px; flex: 0 0 auto; }
+  .pdx-popup__leds .led { width: 7px; height: 7px; border-radius: 50%; box-shadow: inset 0 -1px 1px rgba(0,0,0,0.3); }
+  .pdx-popup__leds .led--red    { background: var(--pdx-led-red);    box-shadow: 0 0 4px var(--pdx-led-red),    inset 0 -1px 1px rgba(0,0,0,0.3); }
+  .pdx-popup__leds .led--green  { background: var(--pdx-led-green);  box-shadow: 0 0 4px var(--pdx-led-green),  inset 0 -1px 1px rgba(0,0,0,0.3); }
+  .pdx-popup__leds .led--yellow { background: var(--pdx-led-yellow); box-shadow: 0 0 4px var(--pdx-led-yellow), inset 0 -1px 1px rgba(0,0,0,0.3); }
+
+  .pdx-popup__wordmark {
+    font-family: var(--pdx-font-pixel); font-size: 11px; line-height: 1;
+    letter-spacing: 0.04em; color: var(--pdx-on-shell);
+    text-transform: uppercase; flex: 1;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+  }
+  .pdx-popup__info {
+    width: 28px; height: 28px; flex: 0 0 auto;
+    background: var(--pdx-key); border: 1px solid var(--pdx-key-2); border-bottom-width: 2px;
+    border-radius: 4px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .pdx-popup__info iconify-icon,
+  .pdx-popup__info svg { font-size: 16px; color: var(--pdx-on-key); }
+
+  .pdx-popup__tabs {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;
+    padding: 0 14px 10px; flex: 0 0 auto;
+  }
+  .pdx-popup__tab {
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: var(--pdx-r-key);
+    padding: 6px 8px;
+    display: flex; flex-direction: row; align-items: center; justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    color: var(--pdx-on-key);
+  }
+  .pdx-popup__tab iconify-icon,
+  .pdx-popup__tab svg { font-size: 14px; color: var(--pdx-on-key); flex: 0 0 auto; }
+  .pdx-popup__tab-label {
+    font-family: var(--pdx-font-pixel); font-size: 8px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .pdx-popup__tab.is-active {
+    background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%);
+    border-color: #B89E50; color: #4A3A0E;
+  }
+  .pdx-popup__tab.is-active iconify-icon,
+  .pdx-popup__tab.is-active svg { color: #4A3A0E; }
+
+  .pdx-popup__ridge {
+    height: 4px;
+    background: linear-gradient(180deg, var(--pdx-shell-deep) 0%, var(--pdx-shell-2) 50%, var(--pdx-shell-hi) 100%);
+    position: relative; flex: 0 0 auto;
+  }
+  .pdx-popup__ridge::after {
+    content: ""; position: absolute; top: 50%; left: 0; right: 0;
+    height: 1px; background: rgba(0,0,0,0.3);
+  }
+
+  /* Body — LCD viewport. The Play tab's body has its own internal
+     spacing because we mix LCD panels (ActiveWord, Progress, Grid)
+     and they share an LCD ground. */
+  .pdx-popup__body {
+    flex: 1;
+    margin: 10px 12px 10px;
+    background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 18%, var(--pdx-lcd) 80%, var(--pdx-lcd-lo) 100%);
+    border-radius: 6px;
+    border: 1px solid var(--pdx-lcd-frame);
+    box-shadow:
+      inset 0 2px 6px rgba(15, 42, 64, 0.35),
+      inset 0 -2px 0 rgba(255, 255, 255, 0.18);
+    position: relative;
+    overflow: hidden;
+    color: var(--pdx-lcd-ink);
+  }
+  .pdx-popup__body::after {
+    content: ""; position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      rgba(15, 42, 64, 0.10) 0,
+      rgba(15, 42, 64, 0.10) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .pdx-popup__body-inner {
+    position: relative; z-index: 2; padding: 10px 12px 12px;
+    height: 100%; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .pdx-popup__body-inner::-webkit-scrollbar { display: none; }
+  .pdx-popup__body-inner { scrollbar-width: none; }
+
+  /* =========================================================
+     ACTIVE WORD CARD — Pokedex variant
+     Horizontal cream key-cap row with: art slot, eyebrow + word, stop key.
+     The art slot itself has a yellow LED ring when there's an active word.
+     ========================================================= */
+  .pdx-active {
+    display: grid;
+    grid-template-columns: 48px 1fr 28px;
+    gap: 10px;
+    align-items: center;
+    padding: 8px;
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+  }
+  .pdx-active__art {
+    width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 100%);
+    border: 2px solid var(--pdx-led-yellow);
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.15), 0 0 6px rgba(255, 210, 63, 0.55);
+    overflow: hidden;
+  }
+  .pdx-active__art img {
+    width: 100%; height: 100%; object-fit: contain;
+    image-rendering: pixelated; image-rendering: crisp-edges;
+  }
+  .pdx-active__art .emoji { font-size: 30px; line-height: 1; }
+  .pdx-active__art--empty {
+    border-color: var(--pdx-key-2);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
+    color: var(--pdx-key-ink-2);
+  }
+  .pdx-active__art--empty iconify-icon,
+  .pdx-active__art--empty svg { font-size: 18px; color: var(--pdx-lcd-ink-2); }
+
+  .pdx-active__body { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .pdx-active__eyebrow {
+    font-family: var(--pdx-font-pixel); font-size: 7px;
+    letter-spacing: 0.08em; color: var(--pdx-key-ink-2);
+    text-transform: uppercase;
+  }
+  .pdx-active__word {
+    font-family: var(--pdx-font-lcd); font-size: 24px;
+    line-height: 1.05; color: var(--pdx-key-ink);
+    text-transform: lowercase;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .pdx-active__hint {
+    font-family: var(--pdx-font-ui); font-size: 11px;
+    color: var(--pdx-key-ink-2); line-height: 1.3;
+  }
+  .pdx-active__stop {
+    width: 28px; height: 28px;
+    background: var(--pdx-key); border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px; border-radius: 3px;
+    cursor: pointer; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    color: var(--pdx-on-key);
+  }
+  .pdx-active__stop iconify-icon,
+  .pdx-active__stop svg { font-size: 12px; }
+
+  /* =========================================================
+     LIST SELECTOR — two key caps, navy lens-tone, full-width
+     ========================================================= */
+  .pdx-list-selector {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+  }
+  .pdx-list-key {
+    padding: 6px 8px;
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    color: var(--pdx-on-key);
+    cursor: pointer;
+    font-family: var(--pdx-font-pixel); font-size: 8px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  }
+  .pdx-list-key svg { font-size: 11px; flex: 0 0 auto; }
+  .pdx-list-key.is-active {
+    background: linear-gradient(180deg, #3F8BD6 0%, #1F5C9E 100%);
+    border-color: #0E3A66; color: #fff;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.35),
+      0 0 0 1px rgba(141, 195, 240, 0.45),
+      0 1px 0 rgba(0,0,0,0.3);
+  }
+  .pdx-list-key.is-active svg { color: #fff; }
+  .pdx-list-key__count {
+    font-family: var(--pdx-font-lcd); font-size: 14px;
+    line-height: 1; opacity: 0.85; margin-left: 4px;
+  }
+  .pdx-list-key.is-active .pdx-list-key__count { opacity: 1; }
+
+  /* =========================================================
+     PROGRESS ROW — inset mini LCD with bar + count
+     ========================================================= */
+  .pdx-progress {
+    display: grid; grid-template-columns: auto auto 1fr 18px;
+    gap: 8px; align-items: center;
+    padding: 5px 8px 5px 10px;
+    background: rgba(15, 42, 64, 0.18);
+    border: 1px solid rgba(15, 42, 64, 0.35);
+    border-radius: 4px;
+    box-shadow: inset 0 1px 2px rgba(15,42,64,0.3);
+  }
+  .pdx-progress__label {
+    font-family: var(--pdx-font-pixel); font-size: 7px;
+    letter-spacing: 0.06em; color: var(--pdx-lcd-ink);
+    text-transform: uppercase;
+  }
+  .pdx-progress__bar {
+    width: 100px; height: 8px;
+    background: var(--pdx-lcd-frame);
+    border-radius: 2px; padding: 1px;
+    display: grid; grid-template-columns: repeat(10, 1fr); gap: 1px;
+  }
+  .pdx-progress__cell { background: rgba(58, 138, 166, 0.3); border-radius: 1px; }
+  .pdx-progress__cell.is-filled {
+    background: linear-gradient(180deg, #94DDEC 0%, #6FC8DC 100%);
+  }
+  .pdx-progress__cell.is-head {
+    background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%);
+    box-shadow: 0 0 4px rgba(255,210,63,0.6);
+  }
+  .pdx-progress__count {
+    font-family: var(--pdx-font-lcd); font-size: 14px;
+    line-height: 1; color: var(--pdx-lcd-ink); white-space: nowrap;
+    text-align: right;
+  }
+  .pdx-progress__chev {
+    width: 18px; height: 18px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--pdx-lcd-ink-2); cursor: pointer;
+    background: transparent; border: 0; padding: 0;
+  }
+  .pdx-progress__chev iconify-icon,
+  .pdx-progress__chev svg { font-size: 12px; }
+
+  /* =========================================================
+     FILTER CHIPS — 3 small key caps
+     ========================================================= */
+  .pdx-filter {
+    display: flex; gap: 4px;
+    align-items: center;
+  }
+  .pdx-filter__label {
+    font-family: var(--pdx-font-pixel); font-size: 7px;
+    letter-spacing: 0.06em; color: var(--pdx-lcd-ink);
+    text-transform: uppercase; margin-right: 4px;
+  }
+  .pdx-filter__key {
+    padding: 4px 8px;
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 3px;
+    color: var(--pdx-on-key);
+    cursor: pointer;
+    font-family: var(--pdx-font-pixel); font-size: 7px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+  }
+  .pdx-filter__key.is-active {
+    background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%);
+    border-color: #B89E50; color: #4A3A0E;
+  }
+
+  /* =========================================================
+     COLLECTION GRID — pdx-slot cream key caps
+     ========================================================= */
+  .pdx-grid {
+    display: grid;
+    gap: 5px;
+  }
+  .pdx-grid--animals { grid-template-columns: repeat(5, 1fr); }
+  .pdx-grid--pokemon { grid-template-columns: repeat(5, 1fr); }
+
+  .pdx-slot-v2 {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    padding: 3px;
+    overflow: hidden;
+  }
+  .pdx-slot-v2:hover { background: #FBF7EB; }
+  .pdx-slot-v2.is-active {
+    background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%);
+    border-color: #B89E50;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.7),
+      0 0 0 1px rgba(255,210,63,0.5),
+      0 0 6px rgba(255, 210, 63, 0.55);
+  }
+  .pdx-slot-v2.is-pending {
+    background: linear-gradient(180deg, #B6D8F5 0%, #6FAEDF 100%);
+    border-color: #1F5C9E;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.6),
+      0 0 0 1px rgba(141,195,240,0.45),
+      0 0 6px rgba(42,133,214,0.4);
+  }
+  .pdx-slot-v2__emoji { font-size: 22px; line-height: 1; }
+  .pdx-slot-v2__ph {
+    font-family: var(--pdx-font-lcd); font-size: 16px; line-height: 1;
+    color: var(--pdx-key-ink-2);
+  }
+  .pdx-slot-v2__sprite {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+  }
+  .pdx-slot-v2__sprite.is-silhouette {
+    filter: brightness(0) opacity(0.35);
+  }
+  .pdx-slot-v2__count {
+    position: absolute; bottom: 1px; right: 2px;
+    font-family: var(--pdx-font-lcd); font-size: 11px;
+    line-height: 1;
+    color: var(--pdx-key-ink);
+    background: rgba(244, 239, 226, 0.92);
+    border-radius: 2px;
+    padding: 0 2px;
+    pointer-events: none;
+  }
+
+  /* =========================================================
+     BOTTOM ACTION BAR — raised raspberry keypad housing
+     [auto-toggle] [START HUNT primary] [shuffle] [custom]
+     ========================================================= */
+  .pdx-popup__action-bar {
+    flex: 0 0 auto;
+    padding: 10px 12px 12px;
+    display: flex; gap: 6px; align-items: stretch;
+    background: linear-gradient(180deg, var(--pdx-shell-2) 0%, var(--pdx-shell-deep) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.35),
+      0 -2px 6px rgba(0, 0, 0, 0.18);
+    border-top: 1px solid rgba(0,0,0,0.35);
+  }
+  .pdx-action-icon {
+    flex: 0 0 38px; width: 38px; height: 38px;
+    background: var(--pdx-key); border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px; border-radius: 4px;
+    color: var(--pdx-on-key);
+    cursor: pointer; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+  }
+  .pdx-action-icon iconify-icon,
+  .pdx-action-icon svg { font-size: 14px; }
+  .pdx-action-icon.is-on {
+    background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%);
+    border-color: #B89E50; color: #4A3A0E;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.55),
+      0 0 0 1px rgba(255,210,63,0.5);
+  }
+
+  .pdx-action-primary {
+    flex: 1;
+    background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%);
+    border: 1px solid #B89E50; border-bottom-width: 2px;
+    border-radius: 4px;
+    color: #3A1208;
+    font-family: var(--pdx-font-pixel); font-size: 10px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    cursor: pointer; padding: 0 12px;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.55),
+      0 0 10px rgba(255,210,63,0.5);
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .pdx-action-primary[disabled] {
+    opacity: 0.45; cursor: not-allowed;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .pdx-action-primary iconify-icon,
+  .pdx-action-primary svg { font-size: 11px; color: #3A1208; }
+
+  /* =========================================================
+     CUSTOM WORD MODAL — absolute over popup interior only
+     ========================================================= */
+  .pdx-modal-stack { position: relative; }
+  .pdx-modal-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(15, 8, 25, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 30;
+  }
+  .pdx-modal {
+    position: absolute;
+    left: 18px; right: 18px;
+    top: 50%; transform: translateY(-50%);
+    z-index: 31;
+    background: linear-gradient(180deg, var(--pdx-shell-hi) 0%, var(--pdx-shell) 30%, var(--pdx-shell-2) 100%);
+    border: 1px solid var(--pdx-shell-deep);
+    border-radius: 8px;
+    box-shadow:
+      inset 0 1px 0 var(--pdx-shell-edge),
+      0 14px 30px rgba(0,0,0,0.6);
+    padding: 10px;
+  }
+  .pdx-modal__header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 4px 8px;
+  }
+  .pdx-modal__title {
+    flex: 1;
+    font-family: var(--pdx-font-pixel); font-size: 10px;
+    letter-spacing: 0.06em; color: var(--pdx-on-shell);
+    text-transform: uppercase;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+  }
+  .pdx-modal__close {
+    width: 22px; height: 22px; flex: 0 0 auto;
+    background: var(--pdx-key); border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px; border-radius: 3px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    color: var(--pdx-on-key);
+    cursor: pointer; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .pdx-modal__close iconify-icon,
+  .pdx-modal__close svg { font-size: 11px; }
+
+  .pdx-modal__lcd {
+    background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 40%, var(--pdx-lcd-lo) 100%);
+    border: 1px solid var(--pdx-lcd-frame);
+    border-radius: 4px;
+    padding: 12px 12px 14px;
+    box-shadow:
+      inset 0 2px 4px rgba(15,42,64,0.35),
+      inset 0 -1px 0 rgba(255,255,255,0.2);
+    position: relative; overflow: hidden;
+    color: var(--pdx-lcd-ink);
+  }
+  .pdx-modal__lcd::after {
+    content: ""; position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(0deg, rgba(15,42,64,0.1) 0, rgba(15,42,64,0.1) 1px, transparent 1px, transparent 3px);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .pdx-modal__lcd-inner {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .pdx-modal__prompt {
+    font-family: var(--pdx-font-pixel); font-size: 8px;
+    letter-spacing: 0.06em; color: var(--pdx-lcd-ink);
+    text-transform: uppercase; line-height: 1.4;
+  }
+  .pdx-modal__input-wrap {
+    display: flex; align-items: stretch;
+    background: var(--pdx-lcd-frame);
+    border: 1px solid var(--pdx-lcd-frame);
+    border-radius: 4px;
+    padding: 2px;
+  }
+  .pdx-modal__input {
+    flex: 1; min-width: 0;
+    background: rgba(255,255,255,0.85);
+    border: 0; padding: 0 8px;
+    height: 28px;
+    font-family: var(--pdx-font-lcd);
+    font-size: 18px; line-height: 1;
+    color: var(--pdx-lcd-ink);
+    border-radius: 2px;
+    outline: none;
+  }
+  .pdx-modal__input::placeholder { color: var(--pdx-lcd-ink-2); }
+  .pdx-modal__helper {
+    font-family: var(--pdx-font-ui); font-size: 11px;
+    color: var(--pdx-lcd-ink-2); line-height: 1.4;
+  }
+  .pdx-modal__error {
+    font-family: var(--pdx-font-pixel); font-size: 7px;
+    letter-spacing: 0.06em; color: var(--pdx-shell-deep);
+    text-transform: uppercase; line-height: 1.4;
+  }
+  .pdx-modal__footer {
+    display: flex; gap: 6px; justify-content: flex-end;
+    padding: 8px 4px 4px;
+  }
+  .pdx-modal__btn-ghost {
+    padding: 6px 10px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.45);
+    color: var(--pdx-on-shell);
+    font-family: var(--pdx-font-pixel); font-size: 8px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    border-radius: 3px; cursor: pointer;
+  }
+  .pdx-modal__btn-primary {
+    padding: 6px 12px;
+    background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%);
+    border: 1px solid #B89E50; border-bottom-width: 2px;
+    color: #3A1208;
+    font-family: var(--pdx-font-pixel); font-size: 8px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    border-radius: 3px; cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 0 8px rgba(255,210,63,0.45);
+  }
+  .pdx-modal__btn-primary[disabled] { opacity: 0.45; cursor: not-allowed; }
+</style>
+</head>
+<body class="pdx">
+
+<nav style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px;">
+  <a href="index.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">FOUNDATIONS</a>
+  <a href="components-form-controls.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">FORM CONTROLS</a>
+  <a href="iconography.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">ICONOGRAPHY</a>
+  <a href="screens-tabs.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">SCREENS</a>
+  <a href="in-page-overlays.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">IN-PAGE</a>
+  <a href="play-tab.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#8C0F31;color:#fff;">PLAY</a>
+  <a href="searchable-select.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">SELECT</a>
+</nav>
+
+<h1 class="page-title">PLAY TAB · CUSTOM-WORD MODAL</h1>
+<p class="page-sub">
+  The home screen of the popup, end-to-end. Four states: hunt running (Pikachu active), hunt running with a slot picked (pending state), empty state (no active word), and the Custom-word modal floating over the Play body. The Bottom Action Bar is the only sticky element — everything else scrolls inside the LCD body.
+</p>
+
+<div class="section">
+  <p class="section-label">play tab · four states</p>
+
+  <div class="popup-row">
+
+    <!-- ============================================================
+         STATE 1 — Hunt running · Pokemon · word "Pikachu"
+         ============================================================ -->
+    <div class="popup-frame">
+      <span class="popup-frame__label">Hunt running · Pokemon list</span>
+      <div class="pdx-popup">
+        <div class="pdx-popup__header">
+          <span class="pdx-popup__lens"></span>
+          <div class="pdx-popup__leds">
+            <span class="led led--red"></span>
+            <span class="led led--green"></span>
+            <span class="led led--yellow"></span>
+          </div>
+          <span class="pdx-popup__wordmark">WORD HUNTER</span>
+          <button class="pdx-popup__info"><iconify-icon icon="pixelarticons:info-box"></iconify-icon></button>
+        </div>
+        <div class="pdx-popup__tabs">
+          <button class="pdx-popup__tab is-active"><iconify-icon icon="pixelarticons:play"></iconify-icon><span class="pdx-popup__tab-label">PLAY</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:chart"></iconify-icon><span class="pdx-popup__tab-label">STATS</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:sliders"></iconify-icon><span class="pdx-popup__tab-label">SETS</span></button>
+        </div>
+        <div class="pdx-popup__ridge"></div>
+        <div class="pdx-popup__body">
+          <div class="pdx-popup__body-inner">
+
+            <div class="pdx-active">
+              <div class="pdx-active__art">
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif" alt="">
+              </div>
+              <div class="pdx-active__body">
+                <span class="pdx-active__eyebrow">NOW HUNTING</span>
+                <span class="pdx-active__word">pikachu</span>
+              </div>
+              <button class="pdx-active__stop" aria-label="Stop hunt"><iconify-icon icon="pixelarticons:close"></iconify-icon></button>
+            </div>
+
+            <div class="pdx-list-selector">
+              <button class="pdx-list-key"><iconify-icon icon="pixelarticons:bookmark"></iconify-icon> ANIMALS <span class="pdx-list-key__count">12</span></button>
+              <button class="pdx-list-key is-active"><iconify-icon icon="pixelarticons:bookmark"></iconify-icon> POKEMON <span class="pdx-list-key__count">31</span></button>
+            </div>
+
+            <div class="pdx-progress">
+              <span class="pdx-progress__label">CGHT</span>
+              <div class="pdx-progress__bar">
+                <span class="pdx-progress__cell is-filled"></span>
+                <span class="pdx-progress__cell is-filled"></span>
+                <span class="pdx-progress__cell is-head"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+              </div>
+              <span class="pdx-progress__count">31 / 151</span>
+              <button class="pdx-progress__chev"><iconify-icon icon="pixelarticons:chevron-down"></iconify-icon></button>
+            </div>
+
+            <div class="pdx-filter">
+              <span class="pdx-filter__label">SHOW</span>
+              <button class="pdx-filter__key is-active">ALL</button>
+              <button class="pdx-filter__key">CGHT</button>
+              <button class="pdx-filter__key">MISS</button>
+            </div>
+
+            <div class="pdx-grid pdx-grid--pokemon">
+              <div class="pdx-slot-v2 is-active"><img class="pdx-slot-v2__sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif"><span class="pdx-slot-v2__count">x2</span></div>
+              <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif"><span class="pdx-slot-v2__count">x1</span></div>
+              <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif"></div>
+              <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif"><span class="pdx-slot-v2__count">x1</span></div>
+              <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/39.gif"></div>
+              <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/150.gif"></div>
+              <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/133.gif"><span class="pdx-slot-v2__count">x1</span></div>
+              <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/143.gif"></div>
+              <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/94.gif"><span class="pdx-slot-v2__count">x1</span></div>
+              <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/54.gif"></div>
+              <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/66.gif"></div>
+              <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/65.gif"></div>
+              <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/129.gif"></div>
+              <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/130.gif"></div>
+              <div class="pdx-slot-v2"><img class="pdx-slot-v2__sprite is-silhouette" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/131.gif"></div>
+            </div>
+
+          </div>
+        </div>
+        <div class="pdx-popup__action-bar">
+          <button class="pdx-action-icon" title="Auto-Continue"><iconify-icon icon="pixelarticons:reload"></iconify-icon></button>
+          <button class="pdx-action-primary" disabled>
+            <iconify-icon icon="pixelarticons:play"></iconify-icon> START HUNT
+          </button>
+          <button class="pdx-action-icon" title="Shuffle"><iconify-icon icon="pixelarticons:shuffle"></iconify-icon></button>
+          <button class="pdx-action-icon" title="Custom word"><iconify-icon icon="pixelarticons:edit"></iconify-icon></button>
+        </div>
+      </div>
+      <p class="popup-frame__caption">
+        ActiveWordCard = cream key cap with cyan LCD art well + yellow LED ring · "NOW HUNTING" pixel eyebrow + VT323 word · stop key (close) · LIST keys lens-tone with counts in VT323 · CGHT progress + 31/151 + chev for expand · filter chips ALL/CGHT/MISS · primary CTA disabled while hunt running, reads HUNT IN PROGRESS
+      </p>
+    </div>
+
+    <!-- ============================================================
+         STATE 2 — Pending · slot picked, ready to start
+         ============================================================ -->
+    <div class="popup-frame">
+      <span class="popup-frame__label">Picked · ready to start</span>
+      <div class="pdx-popup">
+        <div class="pdx-popup__header">
+          <span class="pdx-popup__lens"></span>
+          <div class="pdx-popup__leds">
+            <span class="led led--red"></span>
+            <span class="led led--green"></span>
+            <span class="led led--yellow"></span>
+          </div>
+          <span class="pdx-popup__wordmark">WORD HUNTER</span>
+          <button class="pdx-popup__info"><iconify-icon icon="pixelarticons:info-box"></iconify-icon></button>
+        </div>
+        <div class="pdx-popup__tabs">
+          <button class="pdx-popup__tab is-active"><iconify-icon icon="pixelarticons:play"></iconify-icon><span class="pdx-popup__tab-label">PLAY</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:chart"></iconify-icon><span class="pdx-popup__tab-label">STATS</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:sliders"></iconify-icon><span class="pdx-popup__tab-label">SETS</span></button>
+        </div>
+        <div class="pdx-popup__ridge"></div>
+        <div class="pdx-popup__body">
+          <div class="pdx-popup__body-inner">
+
+            <div class="pdx-active">
+              <div class="pdx-active__art pdx-active__art--empty">
+                <iconify-icon icon="pixelarticons:search"></iconify-icon>
+              </div>
+              <div class="pdx-active__body">
+                <span class="pdx-active__eyebrow">NO HUNT</span>
+                <span class="pdx-active__hint">pick a slot then press hunt.</span>
+              </div>
+              <span style="width: 28px;"></span>
+            </div>
+
+            <div class="pdx-list-selector">
+              <button class="pdx-list-key is-active"><iconify-icon icon="pixelarticons:bookmark"></iconify-icon> ANIMALS <span class="pdx-list-key__count">12</span></button>
+              <button class="pdx-list-key"><iconify-icon icon="pixelarticons:bookmark"></iconify-icon> POKEMON <span class="pdx-list-key__count">31</span></button>
+            </div>
+
+            <div class="pdx-progress">
+              <span class="pdx-progress__label">CGHT</span>
+              <div class="pdx-progress__bar">
+                <span class="pdx-progress__cell is-filled"></span>
+                <span class="pdx-progress__cell is-filled"></span>
+                <span class="pdx-progress__cell is-head"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+              </div>
+              <span class="pdx-progress__count">12 / 54</span>
+              <button class="pdx-progress__chev"><iconify-icon icon="pixelarticons:chevron-down"></iconify-icon></button>
+            </div>
+
+            <div class="pdx-filter">
+              <span class="pdx-filter__label">SHOW</span>
+              <button class="pdx-filter__key is-active">ALL</button>
+              <button class="pdx-filter__key">CGHT</button>
+              <button class="pdx-filter__key">MISS</button>
+            </div>
+
+            <div class="pdx-grid pdx-grid--animals">
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__emoji">🦊</span><span class="pdx-slot-v2__count">x3</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__emoji">🐻</span><span class="pdx-slot-v2__count">x1</span></div>
+              <div class="pdx-slot-v2 is-pending"><span class="pdx-slot-v2__emoji">🦩</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__emoji">🐺</span><span class="pdx-slot-v2__count">x4</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__emoji">🦅</span><span class="pdx-slot-v2__count">x1</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__emoji">🐢</span><span class="pdx-slot-v2__count">x1</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__emoji">🐬</span><span class="pdx-slot-v2__count">x2</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+            </div>
+
+          </div>
+        </div>
+        <div class="pdx-popup__action-bar">
+          <button class="pdx-action-icon" title="Auto-Continue"><iconify-icon icon="pixelarticons:reload"></iconify-icon></button>
+          <button class="pdx-action-primary">
+            <iconify-icon icon="pixelarticons:play"></iconify-icon> START HUNT
+          </button>
+          <button class="pdx-action-icon" title="Shuffle"><iconify-icon icon="pixelarticons:shuffle"></iconify-icon></button>
+          <button class="pdx-action-icon" title="Custom word"><iconify-icon icon="pixelarticons:edit"></iconify-icon></button>
+        </div>
+      </div>
+      <p class="popup-frame__caption">
+        ActiveWordCard empty state · "NO HUNT" pixel eyebrow + sans hint line · flamingo slot wears the cyan pending ring · primary CTA active = START HUNT in pixel font with yellow bloom shadow
+      </p>
+    </div>
+
+    <!-- ============================================================
+         STATE 3 — Empty · no active word, nothing picked
+         ============================================================ -->
+    <div class="popup-frame">
+      <span class="popup-frame__label">Empty + Auto-Continue on</span>
+      <div class="pdx-popup">
+        <div class="pdx-popup__header">
+          <span class="pdx-popup__lens"></span>
+          <div class="pdx-popup__leds">
+            <span class="led led--red"></span>
+            <span class="led led--green"></span>
+            <span class="led led--yellow"></span>
+          </div>
+          <span class="pdx-popup__wordmark">WORD HUNTER</span>
+          <button class="pdx-popup__info"><iconify-icon icon="pixelarticons:info-box"></iconify-icon></button>
+        </div>
+        <div class="pdx-popup__tabs">
+          <button class="pdx-popup__tab is-active"><iconify-icon icon="pixelarticons:play"></iconify-icon><span class="pdx-popup__tab-label">PLAY</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:chart"></iconify-icon><span class="pdx-popup__tab-label">STATS</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:sliders"></iconify-icon><span class="pdx-popup__tab-label">SETS</span></button>
+        </div>
+        <div class="pdx-popup__ridge"></div>
+        <div class="pdx-popup__body">
+          <div class="pdx-popup__body-inner">
+
+            <div class="pdx-active">
+              <div class="pdx-active__art pdx-active__art--empty">
+                <iconify-icon icon="pixelarticons:search"></iconify-icon>
+              </div>
+              <div class="pdx-active__body">
+                <span class="pdx-active__eyebrow">NO HUNT</span>
+                <span class="pdx-active__hint">pick a slot below to start.</span>
+              </div>
+              <span style="width: 28px;"></span>
+            </div>
+
+            <div class="pdx-list-selector">
+              <button class="pdx-list-key is-active"><iconify-icon icon="pixelarticons:bookmark"></iconify-icon> ANIMALS <span class="pdx-list-key__count">0</span></button>
+              <button class="pdx-list-key"><iconify-icon icon="pixelarticons:bookmark"></iconify-icon> POKEMON <span class="pdx-list-key__count">0</span></button>
+            </div>
+
+            <div class="pdx-progress">
+              <span class="pdx-progress__label">CGHT</span>
+              <div class="pdx-progress__bar">
+                <span class="pdx-progress__cell is-head"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+                <span class="pdx-progress__cell"></span>
+              </div>
+              <span class="pdx-progress__count">0 / 54</span>
+              <button class="pdx-progress__chev"><iconify-icon icon="pixelarticons:chevron-down"></iconify-icon></button>
+            </div>
+
+            <div class="pdx-filter">
+              <span class="pdx-filter__label">SHOW</span>
+              <button class="pdx-filter__key is-active">ALL</button>
+              <button class="pdx-filter__key">CGHT</button>
+              <button class="pdx-filter__key">MISS</button>
+            </div>
+
+            <div class="pdx-grid pdx-grid--animals">
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+            </div>
+
+          </div>
+        </div>
+        <div class="pdx-popup__action-bar">
+          <button class="pdx-action-icon is-on" title="Auto-Continue"><iconify-icon icon="pixelarticons:reload"></iconify-icon></button>
+          <button class="pdx-action-primary" disabled>
+            <iconify-icon icon="pixelarticons:play"></iconify-icon> START HUNT
+          </button>
+          <button class="pdx-action-icon" title="Shuffle"><iconify-icon icon="pixelarticons:shuffle"></iconify-icon></button>
+          <button class="pdx-action-icon" title="Custom word"><iconify-icon icon="pixelarticons:edit"></iconify-icon></button>
+        </div>
+      </div>
+      <p class="popup-frame__caption">
+        First-launch state · Auto-Continue toggle ON (yellow key, ring) so the cue is unmistakable · grid full of `???` placeholders · START HUNT disabled until something is picked
+      </p>
+    </div>
+
+    <!-- ============================================================
+         STATE 4 — Custom-word modal open over Play
+         ============================================================ -->
+    <div class="popup-frame">
+      <span class="popup-frame__label">Custom-word modal open</span>
+      <div class="pdx-popup pdx-modal-stack">
+        <div class="pdx-popup__header">
+          <span class="pdx-popup__lens"></span>
+          <div class="pdx-popup__leds">
+            <span class="led led--red"></span>
+            <span class="led led--green"></span>
+            <span class="led led--yellow"></span>
+          </div>
+          <span class="pdx-popup__wordmark">WORD HUNTER</span>
+          <button class="pdx-popup__info"><iconify-icon icon="pixelarticons:info-box"></iconify-icon></button>
+        </div>
+        <div class="pdx-popup__tabs">
+          <button class="pdx-popup__tab is-active"><iconify-icon icon="pixelarticons:play"></iconify-icon><span class="pdx-popup__tab-label">PLAY</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:chart"></iconify-icon><span class="pdx-popup__tab-label">STATS</span></button>
+          <button class="pdx-popup__tab"><iconify-icon icon="pixelarticons:sliders"></iconify-icon><span class="pdx-popup__tab-label">SETS</span></button>
+        </div>
+        <div class="pdx-popup__ridge"></div>
+        <div class="pdx-popup__body">
+          <div class="pdx-popup__body-inner" style="filter: blur(0.5px); opacity: 0.7;">
+            <div class="pdx-active">
+              <div class="pdx-active__art pdx-active__art--empty">
+                <iconify-icon icon="pixelarticons:search"></iconify-icon>
+              </div>
+              <div class="pdx-active__body">
+                <span class="pdx-active__eyebrow">NO HUNT</span>
+                <span class="pdx-active__hint">pick a slot to start.</span>
+              </div>
+              <span style="width: 28px;"></span>
+            </div>
+            <div class="pdx-list-selector">
+              <button class="pdx-list-key is-active"><iconify-icon icon="pixelarticons:bookmark"></iconify-icon> ANIMALS <span class="pdx-list-key__count">12</span></button>
+              <button class="pdx-list-key"><iconify-icon icon="pixelarticons:bookmark"></iconify-icon> POKEMON <span class="pdx-list-key__count">31</span></button>
+            </div>
+            <div class="pdx-grid pdx-grid--animals">
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__emoji">🦊</span><span class="pdx-slot-v2__count">x3</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__emoji">🐻</span><span class="pdx-slot-v2__count">x1</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__emoji">🦩</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__ph">???</span></div>
+              <div class="pdx-slot-v2"><span class="pdx-slot-v2__emoji">🐺</span><span class="pdx-slot-v2__count">x4</span></div>
+            </div>
+          </div>
+
+          <!-- Modal -->
+          <div class="pdx-modal-backdrop"></div>
+          <div class="pdx-modal">
+            <div class="pdx-modal__header">
+              <span class="pdx-modal__title">CUSTOM WORD</span>
+              <button class="pdx-modal__close"><iconify-icon icon="pixelarticons:close"></iconify-icon></button>
+            </div>
+            <div class="pdx-modal__lcd">
+              <div class="pdx-modal__lcd-inner">
+                <span class="pdx-modal__prompt">ENTER YOUR OWN WORD TO HUNT</span>
+                <div class="pdx-modal__input-wrap">
+                  <input type="text" class="pdx-modal__input" placeholder="serendipity" value="serendipity">
+                </div>
+                <span class="pdx-modal__helper">no spaces · 3-30 letters · won't appear in your collection</span>
+              </div>
+            </div>
+            <div class="pdx-modal__footer">
+              <button class="pdx-modal__btn-ghost">CANCEL</button>
+              <button class="pdx-modal__btn-primary">START</button>
+            </div>
+          </div>
+        </div>
+        <div class="pdx-popup__action-bar" style="filter: blur(0.5px); opacity: 0.7;">
+          <button class="pdx-action-icon"><iconify-icon icon="pixelarticons:reload"></iconify-icon></button>
+          <button class="pdx-action-primary" disabled>
+            <iconify-icon icon="pixelarticons:play"></iconify-icon> START HUNT
+          </button>
+          <button class="pdx-action-icon"><iconify-icon icon="pixelarticons:shuffle"></iconify-icon></button>
+          <button class="pdx-action-icon"><iconify-icon icon="pixelarticons:edit"></iconify-icon></button>
+        </div>
+      </div>
+      <p class="popup-frame__caption">
+        Modal absolutely positioned over the popup interior only (never the host page) · raspberry shell + LCD inner panel with scan-lines · cream input on the LCD with VT323 text · CANCEL ghost + yellow START · the popup behind it dims + slight blur for focus
+      </p>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

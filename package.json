@@ -47,7 +47,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.15",
-    "simple-git-hooks": "^2.11.0",
     "@crxjs/vite-plugin": "^2.4.0",
     "@preact/preset-vite": "^2.10.5",
     "@testing-library/dom": "^10.4.1",
@@ -58,6 +57,7 @@
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
     "jsdom": "^29.1.1",
+    "simple-git-hooks": "^2.11.0",
     "ts-jest": "^29.4.9",
     "typescript": "^6.0.3",
     "vite": "^8.0.10"
@@ -65,7 +65,9 @@
   "dependencies": {
     "@fontsource/fraunces": "^5.2.9",
     "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/press-start-2p": "^5.2.7",
     "@fontsource/space-grotesk": "^5.2.10",
+    "@fontsource/vt323": "^5.2.7",
     "preact": "^10.29.1"
   }
 }

@@ -8,6 +8,7 @@ End-to-end manual verification. Run after `pnpm build` produces a fresh `dist/`.
 2. Click **Load unpacked** → select the `dist/` directory in this repo.
 3. On the extension card, enable **Allow access to file URLs** (needed because the smoke fixture is served via `file://`).
 4. Open `tests/fixtures/smoke-article.html` directly in Chrome (drag the file into a tab, or `file:///…/tests/fixtures/smoke-article.html`).
+5. **Theme:** the extension ships two themes (**Slate** default, **Pokédex**). Switch in **Settings → Theme** (click a tile, then reopen the popup) or via DevTools console: `await chrome.storage.local.set({ theme: "pokedex" })` (then reopen). Run the **whole** checklist once per theme; the Pokédex-specific section below covers the forked surfaces that need extra scrutiny.
 
 ## Acceptance checks
 
@@ -134,6 +135,29 @@ Use `tests/fixtures/smoke-hidden-elements.html` (open as a `file://` URL with an
 
 - [ ] **Stats → Clear all hunts**: `Stats` tab returns to the editorial empty state; the Hunt Collection on the Play tab returns to `0 / N` with every slot a silhouette.
 - [ ] **Play → Clear**: the ActiveWord card returns to "No active word"; the previously active slot loses its primary-yellow glow.
+
+### Pokédex theme (run after switching `theme` to `pokedex` and reopening)
+
+**Popup chrome**
+
+- [ ] Popup renders as a raspberry game-device shell: lens + 3 LEDs (red/green/yellow) in the header, pixel `WORD HUNTER` wordmark, cream key-cap tabs (`PLAY` / `STATS` / `SETS`), a ridge strip, and a cyan LCD body well. No Slate (flat dark) chrome leaks through.
+- [ ] **Theme picker** (Settings, first field): two preview tiles — a dark **SLATE** tile (yellow accent bar) and a raspberry **POKEDEX** tile (cyan accent bar). The active theme's tile has the golden frame/glow. Helper line reads "switching reopens the popup". Click **SLATE** → reopen → the popup is back to the Slate skin (round-trip works).
+
+**LCD form controls (Settings)**
+
+- [ ] **MIN PARAGRAPH** is a 12-cell LCD strip with a numeric chip; dragging fills cells left-to-right and the chip tracks the value. **HINT DELAY** / **CURSOR REVEAL** are keys-only steppers (minus / LCD value+unit / plus) — no text field. **RELOAD HINT** / **SHOW NEXT WORD** / the notification toggles are mini key-cap switches showing OFF/ON. Changing any value slides up the LCD footer with an `UNSAVED EDITS` message + Cancel/Save keys.
+
+**Keyboard + motion a11y**
+
+- [ ] Tab through the popup: every focusable control (tabs, slots, action-bar buttons, switches, stepper keys, theme tiles, modal buttons) shows a **yellow focus ring**. No control is unreachable or invisibly focused.
+- [ ] In OS settings enable "reduce motion" (or DevTools → Rendering → Emulate `prefers-reduced-motion: reduce`). Toggle a settings switch — it changes state **without** the sliding cap animation; key/slot press no longer lifts. Colours and state still update.
+
+**In-page overlays**
+
+- [ ] On the smoke article with `theme: "pokedex"`: the hidden word renders as an LED lit-cell highlight (reversed text, `.pdx-highlight`), and Ctrl+F for the word still reports **0 matches**.
+- [ ] Trigger the hint toast (lower hint delay) → `.pdx-toast` device-chrome toast at top-right with a lens button, the message, and a cream key-cap close. The find key (when present) is a cream pixel key.
+- [ ] Find the word → `.pdx-celebration` centred LCD device over a dark scrim: lens + LEDs header, `REGISTERED!`-style found cue (green) + the word on the LCD, duration/hint meta. Clicking the backdrop dismisses; re-clicking the green word reopens with a **Clear/Remove** key. With **Show next word preview** on + Auto-Continue, a `.pdx-next` pill shows the upcoming word.
+- [ ] Switch `theme` back to `slate`, reload the article → overlays render in the original Slate skin (no `.pdx-*` classes leak).
 
 ## Known issues / limitations
 

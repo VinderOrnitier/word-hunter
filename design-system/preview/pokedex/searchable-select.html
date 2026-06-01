@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pokedex theme - SearchableSelect</title>
+<link rel="stylesheet" href="../../themes/theme-pokedex.css">
+<script src="icons.js"></script>
+<style>
+  /* ===== Page chrome (outside .pdx) ===================== */
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    background: #f0eee9;
+    color: #1a1b26;
+    padding: 32px 28px 80px;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .page-title { font-family: 'Press Start 2P', monospace; font-size: 16px; line-height: 1.4; margin: 0 0 6px; }
+  .page-sub { font-size: 14px; color: #4d4d5a; max-width: 780px; margin: 0 0 32px; }
+  .section { margin: 36px 0 0; max-width: 1080px; }
+  .section-label { font-family: 'Press Start 2P', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C0F31; margin: 0 0 6px; }
+  .section-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .section-desc { font-size: 13px; color: #4d4d5a; margin: 0 0 18px; max-width: 720px; }
+
+  .stage-row {
+    display: grid;
+    grid-template-columns: repeat(3, 220px);
+    gap: 28px;
+    justify-content: start;
+    align-items: start;
+  }
+  .col { display: flex; flex-direction: column; gap: 8px; width: 220px; }
+  .col__label {
+    font-family: var(--pdx-font-pixel);
+    font-size: 8px; letter-spacing: 0.06em;
+    color: #8C0F31; text-transform: uppercase;
+  }
+  /* the "stage" is a slice of the LCD body the control would live in */
+  .stage {
+    padding: 16px;
+    background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 30%, var(--pdx-lcd-lo) 100%);
+    border: 1px solid var(--pdx-lcd-frame);
+    border-radius: 6px;
+    position: relative;
+    overflow: visible;
+    min-height: 60px;
+  }
+  .stage::after {
+    content: ""; position: absolute; inset: 0; border-radius: 6px;
+    background-image: repeating-linear-gradient(0deg, rgba(15,42,64,0.1) 0, rgba(15,42,64,0.1) 1px, transparent 1px, transparent 3px);
+    mix-blend-mode: multiply; pointer-events: none;
+  }
+  .stage > * { position: relative; z-index: 2; }
+
+  .caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: #6e6354; line-height: 1.55;
+    max-width: 980px; margin: 20px 0 0;
+  }
+
+  /* =========================================================
+     POKEDEX SEARCHABLE SELECT
+     ---------------------------------------------------------
+     Trigger  = cream key cap with a pixel chevron.
+     Dropdown = navy-framed LCD panel that shares its top edge
+                with the trigger (single-panel read).
+     Search   = recessed LCD input with the pixel search glyph.
+     Options  = VT323 rows; selected row gets the yellow LED rail.
+     ========================================================= */
+  .pdx-select { position: relative; width: 100%; }
+
+  .pdx-select__trigger {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; box-sizing: border-box; gap: 8px;
+    padding: 7px 8px 7px 10px;
+    background: var(--pdx-key);
+    border: 1px solid var(--pdx-key-2);
+    border-bottom-width: 2px;
+    border-radius: var(--pdx-r-key);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    cursor: pointer; text-align: left;
+    color: var(--pdx-on-key);
+  }
+  .pdx-select__value {
+    font-family: var(--pdx-font-lcd);
+    font-size: 18px; line-height: 1;
+    color: var(--pdx-key-ink);
+    text-transform: lowercase;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .pdx-select__chev {
+    flex: 0 0 auto;
+    width: 16px; height: 16px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--pdx-key-ink-2);
+    transition: transform var(--pdx-dur-base) var(--pdx-ease-standard);
+  }
+  .pdx-select__chev iconify-icon,
+  .pdx-select__chev svg { font-size: 11px; }
+
+  /* OPEN trigger -- flattens its bottom into the dropdown, lights the
+     active lens ring so the open panel reads as one unit. */
+  .pdx-select__trigger.is-open {
+    border-color: #1F5C9E;
+    border-bottom-color: transparent;
+    border-bottom-left-radius: 0; border-bottom-right-radius: 0;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.7),
+      0 0 0 1px rgba(141,195,240,0.4);
+  }
+  .pdx-select__trigger.is-open .pdx-select__chev { transform: rotate(180deg); }
+
+  .pdx-select__dropdown {
+    position: absolute; left: 0; right: 0; top: 100%;
+    z-index: 20;
+    background: var(--pdx-lcd-frame);
+    border: 1px solid #1F5C9E;
+    border-top: none;
+    border-radius: 0 0 var(--pdx-r-key) var(--pdx-r-key);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.4);
+    padding: 3px;
+    overflow: hidden;
+  }
+
+  /* Search field -- recessed cyan LCD strip with pixel magnifier */
+  .pdx-select__search-wrap {
+    position: relative;
+    margin-bottom: 3px;
+  }
+  .pdx-select__search-icon {
+    position: absolute; left: 7px; top: 50%; transform: translateY(-50%);
+    width: 12px; height: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--pdx-lcd-ink-2);
+    pointer-events: none; z-index: 2;
+  }
+  .pdx-select__search-icon iconify-icon,
+  .pdx-select__search-icon svg { font-size: 11px; }
+  .pdx-select__search {
+    display: block; width: 100%; box-sizing: border-box;
+    padding: 5px 8px 6px 24px;
+    background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 100%);
+    border: 0;
+    border-radius: 3px;
+    font-family: var(--pdx-font-lcd);
+    font-size: 16px; line-height: 1;
+    color: var(--pdx-lcd-ink);
+    outline: none;
+    box-shadow: inset 0 1px 2px rgba(15,42,64,0.4);
+  }
+  .pdx-select__search::placeholder { color: var(--pdx-lcd-ink-2); }
+
+  .pdx-select__list { max-height: 168px; overflow-y: auto; }
+  .pdx-select__list::-webkit-scrollbar { width: 6px; }
+  .pdx-select__list::-webkit-scrollbar-thumb { background: var(--pdx-lcd-frame-2); border-radius: 3px; }
+
+  .pdx-select__option {
+    display: flex; align-items: center; gap: 6px;
+    width: 100%; box-sizing: border-box;
+    padding: 5px 8px;
+    background: rgba(148, 221, 236, 0.18);
+    border: 0;
+    border-radius: 2px;
+    margin-bottom: 1px;
+    text-align: left; cursor: pointer;
+    font-family: var(--pdx-font-lcd);
+    font-size: 17px; line-height: 1;
+    color: var(--pdx-key);
+    text-transform: lowercase;
+  }
+  .pdx-select__option:last-child { margin-bottom: 0; }
+  .pdx-select__option:hover { background: rgba(148, 221, 236, 0.34); }
+  /* selected -- yellow LED rail on the left + cream text */
+  .pdx-select__option.is-selected {
+    background: rgba(255, 210, 63, 0.16);
+    color: #FFE9B0;
+    box-shadow: inset 2px 0 0 var(--pdx-led-yellow);
+  }
+  .pdx-select__option.is-selected::after {
+    content: ""; margin-left: auto;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--pdx-led-yellow);
+    box-shadow: 0 0 4px var(--pdx-led-yellow);
+  }
+  /* empty result */
+  .pdx-select__empty {
+    padding: 10px 8px;
+    font-family: var(--pdx-font-pixel);
+    font-size: 8px; letter-spacing: 0.06em;
+    color: rgba(244,239,226,0.6);
+    text-transform: uppercase; text-align: center;
+  }
+</style>
+</head>
+<body class="pdx">
+
+<nav style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px;">
+  <a href="index.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">FOUNDATIONS</a>
+  <a href="components-form-controls.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">FORM CONTROLS</a>
+  <a href="iconography.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">ICONOGRAPHY</a>
+  <a href="screens-tabs.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">SCREENS</a>
+  <a href="in-page-overlays.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">IN-PAGE</a>
+  <a href="play-tab.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">PLAY</a>
+  <a href="searchable-select.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#8C0F31;color:#fff;">SELECT</a>
+</nav>
+
+<h1 class="page-title">SEARCHABLE SELECT</h1>
+<p class="page-sub">
+  The last open control. Used wherever the option set is long enough to warrant typing to filter (e.g. picking a word from a large custom list). Pokedex variant: cream key-cap trigger with a pixel chevron, opening into a navy-framed LCD dropdown. The trigger and dropdown share a flattened seam so they read as one panel — same single-panel principle as slate, translated to the device.
+</p>
+
+<div class="section">
+  <p class="section-label">searchable select · three states</p>
+  <h2 class="section-title">Closed · open · filtered</h2>
+  <p class="section-desc">
+    Values are <em>words</em>, so they wear the VT323 LCD font in both the trigger and the options — the same logic slate uses (words wear mono). Selected option carries a yellow LED rail on the left and a lit dot on the right. The search field is a recessed cyan LCD strip with the pixel magnifier glyph.
+  </p>
+
+  <div class="stage-row">
+
+    <!-- CLOSED -->
+    <div class="col">
+      <span class="col__label">closed</span>
+      <div class="stage">
+        <div class="pdx-select">
+          <button class="pdx-select__trigger">
+            <span class="pdx-select__value">pikachu</span>
+            <span class="pdx-select__chev"><iconify-icon icon="pixelarticons:chevron-down"></iconify-icon></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPEN · empty query -->
+    <div class="col">
+      <span class="col__label">open · empty query</span>
+      <div class="stage" style="min-height: 250px;">
+        <div class="pdx-select">
+          <button class="pdx-select__trigger is-open">
+            <span class="pdx-select__value">pikachu</span>
+            <span class="pdx-select__chev"><iconify-icon icon="pixelarticons:chevron-down"></iconify-icon></span>
+          </button>
+          <div class="pdx-select__dropdown">
+            <div class="pdx-select__search-wrap">
+              <span class="pdx-select__search-icon"><iconify-icon icon="pixelarticons:search"></iconify-icon></span>
+              <input class="pdx-select__search" type="text" value="" placeholder="search...">
+            </div>
+            <div class="pdx-select__list">
+              <button class="pdx-select__option">bulbasaur</button>
+              <button class="pdx-select__option">charmander</button>
+              <button class="pdx-select__option">squirtle</button>
+              <button class="pdx-select__option is-selected">pikachu</button>
+              <button class="pdx-select__option">eevee</button>
+              <button class="pdx-select__option">mewtwo</button>
+              <button class="pdx-select__option">snorlax</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPEN · filtered -->
+    <div class="col">
+      <span class="col__label">open · filtered "pi"</span>
+      <div class="stage" style="min-height: 250px;">
+        <div class="pdx-select">
+          <button class="pdx-select__trigger is-open">
+            <span class="pdx-select__value">pikachu</span>
+            <span class="pdx-select__chev"><iconify-icon icon="pixelarticons:chevron-down"></iconify-icon></span>
+          </button>
+          <div class="pdx-select__dropdown">
+            <div class="pdx-select__search-wrap">
+              <span class="pdx-select__search-icon"><iconify-icon icon="pixelarticons:search"></iconify-icon></span>
+              <input class="pdx-select__search" type="text" value="pi" placeholder="search...">
+            </div>
+            <div class="pdx-select__list">
+              <button class="pdx-select__option is-selected">pikachu</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="caption">
+    Trigger flattens its bottom edge + drops a lens-blue border when open, sharing the seam with the dropdown (single-panel read, matching slate)  ·  options are VT323 rows on a faint cyan ground  ·  selected = yellow LED left rail + lit dot right  ·  search input recessed with pixel magnifier  ·  list max-height 168px scrolls inside (navy thumb)  ·  empty-result state shows "NO MATCH" in pixel font
+  </p>
+</div>
+
+<!-- empty-result demo -->
+<div class="section">
+  <p class="section-label">edge case</p>
+  <h2 class="section-title">No match</h2>
+  <p class="section-desc">When the query filters everything out, the list is replaced by a centred pixel-font notice.</p>
+  <div class="stage-row">
+    <div class="col">
+      <span class="col__label">open · filtered "zz"</span>
+      <div class="stage" style="min-height: 120px;">
+        <div class="pdx-select">
+          <button class="pdx-select__trigger is-open">
+            <span class="pdx-select__value">pikachu</span>
+            <span class="pdx-select__chev"><iconify-icon icon="pixelarticons:chevron-down"></iconify-icon></span>
+          </button>
+          <div class="pdx-select__dropdown">
+            <div class="pdx-select__search-wrap">
+              <span class="pdx-select__search-icon"><iconify-icon icon="pixelarticons:search"></iconify-icon></span>
+              <input class="pdx-select__search" type="text" value="zz" placeholder="search...">
+            </div>
+            <div class="pdx-select__empty">NO MATCH</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

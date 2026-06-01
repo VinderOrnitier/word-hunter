@@ -1,5 +1,5 @@
 import { h, render } from "preact";
-import type { ActiveWord, HuntRecord } from "../shared/types";
+import type { ActiveWord, HuntRecord, Theme } from "../shared/types";
 import { HiddenWordHost } from "./components/HiddenWordHost";
 
 const HW_HOST_CLASS = "hw-host";
@@ -10,6 +10,7 @@ export interface WordRendererOptions {
   onReview?: (record: HuntRecord) => void;
   resolveArt?: (word: string, source: ActiveWord["list"]) => string | undefined;
   hoverRevealSeconds?: number;
+  theme?: Theme;
 }
 
 export interface WordRendererResult {
@@ -21,7 +22,7 @@ export function WordRenderer(
   groups: Element[][],
   options: WordRendererOptions = {}
 ): WordRendererResult {
-  const { onFind, onReview, hoverRevealSeconds } = options;
+  const { onFind, onReview, hoverRevealSeconds, theme } = options;
   if (groups.length === 0) return { setHinted: () => {} };
 
   const doc = groups[0][0].ownerDocument;
@@ -59,7 +60,7 @@ export function WordRenderer(
 
   const computed = window.getComputedStyle(textNode.parentElement ?? para);
   const host = doc.createElement("span");
-  host.className = HW_HOST_CLASS;
+  host.className = theme === "pokedex" ? `${HW_HOST_CLASS} pdx` : HW_HOST_CLASS;
 
   const tail = text.slice(insertAt);
   const parent = textNode.parentNode!;
@@ -86,6 +87,7 @@ export function WordRenderer(
         hoverRevealSeconds,
         hinted,
         inheritedStyle,
+        theme,
       }),
       host
     );

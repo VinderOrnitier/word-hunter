@@ -1,6 +1,13 @@
 import type { Locale } from "../i18n/types";
-import { DEFAULT_SETTINGS } from "./constants";
-import type { ActiveWord, FeatureFlags, GameSettings, HuntRecord, WordListName } from "./types";
+import { DEFAULT_SETTINGS, DEFAULT_THEME } from "./constants";
+import type {
+  ActiveWord,
+  FeatureFlags,
+  GameSettings,
+  HuntRecord,
+  Theme,
+  WordListName,
+} from "./types";
 
 export type StorageSchema = {
   finds: HuntRecord[];
@@ -9,6 +16,7 @@ export type StorageSchema = {
   selectedList: WordListName;
   locale: Locale;
   featureFlags: FeatureFlags;
+  theme: Theme;
 };
 
 async function get<K extends keyof StorageSchema>(key: K): Promise<StorageSchema[K] | undefined> {
@@ -44,4 +52,8 @@ export async function setActiveWord(activeWord: ActiveWord): Promise<void> {
 
 export async function clearActiveWord(): Promise<void> {
   await chrome.storage.local.remove("activeWord");
+}
+
+export async function getTheme(): Promise<Theme> {
+  return (await get("theme")) ?? DEFAULT_THEME;
 }

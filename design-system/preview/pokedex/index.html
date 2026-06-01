@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Word Hunter — Pokédex theme · preview index</title>
+<link rel="stylesheet" href="../../themes/theme-pokedex.css">
+<style>
+  /* ===== Page chrome =====================================
+     The preview page itself sits OUTSIDE .pdx so the
+     surrounding documentation can stay neutral. Each
+     "preview card" wraps its content in .pdx to scope
+     the theme. */
+
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    background: #f0eee9;
+    color: #1a1b26;
+    padding: 32px 28px 80px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
+  }
+
+  .page-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    line-height: 1.4;
+    margin: 0 0 6px;
+    color: #1a1b26;
+  }
+  .page-sub {
+    font-size: 14px;
+    color: #4d4d5a;
+    max-width: 720px;
+    margin: 0 0 36px;
+  }
+
+  .section {
+    margin: 36px 0;
+    max-width: 980px;
+  }
+  .section-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8C0F31;
+    margin: 0 0 6px;
+  }
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    color: #1a1b26;
+    letter-spacing: -0.01em;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: #4d4d5a;
+    margin: 0 0 20px;
+    max-width: 640px;
+  }
+
+  .card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 1px 0 rgba(0,0,0,0.05);
+    border: 1px solid #e6e1d6;
+  }
+
+  /* ===== Swatch row helpers ============================== */
+  .swatch-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+  .swatch .chip {
+    height: 72px;
+    border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .swatch .name {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1a1b26;
+  }
+  .swatch .val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #6e6354;
+  }
+
+  /* ===== Type sample row ================================ */
+  .type-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 140px;
+    gap: 20px;
+    align-items: baseline;
+    padding: 14px 0;
+    border-top: 1px dashed #e6e1d6;
+  }
+  .type-row:first-of-type { border-top: 0; }
+  .type-row .role {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: #8C0F31;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .type-row .specs {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #6e6354;
+    text-align: right;
+  }
+
+  /* ===== Demo strip — for in-text effects ================ */
+  .demo-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .demo {
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-family: Georgia, serif;
+    font-size: 14px;
+    line-height: 1.75;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .demo.dark  { background: #0B0F19; color: #B6BED4; }
+  .demo.light { background: #f7f3ec; color: #1c1a17; border-color: #e6dfd2; }
+  .demo .caption {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #6e6354;
+    margin-top: 8px;
+  }
+  .demo.dark .caption { color: #5C6480; }
+
+  /* ===== Primitive cells (right column on big tables) ==== */
+  .primitive-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 24px;
+    padding: 16px 0;
+    border-top: 1px dashed #e6e1d6;
+    align-items: center;
+  }
+  .primitive-row:first-of-type { border-top: 0; }
+  .primitive-row .meta .name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: #1a1b26;
+  }
+  .primitive-row .meta .desc {
+    font-size: 12px;
+    color: #6e6354;
+    margin-top: 4px;
+    line-height: 1.45;
+  }
+  .primitive-row .stage {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 14px;
+    background: #D32B5C;       /* raspberry stage for chrome primitives */
+    border-radius: 8px;
+    min-height: 64px;
+  }
+  .primitive-row .stage--lcd {
+    background: linear-gradient(180deg, #94DDEC 0%, #6FC8DC 35%, #3A8AA6 100%);
+  }
+  .primitive-row .stage--cream {
+    background: #F4EFE2;
+    border: 1px solid #D9D2C0;
+  }
+  .primitive-row .stage--shell-bottom {
+    background: linear-gradient(180deg, #E84B7E 0%, #D32B5C 70%, #B81E4A 100%);
+  }
+
+  /* ===== Mapping table ================================== */
+  .map-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .map-table th,
+  .map-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e6e1d6;
+  }
+  .map-table th {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    color: #8C0F31;
+    letter-spacing: 0.05em;
+    font-weight: 400;
+  }
+  .map-table .hex {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #4d4d5a;
+  }
+  .map-table .dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.1);
+    vertical-align: -3px;
+    margin-right: 6px;
+  }
+
+  /* ===== Coverage check list ============================ */
+  .coverage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 13px;
+  }
+  .coverage li {
+    padding: 6px 0;
+    border-bottom: 1px dashed #ece6da;
+  }
+  .coverage li::before {
+    content: "□ ";
+    font-family: 'JetBrains Mono', monospace;
+    color: #8C0F31;
+    margin-right: 6px;
+  }
+  .coverage li.done::before { content: "■ "; color: #2FD46E; }
+
+  /* tiny utility */
+  .stack { display: flex; flex-direction: column; gap: 16px; }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">POKÉDEX THEME</h1>
+<p class="page-sub">
+  Parallel skin for Word Hunter. Game-device language — raspberry shell, cyan LCD, cream key caps, yellow LED accents. This page is the visual reference for the theme tokens, type, primitives, and brand contract.
+  All swatches and primitives below are rendered live from <code>themes/theme-pokedex.css</code>.
+</p>
+
+<nav style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px;">
+  <a href="index.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#8C0F31;color:#fff;">FOUNDATIONS</a>
+  <a href="components-form-controls.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">FORM CONTROLS</a>
+  <a href="iconography.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">ICONOGRAPHY</a>
+  <a href="screens-tabs.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">SCREENS</a>
+  <a href="in-page-overlays.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">IN-PAGE</a>
+  <a href="play-tab.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">PLAY</a>
+  <a href="searchable-select.html" style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:0.06em;padding:8px 12px;border-radius:4px;text-decoration:none;background:#fff;color:#8C0F31;border:1px solid #e6e1d6;">SELECT</a>
+</nav>
+
+<!-- =====================================================
+     COLOR — Shell palette
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">colors · 1 of 4</p>
+  <h2 class="section-title">Shell — raspberry plastic</h2>
+  <p class="section-desc">
+    The popup envelope and any device chrome (header, action bar, ridge seams). Three values walk from highlight to deep crease so the body reads as moulded plastic, not flat fill.
+  </p>
+  <div class="card pdx">
+    <div class="swatch-row">
+      <div class="swatch"><div class="chip" style="background: var(--pdx-shell-edge)"></div><span class="name">Shell edge</span><span class="val">--pdx-shell-edge · #FFC2D4</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-shell-hi)"></div><span class="name">Shell hi</span><span class="val">--pdx-shell-hi · #E84B7E</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-shell)"></div><span class="name">Shell</span><span class="val">--pdx-shell · #D32B5C</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-shell-2)"></div><span class="name">Shell 2</span><span class="val">--pdx-shell-2 · #B81E4A</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-shell-deep)"></div><span class="name">Shell deep</span><span class="val">--pdx-shell-deep · #8C0F31</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
+     COLOR — LCD palette
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">colors · 2 of 4</p>
+  <h2 class="section-title">LCD — cyan screen</h2>
+  <p class="section-desc">
+    Anywhere "displayed" content lives — the active word, counts, timers, the celebration popup. The screen well is recessed via inset shadow + scan lines; text sits as dark navy ink on the cyan field.
+  </p>
+  <div class="card pdx">
+    <div class="swatch-row">
+      <div class="swatch"><div class="chip" style="background: var(--pdx-lcd-hi)"></div><span class="name">LCD hi</span><span class="val">--pdx-lcd-hi · #94DDEC</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-lcd)"></div><span class="name">LCD</span><span class="val">--pdx-lcd · #6FC8DC</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-lcd-lo)"></div><span class="name">LCD lo</span><span class="val">--pdx-lcd-lo · #3A8AA6</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-lcd-frame-2)"></div><span class="name">Frame inner</span><span class="val">--pdx-lcd-frame-2 · #324B6C</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-lcd-frame)"></div><span class="name">Frame</span><span class="val">--pdx-lcd-frame · #15233A</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-lcd-ink-2)"></div><span class="name">LCD ink 2</span><span class="val">--pdx-lcd-ink-2 · #2C5170</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-lcd-ink)"></div><span class="name">LCD ink</span><span class="val">--pdx-lcd-ink · #0F2A40</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
+     COLOR — Key cap palette
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">colors · 3 of 4</p>
+  <h2 class="section-title">Key cap — cream physical button</h2>
+  <p class="section-desc">
+    Any clickable control that's NOT inside the LCD. Filter chips, list selector, shuffle/custom buttons, collection slots. The 3D effect lives in the border-bottom-width trick + inset shadow.
+  </p>
+  <div class="card pdx">
+    <div class="swatch-row">
+      <div class="swatch"><div class="chip" style="background: var(--pdx-key)"></div><span class="name">Key</span><span class="val">--pdx-key · #F4EFE2</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-key-press)"></div><span class="name">Key pressed</span><span class="val">--pdx-key-press · #E5DDC8</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-key-2)"></div><span class="name">Key 2 (shadow)</span><span class="val">--pdx-key-2 · #D9D2C0</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-key-ink-2)"></div><span class="name">Key ink 2</span><span class="val">--pdx-key-ink-2 · #4D4D5A</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-key-ink)"></div><span class="name">Key ink</span><span class="val">--pdx-key-ink · #1A1B26</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
+     COLOR — LEDs / accents / semantic
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">colors · 4 of 4</p>
+  <h2 class="section-title">LEDs & accents — the bright moments</h2>
+  <p class="section-desc">
+    The small set of saturated colours the theme uses for state and accent. Each one is reserved for a specific semantic role (see mapping table below).
+  </p>
+  <div class="card pdx" style="margin-bottom: 14px;">
+    <div class="swatch-row">
+      <div class="swatch"><div class="chip" style="background: var(--pdx-led-yellow)"></div><span class="name">LED yellow</span><span class="val">--pdx-led-yellow · #FFD23F</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-led-green)"></div><span class="name">LED green</span><span class="val">--pdx-led-green · #2FD46E</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-led-red)"></div><span class="name">LED red</span><span class="val">--pdx-led-red · #FF3B3B</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-lens)"></div><span class="name">Lens</span><span class="val">--pdx-lens · #2A85D6</span></div>
+      <div class="swatch"><div class="chip" style="background: var(--pdx-warning)"></div><span class="name">Warning</span><span class="val">--pdx-warning · #FFA862</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <table class="map-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Pokédex token</th>
+          <th>Hex</th>
+          <th>Slate equivalent</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>primary</strong> (the hunt cue)</td><td>--pdx-primary → --pdx-led-yellow</td><td class="hex"><span class="dot" style="background:#FFD23F"></span>#FFD23F</td><td>--wh-primary #FFD23F (same hex)</td></tr>
+        <tr><td><strong>found</strong> (registered catch)</td><td>--pdx-found → --pdx-led-green</td><td class="hex"><span class="dot" style="background:#2FD46E"></span>#2FD46E</td><td>--wh-found #5EE3A1 (mintier)</td></tr>
+        <tr><td><strong>info</strong> (quiet communication)</td><td>--pdx-info → --pdx-lens</td><td class="hex"><span class="dot" style="background:#2A85D6"></span>#2A85D6</td><td>--wh-info #8AB4FF (lighter)</td></tr>
+        <tr><td><strong>selected</strong> (pending state)</td><td>--pdx-selected → --pdx-lens</td><td class="hex"><span class="dot" style="background:#2A85D6"></span>#2A85D6</td><td>--wh-selected #8AB4FF</td></tr>
+        <tr><td><strong>warning</strong> (heads-up)</td><td>--pdx-warning</td><td class="hex"><span class="dot" style="background:#FFA862"></span>#FFA862</td><td>--wh-warning #FFA862 (same hex)</td></tr>
+        <tr><td><strong>danger</strong> (destructive)</td><td>--pdx-danger → --pdx-led-red</td><td class="hex"><span class="dot" style="background:#FF3B3B"></span>#FF3B3B</td><td>--wh-danger #FF6B6B (softer)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- =====================================================
+     TYPOGRAPHY
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">type</p>
+  <h2 class="section-title">Three families, three roles</h2>
+  <p class="section-desc">
+    <strong>Press Start 2P</strong> — labels stamped on the device (eyebrows, tab labels, button text). Never larger than 14&nbsp;px.<br>
+    <strong>VT323</strong> — LCD output (the active word, counters, durations). The "displayed" font.<br>
+    <strong>Space Grotesk</strong> — body / helper copy where pixel hurts legibility. The "explainer" font.
+  </p>
+
+  <div class="card pdx">
+    <div class="type-row">
+      <span class="role">Display</span>
+      <span class="pdx-display">WORD HUNTER</span>
+      <span class="specs">Press Start 2P · 14px · uppercase</span>
+    </div>
+    <div class="type-row">
+      <span class="role">H1</span>
+      <span class="pdx-h1">START HUNT</span>
+      <span class="specs">Press Start 2P · 12px · uppercase</span>
+    </div>
+    <div class="type-row">
+      <span class="role">H2</span>
+      <span class="pdx-h2">Hint delay</span>
+      <span class="specs">Press Start 2P · 10px · uppercase</span>
+    </div>
+    <div class="type-row">
+      <span class="role">Eyebrow</span>
+      <span class="pdx-eyebrow">NOW HUNTING</span>
+      <span class="specs">Press Start 2P · 8px · wide tracking</span>
+    </div>
+    <div class="type-row">
+      <span class="role">LCD line xl</span>
+      <span class="pdx-lcd-line pdx-lcd-line--xl">flamingo</span>
+      <span class="specs">VT323 · 40px · LCD ink</span>
+    </div>
+    <div class="type-row">
+      <span class="role">LCD line lg</span>
+      <span class="pdx-lcd-line pdx-lcd-line--lg">otter</span>
+      <span class="specs">VT323 · 30px · LCD ink</span>
+    </div>
+    <div class="type-row">
+      <span class="role">LCD line</span>
+      <span class="pdx-lcd-line">12 / 54</span>
+      <span class="specs">VT323 · 22px · LCD ink</span>
+    </div>
+    <div class="type-row">
+      <span class="role">Body</span>
+      <span class="pdx-body">Reload the page to begin hunting.</span>
+      <span class="specs">Space Grotesk · 13px · 500</span>
+    </div>
+    <div class="type-row">
+      <span class="role">Meta</span>
+      <span class="pdx-meta">5 HUNTS LOGGED</span>
+      <span class="specs">Space Grotesk · 11px · uppercase</span>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
+     THEME PRIMITIVES
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">primitives</p>
+  <h2 class="section-title">Theme-wide pieces</h2>
+  <p class="section-desc">
+    Reusable visual primitives consumed by multiple components. Lives in <code>themes/theme-pokedex.css</code>; documented here so each component knows what to reach for.
+  </p>
+
+  <div class="card pdx stack">
+
+    <div class="primitive-row">
+      <div class="meta">
+        <div class="name">.pdx-key</div>
+        <div class="desc">Cream physical button. Modifiers: <code>.is-active</code> (yellow LED), <code>.is-pressed</code> (recessed), <code>.pdx-key--lens</code> (navy lens-tone).</div>
+      </div>
+      <div class="stage stage--shell-bottom">
+        <button class="pdx-key" style="font-family: var(--pdx-font-ui); font-size: 11px; font-weight: 700; letter-spacing: 0.02em; padding: 6px 12px;">ANIM</button>
+        <button class="pdx-key is-active" style="font-family: var(--pdx-font-ui); font-size: 11px; font-weight: 700; letter-spacing: 0.02em; padding: 6px 12px;">POKE</button>
+        <button class="pdx-key" style="font-family: var(--pdx-font-ui); font-size: 11px; font-weight: 700; letter-spacing: 0.02em; padding: 6px 12px;">CGHT</button>
+        <button class="pdx-key pdx-key--lens" style="font-family: var(--pdx-font-ui); font-size: 11px; font-weight: 700; letter-spacing: 0.02em; padding: 6px 12px;">LIST</button>
+        <button class="pdx-key pdx-key--lens is-active" style="font-family: var(--pdx-font-ui); font-size: 11px; font-weight: 700; letter-spacing: 0.02em; padding: 6px 12px;">LENS ACTIVE</button>
+      </div>
+    </div>
+
+    <div class="primitive-row">
+      <div class="meta">
+        <div class="name">.pdx-slot</div>
+        <div class="desc">Square cream key-cap for the collection grid. States: rest · is-active (yellow ring) · is-pending (blue ring).</div>
+      </div>
+      <div class="stage stage--shell-bottom" style="display: grid; grid-template-columns: repeat(5, 44px); gap: 6px;">
+        <div class="pdx-slot" style="height: 44px;"><span style="font-size: 24px;">🦩</span><span class="pdx-slot__count">×3</span></div>
+        <div class="pdx-slot is-active" style="height: 44px;"><span style="font-size: 24px;">🦦</span></div>
+        <div class="pdx-slot is-pending" style="height: 44px;"><span style="font-size: 24px;">🐍</span></div>
+        <div class="pdx-slot" style="height: 44px;"><span style="font-family: var(--pdx-font-lcd); font-size: 22px; color: var(--pdx-key-ink-2);">???</span></div>
+        <div class="pdx-slot" style="height: 44px;"><span style="font-family: var(--pdx-font-lcd); font-size: 22px; color: var(--pdx-key-ink-2);">???</span></div>
+      </div>
+    </div>
+
+    <div class="primitive-row">
+      <div class="meta">
+        <div class="name">.pdx-lens</div>
+        <div class="desc">Blue camera lens. Decorative accessory in the popup header & in-page toast.</div>
+      </div>
+      <div class="stage">
+        <span class="pdx-lens" style="width: 28px; height: 28px;"></span>
+        <span class="pdx-lens" style="width: 36px; height: 36px;"></span>
+        <span class="pdx-lens" style="width: 48px; height: 48px;"></span>
+      </div>
+    </div>
+
+    <div class="primitive-row">
+      <div class="meta">
+        <div class="name">.pdx-led</div>
+        <div class="desc">LED dot. <code>currentColor</code> sets the LED; the glow comes from the same colour via <code>box-shadow</code>.</div>
+      </div>
+      <div class="stage">
+        <span class="pdx-led" style="color: var(--pdx-led-red);"></span>
+        <span class="pdx-led" style="color: var(--pdx-led-green);"></span>
+        <span class="pdx-led" style="color: var(--pdx-led-yellow);"></span>
+        <span class="pdx-led" style="width: 11px; height: 11px; color: var(--pdx-led-red);"></span>
+        <span class="pdx-led" style="width: 11px; height: 11px; color: var(--pdx-led-green);"></span>
+        <span class="pdx-led" style="width: 11px; height: 11px; color: var(--pdx-led-yellow);"></span>
+      </div>
+    </div>
+
+    <div class="primitive-row">
+      <div class="meta">
+        <div class="name">.pdx-ridge</div>
+        <div class="desc">6px plastic seam between display zone and controls zone. Used in V2 between LCD and the slot grid.</div>
+      </div>
+      <div class="stage" style="padding: 0; background: var(--pdx-shell); display: block;">
+        <div style="height: 30px; background: var(--pdx-shell);"></div>
+        <div class="pdx-ridge"></div>
+        <div style="height: 30px; background: linear-gradient(180deg, var(--pdx-shell-hi) 0%, var(--pdx-shell) 100%);"></div>
+      </div>
+    </div>
+
+    <div class="primitive-row">
+      <div class="meta">
+        <div class="name">LCD overlays</div>
+        <div class="desc">Scan lines + glare overlay siblings inside any LCD well. Pointer-events: none so they don't block clicks.</div>
+      </div>
+      <div class="stage stage--lcd" style="position: relative; min-height: 96px; overflow: hidden; border-radius: 6px;">
+        <div style="position: relative; z-index: 2; display: flex; flex-direction: column; gap: 4px;">
+          <span class="pdx-eyebrow pdx-eyebrow--on-lcd">NOW HUNTING</span>
+          <span class="pdx-lcd-line pdx-lcd-line--lg">flamingo</span>
+        </div>
+        <div class="pdx-lcd-scanlines"></div>
+        <div class="pdx-lcd-glare"></div>
+      </div>
+    </div>
+
+    <div class="primitive-row">
+      <div class="meta">
+        <div class="name">.pdx-dpad</div>
+        <div class="desc">Decorative directional pad. Reserved for future "navigate grid via D-pad" interaction.</div>
+      </div>
+      <div class="stage">
+        <div class="pdx-dpad">
+          <div class="pdx-dpad__arm pdx-dpad__arm--h"></div>
+          <div class="pdx-dpad__arm pdx-dpad__arm--v"></div>
+          <div class="pdx-dpad__center"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="primitive-row">
+      <div class="meta">
+        <div class="name">.pdx-grille</div>
+        <div class="desc">Tiny 3-column speaker dot field. Visual rhythm in action bar gaps or as a corner ornament.</div>
+      </div>
+      <div class="stage">
+        <div class="pdx-grille">
+          <div class="pdx-grille__dot"></div><div class="pdx-grille__dot"></div><div class="pdx-grille__dot"></div>
+          <div class="pdx-grille__dot"></div><div class="pdx-grille__dot"></div><div class="pdx-grille__dot"></div>
+          <div class="pdx-grille__dot"></div><div class="pdx-grille__dot"></div><div class="pdx-grille__dot"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- =====================================================
+     HIGHLIGHTER — the brand signature, Pokédex variant
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">brand signature</p>
+  <h2 class="section-title">Highlighter — Pokédex variant</h2>
+  <p class="section-desc">
+    The slate theme uses a thin yellow stripe under inline text. The Pokédex theme commits harder: the highlighted word becomes a yellow LED rectangle behind the text, with a pixel-art 1px charcoal outline (via inset shadow so layout doesn't shift) and a soft LED glow. The text inside flips to dark navy. The found-state swaps the rectangle to LED green.
+  </p>
+  <div class="card pdx">
+    <div class="demo-strip">
+      <div class="demo dark">
+        patient otters spend the morning grooming and the afternoon <span class="pdx-highlight">hunting</span> at the river — <span class="pdx-highlight pdx-highlight--found">otter</span>
+        <span class="caption">on dark host page · same stripe semantics</span>
+      </div>
+      <div class="demo light">
+        patient otters spend the morning grooming and the afternoon <span class="pdx-highlight">hunting</span> at the river — <span class="pdx-highlight pdx-highlight--found">otter</span>
+        <span class="caption">on light host page · LED rectangle reads on both</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
+     COVERAGE — what's left to build
+     ===================================================== -->
+<div class="section">
+  <p class="section-label">next steps</p>
+  <h2 class="section-title">Coverage checklist</h2>
+  <p class="section-desc">
+    Every surface that needs a Pokédex skin — all 24 boxes filled. The theme covers the complete extension: popup chrome, all tab bodies, every form control, the icon set, and all in-page overlays.
+  </p>
+  <div class="card">
+    <ul class="coverage">
+      <li class="done">PopupShell — raspberry envelope</li>
+      <li class="done">PopupHeader — lens + LEDs + wordmark</li>
+      <li class="done">Tabs — key-cap row</li>
+      <li class="done">PlayTab body — LCD viewport + slot grid</li>
+      <li class="done">ActiveWord display — LCD line</li>
+      <li class="done">ProgressRow — inset mini-LCD with bar</li>
+      <li class="done">CollectionSlot — square key-cap</li>
+      <li class="done">BottomActionBar — raised keypad housing</li>
+      <li class="done">CustomWordModal — modal over raspberry</li>
+      <li class="done">StatsTab — LCD table rows</li>
+      <li class="done">SettingsTab — toggle keys, range LCD slider, number stepper</li>
+      <li class="done">Rules view — LCD info screen</li>
+      <li class="done">CelebrationPopup — full-screen "REGISTERED!" flash</li>
+      <li class="done">InPageToast — three variants (hint / info / auto)</li>
+      <li class="done">ReloadHint — small key-cap card</li>
+      <li class="done">ConfirmOverlay — "CLEAR HUNTS?" key-cap confirm</li>
+      <li class="done">SearchableSelect — LCD dropdown</li>
+      <li class="done">Switch — physical toggle key (on/off)</li>
+      <li class="done">NumberStepper — LCD digits with chevron keys</li>
+      <li class="done">RangeSlider — LCD slider with value chip</li>
+      <li class="done">Iconography — Pixelarticons set (16 roles)</li>
+      <li class="done">Theme switcher in Settings — two preview tiles</li>
+      <li class="done">HiddenWord highlighter — LED rectangle (above ↑)</li>
+      <li class="done">Token foundations — colors, type, primitives</li>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>

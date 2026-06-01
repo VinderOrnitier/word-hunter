@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Word Hunter — Pokedex In-Page Overlay (composition)</title>
+<link rel="stylesheet" href="../../themes/theme-pokedex.css">
+<script src="icons.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: var(--pdx-font-ui); background: #15202b; min-height: 100vh; }
+
+  /* ===== Host page mock ================================= */
+  .host {
+    position: relative;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #0F1320 0%, #1a1f2c 100%);
+    overflow: hidden;
+  }
+  .host__article {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 64px 32px 120px;
+    font-family: Georgia, 'Source Serif Pro', serif;
+    color: rgba(255,255,255,0.62);
+    font-size: 15px; line-height: 1.8;
+  }
+  .host__article h1 { font-family: 'Source Serif Pro', Georgia, serif; font-weight: 600; font-size: 30px; line-height: 1.2; color: rgba(255,255,255,0.85); margin: 0 0 8px; letter-spacing: -0.01em; }
+  .host__article .byline { font-family: var(--pdx-font-ui); font-size: 12px; color: rgba(255,255,255,0.4); margin: 0 0 28px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .host__article p { margin: 0 0 18px; }
+
+  /* Highlighter applied in the article body — the brand signature */
+  .host__article .pdx-highlight,
+  .host__article .pdx-highlight--found { font-family: Georgia, serif; }
+
+  /* ===== Pinned overlay positions ====================== */
+  .pin { position: fixed; z-index: 2147483000; }
+  .pin--toast { top: 20px; left: 50%; transform: translateX(-50%); }
+  .scrim { position: fixed; inset: 0; background: rgba(11, 15, 25, 0.55); z-index: 2147482000; }
+  .pin--celebration { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2147483001; }
+
+  /* ===== In-page toast ================================= */
+  .pdx-toast {
+    display: inline-flex; align-items: stretch; gap: 0; height: 36px;
+    background: linear-gradient(180deg, var(--pdx-shell) 0%, var(--pdx-shell-2) 100%);
+    border-radius: 5px;
+    box-shadow: inset 0 1px 0 var(--pdx-shell-edge), inset 0 -2px 0 var(--pdx-shell-deep), 0 6px 14px rgba(0,0,0,0.32), 0 1px 0 rgba(0,0,0,0.4);
+    border: 1px solid var(--pdx-shell-deep);
+    color: var(--pdx-on-shell); padding: 3px;
+    font-family: var(--pdx-font-pixel); font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1;
+  }
+  .pdx-toast::before { content: ""; flex: 0 0 4px; align-self: stretch; margin-right: 6px; border-radius: 2px; background: currentColor; box-shadow: 0 0 6px currentColor; }
+  .pdx-toast--auto { color: var(--pdx-led-yellow); }
+  .pdx-toast__lens {
+    width: 22px; height: 22px; align-self: center; flex: 0 0 auto;
+    background: radial-gradient(circle at 35% 30%, var(--pdx-lens-hi) 0%, var(--pdx-lens) 55%, var(--pdx-lens-deep) 100%);
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1.5px var(--pdx-lens-rim), inset 0 -1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.4);
+    position: relative; cursor: pointer;
+  }
+  .pdx-toast__lens::before { content: ""; position: absolute; top: 14%; left: 16%; width: 30%; height: 30%; background: rgba(255,255,255,0.55); border-radius: 50%; filter: blur(0.5px); }
+  .pdx-toast__msg { flex: 1; display: inline-flex; align-items: center; padding: 0 10px 0 6px; color: var(--pdx-on-shell); text-shadow: 0 1px 0 rgba(0,0,0,0.25); white-space: nowrap; }
+  .pdx-toast__msg .word { color: var(--pdx-led-yellow); margin-left: 6px; font-family: var(--pdx-font-lcd); font-size: 13px; text-shadow: 0 0 4px rgba(255,210,63,0.45); text-transform: lowercase; letter-spacing: 0; }
+  .pdx-toast__close {
+    width: 22px; align-self: center; flex: 0 0 auto; height: 22px;
+    background: var(--pdx-key); border: 1px solid var(--pdx-key-2); border-bottom-width: 2px; border-radius: 3px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7); color: var(--pdx-on-key); cursor: pointer; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center; margin-right: 1px;
+  }
+  .pdx-toast__close iconify-icon, .pdx-toast__close svg { font-size: 11px; }
+
+  /* ===== Celebration =================================== */
+  .pdx-celebration {
+    width: 340px;
+    background: linear-gradient(180deg, var(--pdx-shell-hi) 0%, var(--pdx-shell) 24%, var(--pdx-shell-2) 100%);
+    border-radius: 12px; border: 1px solid var(--pdx-shell-deep);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.18), 0 18px 40px rgba(0,0,0,0.5), inset 0 1px 0 var(--pdx-shell-edge);
+    padding: 10px 10px 12px; position: relative;
+  }
+  .pdx-celebration__header { display: flex; align-items: center; gap: 8px; padding: 4px 6px 8px; }
+  .pdx-celebration__lens { width: 18px; height: 18px; flex: 0 0 auto; background: radial-gradient(circle at 35% 30%, var(--pdx-lens-hi) 0%, var(--pdx-lens) 55%, var(--pdx-lens-deep) 100%); border-radius: 50%; box-shadow: inset 0 0 0 1px var(--pdx-lens-rim), inset 0 -1px 2px rgba(0,0,0,0.3), 0 1px 1px rgba(0,0,0,0.4); }
+  .pdx-celebration__leds { display: flex; gap: 4px; }
+  .pdx-celebration__leds .led { width: 5px; height: 5px; border-radius: 50%; }
+  .pdx-celebration__leds .led--red { background: var(--pdx-led-red); box-shadow: 0 0 3px var(--pdx-led-red); }
+  .pdx-celebration__leds .led--green { background: var(--pdx-led-green); box-shadow: 0 0 3px var(--pdx-led-green); }
+  .pdx-celebration__leds .led--yellow { background: var(--pdx-led-yellow); box-shadow: 0 0 3px var(--pdx-led-yellow); }
+  .pdx-celebration__stamp { flex: 1; text-align: right; font-family: var(--pdx-font-pixel); font-size: 7px; letter-spacing: 0.08em; color: rgba(255,255,255,0.55); text-transform: uppercase; }
+  .pdx-celebration__lcd {
+    position: relative;
+    background: linear-gradient(180deg, var(--pdx-lcd-hi) 0%, var(--pdx-lcd) 28%, var(--pdx-lcd-lo) 100%);
+    border: 1px solid var(--pdx-lcd-frame); border-radius: 6px;
+    box-shadow: inset 0 2px 6px rgba(15, 42, 64, 0.35), inset 0 -2px 0 rgba(255, 255, 255, 0.22);
+    overflow: hidden; padding: 14px 18px 16px; display: flex; align-items: center; gap: 16px;
+  }
+  .pdx-celebration__lcd::after { content: ""; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, rgba(15,42,64,0.1) 0, rgba(15,42,64,0.1) 1px, transparent 1px, transparent 3px); mix-blend-mode: multiply; pointer-events: none; }
+  .pdx-celebration__art { flex: 0 0 auto; width: 64px; height: 64px; background: var(--pdx-key); border: 1px solid var(--pdx-key-2); border-bottom-width: 2px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-size: 42px; line-height: 1; box-shadow: inset 0 1px 0 rgba(255,255,255,0.7); position: relative; z-index: 2; }
+  .pdx-celebration__art img { max-width: 100%; max-height: 100%; image-rendering: pixelated; }
+  .pdx-celebration__body { flex: 1; display: flex; flex-direction: column; gap: 4px; position: relative; z-index: 2; color: var(--pdx-lcd-ink); min-width: 0; }
+  .pdx-celebration__found { font-family: var(--pdx-font-pixel); font-size: 12px; line-height: 1.1; letter-spacing: 0.08em; color: #186e36; text-shadow: 0 0 8px rgba(47, 212, 110, 0.6); }
+  .pdx-celebration__word { font-family: var(--pdx-font-lcd); font-size: 28px; line-height: 1; color: var(--pdx-lcd-ink); text-transform: lowercase; }
+  .pdx-celebration__meta { display: flex; gap: 10px; font-family: var(--pdx-font-pixel); font-size: 7px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--pdx-lcd-frame-2); margin-top: 2px; }
+  .pdx-celebration__sep { color: rgba(15, 42, 64, 0.35); }
+
+  /* ===== Caption rail ================================== */
+  .kit-note {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    padding: 10px 16px;
+    background: rgba(11,15,25,0.9);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.55);
+    text-align: center; z-index: 2147483647; line-height: 1.5;
+  }
+  .kit-note b { color: #FFD23F; font-weight: 400; }
+</style>
+</head>
+<body class="pdx">
+
+<div class="host">
+  <article class="host__article">
+    <h1>The river otter's afternoon</h1>
+    <p class="byline">Field notes · 6 min read</p>
+    <p>Patient otters spend the morning grooming and the afternoon <span class="pdx-highlight">hunting</span> at the river. Their fur is the densest of any animal — up to a million hairs per square inch — and it is this, not a layer of blubber, that keeps them warm through long stretches of activity in cold water.</p>
+    <p>A single forager, working a quiet bend, can take half its body weight in fish before dusk. They hunt by touch as much as by sight, sweeping the riverbed with sensitive whiskers until something darts, and the chase is on. The successful <span class="pdx-highlight--found">otter</span> hauls its catch to a favourite rock, eats, grooms, and slips back under.</p>
+    <p>By evening the bank is quiet again. The otters have moved downstream to a holt dug into the roots of an old willow, where the day's hunting gives way to a long, companionable sleep.</p>
+  </article>
+
+  <!-- Auto-mode toast pinned top-center -->
+  <div class="pin pin--toast">
+    <div class="pdx-toast pdx-toast--auto">
+      <span class="pdx-toast__lens" title="Open Word Hunter"></span>
+      <span class="pdx-toast__msg">AUTO-HUNTER ACTIVE<span class="word">otter</span></span>
+      <button class="pdx-toast__close" aria-label="Dismiss"><iconify-icon icon="pixelarticons:close"></iconify-icon></button>
+    </div>
+  </div>
+
+  <!-- Celebration over scrim -->
+  <div class="scrim"></div>
+  <div class="pin pin--celebration">
+    <div class="pdx-celebration">
+      <div class="pdx-celebration__header">
+        <span class="pdx-celebration__lens"></span>
+        <div class="pdx-celebration__leds"><span class="led led--red"></span><span class="led led--green"></span><span class="led led--yellow"></span></div>
+        <span class="pdx-celebration__stamp">CATCH No. 042</span>
+      </div>
+      <div class="pdx-celebration__lcd">
+        <div class="pdx-celebration__art" aria-hidden="true">🦦</div>
+        <div class="pdx-celebration__body">
+          <span class="pdx-celebration__found">&gt;&gt; REGISTERED!</span>
+          <span class="pdx-celebration__word">otter</span>
+          <div class="pdx-celebration__meta"><span>12s</span><span class="pdx-celebration__sep">·</span><span>NO HINT</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="kit-note">
+  Pokedex in-page overlays on a host page — <b>highlighter</b> (yellow + found-green LED rectangles in the article), <b>InPageToast</b> (auto variant, top-center), <b>CelebrationPopup</b> (centred over scrim). All solid raspberry device chrome, no host-page blur. See <b>preview/pokedex/in-page-overlays.html</b> for the hint/info toast variants and Auto-Continue / review celebration states.
+</div>
+
+</body>
+</html>

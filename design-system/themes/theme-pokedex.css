@@ -1,0 +1,647 @@
+@charset "UTF-8";
+
+/* ============================================================
+   Word Hunter -- Pokedex theme
+   "Game-device" parallel skin. Scoped to .pdx -- sits alongside the
+   default (slate) theme. All tokens prefixed --pdx-*.
+
+   Inspired by 90s handheld consoles: raspberry plastic body, cyan
+   LCD screen, cream key caps, yellow LED accent, blue camera lens.
+
+   Architecture note
+   -----------------
+   This theme is a PARALLEL skin, not a token override. It does not
+   redefine any --wh-* variable -- components written for the slate
+   theme stay unaffected. Components written for the Pokedex theme
+   should reach for --pdx-* tokens directly.
+
+   See README.md "THEMES" section for the rationale and integration
+   notes.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+.pdx {
+  /* -- Shell / body -- raspberry plastic ----------------------
+     The popup envelope and any device chrome (header, action bar,
+     ridge seams). Three values walk from highlight to deep crease. */
+  --pdx-shell:           #D32B5C;   /* main raspberry */
+  --pdx-shell-hi:        #E84B7E;   /* highlight (top-light edge) */
+  --pdx-shell-2:         #B81E4A;   /* shadow ridge */
+  --pdx-shell-deep:      #8C0F31;   /* deep crease, borders */
+  --pdx-shell-edge:      #FFC2D4;   /* very-top bezel highlight */
+
+  /* -- LCD -- cyan screen -------------------------------------
+     Anywhere "displayed" content lives. Three values walk from
+     glare-highlight to bottom-shadow inside the screen well. */
+  --pdx-lcd:             #6FC8DC;   /* LCD field */
+  --pdx-lcd-hi:          #94DDEC;   /* LCD top glare strip */
+  --pdx-lcd-lo:          #3A8AA6;   /* LCD bottom shadow */
+  --pdx-lcd-ink:         #0F2A40;   /* primary LCD text (dark navy) */
+  --pdx-lcd-ink-2:       #2C5170;   /* muted / placeholder LCD text */
+  --pdx-lcd-frame:       #15233A;   /* dark frame around the screen */
+  --pdx-lcd-frame-2:     #324B6C;   /* lighter inner frame */
+
+  /* -- Key cap -- cream physical button ----------------------
+     Any clickable control that's NOT inside the LCD. Filter chips,
+     list selector, shuffle/custom buttons, collection slots. */
+  --pdx-key:             #F4EFE2;   /* key cap top (rest) */
+  --pdx-key-2:           #D9D2C0;   /* key cap shadow ridge */
+  --pdx-key-press:       #E5DDC8;   /* pressed surface */
+  --pdx-key-ink:         #1A1B26;   /* primary text on key */
+  --pdx-key-ink-2:       #4D4D5A;   /* muted text on key */
+
+  /* -- LEDs / accents ----------------------------------------
+     The bright moments. Used as small dots, as the active-key glow,
+     as the primary CTA fill, as the celebration cue. */
+  --pdx-led-red:         #FF3B3B;
+  --pdx-led-green:       #2FD46E;
+  --pdx-led-yellow:      #FFD23F;
+  --pdx-led-yellow-deep: #E5B91A;   /* yellow shadow side (3D button) */
+
+  --pdx-lens:            #2A85D6;   /* main blue camera lens */
+  --pdx-lens-hi:         #8DC3F0;   /* highlight on lens */
+  --pdx-lens-deep:       #15528F;   /* deep edge on lens */
+  --pdx-lens-rim:        #FFFFFF;   /* white rim around lens */
+
+  /* -- Semantic mappings ------------------------------------
+     The same six semantic roles the slate theme exposes (--wh-primary,
+     --wh-found, --wh-info, --wh-selected, --wh-warning, --wh-danger),
+     remapped to physical-device equivalents. Components reaching for a
+     semantic colour should use these names so the role stays portable.
+
+     primary  -> yellow LED   (the "hunt" cue)
+     found    -> green LED    (a "registered catch")
+     info     -> blue lens    (system communicating with the player)
+     selected -> blue lens    (state: a slot has been picked)
+     warning  -> soft amber (between yellow and red -- heads-up)
+     danger   -> red LED     (destructive) */
+  --pdx-primary:         var(--pdx-led-yellow);
+  --pdx-primary-deep:    var(--pdx-led-yellow-deep);
+  --pdx-primary-soft:    rgba(255, 210, 63, 0.30);
+
+  --pdx-found:           var(--pdx-led-green);
+  --pdx-found-soft:      rgba(47, 212, 110, 0.28);
+
+  --pdx-info:            var(--pdx-lens);
+  --pdx-info-soft:       rgba(42, 133, 214, 0.28);
+
+  --pdx-selected:        var(--pdx-lens);
+  --pdx-selected-soft:   rgba(42, 133, 214, 0.28);
+
+  --pdx-warning:         #FFA862;
+  --pdx-warning-soft:    rgba(255, 168, 98, 0.30);
+
+  --pdx-danger:          var(--pdx-led-red);
+  --pdx-danger-soft:     rgba(255, 59, 59, 0.28);
+
+  --pdx-divider:         rgba(0, 0, 0, 0.18);
+
+  /* -- Foreground / "on-x" pairs ----------------------------
+     Pokedex differs from slate in that "the right text colour"
+     depends on which surface you're on. Components should pick
+     the matching pair, not reach for a single --pdx-fg. */
+  --pdx-on-shell:        #FFFFFF;   /* text on raspberry chrome */
+  --pdx-on-shell-2:      rgba(255, 255, 255, 0.78);
+  --pdx-on-lcd:          var(--pdx-lcd-ink);
+  --pdx-on-lcd-2:        var(--pdx-lcd-ink-2);
+  --pdx-on-key:          var(--pdx-key-ink);
+  --pdx-on-key-2:        var(--pdx-key-ink-2);
+  --pdx-on-primary:      #3A1208;   /* dark brown text on yellow button */
+
+  /* -- Type families -----------------------------------------
+     LCD font (VT323) for any "displayed" text -- active word, counts,
+     timers. Pixel font (Press Start 2P) for "labels stamped on the
+     device" -- eyebrows, button text, tab labels. UI sans for body
+     copy and helper text where pixel would harm readability. */
+  --pdx-font-lcd:        'VT323', 'JetBrains Mono', ui-monospace, monospace;
+  --pdx-font-pixel:      'Press Start 2P', 'VT323', monospace;
+  --pdx-font-ui:         'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+
+  /* -- Type scale --------------------------------------------
+     Press Start 2P is ~1.6x wider than equivalent-px sans, so the
+     pixel-scale runs smaller numerically. Two scales in parallel:
+     LCD (VT323 -- narrow, good big) and PIXEL (Press Start 2P --
+     never larger than 14 in chrome).
+
+     Use --pdx-text-* for body / sans copy.
+     Use --pdx-lcd-* for LCD-font sizes.
+     Use --pdx-pixel-* for pixel-font sizes. */
+
+  /* Sans (UI / helper copy) */
+  --pdx-text-xs:         11px;
+  --pdx-text-sm:         12px;
+  --pdx-text-base:       13px;
+  --pdx-text-md:         14px;
+  --pdx-text-lg:         16px;
+
+  /* LCD (VT323) -- used for the word, counts, durations */
+  --pdx-lcd-xs:          12px;
+  --pdx-lcd-sm:          16px;
+  --pdx-lcd-md:          22px;
+  --pdx-lcd-lg:          30px;
+  --pdx-lcd-xl:          40px;
+
+  /* Pixel (Press Start 2P) -- eyebrows, buttons, tab labels */
+  --pdx-pixel-xs:        7px;
+  --pdx-pixel-sm:        8px;
+  --pdx-pixel-md:        10px;
+  --pdx-pixel-lg:        12px;
+  --pdx-pixel-xl:        14px;
+
+  /* -- Type: weights & tracking -----------------------------
+     Press Start 2P only ships at 400; the "weight" you control is
+     the tracking. VT323 likewise -- single weight, distinguish
+     via size + colour. */
+  --pdx-tracking-pixel:  0.04em;   /* default for Press Start 2P */
+  --pdx-tracking-wide:   0.08em;   /* eyebrow / tab labels */
+  --pdx-tracking-lcd:    0.04em;   /* default for VT323 */
+  --pdx-leading-tight:   1.1;
+  --pdx-leading-snug:    1.25;
+  --pdx-leading-body:    1.4;
+
+  /* -- Spacing scale -- shared with slate (4px base) ---------
+     The two themes deliberately share spacing so layout primitives
+     (popup width, scroll regions, modal padding) don't fork. */
+  --pdx-space-0:         0;
+  --pdx-space-1:         4px;
+  --pdx-space-2:         8px;
+  --pdx-space-3:         12px;
+  --pdx-space-4:         16px;
+  --pdx-space-5:         20px;
+  --pdx-space-6:         24px;
+  --pdx-space-8:         32px;
+  --pdx-space-10:        40px;
+  --pdx-space-12:        48px;
+
+  /* -- Radii -- sharper than slate (3 / 6 / 10) --------------
+     Plastic key caps want softer-than-slate corners but not pillowy;
+     the LCD itself stays nearly square. */
+  --pdx-r-1:             3px;     /* LED-counter chips, value-chip */
+  --pdx-r-2:             6px;     /* keys, buttons, slots */
+  --pdx-r-3:             10px;    /* shell envelope, modals */
+  --pdx-r-key:           6px;     /* canonical key-cap radius */
+  --pdx-r-pill:          999px;
+
+  /* -- Shadows / elevation -----------------------------------
+     Three families:
+       1. Key-cap 3D -- border-bottom-width swap + inset highlight
+       2. LCD inset -- recessed screen well
+       3. Shell drop -- overall popup shadow */
+  --pdx-shadow-key:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 1px 0 rgba(0, 0, 0, 0.15);
+  --pdx-shadow-key-pressed:
+    inset 0 1px 2px rgba(0, 0, 0, 0.18);
+  --pdx-shadow-lcd:
+    inset 0 2px 6px rgba(15, 42, 64, 0.35),
+    inset 0 -2px 0 rgba(255, 255, 255, 0.25),
+    0 1px 0 rgba(255, 255, 255, 0.4);
+  --pdx-shadow-popup:
+    0 14px 32px rgba(0, 0, 0, 0.35);
+  --pdx-shadow-modal:
+    0 12px 28px rgba(0, 0, 0, 0.45);
+  --pdx-shadow-action-bar:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 2px 0 var(--pdx-shell-deep),
+    0 -2px 6px rgba(0, 0, 0, 0.18);
+
+  /* Glow rings -- used on active slot, focus, celebration */
+  --pdx-glow-primary:    0 0 0 2px var(--pdx-primary-soft);
+  --pdx-glow-found:      0 0 0 2px var(--pdx-found-soft);
+  --pdx-glow-selected:   0 0 0 2px var(--pdx-selected-soft);
+
+  /* -- Motion -- snappier than slate --------------------------
+     Game-device language is short, punchy. No 360ms slow easing
+     except for the celebration moment. */
+  --pdx-ease-standard:   cubic-bezier(0.2, 0.8, 0.2, 1);
+  --pdx-ease-pop:        cubic-bezier(0.34, 1.56, 0.64, 1);
+  --pdx-dur-fast:        80ms;
+  --pdx-dur-base:        160ms;
+  --pdx-dur-slow:        280ms;
+
+  /* -- Layout -- shared with slate ---------------------------
+     Popup size is a product constraint, not a theme one. */
+  --pdx-popup-width:     360px;
+  --pdx-popup-min-h:     560px;
+
+  /* -- Defaults applied to the theme root -------------------
+     Anything inside .pdx inherits these by default. Specific
+     components can override on a case-by-case basis. */
+  color: var(--pdx-on-key);
+  font-family: var(--pdx-font-ui);
+}
+
+/* ============================================================
+   THEME-WIDE EFFECTS
+   These are reusable visual primitives used across multiple
+   components. Lifted from src/pokedex/theme.css in the reference,
+   normalised and documented.
+   ============================================================ */
+
+/* -- LCD overlays -- scan lines + glare ----------------------
+   Drop these as absolute-positioned siblings inside any LCD well
+   to get the CRT feel. Both are pointer-events:none so they don't
+   block clicks on the content underneath. */
+.pdx-lcd-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(15, 42, 64, 0.10) 0,
+    rgba(15, 42, 64, 0.10) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: multiply;
+}
+.pdx-lcd-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.05) 20%,
+    transparent 35%
+  );
+}
+
+/* -- Key cap base -------------------------------------------
+   The cream physical button. Modifiers: .is-active (yellow LED),
+   .is-pressed (recessed), .pdx-key--lens (navy lens-tone).
+   The 3D effect lives in border-bottom-width swap + box-shadow. */
+.pdx-key {
+  background: var(--pdx-key);
+  border: 1px solid var(--pdx-key-2);
+  border-bottom-width: 2px;
+  border-radius: var(--pdx-r-key);
+  color: var(--pdx-on-key);
+  font-family: var(--pdx-font-ui);
+  cursor: pointer;
+  transition:
+    transform var(--pdx-dur-fast) var(--pdx-ease-standard),
+    background var(--pdx-dur-base);
+  box-shadow: var(--pdx-shadow-key);
+}
+.pdx-key:hover    { background: #FBF7EB; }
+.pdx-key:active,
+.pdx-key.is-pressed {
+  background: var(--pdx-key-press);
+  transform: translateY(1px);
+  border-bottom-width: 1px;
+  box-shadow: var(--pdx-shadow-key-pressed);
+}
+.pdx-key.is-active {
+  background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%);
+  border-color: #B89E50;
+  color: #4A3A0E;
+}
+
+/* Lens-tone variant -- deep navy for primary-toggle keys (e.g. list
+   selector) so they read distinct from cream filter chips AND from
+   the cyan LCD surface. */
+.pdx-key--lens {
+  background: linear-gradient(180deg, #2B406A 0%, var(--pdx-lcd-frame) 100%);
+  border-color: #0A1426;
+  color: var(--pdx-key);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 1px 0 rgba(0, 0, 0, 0.25);
+}
+.pdx-key--lens:hover    { background: linear-gradient(180deg, #34507F 0%, #1B2C49 100%); }
+.pdx-key--lens.is-active {
+  background: linear-gradient(180deg, #3F8BD6 0%, #1F5C9E 100%);
+  border-color: #0E3A66;
+  color: #FFFFFF;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 0 0 1px rgba(141, 195, 240, 0.45),
+    0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* -- Blue camera lens --------------------------------------
+   The signature accessory in the top-left of the device. Used in
+   PopupHeader, also as a small badge on the in-page toast. */
+.pdx-lens {
+  position: relative;
+  flex: 0 0 auto;
+  background: radial-gradient(
+    circle at 35% 30%,
+    var(--pdx-lens-hi) 0%,
+    var(--pdx-lens) 55%,
+    var(--pdx-lens-deep) 100%
+  );
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 2px var(--pdx-lens-rim),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.4);
+}
+.pdx-lens::before {
+  content: "";
+  position: absolute;
+  top: 14%;
+  left: 16%;
+  width: 30%;
+  height: 30%;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  filter: blur(1px);
+}
+.pdx-lens::after {
+  content: "";
+  position: absolute;
+  top: 55%;
+  left: 55%;
+  width: 12%;
+  height: 12%;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+}
+
+/* -- LED dot ------------------------------------------------
+   currentColor sets the LED; e.g. style="color: var(--pdx-led-red)".
+   Glow comes from the same currentColor via box-shadow. */
+.pdx-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow:
+    inset 0 -1px 1px rgba(0, 0, 0, 0.3),
+    0 0 4px currentColor;
+}
+
+/* -- Bezel ridge --------------------------------------------
+   The 6px plastic seam between display zone and controls zone.
+   Used in V2 between LCD and the slot grid. */
+.pdx-ridge {
+  height: 6px;
+  background: linear-gradient(
+    180deg,
+    var(--pdx-shell-deep) 0%,
+    var(--pdx-shell-2) 50%,
+    var(--pdx-shell-hi) 100%
+  );
+  position: relative;
+}
+.pdx-ridge::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* -- Collection slot ---------------------------------------
+   Square key-cap variant used in the catch grid. The cream surface
+   reads as a "blank cartridge slot" until filled. */
+.pdx-slot {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--pdx-key);
+  border: 1px solid var(--pdx-key-2);
+  border-bottom-width: 2px;
+  border-radius: var(--pdx-r-key);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--pdx-dur-fast) var(--pdx-ease-standard);
+  box-shadow: var(--pdx-shadow-key);
+}
+.pdx-slot:hover  { background: #FBF7EB; }
+.pdx-slot:active {
+  transform: translateY(1px);
+  border-bottom-width: 1px;
+}
+.pdx-slot.is-active {
+  background: linear-gradient(180deg, #FFE9B0 0%, var(--pdx-led-yellow) 100%);
+  border-color: #B89E50;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    var(--pdx-glow-primary),
+    0 1px 0 rgba(0, 0, 0, 0.15);
+}
+.pdx-slot.is-pending {
+  background: linear-gradient(180deg, #B6D8F5 0%, #6FAEDF 100%);
+  border-color: #1F5C9E;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    var(--pdx-glow-selected),
+    0 1px 0 rgba(0, 0, 0, 0.15);
+}
+.pdx-slot__count {
+  position: absolute;
+  bottom: 1px;
+  right: 2px;
+  font-family: var(--pdx-font-lcd);
+  font-size: 11px;
+  line-height: 1;
+  color: var(--pdx-on-key);
+  background: rgba(244, 239, 226, 0.85);
+  border-radius: 2px;
+  padding: 0 2px;
+  pointer-events: none;
+}
+
+/* -- D-pad button (decorative / nav) -----------------------
+   Reserved for future "navigate grid via D-pad" interaction.
+   Renders as the classic cross with a lens-toned center dot. */
+.pdx-dpad {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  flex: 0 0 auto;
+}
+.pdx-dpad__arm {
+  position: absolute;
+  background: var(--pdx-key-ink);
+  border-radius: 4px;
+}
+.pdx-dpad__arm--h {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 22px;
+  transform: translateY(-50%);
+}
+.pdx-dpad__arm--v {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 22px;
+  transform: translateX(-50%);
+}
+.pdx-dpad__center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, var(--pdx-lens-hi) 0%, var(--pdx-lens) 70%);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.7);
+}
+
+/* -- Speaker grille (decorative) ---------------------------
+   Tiny 3-column dot field. Used as visual rhythm in action bar
+   gaps or as a corner ornament on Stats / Settings headers. */
+.pdx-grille {
+  display: grid;
+  grid-template-columns: repeat(3, 4px);
+  gap: 6px 4px;
+  flex: 0 0 auto;
+}
+.pdx-grille__dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* ============================================================
+   SEMANTIC TYPOGRAPHY
+   Apply these classes as Pokedex-theme equivalents of the slate
+   .wh-display / .wh-h1 / .wh-eyebrow family. Same role names so a
+   component can swap themes by swapping its className prefix.
+   ============================================================ */
+
+/* Headline -- "stamped on the device" feel. Use sparingly. */
+.pdx-display {
+  font-family: var(--pdx-font-pixel);
+  font-size: var(--pdx-pixel-xl);
+  line-height: var(--pdx-leading-tight);
+  letter-spacing: var(--pdx-tracking-pixel);
+  color: var(--pdx-on-shell);
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* Section title on a shell surface (e.g. action-bar CTA label). */
+.pdx-h1 {
+  font-family: var(--pdx-font-pixel);
+  font-size: var(--pdx-pixel-lg);
+  line-height: var(--pdx-leading-tight);
+  letter-spacing: var(--pdx-tracking-pixel);
+  color: var(--pdx-on-shell);
+  text-transform: uppercase;
+}
+
+/* Section title on a key surface (e.g. Settings field label). */
+.pdx-h2 {
+  font-family: var(--pdx-font-pixel);
+  font-size: var(--pdx-pixel-md);
+  line-height: var(--pdx-leading-snug);
+  letter-spacing: var(--pdx-tracking-wide);
+  color: var(--pdx-on-key);
+  text-transform: uppercase;
+}
+
+/* Eyebrow -- the small ALL-CAPS PIXEL label above a block.
+   The Pokedex theme's most-used label class. */
+.pdx-eyebrow {
+  font-family: var(--pdx-font-pixel);
+  font-size: var(--pdx-pixel-sm);
+  letter-spacing: var(--pdx-tracking-wide);
+  color: var(--pdx-on-lcd);
+  text-transform: uppercase;
+}
+.pdx-eyebrow--on-shell { color: var(--pdx-on-shell-2); }
+.pdx-eyebrow--on-key   { color: var(--pdx-on-key-2); }
+.pdx-eyebrow--on-lcd   { color: var(--pdx-lcd-frame); }
+
+/* Body / helper copy -- sans, slightly smaller than slate. */
+.pdx-body {
+  font-family: var(--pdx-font-ui);
+  font-size: var(--pdx-text-base);
+  font-weight: 500;
+  line-height: var(--pdx-leading-body);
+  color: var(--pdx-on-key);
+}
+.pdx-body--on-shell { color: var(--pdx-on-shell); }
+.pdx-body--on-lcd   { color: var(--pdx-on-lcd); }
+
+/* Meta -- tiny sans for counters, hints. */
+.pdx-meta {
+  font-family: var(--pdx-font-ui);
+  font-size: var(--pdx-text-xs);
+  font-weight: 500;
+  line-height: var(--pdx-leading-snug);
+  letter-spacing: var(--pdx-tracking-wide);
+  color: var(--pdx-on-key-2);
+  text-transform: uppercase;
+}
+
+/* LCD line -- the active word, durations, counts. The Pokedex
+   theme's mono-display role; replaces slate's .wh-word-display. */
+.pdx-lcd-line {
+  font-family: var(--pdx-font-lcd);
+  font-size: var(--pdx-lcd-md);
+  line-height: 1;
+  letter-spacing: var(--pdx-tracking-lcd);
+  color: var(--pdx-on-lcd);
+}
+.pdx-lcd-line--lg { font-size: var(--pdx-lcd-lg); }
+.pdx-lcd-line--xl { font-size: var(--pdx-lcd-xl); }
+.pdx-lcd-line--muted { color: var(--pdx-on-lcd-2); }
+
+/* ============================================================
+   HIGHLIGHTER -- the brand's signature treatment, Pokedex variant
+   The slate theme uses a thin yellow stripe under inline text.
+   Pokedex commits harder: the highlighted word becomes a yellow
+   LED rectangle behind the text, with a pixel-art 1px charcoal
+   outline (via inset shadow so layout doesn't shift) and a soft
+   LED glow. The text inside flips to dark navy.
+
+   This is the in-page treatment applied to the hidden word AFTER
+   it is found. It also doubles as the chip background for the
+   "active word" eyebrow in the LCD viewport.
+   ============================================================ */
+
+.pdx-highlight {
+  /* The "the word lit up on the LED" effect. */
+  padding: 0 3px;
+  background: var(--pdx-led-yellow);
+  color: var(--pdx-lcd-ink);
+  box-shadow:
+    inset 0 0 0 1px var(--pdx-key-ink),
+    0 0 6px rgba(255, 210, 63, 0.45);
+  border-radius: 0;   /* sharp pixel corners */
+  /* Preserve inline flow -- no display:inline-block so wrapping works
+     across line breaks like slate's highlighter. */
+}
+
+.pdx-highlight--found {
+  /* Celebration / "registered catch" variant -- LED green. */
+  background: var(--pdx-led-green);
+  color: var(--pdx-lcd-ink);
+  box-shadow:
+    inset 0 0 0 1px var(--pdx-key-ink),
+    0 0 6px rgba(47, 212, 110, 0.50);
+}
+
+/* ============================================================
+   REDUCED MOTION
+   Honour the user's OS-level preference. Disables the transform
+   feedback on key caps and slots (the lift-on-press effect), but
+   keeps colour transitions for legibility.
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .pdx-key,
+  .pdx-slot {
+    transition: background var(--pdx-dur-base) var(--pdx-ease-standard);
+  }
+  .pdx-key:active,
+  .pdx-key.is-pressed,
+  .pdx-slot:active {
+    transform: none;
+  }
+}

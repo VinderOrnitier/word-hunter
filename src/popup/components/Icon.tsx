@@ -1,4 +1,6 @@
 import type { JSX } from "preact";
+import { useThemeContext } from "../theme/ThemeContext";
+import { PIXELARTICONS_BODIES, type PixelarticonSlug } from "./pixelarticons";
 
 export type IconName =
   | "search"
@@ -16,7 +18,29 @@ export type IconName =
   | "shuffle"
   | "pencil"
   | "star"
-  | "chevron-down";
+  | "chevron-down"
+  | "bookmark";
+
+/** IconName role → Pixelarticons slug. The 16-role contract (see iconography.html). */
+export const PIXELARTICONS_SLUG: Record<IconName, PixelarticonSlug> = {
+  search: "search",
+  "bar-chart": "chart",
+  settings: "sliders",
+  info: "info-box",
+  trash: "trash",
+  external: "external-link",
+  refresh: "reload",
+  check: "check",
+  x: "close",
+  target: "target",
+  timer: "clock",
+  play: "play",
+  shuffle: "shuffle",
+  pencil: "edit",
+  star: "star",
+  "chevron-down": "chevron-down",
+  bookmark: "bookmark",
+};
 
 interface IconProps {
   name: IconName;
@@ -25,6 +49,27 @@ interface IconProps {
 }
 
 export function Icon({ name, size = 16, filled = false }: IconProps): JSX.Element | null {
+  const theme = useThemeContext();
+
+  if (theme === "pokedex") {
+    // Pixelarticons are single-form pixel glyphs; "lit"/emphasis states are expressed
+    // via parent color in .pdx CSS, so `filled` is intentionally ignored in this branch.
+    const body = PIXELARTICONS_BODIES[PIXELARTICONS_SLUG[name]];
+    if (!body) return null;
+    // `body` is static, committed SVG markup from PIXELARTICONS_BODIES — never user or
+    // page input — so injecting it as innerHTML carries no XSS risk.
+    return (
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        aria-hidden="true"
+        dangerouslySetInnerHTML={{ __html: body }}
+      />
+    );
+  }
+
   const props = {
     width: size,
     height: size,
@@ -148,6 +193,12 @@ export function Icon({ name, size = 16, filled = false }: IconProps): JSX.Elemen
       return (
         <svg {...props} aria-hidden="true">
           <path d="m6 9 6 6 6-6" />
+        </svg>
+      );
+    case "bookmark":
+      return (
+        <svg {...props} aria-hidden="true">
+          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
         </svg>
       );
     default:

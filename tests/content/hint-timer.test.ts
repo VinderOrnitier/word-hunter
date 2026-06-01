@@ -15,20 +15,32 @@ describe("HintTimer", () => {
   });
 
   it("hintUsed() is false before the timer fires", () => {
-    const timer = HintTimer(document, () => "en");
+    const timer = HintTimer(
+      document,
+      () => "en",
+      () => "slate"
+    );
     timer.start(1);
     expect(timer.hintUsed()).toBe(false);
   });
 
   it("hintUsed() is true after the timer fires", () => {
-    const timer = HintTimer(document, () => "en");
+    const timer = HintTimer(
+      document,
+      () => "en",
+      () => "slate"
+    );
     timer.start(1);
     jest.advanceTimersByTime(60_000);
     expect(timer.hintUsed()).toBe(true);
   });
 
   it("toast appears after the timer fires with hint message", () => {
-    const timer = HintTimer(document, () => "en");
+    const timer = HintTimer(
+      document,
+      () => "en",
+      () => "slate"
+    );
     timer.start(1);
     expect(document.querySelector(".hw-toast--hint")).toBeNull();
     jest.advanceTimersByTime(60_000);
@@ -40,7 +52,11 @@ describe("HintTimer", () => {
 
   it("toast uses the locale current at fire time, not at start() time", () => {
     let locale: Locale = "en";
-    const timer = HintTimer(document, () => locale);
+    const timer = HintTimer(
+      document,
+      () => locale,
+      () => "slate"
+    );
     timer.start(1);
     locale = "uk";
     jest.advanceTimersByTime(60_000);
@@ -50,7 +66,11 @@ describe("HintTimer", () => {
   });
 
   it("cancel() before firing prevents toast and keeps hintUsed false", () => {
-    const timer = HintTimer(document, () => "en");
+    const timer = HintTimer(
+      document,
+      () => "en",
+      () => "slate"
+    );
     timer.start(1);
     timer.cancel();
     jest.advanceTimersByTime(60_000);
@@ -59,7 +79,11 @@ describe("HintTimer", () => {
   });
 
   it("hintUsed state persists in sessionStorage", () => {
-    const timer = HintTimer(document, () => "en");
+    const timer = HintTimer(
+      document,
+      () => "en",
+      () => "slate"
+    );
     timer.start(1);
     jest.advanceTimersByTime(60_000);
     expect(sessionStorage.getItem(HINT_USED_KEY)).toBe("true");
@@ -67,19 +91,31 @@ describe("HintTimer", () => {
 
   it("hintUsed() reads from sessionStorage (survives re-instantiation)", () => {
     sessionStorage.setItem(HINT_USED_KEY, "true");
-    const timer = HintTimer(document, () => "en");
+    const timer = HintTimer(
+      document,
+      () => "en",
+      () => "slate"
+    );
     expect(timer.hintUsed()).toBe(true);
   });
 
   it("start() resets hintUsed to false — stale flag from previous hunt is cleared", () => {
     sessionStorage.setItem(HINT_USED_KEY, "true");
-    const timer = HintTimer(document, () => "en");
+    const timer = HintTimer(
+      document,
+      () => "en",
+      () => "slate"
+    );
     timer.start(1);
     expect(timer.hintUsed()).toBe(false);
   });
 
   it("cancel() after toast is shown removes it from DOM", () => {
-    const timer = HintTimer(document, () => "en");
+    const timer = HintTimer(
+      document,
+      () => "en",
+      () => "slate"
+    );
     timer.start(1);
     jest.advanceTimersByTime(60_000);
     expect(document.querySelector(".hw-toast--hint")).not.toBeNull();
@@ -88,7 +124,11 @@ describe("HintTimer", () => {
   });
 
   it("clicking close button removes the toast from DOM", () => {
-    const timer = HintTimer(document, () => "en");
+    const timer = HintTimer(
+      document,
+      () => "en",
+      () => "slate"
+    );
     timer.start(1);
     jest.advanceTimersByTime(60_000);
     const closeBtn = document.querySelector(".hw-toast__close") as HTMLElement;
@@ -99,14 +139,22 @@ describe("HintTimer", () => {
 
   describe("find button wiring", () => {
     it("toast has no find button when start() is called without onFind", () => {
-      const timer = HintTimer(document, () => "en");
+      const timer = HintTimer(
+        document,
+        () => "en",
+        () => "slate"
+      );
       timer.start(1);
       jest.advanceTimersByTime(60_000);
       expect(document.querySelector(".hw-toast__find")).toBeNull();
     });
 
     it("toast has a find button when start() is called with onFind", () => {
-      const timer = HintTimer(document, () => "en");
+      const timer = HintTimer(
+        document,
+        () => "en",
+        () => "slate"
+      );
       timer.start(1, jest.fn());
       jest.advanceTimersByTime(60_000);
       expect(document.querySelector(".hw-toast__find")).not.toBeNull();
@@ -114,7 +162,11 @@ describe("HintTimer", () => {
 
     it("clicking the find button calls the onFind callback", () => {
       const onFind = jest.fn();
-      const timer = HintTimer(document, () => "en");
+      const timer = HintTimer(
+        document,
+        () => "en",
+        () => "slate"
+      );
       timer.start(1, onFind);
       jest.advanceTimersByTime(60_000);
       (document.querySelector(".hw-toast__find") as HTMLElement).click();

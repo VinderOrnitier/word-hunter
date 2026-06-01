@@ -1929,6 +1929,68 @@ button {
   }
 }
 
+/* ---------- Theme picker tiles (Phase 5) ----------
+   Swatch colours are intentional literals previewing each skin's real
+   shell/accent colours; they must NOT use --wh-* tokens. */
+.wh-settings__theme-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+.wh-settings__theme-tile {
+  position: relative;
+  padding: 8px;
+  background: var(--wh-surface-2);
+  border: 1px solid var(--wh-border);
+  border-radius: var(--wh-radius-2);
+  cursor: pointer;
+  text-align: left;
+  box-sizing: border-box;
+  transition:
+    border-color var(--wh-dur-base) var(--wh-ease-standard),
+    box-shadow var(--wh-dur-base) var(--wh-ease-standard);
+}
+.wh-settings__theme-tile:hover {
+  border-color: var(--wh-fg-4);
+}
+.wh-settings__theme-tile.is-active {
+  border-color: var(--wh-selected);
+  box-shadow: 0 0 0 3px var(--wh-selected-soft);
+}
+.wh-settings__theme-swatch {
+  display: block;
+  height: 36px;
+  border-radius: var(--wh-radius-1);
+  margin-bottom: 6px;
+  position: relative;
+}
+.wh-settings__theme-tile--slate .wh-settings__theme-swatch {
+  background: linear-gradient(180deg, #1c2030 0%, #0f1422 100%);
+}
+.wh-settings__theme-tile--pokedex .wh-settings__theme-swatch {
+  background: linear-gradient(180deg, #d32b5c, #8c0f31);
+}
+.wh-settings__theme-accent {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  height: 4px;
+  border-radius: 1px;
+}
+.wh-settings__theme-tile--slate .wh-settings__theme-accent {
+  background: #ffd23f;
+}
+.wh-settings__theme-tile--pokedex .wh-settings__theme-accent {
+  background: #6fc8dc;
+}
+.wh-settings__theme-name {
+  font-size: var(--wh-text-sm);
+  font-weight: 600;
+  color: var(--wh-fg);
+}
+
 /* ---------- RulesTab ---------- */
 
 .wh-rules {

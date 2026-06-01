@@ -60,6 +60,23 @@ export const en = {
   play_word_list_aria: "Word list",
   play_filter_aria: "Filter",
 
+  // Pokédex Play surface (theme-specific voice)
+  pdx_active_now_hunting: "Now hunting",
+  pdx_active_no_hunt: "No hunt",
+  pdx_active_empty_hint: "pick a slot below to start.",
+  pdx_progress_caught_label: "CGHT",
+  pdx_filter_label: "Show",
+  pdx_filter_all: "All",
+  pdx_filter_caught: "CGHT",
+  pdx_filter_uncaught: "MISS",
+  pdx_collection_empty_caught: "No catches — go hunt!",
+  pdx_collection_empty_uncaught: "All caught!",
+  pdx_reload_hint_text: "Reload to hunt",
+  pdx_custom_word_prompt: "Enter your own word to hunt",
+  pdx_custom_word_helper: "no spaces · 2-25 letters · won't appear in your collection",
+  pdx_custom_word_submit: "Start",
+  pdx_unsaved_edits: "Unsaved edits",
+
   // Stats tab
   stats_empty_body: "No words found yet.",
   stats_empty_editorial: "your hunts will appear here.",
@@ -115,6 +132,10 @@ export const en = {
   settings_switch_off: "Off",
   settings_cancel: "Cancel",
   settings_save: "Save",
+  settings_theme_label: "Theme",
+  settings_theme_slate: "Slate",
+  settings_theme_pokedex: "Pokédex",
+  settings_theme_reopen_hint: "switching reopens the popup",
 
   // InPageToast (shared aria labels)
   toast_open_aria: "Open Word Hunter",
