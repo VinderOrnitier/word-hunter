@@ -1,12 +1,12 @@
 import type { JSX } from "preact";
-import { useEffect, useState } from "preact/hooks";
 import { useT } from "../../i18n";
 import type { Locale } from "../../i18n/types";
-import { DEFAULT_SETTINGS, DEFAULT_THEME } from "../../shared/constants";
-import type { GameSettings, Theme } from "../../shared/types";
+import { DEFAULT_THEME } from "../../shared/constants";
+import type { Theme } from "../../shared/types";
 import { NumberStepperPdx } from "../components/NumberStepper.pdx";
 import { RangeSliderPdx } from "../components/RangeSlider.pdx";
 import { SwitchPdx } from "../components/Switch.pdx";
+import { useSettingsDraft } from "../hooks/useSettingsDraft";
 import { useStorage } from "../hooks/useStorage";
 
 const LANGUAGE_OPTIONS: Array<{ value: Locale; label: string }> = [
@@ -18,10 +18,7 @@ const LANGUAGE_OPTIONS: Array<{ value: Locale; label: string }> = [
 
 export function SettingsTabPdx(): JSX.Element {
   const t = useT();
-  const [saved, setSettings] = useStorage("settings", DEFAULT_SETTINGS);
-  const [draft, setDraft] = useState<GameSettings>(saved);
-  const [savedLocale, setSavedLocale] = useStorage("locale", "en");
-  const [draftLocale, setDraftLocale] = useState<Locale>(savedLocale);
+  const { draft, draftLocale, isDirty, update, setDraftLocale, save, cancel } = useSettingsDraft();
   const [theme, setTheme] = useStorage("theme", DEFAULT_THEME);
 
   const themeTiles: Array<{
@@ -31,40 +28,6 @@ export function SettingsTabPdx(): JSX.Element {
     { value: "slate", labelKey: "settings_theme_slate" },
     { value: "pokedex", labelKey: "settings_theme_pokedex" },
   ];
-
-  useEffect(() => {
-    setDraft(saved);
-  }, [saved]);
-
-  useEffect(() => {
-    setDraftLocale(savedLocale);
-  }, [savedLocale]);
-
-  const isDirty =
-    draft.hintDelayMinutes !== saved.hintDelayMinutes ||
-    draft.celebrationHoverSeconds !== saved.celebrationHoverSeconds ||
-    draft.minWordThreshold !== saved.minWordThreshold ||
-    draft.showNextWordPreview !== saved.showNextWordPreview ||
-    draft.showReloadHint !== saved.showReloadHint ||
-    draft.notificationsEnabled !== saved.notificationsEnabled ||
-    draft.showAutoModeToast !== saved.showAutoModeToast ||
-    draft.showHintToast !== saved.showHintToast ||
-    draft.showNoParagraphToast !== saved.showNoParagraphToast ||
-    draftLocale !== savedLocale;
-
-  const update = (patch: Partial<GameSettings>): void => {
-    setDraft({ ...draft, ...patch });
-  };
-
-  const handleSave = (): void => {
-    setSettings(draft);
-    setSavedLocale(draftLocale);
-  };
-
-  const handleCancel = (): void => {
-    setDraft(saved);
-    setDraftLocale(savedLocale);
-  };
 
   return (
     <>
@@ -98,7 +61,7 @@ export function SettingsTabPdx(): JSX.Element {
             <span class="settings-field__helper">{t("settings_theme_reopen_hint")}</span>
           </div>
 
-          {/* LANGUAGE — pdx-styled select arrives in Phase 3c; native select keeps it functional */}
+          {/* LANGUAGE */}
           <div class="settings-field">
             <span class="settings-field__label">{t("settings_language_label")}</span>
             <div class="settings-field__row">
@@ -243,10 +206,10 @@ export function SettingsTabPdx(): JSX.Element {
       {isDirty && (
         <div class="pdx-popup__footer">
           <span class="pdx-popup__footer-msg">{t("pdx_unsaved_edits")}</span>
-          <button type="button" class="pdx-btn-ghost" onClick={handleCancel}>
+          <button type="button" class="pdx-btn-ghost" onClick={cancel}>
             {t("settings_cancel")}
           </button>
-          <button type="button" class="pdx-btn-primary" onClick={handleSave}>
+          <button type="button" class="pdx-btn-primary" onClick={save}>
             {t("settings_save")}
           </button>
         </div>

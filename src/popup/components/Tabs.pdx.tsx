@@ -11,9 +11,9 @@ interface TabDescriptor {
 }
 
 const TABS: TabDescriptor[] = [
-  { id: "play", labelKey: "tab_play", icon: "search" },
-  { id: "stats", labelKey: "tab_stats", icon: "bar-chart" },
-  { id: "settings", labelKey: "tab_settings", icon: "settings" },
+  { id: "play", labelKey: "pdx_tab_play", icon: "search" },
+  { id: "stats", labelKey: "pdx_tab_stats", icon: "bar-chart" },
+  { id: "settings", labelKey: "pdx_tab_settings", icon: "settings" },
 ];
 
 interface TabsProps {

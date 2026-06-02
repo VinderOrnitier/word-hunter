@@ -7,6 +7,13 @@ export const en = {
   tab_stats: "Statistics",
   tab_settings: "Settings",
 
+  // Pokédex tabs nav — short labels. Press Start 2P key-caps are narrow, so long
+  // words (de "Einstellungen", uk "Налаштування") overflow; the Pokédex voice is
+  // ALL CAPS + abbreviations anyway.
+  pdx_tab_play: "Play",
+  pdx_tab_stats: "Stats",
+  pdx_tab_settings: "Settings",
+
   // Bottom action bar
   action_bar_auto_continue_title: "Auto-continue — pick next word after each find",
   action_bar_auto_continue_aria: "Auto-continue",

@@ -9,6 +9,11 @@ export const de: Record<MessageKey, string> = {
   tab_stats: "Statistik",
   tab_settings: "Einstellungen",
 
+  // Pokédex tabs nav — short labels (see en.ts)
+  pdx_tab_play: "Spielen",
+  pdx_tab_stats: "Stats",
+  pdx_tab_settings: "Optionen",
+
   // Bottom action bar
   action_bar_auto_continue_title: "Auto-Weiter — wählt das nächste Wort nach jedem Fund",
   action_bar_auto_continue_aria: "Auto-Weiter",

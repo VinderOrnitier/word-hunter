@@ -1,13 +1,13 @@
 import type { JSX } from "preact";
-import { useEffect, useState } from "preact/hooks";
 import { useT } from "../../i18n";
 import type { Locale } from "../../i18n/types";
-import { DEFAULT_SETTINGS, DEFAULT_THEME } from "../../shared/constants";
-import type { GameSettings, Theme } from "../../shared/types";
+import { DEFAULT_THEME } from "../../shared/constants";
+import type { Theme } from "../../shared/types";
 import { Button } from "../components/Button";
 import { Eyebrow } from "../components/Eyebrow";
 import { Field } from "../components/Field";
 import { NumberInput } from "../components/NumberInput";
+import { useSettingsDraft } from "../hooks/useSettingsDraft";
 import { useStorage } from "../hooks/useStorage";
 
 const LANGUAGE_OPTIONS: Array<{ value: Locale; label: string }> = [
@@ -19,10 +19,7 @@ const LANGUAGE_OPTIONS: Array<{ value: Locale; label: string }> = [
 
 export function SettingsTab(): JSX.Element {
   const t = useT();
-  const [saved, setSettings] = useStorage("settings", DEFAULT_SETTINGS);
-  const [draft, setDraft] = useState<GameSettings>(saved);
-  const [savedLocale, setSavedLocale] = useStorage("locale", "en");
-  const [draftLocale, setDraftLocale] = useState<Locale>(savedLocale);
+  const { draft, draftLocale, isDirty, update, setDraftLocale, save, cancel } = useSettingsDraft();
   const [theme, setTheme] = useStorage("theme", DEFAULT_THEME);
 
   const themeTiles: Array<{
@@ -32,40 +29,6 @@ export function SettingsTab(): JSX.Element {
     { value: "slate", labelKey: "settings_theme_slate" },
     { value: "pokedex", labelKey: "settings_theme_pokedex" },
   ];
-
-  useEffect(() => {
-    setDraft(saved);
-  }, [saved]);
-
-  useEffect(() => {
-    setDraftLocale(savedLocale);
-  }, [savedLocale]);
-
-  const isDirty =
-    draft.hintDelayMinutes !== saved.hintDelayMinutes ||
-    draft.celebrationHoverSeconds !== saved.celebrationHoverSeconds ||
-    draft.minWordThreshold !== saved.minWordThreshold ||
-    draft.showNextWordPreview !== saved.showNextWordPreview ||
-    draft.showReloadHint !== saved.showReloadHint ||
-    draft.notificationsEnabled !== saved.notificationsEnabled ||
-    draft.showAutoModeToast !== saved.showAutoModeToast ||
-    draft.showHintToast !== saved.showHintToast ||
-    draft.showNoParagraphToast !== saved.showNoParagraphToast ||
-    draftLocale !== savedLocale;
-
-  const update = (patch: Partial<GameSettings>): void => {
-    setDraft({ ...draft, ...patch });
-  };
-
-  const handleSave = (): void => {
-    setSettings(draft);
-    setSavedLocale(draftLocale);
-  };
-
-  const handleCancel = (): void => {
-    setDraft(saved);
-    setDraftLocale(savedLocale);
-  };
 
   return (
     <div class="wh-settings">
@@ -288,10 +251,10 @@ export function SettingsTab(): JSX.Element {
 
       {isDirty && (
         <div class="wh-settings__footer">
-          <Button variant="ghost" size="sm" onClick={handleCancel}>
+          <Button variant="ghost" size="sm" onClick={cancel}>
             {t("settings_cancel")}
           </Button>
-          <Button variant="primary" size="sm" onClick={handleSave}>
+          <Button variant="primary" size="sm" onClick={save}>
             {t("settings_save")}
           </Button>
         </div>

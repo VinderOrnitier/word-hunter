@@ -1,11 +1,13 @@
 import type { JSX } from "preact";
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useRef } from "preact/hooks";
 import { useT } from "../../i18n";
-import { MAX_CUSTOM_LEN, validateCustomWord } from "../../shared/word-validation";
+import { MAX_CUSTOM_LEN } from "../../shared/word-validation";
 import { Button } from "../components/Button";
 import { Field } from "../components/Field";
 import { Icon } from "../components/Icon";
 import { Input } from "../components/Input";
+import { useFocusTrap } from "../hooks/useFocusTrap";
+import { useCustomWordForm } from "./useCustomWordForm";
 
 interface CustomWordModalProps {
   open: boolean;
@@ -13,80 +15,24 @@ interface CustomWordModalProps {
   onSubmit: (word: string) => void;
 }
 
-const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
 export function CustomWordModal({
   open,
   onClose,
   onSubmit,
 }: CustomWordModalProps): JSX.Element | null {
   const t = useT();
-  const [value, setValue] = useState("");
-  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const { value, setValue, trimmed, error, showError, handleSubmit } = useCustomWordForm({
+    open,
+    onSubmit,
+  });
   const inputRef = useRef<HTMLInputElement | null>(null);
   const dialogRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (open) {
-      setValue("");
-      setSubmitAttempted(false);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const timer = setTimeout(() => inputRef.current?.focus(), 0);
-
-    function onKeyDown(e: KeyboardEvent): void {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        onClose();
-        return;
-      }
-      if (e.key !== "Tab") return;
-
-      const dialog = dialogRef.current;
-      if (!dialog) return;
-      const focusables = Array.from(
-        dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
-      ).filter((el) => !el.hasAttribute("disabled"));
-      if (focusables.length === 0) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      const active = document.activeElement as HTMLElement | null;
-
-      if (e.shiftKey && active === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && active === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    }
-
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      clearTimeout(timer);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open, onClose]);
+  useFocusTrap(dialogRef, { active: open, onEscape: onClose, initialFocusRef: inputRef });
 
   if (!open) return null;
 
-  const trimmed = value.trim();
-  const error = validateCustomWord(trimmed);
-  const showError = submitAttempted && error !== undefined && trimmed.length > 0;
   const counter = `${trimmed.length} / ${MAX_CUSTOM_LEN}`;
-
-  function handleSubmit(): void {
-    if (!trimmed || error) {
-      setSubmitAttempted(true);
-      return;
-    }
-    onSubmit(trimmed);
-  }
 
   return (
     <div class="wh-modal__backdrop">
