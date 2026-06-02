@@ -1,6 +1,6 @@
 import type { JSX } from "preact";
 import { type ComponentChildren, createContext } from "preact";
-import { useCallback, useContext } from "preact/hooks";
+import { useCallback, useContext, useEffect } from "preact/hooks";
 import { useStorage } from "../popup/hooks/useStorage";
 import { de } from "./messages/de";
 import { en } from "./messages/en";
@@ -42,6 +42,12 @@ const LocaleContext = createContext<TFunction>(defaultT);
 
 export function LocaleProvider({ children }: { children: ComponentChildren }): JSX.Element {
   const [locale] = useStorage("locale", "en");
+  // Reflect the active locale onto <html lang> so locale-scoped CSS (e.g. the
+  // Pokédex theme's CJK font override) and screen readers see the right
+  // language. index.html ships lang="en" as a static default.
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
   const boundT = useCallback<TFunction>((key, params) => t(key, locale, params), [locale]);
   return <LocaleContext.Provider value={boundT}>{children}</LocaleContext.Provider>;
 }

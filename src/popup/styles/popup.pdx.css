@@ -1682,3 +1682,98 @@
   outline-offset: 1px;
   border-radius: 2px;
 }
+
+/* =========================================================
+   CJK LOCALE OVERRIDE — Japanese legibility (i18n)
+   ---------------------------------------------------------
+   Press Start 2P / VT323 carry no CJK glyphs, so Japanese used to fall
+   through to a system monospace gothic rendered far too small to read.
+   Two-part fix, scoped to CJK locales via <html lang> (set from storage
+   in LocaleProvider):
+
+   1. A unicode-range @font-face maps ONLY CJK codepoints to a gothic
+      system face. Appending it to the pixel / LCD stacks lets the
+      browser pick per glyph — Latin keeps Press Start 2P / VT323, while
+      kana & kanji render in gothic. This is deliberate: the Pokédex
+      theme uses English EN-fallback copy on many pixel surfaces
+      (NOW HUNTING, CGHT, SHOW, ALL …) plus Latin brand prints (the
+      WORD HUNTER wordmark, the ON/OFF switch pips) — all of which must
+      stay pixel-perfect. Per-glyph fallback leaves them untouched.
+
+   2. The handful of label / button classes that actually carry Japanese
+      copy get a size bump, because gothic ideographs need more px than
+      the bitmap face they replace.
+
+   Add :lang(zh) / :lang(ko) to the selectors when those locales ship. */
+@font-face {
+  font-family: "PDX CJK Fallback";
+  font-display: swap;
+  src:
+    local("Yu Gothic UI"), local("YuGothic UI"), local("Hiragino Kaku Gothic ProN"),
+    local("Noto Sans JP"), local("Noto Sans CJK JP"), local("Meiryo"), local("MS PGothic");
+  unicode-range:
+    U+3000-303F, /* CJK symbols & punctuation */ U+3040-309F, /* hiragana */
+    U+30A0-30FF, /* katakana */ U+31F0-31FF, /* katakana phonetic ext */
+    U+FF00-FFEF, /* halfwidth & fullwidth forms */ U+3400-4DBF, /* CJK ext A */ U+4E00-9FFF; /* CJK unified ideographs */
+}
+
+/* Per-glyph gothic for CJK codepoints; Latin keeps the pixel / LCD face. */
+.pdx:lang(ja) {
+  --pdx-font-pixel: "Press Start 2P", "PDX CJK Fallback", "VT323", monospace;
+  --pdx-font-lcd: "VT323", "PDX CJK Fallback", "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* Size bumps for the classes that actually render Japanese copy.
+   Tuned per container so labels don't overflow the key-caps. */
+.pdx:lang(ja) .pdx-popup__tab-label,
+.pdx:lang(ja) .pdx-list-key,
+.pdx:lang(ja) .pdx-section-eyebrow__title,
+.pdx:lang(ja) .pdx-progress__eyebrow,
+.pdx:lang(ja) .stats-empty__line {
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+/* Field labels, settings / stats buttons, and the custom-word modal
+   (title + footer buttons) the user reads most. The modal's prompt and
+   START label stay English/pixel via the per-glyph fallback above. */
+.pdx:lang(ja) .settings-field__label,
+.pdx:lang(ja) .pdx-action-primary,
+.pdx:lang(ja) .pdx-btn-ghost,
+.pdx:lang(ja) .pdx-btn-primary,
+.pdx:lang(ja) .pdx-btn-danger,
+.pdx:lang(ja) .pdx-modal__title,
+.pdx:lang(ja) .pdx-modal__btn-ghost,
+.pdx:lang(ja) .pdx-modal__btn-primary,
+.pdx:lang(ja) .pdx-reload-hint__btn {
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+/* Compact Japanese labels in tight bars — the streak/longest stat captions
+   (6–7px originally) and the clear-stats confirm prompt in the footer well. */
+.pdx:lang(ja) .pdx-progress__stat-label,
+.pdx:lang(ja) .pdx-popup__confirm .pdx-popup__footer-msg {
+  font-size: 10px;
+  letter-spacing: 0.02em;
+}
+
+/* The "{n} hunts" summary above the stats table (this .pdx-progress__label
+   instance carries Japanese; the Play-tab one stays English/pixel). */
+.pdx:lang(ja) .pdx-stats__header .pdx-progress__label {
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+/* Stats table: the hint / page columns are sized for a single icon (25px),
+   so the 3-char Japanese headers (ヒント / ページ) stacked vertically. Widen
+   just those two columns enough to fit one line, and keep the header type a
+   touch smaller than the body so nothing wraps. */
+.pdx:lang(ja) .stats-row {
+  grid-template-columns: 1.3fr 1fr 0.8fr 34px 32px;
+}
+.pdx:lang(ja) .stats-row--header .col {
+  font-size: 9px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}

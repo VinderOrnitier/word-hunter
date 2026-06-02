@@ -73,6 +73,35 @@ describe("useT()", () => {
   });
 });
 
+describe("LocaleProvider — document language", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    document.documentElement.lang = "";
+  });
+
+  it("sets <html lang> to the active locale so CSS can target it", async () => {
+    setupChromeMock({ locale: "ja" });
+    render(
+      <LocaleProvider>
+        <EyebrowOutput />
+      </LocaleProvider>
+    );
+    await waitFor(() => expect(document.documentElement.lang).toBe("ja"));
+  });
+
+  it("updates <html lang> when the locale changes", async () => {
+    const { fireChange } = setupChromeMock({ locale: "en" });
+    render(
+      <LocaleProvider>
+        <EyebrowOutput />
+      </LocaleProvider>
+    );
+    await waitFor(() => expect(document.documentElement.lang).toBe("en"));
+    fireChange({ locale: { newValue: "ja", oldValue: "en" } });
+    await waitFor(() => expect(document.documentElement.lang).toBe("ja"));
+  });
+});
+
 describe("getLocale()", () => {
   beforeEach(() => jest.clearAllMocks());
 
