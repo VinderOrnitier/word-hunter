@@ -9,6 +9,11 @@ export const uk: Record<MessageKey, string> = {
   tab_stats: "Статистика",
   tab_settings: "Налаштування",
 
+  // Pokédex tabs nav — short labels (see en.ts); stats keeps its full word (fits)
+  pdx_tab_play: "Гра",
+  pdx_tab_stats: "Статистика",
+  pdx_tab_settings: "Опції",
+
   // Bottom action bar
   action_bar_auto_continue_title: "Авто-продовження — вибирає наступне слово після кожної знахідки",
   action_bar_auto_continue_aria: "Авто-продовження",

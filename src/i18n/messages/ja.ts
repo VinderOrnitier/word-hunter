@@ -9,6 +9,11 @@ export const ja: Record<MessageKey, string> = {
   tab_stats: "統計",
   tab_settings: "設定",
 
+  // Pokédex tabs nav — short labels (see en.ts)
+  pdx_tab_play: "プレイ",
+  pdx_tab_stats: "統計",
+  pdx_tab_settings: "設定",
+
   // Bottom action bar
   action_bar_auto_continue_title: "オート続行 — 発見ごとに次の単語を自動選択",
   action_bar_auto_continue_aria: "オート続行",
