@@ -61,7 +61,7 @@ export function SettingsTabPdx(): JSX.Element {
             <span class="settings-field__helper">{t("settings_theme_reopen_hint")}</span>
           </div>
 
-          {/* LANGUAGE — pdx-styled select arrives in Phase 3c; native select keeps it functional */}
+          {/* LANGUAGE */}
           <div class="settings-field">
             <span class="settings-field__label">{t("settings_language_label")}</span>
             <div class="settings-field__row">
