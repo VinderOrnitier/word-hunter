@@ -1,6 +1,6 @@
 # Privacy Policy — Word Hunter
 
-_Last updated: 2026-05-22_
+_Last updated: 2026-06-03_
 
 Word Hunter is a browser extension that helps you find a hidden word embedded
 in the text of web pages you visit. This document explains exactly what
@@ -12,9 +12,12 @@ information the extension reads, stores, and transmits.
   control, because we don't operate any servers.
 - **No analytics, no telemetry, no tracking.** There are no third-party
   analytics SDKs, no crash reporting, no usage metrics collection.
-- **One outbound network call:** Pokémon sprite images are loaded on-demand
-  from the public PokeAPI CDN (`raw.githubusercontent.com/PokeAPI/sprites`)
-  during the celebration animation. No user identifiers are attached.
+- **Two kinds of outbound network call, both to `raw.githubusercontent.com`
+  and neither carrying user identifiers:** (1) Pokémon sprite images loaded
+  on-demand from the public PokeAPI repository during gameplay, and (2) a
+  small feature-flag file (`config/features.json`) fetched from this
+  project's own repository on install and roughly once an hour, used to
+  remotely toggle optional content such as the Pokémon list.
 - **No account, no sign-in, no cloud sync.**
 
 ## Data the extension reads from web pages
@@ -47,7 +50,8 @@ browser unless you export it yourself.
 
 ## Data transmitted off your device
 
-There is exactly one type of outbound network request:
+There are two types of outbound network request, both to
+`raw.githubusercontent.com`:
 
 - **Pokémon sprite images.** When showing a celebration animation or the
   Pokédex grid, the extension fetches `.gif` images from
@@ -55,6 +59,13 @@ There is exactly one type of outbound network request:
   where `{id}` is a Pokémon ID between 1 and 151. No cookies, no headers
   identifying you personally, and no information about which page you are
   viewing, are sent in these requests.
+- **Feature-flag file.** On install and roughly once an hour, the extension
+  fetches a small JSON file from
+  `https://raw.githubusercontent.com/VinderOrnitier/word-hunter/master/config/features.json`.
+  It contains only on/off switches (currently a single flag that can hide the
+  Pokémon list) and lets us disable optional content remotely without shipping
+  an extension update. The request sends no cookies and no identifying
+  information; if it fails, the last cached value is used.
 
 No other network requests are made by Word Hunter. There is no first-party
 backend server.
@@ -63,7 +74,7 @@ backend server.
 
 | Party | What they receive | When |
 |---|---|---|
-| GitHub (hosts PokeAPI sprite CDN) | Your IP address and a request for a `.gif` file (standard HTTP request metadata) | Each time a Pokémon sprite is rendered |
+| GitHub (`raw.githubusercontent.com` — hosts the PokeAPI sprites and our feature-flag file) | Your IP address and a request for a static file (standard HTTP request metadata) | Each time a Pokémon sprite is rendered, and on the roughly-hourly feature-flag check |
 
 We do not embed third-party scripts, fonts loaded over the network,
 advertising libraries, social-media widgets, or analytics SDKs.
@@ -75,10 +86,14 @@ advertising libraries, social-media widgets, or analytics SDKs.
 | `storage` | To save your finds, settings, and current word locally. |
 | `activeTab` | To inject the hidden word into the page you are currently viewing. |
 | `scripting` | To execute the content script that performs the injection. |
+| `alarms` | To schedule the roughly-hourly check of the feature-flag file described above. |
 | `<all_urls>` content script | The game works on any website, so the script must be allowed to run on all of them. |
+| `host_permissions`: `raw.githubusercontent.com/PokeAPI/sprites/*` and `raw.githubusercontent.com/VinderOrnitier/word-hunter/*` | To fetch Pokémon sprite images and the feature-flag file. Scoped to those two paths only. |
 
-There is no `host_permissions` block — the extension uses `activeTab`, which
-grants access only to the tab the user has activated.
+The extension reads the content of web pages only through `activeTab` plus
+the `<all_urls>` content script, which run only on the tab you are actively
+using. The `host_permissions` above are limited to two static-file paths on
+`raw.githubusercontent.com` and grant no access to the websites you browse.
 
 ## Children's privacy
 

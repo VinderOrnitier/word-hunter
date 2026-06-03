@@ -42,19 +42,24 @@ If the product ever grows a second user-facing purpose, this statement
 **and** the listing copy must be revisited together — divergence is one
 of the most common rejection reasons.
 
-The shorter form of the same statement lives in
-[`package.json#description`](../../package.json) (and is mirrored into
-`dist/manifest.json` by [`vite.config.ts`](../../vite.config.ts)) so
-that the extension card in `chrome://extensions` and the CWS form both
-tell the same story:
+The shorter form of the same statement is the extension's localized
+`description`. `manifest.json` uses the `__MSG_description__` placeholder,
+which Chrome resolves from
+[`_locales/<locale>/messages.json`](../../_locales) — `en` is the canonical
+copy, with `de`/`ja`/`uk` translations — so the extension card in
+`chrome://extensions` and the per-locale CWS listing tell the same story.
+The English copy:
 
 ```
 A vocabulary game that hides a word invisibly in web-page text and lets you hunt for it as you read.
 ```
 
-Treat `package.json#description` as the source of truth. Re-wording the
-manifest description requires re-wording the single-purpose statement
-above and vice versa.
+Treat [`_locales/en/messages.json#description`](../../_locales/en/messages.json)
+as the source of truth, and keep
+[`package.json#description`](../../package.json) (npm metadata) identical to
+it. Re-wording the description requires re-wording the single-purpose
+statement above, the English message, and the `de`/`ja`/`uk` translations —
+and vice versa.
 
 ## Listing copy
 
@@ -99,6 +104,9 @@ FEATURES
 • Hunt Collection — a Pokédex-style grid that fills up as you catch words
 • Daily streak counter and five achievement badges
 • Per-word art — emoji for the Animals list, animated sprites for Pokémon
+• Two visual themes — a clean "Slate" skin and a retro "Pokédex" skin,
+  switchable any time
+• Multilingual interface — English, Ukrainian, German, and Japanese
 • Auto-Continue mode — auto-picks the next word after each find, so
   reload-to-keep-playing just works
 • Optional hint timer — a small tooltip appears after a configurable
@@ -108,11 +116,11 @@ FEATURES
 • Works on any website thanks to the activeTab permission
 
 PRIVACY FIRST
-• 100% local — all progress stored in your browser, never on a server
+• Your progress stays 100% local — stored in your browser, never on a server
 • No analytics, no telemetry, no tracking
 • No account, no sign-in, no cloud sync
-• The only outbound network request is to the public PokeAPI sprite
-  CDN for the Pokémon list, with no user identifiers attached
+• Outbound requests go only to GitHub's raw-content CDN: Pokémon sprite
+  images and a tiny feature-toggle file. No user identifiers are ever sent
 
 OPEN SOURCE (MIT)
 Source code, issues, and discussions:
@@ -138,8 +146,17 @@ asks for one category.
 
 Primary language: `English (United States)`.
 
-Additional locales should be added only after shipping `_locales/`
-translations in the extension itself (not in scope for v0.1.0).
+The extension's `name` and `description` are localized: `manifest.json` uses
+the `__MSG_name__` / `__MSG_description__` placeholders, resolved from
+`_locales/{en,de,ja,uk}/messages.json`, so `chrome://extensions` and the
+Chrome Web Store show the translated name and description in German,
+Japanese, and Ukrainian automatically.
+
+The CWS *listing page* (short/detailed description, screenshots) is a
+separate, English-only surface entered in the Developer Dashboard. To
+localize the full listing, add the target locales in the dashboard and
+translate the listing copy there — tracked under
+[Open questions and future work](#open-questions-and-future-work).
 
 ## Permission justifications
 
@@ -153,12 +170,19 @@ justification and code are a common rejection cause.
 | `storage` | Persist the player's progress — completed hunts, the current active word, and user settings — across page loads and browser restarts. Data stays on the device; the extension does not sync to any account or external server. |
 | `activeTab` | Inject the hidden word into the page the user is currently viewing. Access is granted by the browser only for the tab the user has actively engaged with; no background tabs are read. |
 | `scripting` | Run the content script that locates a suitable paragraph and inserts the invisible word. Required by Manifest V3 to perform any dynamic DOM modification. |
+| `alarms` | Schedule a roughly-hourly background check that fetches a small feature-flag JSON file (see the `host_permissions` row). Used only to toggle optional content (e.g. hide the Pokémon list) remotely without shipping an update; no user data is involved. |
 | `<all_urls>` content script | The game is designed to work on any web page the player visits while reading. The script reads only paragraph text and inserts a single CSS-rendered `<span>`; it never reads form inputs, password fields, cookies, or site-local storage of the visited site. |
+| `host_permissions`: `https://raw.githubusercontent.com/PokeAPI/sprites/*` and `https://raw.githubusercontent.com/VinderOrnitier/word-hunter/*` | Fetch Pokémon sprite images (from the public PokeAPI sprite repository) and the feature-flag file (from this extension's own repository). Scoped to those two static-file paths only; no other origin is accessible. No cookies or identifiers are sent. |
 
 ### What we DO NOT request (state explicitly if a reviewer asks)
 
-- No `host_permissions` block — `activeTab` is sufficient.
-- No `tabs` permission — the extension does not enumerate tabs.
+- The only `host_permissions` are the two `raw.githubusercontent.com`
+  static-file paths in the table above (Pokémon sprites + feature-flag
+  file). No host permission is requested for the sites the user browses —
+  page access is via `activeTab` + the `<all_urls>` content script only.
+- No `tabs` permission — the service worker calls `chrome.tabs.query` only
+  to obtain tab IDs for message passing. Without the `tabs` permission it
+  cannot read tab URLs, titles, or favicons, and it does not.
 - No `webRequest` or `declarativeNetRequest` — no network interception.
 - No `cookies` — the extension does not read cookies.
 - No `<all_urls>` host permission for the service worker — only the
@@ -223,6 +247,11 @@ Recommended shots, in order:
 4. **Settings tab** — toggles and sliders, so the user understands the
    game is configurable.
 5. **Achievements** — the badge row, with one or two unlocked.
+
+If you have room for a sixth shot (or want to swap one in), include the
+**theme picker** showing the Slate and Pokédex skins side by side — the
+second skin is a strong visual differentiator. The localized UI is also
+worth one shot if you target the uk/de/ja markets.
 
 Store the final screenshots under `docs/screenshots/` so the
 [README.md](../../README.md) can reuse them and so they stay version-
@@ -312,9 +341,11 @@ within 24 hours.
   occasionally flag GitHub-hosted policies as "unstable" even though
   they work fine in practice. A static page on a dedicated domain
   removes that risk.
-- **Localized listings** — add `_locales/` to the extension and ship
-  store copy in additional languages (Ukrainian is the obvious first
-  add for this author).
+- **Localized listings** — the extension's manifest name/description are
+  already localized via `_locales/` (de/ja/uk). What remains is localizing
+  the Chrome Web Store *listing page itself* (short + detailed description,
+  screenshots) by adding those locales in the Developer Dashboard and
+  translating the copy there.
 - **Promotional video** — CWS supports a YouTube video URL in the
   listing. A 30-second screen capture of a full hunt would meaningfully
   raise the conversion rate of the listing page.

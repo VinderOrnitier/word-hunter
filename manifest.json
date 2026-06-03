@@ -1,11 +1,14 @@
 {
   "manifest_version": 3,
-  "name": "Word Hunter",
-  "version": "0.1.0",
-  "description": "A vocabulary game that hides a word invisibly in web-page text and lets you hunt for it as you read.",
+  "name": "__MSG_name__",
+  "version": "1.0.0",
+  "description": "__MSG_description__",
   "default_locale": "en",
   "permissions": ["storage", "activeTab", "scripting", "alarms"],
-  "host_permissions": ["https://raw.githubusercontent.com/*"],
+  "host_permissions": [
+    "https://raw.githubusercontent.com/PokeAPI/sprites/*",
+    "https://raw.githubusercontent.com/VinderOrnitier/word-hunter/*"
+  ],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
