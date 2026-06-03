@@ -1,7 +1,7 @@
 # Word Hunter
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.0-orange.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.0-orange.svg)](CHANGELOG.md)
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-34a853.svg)](manifest.json)
 
 A Chrome extension where the player searches for a hidden word embedded invisibly in page text.
@@ -117,4 +117,4 @@ pnpm dlx skills@latest add mattpocock/skills
 
 ## Version
 
-`0.1.0` — core game loop + Hunt Collection complete, pre-release (not yet published to Chrome Web Store). See [`CHANGELOG.md`](CHANGELOG.md) for what's in.
+`1.0.0` — first stable release: core game loop, Hunt Collection, two themes (Slate + Pokédex), and a localized UI (English, Ukrainian, German, Japanese). Prepared for the Chrome Web Store. See [`CHANGELOG.md`](CHANGELOG.md) for the full list.

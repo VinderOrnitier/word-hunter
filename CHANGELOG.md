@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Pre-release. Not yet published to the Chrome Web Store.
+### Added
+
+### Changed
+
+### Fixed
+
+## [1.0.0] - 2026-06-03
+
+First public release — the initial stable build prepared for the Chrome Web Store.
 
 ### Added
 
@@ -67,6 +75,16 @@ Pre-release. Not yet published to the Chrome Web Store.
   next-word spoiler toggle.
 - Popup UI with Play, Stats, and Rules tabs; branded glyph button in the
   in-page toast that opens the popup.
+- Localized UI in English, Ukrainian, German, and Japanese — `useT()` in the
+  popup and `t(key, locale)` in content scripts; the active locale is
+  persisted and applied to `<html lang>` for correct typography and a11y
+  (see ADR 006). The extension `name`/`description` shown in
+  `chrome://extensions` and the Chrome Web Store are also localized via
+  `_locales/` (`__MSG_*__` manifest placeholders).
+- Second theme — **Pokédex** — selectable from a theme picker alongside the
+  default **Slate** skin. Both skins fork the entire popup and the in-page
+  overlays (see ADR 007). Includes a per-glyph CJK font fallback so Japanese
+  stays legible under the pixel/LCD Pokédex fonts.
 
 ### Changed
 
@@ -88,6 +106,13 @@ Pre-release. Not yet published to the Chrome Web Store.
 - `onlyBuiltDependencies` (for `unrs-resolver`) migrated from the
   deprecated `package.json#pnpm` field to `pnpm-workspace.yaml`, matching
   the pnpm 11 settings layout.
+- Production bundle roughly halved (~1.5 MB → ~0.7 MB): a `dropLegacyWoff`
+  Vite plugin emits `woff2` only, web fonts are subset to the character
+  ranges actually shipped, and duplicate icon assets were de-duplicated.
+- `host_permissions` narrowed from the whole `raw.githubusercontent.com`
+  host to the two exact paths the extension fetches — the PokeAPI sprite
+  repo and this project's `config/` directory — to request the minimum
+  scope Chrome Web Store review expects.
 
 ### Fixed
 
@@ -99,4 +124,5 @@ Pre-release. Not yet published to the Chrome Web Store.
 - `word-renderer.ts`: removed unused `resolveArt` from the
   `WordRendererOptions` destructure.
 
-[Unreleased]: https://github.com/VinderOrnitier/word-hunter/commits/master
+[Unreleased]: https://github.com/VinderOrnitier/word-hunter/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/VinderOrnitier/word-hunter/releases/tag/v1.0.0

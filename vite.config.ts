@@ -23,12 +23,14 @@ function dropLegacyWoff(): Plugin {
   };
 }
 
-// package.json is the single source of truth for the extension's version
-// and description. manifest.json's matching fields are kept in sync for
-// IDE / unpacked-load convenience, but the built dist/manifest.json always
-// reflects what is in package.json. The description doubles as the
-// Chrome Web Store single-purpose statement — see
-// docs/release/chrome-web-store.md.
+// package.json is the single source of truth for the extension's version,
+// injected into dist/manifest.json at build time so the two cannot drift.
+// The name and description are localized instead: manifest.json uses the
+// __MSG_name__ / __MSG_description__ placeholders, which Chrome resolves from
+// _locales/<locale>/messages.json (en is the canonical copy; de/ja/uk are
+// translations). Keep _locales/en/messages.json#description in sync with
+// package.json#description and the Chrome Web Store single-purpose statement
+// — see docs/release/chrome-web-store.md.
 export default defineConfig({
   plugins: [
     dropLegacyWoff(),
@@ -37,7 +39,6 @@ export default defineConfig({
       manifest: {
         ...manifest,
         version: pkg.version,
-        description: pkg.description,
       },
     }),
   ],
