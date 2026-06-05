@@ -2,7 +2,7 @@
   "name": "word-hunter",
   "version": "1.0.0",
   "description": "A vocabulary game that hides a word invisibly in web-page text and lets you hunt for it as you read.",
-  "homepage": "https://github.com/VinderOrnitier/word-hunter",
+  "homepage": "https://chromewebstore.google.com/detail/word-hunter/bjojlmdjfkkiiikpnklnahfnlohpeilp",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/VinderOrnitier/word-hunter.git"
