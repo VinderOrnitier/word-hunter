@@ -12,7 +12,7 @@ there is no file for it in the repo. Tick each item once it's set.
 ## 1. General (`/settings`)
 
 - [ ] **Description** — set to: `Chrome extension where you hunt for a hidden word embedded invisibly in page text`
-- [ ] **Website** — leave empty until the Chrome Web Store listing exists; then set to the CWS URL.
+- [x] **Website** — set to the Chrome Web Store listing: `https://chromewebstore.google.com/detail/word-hunter/bjojlmdjfkkiiikpnklnahfnlohpeilp` (published 2026-06-03).
 - [ ] **Topics** — add: `chrome-extension`, `browser-extension`, `mv3`, `preact`, `typescript`, `vite`, `word-game`, `gamification`, `vocabulary`. Topics drive GitHub search discoverability.
 - [ ] **Social preview image** — upload a 1280×640 image (the "preview when shared on Twitter/Slack/Discord"). A clean screenshot of the popup or the in-page hidden-word effect works well.
 - [ ] **Include in the home page** — leave default.

@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-1.0.0-orange.svg)](CHANGELOG.md)
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-34a853.svg)](manifest.json)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/bjojlmdjfkkiiikpnklnahfnlohpeilp?label=Chrome%20Web%20Store&color=4285F4)](https://chromewebstore.google.com/detail/word-hunter/bjojlmdjfkkiiikpnklnahfnlohpeilp)
 
 A Chrome extension where the player searches for a hidden word embedded invisibly in page text.
 
@@ -49,7 +50,9 @@ Word Hunter targets Chromium-based browsers via Manifest V3.
 
 ### From the Chrome Web Store
 
-Not yet published. The first stable release will be linked here.
+**[Install from the Chrome Web Store →](https://chromewebstore.google.com/detail/word-hunter/bjojlmdjfkkiiikpnklnahfnlohpeilp)**
+
+One click to install; Chrome keeps it up to date automatically.
 
 ### From source (unpacked)
 
@@ -117,4 +120,4 @@ pnpm dlx skills@latest add mattpocock/skills
 
 ## Version
 
-`1.0.0` — first stable release: core game loop, Hunt Collection, two themes (Slate + Pokédex), and a localized UI (English, Ukrainian, German, Japanese). Prepared for the Chrome Web Store. See [`CHANGELOG.md`](CHANGELOG.md) for the full list.
+`1.0.0` — first stable release: core game loop, Hunt Collection, two themes (Slate + Pokédex), and a localized UI (English, Ukrainian, German, Japanese). Available on the [Chrome Web Store](https://chromewebstore.google.com/detail/word-hunter/bjojlmdjfkkiiikpnklnahfnlohpeilp). See [`CHANGELOG.md`](CHANGELOG.md) for the full list.

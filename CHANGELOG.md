@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- README, `package.json#homepage`, and the repository Website now link to the
+  published Chrome Web Store listing
+  (https://chromewebstore.google.com/detail/word-hunter/bjojlmdjfkkiiikpnklnahfnlohpeilp).
+
 ### Fixed
 
 ## [1.0.0] - 2026-06-03
