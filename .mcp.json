@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "chrome-devtools": {
+      "type": "stdio",
+      "command": "pnpm",
+      "args": [
+        "dlx",
+        "chrome-devtools-mcp@1.12.0",
+        "--ignore-default-chrome-arg=--disable-extensions",
+        "--chrome-arg=--load-extension=./dist"
+      ]
+    }
+  }
+}

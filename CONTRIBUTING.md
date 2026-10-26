@@ -54,6 +54,12 @@ After `pnpm dev` rebuilds, click "Reload" on the extension card in
 `chrome://extensions` to pick up the changes — content-script changes
 also require reloading the host page.
 
+For AI-assisted debugging, [`.mcp.json`](.mcp.json) configures the
+[chrome-devtools MCP server](https://github.com/ChromeDevTools/chrome-devtools-mcp)
+for Claude Code. It launches Chrome with `./dist` loaded as an unpacked
+extension, so run `pnpm build` first. The server version is pinned; bump it
+deliberately rather than switching to `@latest`.
+
 ## Project layout
 
 ```
